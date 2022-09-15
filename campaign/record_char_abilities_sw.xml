@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+  File adjusted for Star Wars 3.5E
+-->
+
+<root>
+	<!-- =================================================================================================================== -->
+	<!-- General Frame -->
+	<!-- =================================================================================================================== -->	
+	<windowclass name="charsheet_abilities">
+		<sheetdata>
+
+			<frame_char name="charsheet_abilities_frame">
+				<bounds>15,0,-29,-2</bounds>
+			</frame_char>
+
+			<subwindow name="contents">
+				<anchored>
+					<top offset="0" />
+					<bottom offset="-40" />
+					<left offset="0" />
+					<right offset="-15" />
+				</anchored>
+				<class>charsheet_abilities_contents</class>
+				<activate />
+				<fastinit />
+			</subwindow>
+
+			<scrollbar>
+				<anchored to="contents" position="right" offset="-25,-4" width="20">
+					<top offset="20" />
+					<bottom offset="20" />
+				</anchored>
+				<target>contents</target>
+			</scrollbar>
+
+		</sheetdata>
+	</windowclass>
+
+	<!-- =================================================================================================================== -->
+	<!-- Windowclass Abilities -->
+	<!-- =================================================================================================================== -->
+	<windowclass name="charsheet_abilities_contents">
+		<script>
+			function onDrop(x, y, draginfo)
+				return handleDrop(draginfo, nil);
+			end
+			
+			function handleDrop(draginfo, nodeTargetList)
+				if draginfo.isType("shortcut") then
+					local sClass, sRecord = draginfo.getShortcutData();
+					if StringManager.contains({"referencefeat", "referenceclassability", "referenceracialtrait"}, sClass) then
+						CharManager.addInfoDB(getDatabaseNode(), sClass, sRecord, nodeTargetList);
+						return true;
+					end
+				end
+			end
+		</script>
+		<sheetdata>
+
+			<!-- =================================================================================================================== -->
+			<!-- Feats -->
+			<!-- =================================================================================================================== -->
+			<label_charframetop name="featstitle">
+				<bounds>40,15,-40,20</bounds>
+				<static textres="char_label_feats" />
+				<!-- <icons>char_abilities_green</icons> -->
+				<target>feats</target>
+			</label_charframetop>
+
+			<button_iedit name="feats_iedit">
+				<anchored to="featstitle" position="righthigh" offset="-25,0" />
+				<target>feats</target>
+			</button_iedit>
+
+			<button_iadd name="feats_iadd">
+				<anchored to="feats_iedit" position="lefthigh" offset="5,0" />
+				<target>feats</target>
+			</button_iadd>
+
+			<list_abilities name="feats">
+				<anchored to="featstitle">
+					<top anchor="bottom" relation="relative" offset="5" />
+					<left offset="-10" />
+					<right offset="10" />
+				</anchored>
+				<datasource>.featlist</datasource>
+				<class>char_ability_feat</class>
+				<listheader>featstitle</listheader>
+			</list_abilities>
+
+			<!-- =================================================================================================================== -->
+			<!-- Class Abilities -->
+			<!-- =================================================================================================================== -->
+			<label_charframetop name="specialabilitiestitle">
+				<anchored to="featstitle" height="20">
+					<top anchor="bottom" relation="relative" offset="7" />
+					<left />
+					<right />
+				</anchored>
+				<static textres="char_label_sa" />
+				<target>specialabilities</target>
+			</label_charframetop>
+
+			<button_iedit name="specialabilities_iedit">
+				<anchored to="specialabilitiestitle" position="righthigh" offset="-25,0" />
+				<target>specialabilities</target>
+			</button_iedit>
+
+			<button_iadd name="specialabilities_iadd">
+				<anchored to="specialabilities_iedit" position="lefthigh" offset="5,0" />
+				<target>specialabilities</target>
+			</button_iadd>
+
+			<list_abilities name="specialabilities">
+				<anchored to="specialabilitiestitle">
+					<top anchor="bottom" relation="relative" offset="5" />
+					<left offset="-10" />
+					<right offset="10" />
+				</anchored>
+				<datasource>.specialabilitylist</datasource>
+				<class>char_ability_class</class>
+			</list_abilities>
+
+			<!-- =================================================================================================================== -->
+			<!-- Proficency -->
+			<!-- =================================================================================================================== -->
+			<label_charframetop name="proficiencytitle">
+				<anchored to="specialabilitiestitle" height="20">
+					<top anchor="bottom" relation="relative" offset="7" />
+					<left />
+					<right />
+				</anchored>
+				<static textres="char_label_proficiencies" />
+				<target>proficiencies</target>
+			</label_charframetop>
+
+			<button_iedit name="proficiencies_iedit">
+				<anchored to="proficiencytitle" position="righthigh" offset="-25,0" />
+				<target>proficiencies</target>
+			</button_iedit>
+
+			<button_iadd name="proficiencies_iadd">
+				<anchored to="proficiencies_iedit" position="lefthigh" offset="5,0" />
+				<target>proficiencies</target>
+			</button_iadd>
+
+			<list_abilities name="proficiencies">
+				<anchored to="proficiencytitle">
+					<top anchor="bottom" relation="relative" offset="5" />
+					<left offset="-10" />
+					<right offset="10" />
+				</anchored>
+				<datasource>.proficiencylist</datasource>
+				<class>char_ability_proficiency</class>
+			</list_abilities>
+
+			<!-- =================================================================================================================== -->
+			<!-- Traits -->
+			<!-- =================================================================================================================== -->
+			<label_charframetop name="traittitle">
+				<anchored to="proficiencytitle" height="20">
+					<top anchor="bottom" relation="relative" offset="7" />
+					<left />
+					<right />
+				</anchored>
+				<static textres="char_label_traits" />
+				<target>traits</target>
+			</label_charframetop>
+
+			<button_iedit name="traits_iedit">
+				<anchored to="traittitle" position="righthigh" offset="-25,0" />
+				<target>traits</target>
+			</button_iedit>
+
+			<button_iadd name="traits_iadd">
+				<anchored to="traits_iedit" position="lefthigh" offset="5,0" />
+				<target>traits</target>
+			</button_iadd>
+
+			<list_abilities name="traits">
+				<anchored to="traittitle" >
+					<top anchor="bottom" relation="relative" offset="7" />
+					<left offset="-10" />
+					<right offset="10" />
+				</anchored>
+				<datasource>.traitlist</datasource>
+				<class>char_ability_race</class>
+			</list_abilities>
+
+		</sheetdata>
+	</windowclass>
+
+	<!-- =================================================================================================================== -->
+	<!-- WindowClass - Ability Feats -->
+	<!-- =================================================================================================================== -->
+	<windowclass name="char_ability_feat">
+		<margins control="0,0,0,2" />
+		<sheetdata>
+
+			<genericcontrol name="rightanchor">
+				<anchored height="0" width="0">
+					<top />
+					<right />
+				</anchored>
+			</genericcontrol>
+
+			<button_idelete name="idelete">
+				<anchored>
+					<top offset="2" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+			</button_idelete>
+
+			<linkcontrol name="shortcut">
+				<anchored width="20" height="20">
+					<top offset="2" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<class>referencefeat</class>
+				<description field="name" />
+				<readonly />
+			</linkcontrol>
+
+			<string_textlistitem name="name">
+				<anchored>
+					<top offset="2" />
+					<left offset="5" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<multilinespacing>20</multilinespacing>
+			</string_textlistitem>
+
+		</sheetdata>
+	</windowclass>
+
+	<!-- =================================================================================================================== -->
+	<!-- WindowClass - Ability Class -->
+	<!-- =================================================================================================================== -->
+	<windowclass name="char_ability_class">
+		<margins control="0,0,0,2" />
+		<sheetdata>
+			<genericcontrol name="rightanchor">
+				<anchored height="0" width="0">
+					<top />
+					<right />
+				</anchored>
+			</genericcontrol>
+
+			<button_idelete name="idelete">
+				<anchored>
+					<top offset="2" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+			</button_idelete>
+
+			<linkcontrol name="shortcut">
+				<anchored width="20" height="20">
+					<top offset="2" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<class>referenceclassability</class>
+				<description field="name" />
+				<readonly />
+			</linkcontrol>
+
+			<string_textlistitem name="name">
+				<anchored>
+					<top offset="2" />
+					<left offset="5" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<multilinespacing>20</multilinespacing>
+			</string_textlistitem>
+		</sheetdata>
+	</windowclass>
+
+	<!-- =================================================================================================================== -->
+	<!-- WindowClass - Ability Race -->
+	<!-- =================================================================================================================== -->
+	<windowclass name="char_ability_race">
+		<margins control="0,0,0,2" />
+		<sheetdata>
+			<genericcontrol name="rightanchor">
+				<anchored height="0" width="0">
+					<top />
+					<right />
+				</anchored>
+			</genericcontrol>
+
+			<button_idelete name="idelete">
+				<anchored>
+					<top offset="2" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+			</button_idelete>
+
+			<linkcontrol name="shortcut">
+				<anchored width="20" height="20">
+					<top offset="2" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<class>referenceracialtrait</class>
+				<description field="name" />
+				<readonly />
+			</linkcontrol>
+
+			<string_textlistitem name="name">
+				<anchored>
+					<top offset="2" />
+					<left offset="5" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<multilinespacing>20</multilinespacing>
+			</string_textlistitem>
+		</sheetdata>
+	</windowclass>
+
+	<!-- =================================================================================================================== -->
+	<!-- WindowClass - Ability Proficency -->
+	<!-- =================================================================================================================== -->
+	<windowclass name="char_ability_proficiency">
+		<margins control="0,0,0,2" />
+		<sheetdata>
+			<genericcontrol name="rightanchor">
+				<anchored height="0" width="0">
+					<top />
+					<right />
+				</anchored>
+			</genericcontrol>
+
+			<button_idelete name="idelete">
+				<anchored>
+					<top offset="2" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+			</button_idelete>
+
+			<linkcontrol name="shortcut">
+				<anchored width="20" height="20">
+					<top offset="2" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<class>referenceproficiency</class>
+				<description field="name" />
+				<readonly />
+			</linkcontrol>
+
+			<string_textlistitem name="name">
+				<anchored>
+					<top offset="2" />
+					<left offset="5" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<multilinespacing>20</multilinespacing>
+			</string_textlistitem>
+		</sheetdata>
+	</windowclass>
+
+	<!-- =================================================================================================================== -->
+	<!-- WindowClass - Reference Proficency -->
+	<!-- =================================================================================================================== -->
+	<windowclass name="referenceproficiency">
+		<frame>recordsheet</frame>
+		<placement>
+			<size width="400" height="350" />
+		</placement>
+		<sizelimits>
+			<dynamic />
+		</sizelimits>
+		<minimize>minimized_reference</minimize>
+		<tooltip field="name" />
+		<script>
+			function onLockChanged()
+				if header.subwindow then
+					header.subwindow.update();
+				end
+				
+				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
+				text.setReadOnly(bReadOnly);
+			end
+		</script>
+		<sheetdata>
+			<sub_record_header name="header">
+				<class>ref_proficiency_header</class>
+			</sub_record_header>
+
+			<frame_record_content />
+
+			<ft_record name="text">
+				<anchored to="contentframe" position="over" />
+				<footer>footer_wide</footer>
+			</ft_record>
+
+			<scrollbar>
+				<anchored to="text" />
+				<target>text</target>
+			</scrollbar>
+			
+			<resize_recordsheet />
+			<close_recordsheet />
+		</sheetdata>
+	</windowclass>
+
+	<!-- =================================================================================================================== -->
+	<!-- WindowClass - Reference Proficency Header -->
+	<!-- =================================================================================================================== -->
+	<windowclass name="ref_proficiency_header">
+		<margins control="0,0,0,2" />
+		<script>
+			function onInit()
+				update();
+			end
+			function update()
+				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
+				name.setReadOnly(bReadOnly);
+			end
+		</script>
+		<sheetdata>
+			<link_record_header>
+				<class>referenceproficiency</class>
+			</link_record_header>
+
+			<anchor_record_header_right />
+			<icon_record_locked />
+			<button_record_locked />
+
+			<string_record_name name="name">
+				<empty textres="library_recordtype_empty_proficiency" />
+			</string_record_name>
+
+			<label_recordtype name="recordtype">
+				<static textres="record_label_proficiency" />
+			</label_recordtype>	
+		</sheetdata>
+	</windowclass>
+</root>

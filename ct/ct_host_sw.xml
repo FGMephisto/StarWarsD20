@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<windowclass name="combattracker_host">
+		<frame>ctbox</frame>
+		<placement>
+			<size width="600" height="500" />
+		</placement>
+		<sizelimits>
+			<minimum width="600" height="400" />
+			<dynamic />
+		</sizelimits>
+		<softclose />
+		<sheetdata>
+			<windowtitlebar name="title">
+				<resource>ct_window_title</resource>
+			</windowtitlebar>
+
+			<frame_ct name="header_vis">
+				<bounds>22,28,40,35</bounds>
+			</frame_ct>
+			<buttoncontrol name="button_global_visibility">
+				<anchored position="insidetopleft" offset="33,37" width="20" height="20" />
+				<state icon="visibilityoff" tooltipres="ct_tooltip_shownpcallon" />
+				<state icon="visibilityon" tooltipres="ct_tooltip_shownpcalloff" />
+				<script>
+					function onValueChanged()
+						window.list.toggleVisibility();
+					end
+				</script>
+			</buttoncontrol>
+			<label_ct name="label_name">
+				<bounds>70,38,-390,20</bounds>
+				<static textres="ct_label_name" />
+				<center />
+			</label_ct>
+			<label_ct name="label_init">
+				<anchored position="insidetopright" offset="350,38" width="30" />
+				<static textres="init" />
+				<center />
+			</label_ct>
+			<label_ct name="label_hp">
+				<anchored position="insidetopright" offset="305,38" width="30" />
+				<static textres="hp" />
+				<tooltip textres="hitpoints" />
+				<center />
+			</label_ct>
+			<label_ct name="label_temp">
+				<anchored position="insidetopright" offset="265,38" width="30" />
+				<static textres="ct_label_hptemp" />
+				<tooltip textres="ct_tooltip_hptemp" />
+				<center />
+			</label_ct>
+			<label_ct name="label_nonlethal">
+				<anchored position="insidetopright" offset="225,38" width="30" />
+				<static textres="ct_label_nonlethal" />
+				<tooltip textres="ct_tooltip_nonlethal" />
+				<center />
+			</label_ct>
+			<label_ct name="label_wounds">
+				<anchored position="insidetopright" offset="185,38" width="30" />
+				<static textres="ct_label_wounds" />
+				<tooltip textres="ct_tooltip_wounds" />
+				<center />
+			</label_ct>
+				
+			<windowlist name="list">
+				<bounds>0,65,-20,-55</bounds>
+				<datasource>.list</datasource>
+				<class>ct_entry</class>
+				<empty font="list-empty-ct" textres="ct_emptylist" />
+				<script file="ct/scripts/ct.lua" />
+			</windowlist>
+			<scrollbar_list />
+			
+			<button_ct_setactive name="icon_setactive">
+				<bounds>28,-53,33,40</bounds>
+			</button_ct_setactive>
+			<button_ct_nextactor name="advance_actor">
+				<bounds>62,-45,33,26</bounds>
+			</button_ct_nextactor>
+
+			<button_ct_faction_friend />
+			<button_ct_faction_neutral />
+			<button_ct_faction_foe />
+		
+			<button_ct_menu />
+
+			<label_ct_host_rounds />
+			<number_ct_host_rounds />
+			<button_ct_nextround name="advance_round">
+				<bounds>-68,-45,33,26</bounds>
+			</button_ct_nextround>
+			
+			<resize_ctbox />
+			<helper_ct />
+			<close_ctbox />
+		</sheetdata>
+	</windowclass>
+</root>
