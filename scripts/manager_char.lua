@@ -1,7 +1,6 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars 3.5E
 --
 
 RACIAL_TRAIT_ABILITY_D20PFSRD = "^ability score racial traits$";
@@ -115,7 +114,7 @@ end
 
 function onCharItemAdd(nodeItem)
 	DB.setValue(nodeItem, "carried", "number", 1);
-	-- DB.setValue(nodeItem, "showonminisheet", "number", 1);
+	DB.setValue(nodeItem, "showonminisheet", "number", 1);
 
 	if DB.getValue(nodeItem, "type", "") == "Goods and Services" then
 		local sSubType = DB.getValue(nodeItem, "subtype", "");
@@ -187,7 +186,7 @@ function calcItemArmorClass(nodeChar)
 	local nMainShieldTotal = 0;
 	local nMainMaxStatBonus = 0;
 	local nMainCheckPenalty = 0;
-	-- local nMainSpellFailure = 0;
+	local nMainSpellFailure = 0;
 	local nMainSpeed30 = 0;
 	local nMainSpeed20 = 0;
 
@@ -238,6 +237,11 @@ function calcItemArmorClass(nodeChar)
 				if nCheckPenalty < 0 then
 					nMainCheckPenalty = nMainCheckPenalty + nCheckPenalty;
 				end
+				
+				local nSpellFailure = DB.getValue(vNode, "spellfailure", 0);
+				if nSpellFailure > 0 then
+					nMainSpellFailure = nMainSpellFailure + nSpellFailure;
+				end
 			end
 		end
 	end
@@ -252,6 +256,7 @@ function calcItemArmorClass(nodeChar)
 		DB.setValue(nodeChar, "encumbrance.armormaxstatbonus", "number", 0);
 	end
 	DB.setValue(nodeChar, "encumbrance.armorcheckpenalty", "number", nMainCheckPenalty);
+	DB.setValue(nodeChar, "encumbrance.spellfailure", "number", nMainSpellFailure);
 	
 	local bApplySpeedPenalty = true;
 	if hasTrait(nodeChar, "Slow and Steady") then
@@ -261,10 +266,10 @@ function calcItemArmorClass(nodeChar)
 	local nSpeedBase = DB.getValue(nodeChar, "speed.base", 0);
 	local nSpeedArmor = 0;
 	if bApplySpeedPenalty then
-		if (nSpeedBase >= 10) and (nMainSpeed30 > 0) then
-			nSpeedArmor = nMainSpeed30 - 10;
-		elseif (nSpeedBase < 10) and (nMainSpeed20 > 0) then
-			nSpeedArmor = nMainSpeed20 - 6;
+		if (nSpeedBase >= 30) and (nMainSpeed30 > 0) then
+			nSpeedArmor = nMainSpeed30 - 30;
+		elseif (nSpeedBase < 30) and (nMainSpeed20 > 0) then
+			nSpeedArmor = nMainSpeed20 - 20;
 		end
 	end
 	DB.setValue(nodeChar, "speed.armor", "number", nSpeedArmor);
@@ -411,7 +416,7 @@ function addToWeaponDB(nodeItem)
 	local nThresholdIndex = 1;
 	local nMultIndex = 1;
 	for kCrit, sCrit in ipairs(aCrit) do
-		local sCritThreshold = string.match(sCrit, "(%d+)[%-â€“]20");
+		local sCritThreshold = string.match(sCrit, "(%d+)[%-–]20");
 		if sCritThreshold then
 			aCritThreshold[nThresholdIndex] = tonumber(sCritThreshold) or 20;
 			nThresholdIndex = nThresholdIndex + 1;
@@ -834,7 +839,7 @@ end
 
 function resetHealth(nodeChar)
 	-- Clear temporary hit points
-	-- DB.setValue(nodeChar, "hp.temporary", "number", 0);
+	DB.setValue(nodeChar, "hp.temporary", "number", 0);
 	
 	-- Heal hit points equal to character level
 	local nHP = DB.getValue(nodeChar, "hp.total", 0);
@@ -847,7 +852,6 @@ function resetHealth(nodeChar)
 	end
 	DB.setValue(nodeChar, "hp.wounds", "number", nWounds);
 	
-	-- ToDo: Check
 	local nNonlethal = DB.getValue(nodeChar, "hp.nonlethal", 0);
 	nNonlethal = nNonlethal - (nLevel * 8);
 	if nNonlethal < 0 then
@@ -1124,7 +1128,7 @@ function getSkillNode(nodeChar, sSkill, sSpecialty)
 			
 			DB.setValue(nodeSkill, "label", "string", sSkill);
 			DB.setValue(nodeSkill, "statname", "string", t.stat or "");
-			-- DB.setValue(nodeSkill, "showonminisheet", "number", 1);
+			DB.setValue(nodeSkill, "showonminisheet", "number", 1);
 			
 			if t.sublabeling and sSpecialty then
 				DB.setValue(nodeSkill, "sublabel", "string", sSpecialty);
@@ -1386,7 +1390,12 @@ function handleRacialSize(nodeChar, nodeTrait, sTraitType)
 		return false;
 	end
 	
-	local sSkill = "Hide";
+	local sSkill;
+	if DataCommon.isPFRPG() then
+		sSkill = "Stealth";
+	else
+		sSkill = "Hide";
+	end
 	
 	DB.setValue(nodeChar, "size", "string", StringManager.capitalize(sTraitType));
 	if sSize == "small" then
@@ -1487,11 +1496,13 @@ function checkForRacialAbilityInName(nodeChar, sTraitType)
 end
 
 -- Special handling
+-- Half-orcs receive a +2 racial bonus on Intimidate checks due to their fearsome nature.
+-- Fetchlings have a +2 racial bonus on Knowledge (planes) and Stealth checks.
+-- Kobolds gain a +2 racial bonus on Craft (trapmaking), Perception, and Profession (miner) checks.
+-- Ratfolk gain a +2 racial bonus on Craft (alchemy), Perception, and Use Magic Device checks.
 function checkForRacialSkillBonus(nodeChar, nodeTrait)
 	local sText = DB.getText(nodeTrait, "text", "");
-
 	sText = sText:gsub(" due to their fearsome nature%.", "."); -- Half-orc Intimidating
-
 	for sMod, sSkills in sText:gmatch("%+(%d) racial bonus on ([^.]+) checks[.;,]") do
 		local nMod = tonumber(sMod) or 0;
 		if sSkills and nMod ~= 0 then
@@ -1634,7 +1645,7 @@ function addClass(nodeChar, sClass, sRecord)
 			
 			local sRootMapping = LibraryData.getRootMapping("class");
 			local wIndex, bWasIndexOpen = RecordManager.openRecordIndex(sRootMapping);
-
+			
 			if wIndex then
 				local aMappings = LibraryData.getMappings("class");
 				for _,vMapping in ipairs(aMappings) do
@@ -1978,7 +1989,7 @@ function addClassFeature(nodeChar, sClass, sRecord, nodeTargetList)
 		if sClassName == CLASS_NAME_MYSTIC_THEURGE then
 			nChooseSpellClassIncrease = 2;
 		end
-		
+
 		local aOptions = {};
 		for _,v in pairs(DB.getChildren(nodeChar, "spellset")) do
 			local sSpellClassName = DB.getValue(v, "label", "");
@@ -2013,6 +2024,56 @@ function addClassFeature(nodeChar, sClass, sRecord, nodeTargetList)
 			end
 		end
 	end
+	-- TO DO - Possible future additions
+	--			To do these, we would also need to strip (ex), (su), (sp) and (ex or sp)
+	--		Fast Movement (Barbarian) - Speed - Interacts with armor equip
+	--		Rage (Barbarian) - Ability
+	--		Rage Power (Barbarian) - Choice
+	--			Power Selection - Ability
+	--		Greater Rage (Barbarian) - Ability
+	--		Mighty Rage (Barbarian) - Ability
+	--		Bardic Knowledge (Bard) - Skill Bonus (variable)
+	--		Bardic Performance (Bard) - Ability (multiple)
+	--		Jack of All Trades (Bard) - Skill (training, class)
+	-- 		Channel Energy (Cleric) - Ability
+	--		Domains (Cleric) - Choice (two)
+	--			Domain Selection and Leveling - Spell Addition, Ability
+	--		Nature Sense (Druid) - Skill Bonus
+	-- 		Bonus Feat (Fighter) - Feat (Combat only) (multiple)
+	--		Armor Training (Fighter) - Misc - Interacts with automatic AC on armor equip
+	--		AC Bonus (Monk) - AC - Interacts with armor equip
+	--		Flurry of Blows (Monk) - Ability/weapon
+	--		Unarmed Strike (Monk) - Ability/weapon
+	-- 		Bonus Feat (Monk) - Feat (Choice of set)
+	--		Stunning Fist (Monk) - Ability
+	--		Fast Movement (Monk) - Speed - Interacts with armor equip
+	-- 		Maneuver Training (Monk) - CMB
+	--		Ki Pool (Monk) - Ability
+	--			Ki Strike (Monk)
+	--			Wholeness of Body (Monk)
+	--			Abundant Step (Monk)
+	--			Empty Body (Monk)
+	--		Diamond Soul (Monk) - SR
+	--		Quivering Palm (Monk) - Ability
+	--		Detect Evil (Paladin) - Ability
+	-- 		Smite Evil (Paladin) - Ability
+	-- 		Divine Grace (Paladin) - Saves
+	-- 		Lay on Hands (Paladin) - Ability
+	-- 		Channel Positive Energy (Paladin) - Ability
+	--		Track (Ranger) - Skill Bonus (variable)
+	--		Combat Style (Ranger) - Choice
+	--			Style Selection - ?
+	-- 		Endurance (Ranger) - Feat
+	--		Sneak Attack (Rogue) - Ability
+	--		Rogue Talent (Rogue) - Choice (multiple)
+	--			Talent Selection - Ability
+	--		Advanced Talents (Rogue) - Choice (multiple)
+	--			Talent Selection - Ability
+	--		Bloodline (Sorcerer) - Choice
+	--			Bloodline Selection and Leveling - Class Skill, Bonus Feat, Abilities
+	--		Arcane School (Wizard) - Choice (plus opposition school choices)
+	-- 		Scribe Scroll (Wizard) - Feat
+	-- 		Bonus Feat (Wizard) - Feat (metamagic, item creation, spell mastery)
 
 	if bCreateFeatureEntry then
 		if not nodeTargetList then
@@ -2070,6 +2131,74 @@ function parseFeatureName(s)
 	return s:lower(), nMult, sSuffix;
 end
 
+-- Multiple 
+--		Rage Power - Barb
+--		Bloodline feat - Drag Disc
+--		Bonus combat feat - Eldritch knight
+--		Bonus feat - Fighter
+--		Secret - Loremaster
+--		Bonus feat - Monk
+--		Mercy - Paladin
+--		Combat Style Feat - Ranger
+--		Rogue talent - Rogue, Shadowdancer
+--		Bloodline power - Sorcerer
+--		Bloodline spell - Sorcerer
+--		Bonus feat - Wizard
+--		Discovery - ALchemist
+--		Cruelty - Antipaladin
+--		Bonus feat - Cavalier
+--		Order ability - Cavalier
+--		Favored terrain - Horizon Walker
+--		Terrain mastery - Horizon Walker
+--		Terrain dominance - Horizon Walker
+--		Teamwork feat - Inquisitor
+--		Favored terrain - Nature warden
+--		Mystery spell - Oracle
+--		Revelation - Oracle
+--		Rage Prophet Mystery - Rage Prophet
+--		Hex - Witch
+-- Special handling (** not handled for now)
+-- 		Trap Sense (+#) - Barb
+--		Damage reduction (1/-) - Barb
+--		Sneak attack +#d6 - Arc Trickster, Assassin, 
+--		Impromptu sneak attack #/day - Arc Trickster
+--		+# save bonus against poison - Assassin
+--		Inspire courage +# - Brd
+--		Inspire competence +# - Brd
+--		Lore master #/day - Brd
+--		Channel Energy #d6 - Cle
+-- 		Natural armor increase (+1) - Drag Disc
+--		**Ability boost (Str +2) - Drag Disc
+--		Dragon form (#/day) - Drag Disc
+--		Blindsense # ft. - Drag Disc
+--		Wild shape (#/day) - Druid
+--		**Wild shape (at will) - Druid
+--		Imrpoved Reaction +# - Duelist
+--		Bravery +# - Fighter
+--		Armor training # - Fighter
+--		Weapon training # - Fighter
+--		AC Bonus (+#) - Monk
+--		Slow fall # ft. - Monk
+--		**Combined Spells (1st)(2nd)(3rd)(4th)(5th) - Mystic Theurge
+--		Smite evil #/day - Paladin
+--		**Inspired action (move) (standard) - Pathinfder Chronicler
+--		**1st/2nd/3rd/4th/5th favored enemy - Ranger
+--		**1st/2nd/3rd/4th favored terrain - Ranger
+--		Sneak Attack +#d6 - Rogue
+-- 		Trap Sense +# - Rogue
+--		Shadow jump # ft. - Shadowdancer
+--		Bomb #d6 - Alchemist
+--		Poison resistance +# - ALchemist
+--		Smite good #/day - Antipaladin
+-- 		**1st inspiring command (+1) / 2nd inspiring command / Inspiring command (+2) / 3rd inspiring command / 4th inspiring command (+3) / 5th inspiring command / Inspiring command (+4) - Battle Herald
+--		Challenge #/day - Cavalier
+--		Judgement #/day = Inquisitor
+--		Mutate #/day - Master Chymist
+--		Brutality (+#) - Master Chymist
+-- 		Sneak attack +#d6 - Master spy
+--		Nonmagical aura #/day - Master spy (no advancement)
+--		AC Bonus (+#) - Stalwart Defender
+--		Damage reduction #/- - Stalwart Defender
 function handleDuplicateFeatures(nodeChar, nodeFeature, sFeatureType, nodeTargetList)
 	local sClassName = StringManager.strip(DB.getValue(nodeFeature, "...name", ""));
 	local sFeatureStrip = StringManager.strip(DB.getValue(nodeFeature, "name", ""));
@@ -2247,7 +2376,7 @@ function handleClassFeatureSpells(nodeChar, nodeFeature)
 	if not sAbility then
 		return false;
 	end
-	
+
 	local nodeSpellClassList = nodeChar.createChild("spellset");
 	local nodeNewSpellClass = nodeSpellClassList.createChild();
 	DB.setValue(nodeNewSpellClass, "label", "string", DB.getValue(nodeFeature, "...name", ""));
@@ -2287,12 +2416,11 @@ function addClassSpellLevel(nodeChar, sClassName)
 end
 
 function addClassSpellLevelHelper(nodeChar, nodeSpellClass)
-	-- ToDo: Remove
 	local sClassName = DB.getValue(nodeSpellClass, "label", "");
 	
 	-- Increment caster level
-	local nCL = 0
-	-- DB.setValue(nodeSpellClass, "cl", "number", nCL);
+	local nCL = DB.getValue(nodeSpellClass, "cl", 0) + 1;
+	DB.setValue(nodeSpellClass, "cl", "number", nCL);
 
 	-- Update spell slots based on class
 	local nNewSpellLevel = 0;
@@ -2712,6 +2840,67 @@ function addClassSpellLevelHelper(nodeChar, nodeSpellClass)
 			addClassSpellLevelSlot(nodeSpellClass, 2);
 		elseif nCL == 10 then
 			addClassSpellLevelSlot(nodeSpellClass, 3);
+		end
+	elseif sClassName == CLASS_NAME_MAGUS then
+		if nCL == 1 then
+			addClassSpellLevelSlot(nodeSpellClass, 0, 3);
+			addClassSpellLevelSlot(nodeSpellClass, 1);
+			nNewSpellLevel = 1;
+		elseif nCL == 2 then
+			addClassSpellLevelSlot(nodeSpellClass, 0);
+			addClassSpellLevelSlot(nodeSpellClass, 1);
+		elseif nCL == 3 then
+			addClassSpellLevelSlot(nodeSpellClass, 1);
+		elseif nCL == 4 then
+			addClassSpellLevelSlot(nodeSpellClass, 2);
+			nNewSpellLevel = 2;
+		elseif nCL == 5 then
+			addClassSpellLevelSlot(nodeSpellClass, 1);
+			addClassSpellLevelSlot(nodeSpellClass, 2);
+		elseif nCL == 6 then
+			addClassSpellLevelSlot(nodeSpellClass, 0);
+			addClassSpellLevelSlot(nodeSpellClass, 2);
+		elseif nCL == 7 then
+			addClassSpellLevelSlot(nodeSpellClass, 3);
+			nNewSpellLevel = 3;
+		elseif nCL == 8 then
+			addClassSpellLevelSlot(nodeSpellClass, 2);
+			addClassSpellLevelSlot(nodeSpellClass, 3);
+		elseif nCL == 9 then
+			addClassSpellLevelSlot(nodeSpellClass, 1);
+			addClassSpellLevelSlot(nodeSpellClass, 3);
+		elseif nCL == 10 then
+			addClassSpellLevelSlot(nodeSpellClass, 4);
+			nNewSpellLevel = 4;
+		elseif nCL == 11 then
+			addClassSpellLevelSlot(nodeSpellClass, 3);
+			addClassSpellLevelSlot(nodeSpellClass, 4);
+		elseif nCL == 12 then
+			addClassSpellLevelSlot(nodeSpellClass, 2);
+			addClassSpellLevelSlot(nodeSpellClass, 4);
+		elseif nCL == 13 then
+			addClassSpellLevelSlot(nodeSpellClass, 5);
+			nNewSpellLevel = 5;
+		elseif nCL == 14 then
+			addClassSpellLevelSlot(nodeSpellClass, 4);
+			addClassSpellLevelSlot(nodeSpellClass, 5);
+		elseif nCL == 15 then
+			addClassSpellLevelSlot(nodeSpellClass, 3);
+			addClassSpellLevelSlot(nodeSpellClass, 5);
+		elseif nCL == 16 then
+			addClassSpellLevelSlot(nodeSpellClass, 6);
+			nNewSpellLevel = 6;
+		elseif nCL == 17 then
+			addClassSpellLevelSlot(nodeSpellClass, 5);
+			addClassSpellLevelSlot(nodeSpellClass, 6);
+		elseif nCL == 18 then
+			addClassSpellLevelSlot(nodeSpellClass, 4);
+			addClassSpellLevelSlot(nodeSpellClass, 6);
+		elseif nCL == 19 then
+			addClassSpellLevelSlot(nodeSpellClass, 5);
+			addClassSpellLevelSlot(nodeSpellClass, 6);
+		elseif nCL == 20 then
+			addClassSpellLevelSlot(nodeSpellClass, 6);
 		end
 	elseif sClassName == CLASS_FEATURE_DOMAIN_SPELLS then
 		if nCL % 2 == 1 then

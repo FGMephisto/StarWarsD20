@@ -1,7 +1,6 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars 3.5E
 --
 
 function onInit()
@@ -32,27 +31,29 @@ function getWoundPercent(v)
 	local nHP = 0;
 	local nTemp = 0;
 	local nWounds = 0;
+	local nNonlethal = 0;
 
 	local nodeCT = ActorManager.getCTNode(rActor);
-
 	if nodeCT then
 		nHP = math.max(DB.getValue(nodeCT, "hp", 0), 0);
 		nTemp = math.max(DB.getValue(nodeCT, "hptemp", 0), 0);
 		nWounds = math.max(DB.getValue(nodeCT, "wounds", 0), 0);
+		nNonlethal = math.max(DB.getValue(nodeCT, "nonlethal", 0), 0);
 	elseif ActorManager.isPC(rActor) then
 		local nodePC = ActorManager.getCreatureNode(rActor);
 		if nodePC then
 			nHP = math.max(DB.getValue(nodePC, "hp.total", 0), 0);
 			nTemp = math.max(DB.getValue(nodePC, "hp.temporary", 0), 0);
 			nWounds = math.max(DB.getValue(nodePC, "hp.wounds", 0), 0);
+			nNonlethal = math.max(DB.getValue(nodePC, "hp.nonlethal", 0), 0);
 		end
 	end
-
+	
 	local nPercentLethal = 0;
-	local nPercentNonLethal = 0;
-
+	local nPercentNonlethal = 0;
 	if nHP > 0 then
 		nPercentLethal = nWounds / nHP;
+		nPercentNonlethal = (nWounds + nNonlethal) / (nHP + nTemp);
 	end
 
 	local sStatus;
@@ -60,70 +61,59 @@ function getWoundPercent(v)
 	if ActorCommonManager.isCreatureTypeDnD(rActor, "construct,undead,swarm") then
 		bDiesAtZero = true;
 	end
-
 	if bDiesAtZero and nPercentLethal >= 1 then
 		sStatus = ActorHealthManager.STATUS_DEAD;
 	elseif nPercentLethal > 1 then
 		local nDying = GameSystem.getDeathThreshold(rActor);
+		
 		if (nWounds - nHP) < nDying then
 			sStatus = ActorHealthManager.STATUS_DYING;
 		else
 			sStatus = ActorHealthManager.STATUS_DEAD;
 		end
+	elseif nPercentNonlethal > 1 then
+		sStatus = ActorHealthManager.STATUS_UNCONSCIOUS;
 	elseif nPercentLethal == 1 then
 		sStatus = ActorHealthManager.STATUS_DISABLED;
+	elseif nPercentNonlethal == 1 then
+		sStatus = ActorHealthManager.STATUS_STAGGERED;
 	else
-		sStatus = ActorHealthManager.getDefaultStatusFromWoundPercent(nPercentLethal);
+		sStatus = ActorHealthManager.getDefaultStatusFromWoundPercent(nPercentNonlethal);
 	end
-
-	return nPercentLethal, sStatus, nPercentLethal;
+	
+	return nPercentNonlethal, sStatus, nPercentLethal;
 end
 
 function getPCSheetWoundColor(nodePC)
 	local nHP = 0;
+	local nTemp = 0;
 	local nWounds = 0;
-
+	local nNonlethal = 0;
 	if nodePC then
 		nHP = math.max(DB.getValue(nodePC, "hp.total", 0), 0);
+		nTemp = math.max(DB.getValue(nodePC, "hp.temporary", 0), 0);
 		nWounds = math.max(DB.getValue(nodePC, "hp.wounds", 0), 0);
+		nNonlethal = math.max(DB.getValue(nodePC, "hp.nonlethal", 0), 0);
 	end
 
 	local nPercentLethal = 0;
-
+	local nPercentNonlethal = 0;
 	if nHP > 0 then
 		nPercentLethal = nWounds / nHP;
+		nPercentNonlethal = (nWounds + nNonlethal) / (nHP + nTemp);
 	end
 	
 	if nPercentLethal > 1 then
 		return ColorManager.COLOR_HEALTH_DYING_OR_DEAD;
+	elseif nPercentNonlethal > 1 then
+		return ColorManager.COLOR_HEALTH_UNCONSCIOUS;
 	elseif nPercentLethal == 1 then
 		return ColorManager.COLOR_HEALTH_SIMPLE_BLOODIED;
-	end
-
-	local sColor = ColorManager.getHealthColor(nPercentLethal, false);
-	return sColor;
-end
-
-function getPCSheetVitalityColor(nodePC)
-	local nHP = 0;
-	local nTemp = 0;
-
-	if nodePC then
-		nHP = math.max(DB.getValue(nodePC, "hp.total", 0), 0);
-		nTemp = math.max(DB.getValue(nodePC, "hp.temporary", 0), 0);
-	end
-
-	local nPercentLethal = 0;
-
-	if nHP > 0 then
-		nPercentLethal = 1 - (nTemp / nHP);
-	end
-	
-	if nPercentLethal == 0 then
+	elseif nPercentNonlethal == 1 then
 		return ColorManager.COLOR_HEALTH_SIMPLE_BLOODIED;
 	end
 
-	local sColor = ColorManager.getHealthColor(nPercentLethal, false);
+	local sColor = ColorManager.getHealthColor(nPercentNonlethal, false);
 	return sColor;
 end
 

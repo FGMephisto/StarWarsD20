@@ -29,12 +29,7 @@ function updateWidgets()
 	local wt = window[icons[1].container[1]];
 	local c = getValue();
 	
-	local w, h = getSize();
-	
 	for i = 1, c do
-		local widget = wt.addBitmapWidget(icons[1].icon[1]);
-		widget.setSize(10, 10);
-		
 		local ox = offsetx;
 		if (i % 2) == 1 then
 			ox = ox - 8;
@@ -47,9 +42,8 @@ function updateWidgets()
 		else
 			oy = oy + 5;
 		end
-		widget.setPosition("center", ox, oy);
 		
-		widgets[i] = widget;
+		widgets[i] = wt.addBitmapWidget({ icon = icons[1].icon[1], x = ox, y = oy, w = 10, h = 10 });
 	end
 end
 

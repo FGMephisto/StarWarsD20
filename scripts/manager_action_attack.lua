@@ -1,7 +1,6 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars 3.5E
 --
 
 OOB_MSGTYPE_APPLYATK = "applyatk";
@@ -191,154 +190,44 @@ function modAttack(rSource, rTarget, rRoll)
 	local aAddDesc = {};
 	local aAddDice = {};
 	local nAddMod = 0;
-
+	
 	-- Check for opportunity attack
 	local bOpportunity = ModifierManager.getKey("ATT_OPP") or Input.isShiftPressed();
-
-	-- Check attack modifiers
-	local bMultifire = ModifierManager.getKey("ATT_MFI");
-	local bAutofire = ModifierManager.getKey("ATT_AFI");
-	local bMultiShot = ModifierManager.getKey("ATT_MSO");
-	local bRapidShot = ModifierManager.getKey("ATT_RSO");
-	local bPointBlank = ModifierManager.getKey("ATT_PBL");
-	local bFireintoMelee = ModifierManager.getKey("ATT_ITM");
-	local bFlanking = ModifierManager.getKey("ATT_FLA");
-	local bHigherGround = ModifierManager.getKey("ATT_HGR");	
-	local bAProne = ModifierManager.getKey("ATT_PRO");
-	local bAConceal = ModifierManager.getKey("ATT_CONC");	
 
 	-- Check defense modifiers
 	local bTouch = ModifierManager.getKey("ATT_TCH");
 	local bFlatFooted = ModifierManager.getKey("ATT_FF");
-
-	local bMinimumCover = ModifierManager.getKey("DEF_MCOVER");
-	local bPartialCover = ModifierManager.getKey("DEF_PCOVER");
 	local bCover = ModifierManager.getKey("DEF_COVER");
+	local bPartialCover = ModifierManager.getKey("DEF_PCOVER");
 	local bSuperiorCover = ModifierManager.getKey("DEF_SCOVER");
-
-	local bTotalDefense = ModifierManager.getKey("DEF_TDEF");
-	local bDodging = ModifierManager.getKey("DEF_DOD");
-	local bKneeling = ModifierManager.getKey("DEF_KNE");
-	local bProne = ModifierManager.getKey("DEF_PRO");
-	local bRunning = ModifierManager.getKey("DEF_RUN");
-	local bPinned = ModifierManager.getKey("DEF_PIN");
-
-	local bMinimumConceal = ModifierManager.getKey("DEF_MCONC");
-	local bPartialConceal = ModifierManager.getKey("DEF_PCONC");
 	local bConceal = ModifierManager.getKey("DEF_CONC");
-	local bSuperiosConceal = ModifierManager.getKey("DEF_SCONC");
 	local bTotalConceal = ModifierManager.getKey("DEF_TCONC");
-
-	-- Add attack modifiers and adjust attack roll string
+	
 	if bOpportunity then
 		table.insert(aAddDesc, "[OPPORTUNITY]");
 	end
-
-	if bMultifire then
-		table.insert(aAddDesc, "[Multifire]");
-		nAddMod = nAddMod - 4;
-	end
-
-	if bAutofire then
-		table.insert(aAddDesc, "[Autofire]");
-		nAddMod = nAddMod - 6;
-	end
-	
-	if bMultiShot then
-		table.insert(aAddDesc, "[MultiShot]");
-		nAddMod = nAddMod + 2;
-	end
-
-	if bRapidShot then
-		table.insert(aAddDesc, "[Rapid Shot]");
-		nAddMod = nAddMod - 2;
-	end
-
-	if bPointBlank then
-		table.insert(aAddDesc, "[Point Blank]");
-		nAddMod = nAddMod + 1;
-	end
-
-	if bFireintoMelee then
-		table.insert(aAddDesc, "[Fire into Melee]");
-		nAddMod = nAddMod - 4;
-	end
-
-	if bFlanking then
-		table.insert(aAddDesc, "[Flanking]");
-		nAddMod = nAddMod + 2;
-	end
-	
-	if bHigherGround then
-		table.insert(aAddDesc, "[Higher Ground]");
-		nAddMod = nAddMod + 1;
-	end	
-
-	if bAProne then
-		table.insert(aAddDesc, "[Attacker prone]");
-		nAddMod = nAddMod - 4;
-	end
-	
-	if bAConceal then
-		table.insert(aAddDesc, "[Attacker Concealed]");
-		nAddMod = nAddMod + 2;
-	end	
-
-	-- Add defense modifiers and adjust attack roll string
 	if bTouch then
 		if not string.match(rRoll.sDesc, "%[TOUCH%]") then
 			table.insert(aAddDesc, "[TOUCH]");
 		end
 	end
-	
 	if bFlatFooted then
 		table.insert(aAddDesc, "[FF]");
 	end
-
 	if bSuperiorCover then
-		table.insert(aAddDesc, "[COVER -10]");
-		nAddMod = nAddMod - 10;
+		table.insert(aAddDesc, "[COVER -8]");
 	elseif bCover then
-		table.insert(aAddDesc, "[COVER -7]");
-		nAddMod = nAddMod - 7;		
-	elseif bPartialCover then
 		table.insert(aAddDesc, "[COVER -4]");
-		nAddMod = nAddMod - 4;
-	elseif bMinimumCover then
-		nAddMod = nAddMod - 2;
-		table.insert(aAddDesc, "[COVER -2]");		
+	elseif bPartialCover then
+		table.insert(aAddDesc, "[COVER -2]");
 	end
-
-	if bTotalDefense then
-		table.insert(aAddDesc, "[Total Defense]");
-		nAddMod = nAddMod - 4;
+	if bConceal then
+		table.insert(aAddDesc, "[CONCEAL]");
 	end
-
-	if bDodging then
-		table.insert(aAddDesc, "[Dodging]");
-		nAddMod = nAddMod - 1;
+	if bTotalConceal then
+		table.insert(aAddDesc, "[TOTAL CONC]");
 	end
 	
-	if bKneeling then
-		table.insert(aAddDesc, "[Defender kneeling]");
-		nAddMod = nAddMod + 2;
-	end
-
-	if bProne then
-		table.insert(aAddDesc, "[Defender prone]");
-		nAddMod = nAddMod + 4;
-	end
-	
-	if bRunning then
-		table.insert(aAddDesc, "[Defender running]");
-		nAddMod = nAddMod - 2;
-	end
-
-	if bPinned then
-		table.insert(aAddDesc, "[Defender pinned]");
-		nAddMod = nAddMod + 4;
-	end
-
 	if rSource then
 		-- Determine attack type
 		local sAttackType = nil;
@@ -367,7 +256,6 @@ function modAttack(rSource, rTarget, rRoll)
 
 		-- Build attack filter
 		local aAttackFilter = {};
-		
 		if sAttackType == "M" then
 			table.insert(aAttackFilter, "melee");
 		elseif sAttackType == "R" then
@@ -376,17 +264,14 @@ function modAttack(rSource, rTarget, rRoll)
 		if bOpportunity then
 			table.insert(aAttackFilter, "opportunity");
 		end
-
+		
 		-- Get attack effect modifiers
 		local bEffects = false;
 		local nEffectCount;
-
 		aAddDice, nAddMod, nEffectCount = EffectManager35E.getEffectsBonus(rSource, {"ATK"}, false, aAttackFilter, rTarget);
-
 		if (nEffectCount > 0) then
 			bEffects = true;
 		end
-
 		if rRoll.sType == "grapple" then
 			local aPFDice, nPFMod, nPFCount = EffectManager35E.getEffectsBonus(rSource, {"CMB"}, false, aAttackFilter, rTarget);
 			if nPFCount > 0 then
@@ -397,7 +282,7 @@ function modAttack(rSource, rTarget, rRoll)
 				nAddMod = nAddMod + nPFMod;
 			end
 		end
-
+		
 		-- Get condition modifiers
 		if EffectManager35E.hasEffect(rSource, "Invisible") then
 			bEffects = true;
@@ -407,48 +292,40 @@ function modAttack(rSource, rTarget, rRoll)
 			bEffects = true;
 			table.insert(aAddDesc, "[CA]");
 		end
-
 		if EffectManager35E.hasEffect(rSource, "Blinded") then
 			bEffects = true;
 			table.insert(aAddDesc, "[BLINDED]");
 		end
-
 		if not DataCommon.isPFRPG() then
 			if EffectManager35E.hasEffect(rSource, "Incorporeal") and sAttackType == "M" and not string.match(string.lower(rRoll.sDesc), "incorporeal touch") then
 				bEffects = true;
 				table.insert(aAddDesc, "[INCORPOREAL]");
 			end
 		end
-
 		if EffectManager35E.hasEffectCondition(rSource, "Dazzled") then
 			bEffects = true;
 			nAddMod = nAddMod - 1;
 		end
-
 		if EffectManager35E.hasEffectCondition(rSource, "Slowed") then
 			bEffects = true;
 			nAddMod = nAddMod - 1;
 		end
-
 		if EffectManager35E.hasEffectCondition(rSource, "Entangled") then
 			bEffects = true;
 			nAddMod = nAddMod - 2;
 		end
-
 		if rRoll.sType == "attack" and 
 				(EffectManager35E.hasEffectCondition(rSource, "Pinned") or
 				EffectManager35E.hasEffectCondition(rSource, "Grappled")) then
 			bEffects = true;
 			nAddMod = nAddMod - 2;
 		end
-
 		if EffectManager35E.hasEffectCondition(rSource, "Frightened") or 
 				EffectManager35E.hasEffectCondition(rSource, "Panicked") or
 				EffectManager35E.hasEffectCondition(rSource, "Shaken") then
 			bEffects = true;
 			nAddMod = nAddMod - 2;
 		end
-
 		if EffectManager35E.hasEffectCondition(rSource, "Sickened") then
 			bEffects = true;
 			nAddMod = nAddMod - 2;
@@ -465,7 +342,7 @@ function modAttack(rSource, rTarget, rRoll)
 				nAddMod = nAddMod - 4;
 			end
 		end
-
+		
 		-- Get ability modifiers
 		local nBonusStat, nBonusEffects = ActorManager35E.getAbilityEffectsBonus(rSource, sActionStat);
 		if nBonusEffects > 0 then
@@ -492,11 +369,18 @@ function modAttack(rSource, rTarget, rRoll)
 			table.insert(aAddDesc, sEffects);
 		end
 	end
-
+	
+	if bSuperiorCover then
+		nAddMod = nAddMod - 8;
+	elseif bCover then
+		nAddMod = nAddMod - 4;
+	elseif bPartialCover then
+		nAddMod = nAddMod - 2;
+	end
+	
 	if #aAddDesc > 0 then
 		rRoll.sDesc = rRoll.sDesc .. " " .. table.concat(aAddDesc, " ");
 	end
-
 	for _,vDie in ipairs(aAddDice) do
 		if vDie:sub(1,1) == "-" then
 			table.insert(rRoll.aDice, "-p" .. vDie:sub(3));
@@ -504,10 +388,8 @@ function modAttack(rSource, rTarget, rRoll)
 			table.insert(rRoll.aDice, "p" .. vDie:sub(2));
 		end
 	end
-
 	rRoll.nMod = rRoll.nMod + nAddMod;
 end
-
 
 function onAttack(rSource, rTarget, rRoll)
 	local rMessage = ActionsManager.createActionMessage(rSource, rRoll);
@@ -637,7 +519,6 @@ end
 function onPreAttackResolve(rSource, rTarget, rRoll, rMessage)
 	-- Do nothing; location to override
 end
-
 function onAttackResolve(rSource, rTarget, rRoll, rMessage)
 	Comm.deliverChatMessage(rMessage);
 
@@ -702,7 +583,6 @@ function onAttackResolve(rSource, rTarget, rRoll, rMessage)
 		end
 	end
 end
-
 function onPostAttackResolve(rSource, rTarget, rRoll, rMessage)
 	-- HANDLE FUMBLE/CRIT HOUSE RULES
 	local sOptionHRFC = OptionsManager.getOption("HRFC");

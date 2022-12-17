@@ -1,7 +1,6 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars 3.5E
 --
 
 local aFieldMap = {};
@@ -18,9 +17,7 @@ function linkPCClasses(nodeClass)
 	if not nodeClass then
 		return;
 	end
-
 	local nodePS = PartyManager.mapChartoPS(nodeClass.getParent());
-
 	if not nodePS then
 		return;
 	end
@@ -32,9 +29,7 @@ function linkPCLanguages(nodeLanguages)
 	if not nodeLanguages then
 		return;
 	end
-
 	local nodePS = PartyManager.mapChartoPS(nodeLanguages.getParent());
-
 	if not nodePS then
 		return;
 	end
@@ -58,13 +53,10 @@ function linkPCSkill(nodeSkill, nodePS, sPSField)
 end
 
 function linkPCSkills(nodeSkills)
-
 	if not nodeSkills then
 		return;
 	end
-
 	local nodePS = PartyManager.mapChartoPS(nodeSkills.getParent());
-
 	if not nodePS then
 		return;
 	end
@@ -78,37 +70,42 @@ function linkPCSkills(nodeSkills)
 			linkPCSkill(v, nodePS, "listen");
 		elseif sLabel == "search" then
 			linkPCSkill(v, nodePS, "search");
+		elseif sLabel == "perception" then
+			linkPCSkill(v, nodePS, "perception");
+		elseif sLabel == "sense motive" then
+			linkPCSkill(v, nodePS, "sensemotive");
+		
 		elseif sLabel == "knowledge" then
 			local sSubLabel = DB.getValue(v, "sublabel", ""):lower();
-
-			if sSubLabel == "alien species" then
-				linkPCSkill(v, nodePS, "alienapecies");
-			elseif sSubLabel == "history" then
-				linkPCSkill(v, nodePS, "history");
-			elseif sSubLabel == "jedi lore" then
-				linkPCSkill(v, nodePS, "jedilore");
-			elseif sSubLabel == "streetwise" then
-				linkPCSkill(v, nodePS, "streetwise");
-			elseif sSubLabel == "tactics" then
-				linkPCSkill(v, nodePS, "tactics");
-			elseif sSubLabel == "world lore" then
-				linkPCSkill(v, nodePS, "worldlore");
+			
+			if sSubLabel == "arcana" then
+				linkPCSkill(v, nodePS, "arcana");
+			elseif sSubLabel == "dungeoneering" then
+				linkPCSkill(v, nodePS, "dungeoneering");
+			elseif sSubLabel == "local" then
+				linkPCSkill(v, nodePS, "klocal");
+			elseif sSubLabel == "nature" then
+				linkPCSkill(v, nodePS, "nature");
+			elseif sSubLabel == "planes" or sSubLabel == "the planes" then
+				linkPCSkill(v, nodePS, "planes");
+			elseif sSubLabel == "religion" then
+				linkPCSkill(v, nodePS, "religion");
 			end
 		elseif sLabel:sub(1,9) == "knowledge" then
 			local sSubLabel = sLabel:sub(10):match("%w[%w%s]*%w");
 
-			if sSubLabel == "alien species" then
-				linkPCSkill(v, nodePS, "alienapecies");
-			elseif sSubLabel == "history" then
-				linkPCSkill(v, nodePS, "history");
-			elseif sSubLabel == "jedi lore" then
-				linkPCSkill(v, nodePS, "jedilore");
-			elseif sSubLabel == "streetwise" then
-				linkPCSkill(v, nodePS, "streetwise");
-			elseif sSubLabel == "tactics" then
-				linkPCSkill(v, nodePS, "tactics");
-			elseif sSubLabel == "world lore" then
-				linkPCSkill(v, nodePS, "worldlore");
+			if sSubLabel == "arcana" then
+				linkPCSkill(v, nodePS, "arcana");
+			elseif sSubLabel == "dungeoneering" then
+				linkPCSkill(v, nodePS, "dungeoneering");
+			elseif sSubLabel == "local" then
+				linkPCSkill(v, nodePS, "klocal");
+			elseif sSubLabel == "nature" then
+				linkPCSkill(v, nodePS, "nature");
+			elseif sSubLabel == "planes" or sSubLabel == "the planes" then
+				linkPCSkill(v, nodePS, "planes");
+			elseif sSubLabel == "religion" then
+				linkPCSkill(v, nodePS, "religion");
 			end
 		
 		elseif sLabel == "bluff" then
@@ -119,6 +116,9 @@ function linkPCSkills(nodeSkills)
 			linkPCSkill(v, nodePS, "gatherinfo");
 		elseif sLabel == "intimidate" then
 			linkPCSkill(v, nodePS, "intimidate");
+		
+		elseif sLabel == "acrobatics" then
+			linkPCSkill(v, nodePS, "acrobatics");
 		elseif sLabel == "climb" then
 			linkPCSkill(v, nodePS, "climb");
 		elseif sLabel == "heal" then
@@ -132,19 +132,18 @@ function linkPCSkills(nodeSkills)
 			linkPCSkill(v, nodePS, "hide");
 		elseif sLabel == "move silently" then
 			linkPCSkill(v, nodePS, "movesilent");
+		elseif sLabel == "stealth" then
+			linkPCSkill(v, nodePS, "stealth");
 		end
 	end
 end
 
 function linkPCFields(nodePS)
 	local sClass, sRecord = DB.getValue(nodePS, "link", "", "");
-
 	if sRecord == "" then
 		return;
 	end
-
 	local nodeChar = DB.findNode(sRecord);
-
 	if not nodeChar then
 		return;
 	end
@@ -162,6 +161,7 @@ function linkPCFields(nodePS)
 	PartyManager.linkRecordField(nodeChar, nodePS, "hp.total", "number", "hptotal");
 	PartyManager.linkRecordField(nodeChar, nodePS, "hp.temporary", "number", "hptemp");
 	PartyManager.linkRecordField(nodeChar, nodePS, "hp.wounds", "number", "wounds");
+	PartyManager.linkRecordField(nodeChar, nodePS, "hp.nonlethal", "number", "nonlethal");
 	
 	PartyManager.linkRecordField(nodeChar, nodePS, "abilities.strength.score", "number", "strength");
 	PartyManager.linkRecordField(nodeChar, nodePS, "abilities.constitution.score", "number", "constitution");
@@ -180,6 +180,7 @@ function linkPCFields(nodePS)
 	PartyManager.linkRecordField(nodeChar, nodePS, "ac.totals.general", "number", "ac");
 	PartyManager.linkRecordField(nodeChar, nodePS, "ac.totals.flatfooted", "number", "flatfootedac");
 	PartyManager.linkRecordField(nodeChar, nodePS, "ac.totals.touch", "number", "touchac");
+	PartyManager.linkRecordField(nodeChar, nodePS, "ac.totals.cmd", "number", "cmd");
 	
 	PartyManager.linkRecordField(nodeChar, nodePS, "saves.fortitude.total", "number", "fortitude");
 	PartyManager.linkRecordField(nodeChar, nodePS, "saves.reflex.total", "number", "reflex");
@@ -221,7 +222,6 @@ end
 
 function awardQuestsToParty(nodeEntry)
 	local nXP = 0;
-
 	if nodeEntry then
 		if DB.getValue(nodeEntry, "xpawarded", 0) == 0 then
 			nXP = DB.getValue(nodeEntry, "xp", 0);
@@ -235,7 +235,6 @@ function awardQuestsToParty(nodeEntry)
 			end
 		end
 	end
-
 	if nXP ~= 0 then
 		awardXP(nXP);
 	end
@@ -243,7 +242,6 @@ end
 
 function awardEncountersToParty(nodeEntry)
 	local nXP = 0;
-
 	if nodeEntry then
 		if DB.getValue(nodeEntry, "xpawarded", 0) == 0 then
 			nXP = DB.getValue(nodeEntry, "exp", 0);
@@ -257,7 +255,6 @@ function awardEncountersToParty(nodeEntry)
 			end
 		end
 	end
-
 	if nXP ~= 0 then
 		awardXP(nXP);
 	end
@@ -266,7 +263,6 @@ end
 function awardXP(nXP) 
 	-- Determine members of party
 	local aParty = {};
-
 	for _,v in pairs(PartyManager.getPartyNodes()) do
 		local sClass, sRecord = DB.getValue(v, "link");
 		if sClass == "charsheet" and sRecord then
@@ -280,13 +276,11 @@ function awardXP(nXP)
 
 	-- Determine split
 	local nAverageSplit;
-
 	if nXP >= #aParty then
 		nAverageSplit = math.floor((nXP / #aParty) + 0.5);
 	else
 		nAverageSplit = 0;
 	end
-
 	local nFinalSplit = math.max((nXP - ((#aParty - 1) * nAverageSplit)), 0);
 	
 	-- Award XP

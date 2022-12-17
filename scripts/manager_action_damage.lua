@@ -1,7 +1,6 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars 3.5E
 --
 
 -- NOTE: Effect damage dice are not multiplied on critical, though numerical modifiers are multiplied
@@ -1315,18 +1314,17 @@ function applyDamage(rSource, rTarget, bSecret, sRollType, sDamage, nTotal)
 	-- Healing
 	if rDamageOutput.sType == "heal" or rDamageOutput.sType == "fheal" then
 		-- CHECK COST
-		if nWounds <= 0 then
+		if nWounds <= 0 and nNonlethal <= 0 then
 			table.insert(rDamageOutput.tNotifications, "[NOT WOUNDED]");
 		else
 			local nHealAmount = rDamageOutput.nVal;
 			
 			-- CALCULATE HEAL AMOUNTS
-			-- ToDO: Needs to work with Wounds and Temp Health
 			local nNonlethalHealAmount = math.min(nHealAmount, nNonlethal);
-			-- nNonlethal = nNonlethal - nNonlethalHealAmount;
-			-- if (not bPFMode) and (rDamageOutput.sType == "fheal") then
-				-- nHealAmount = nHealAmount - nNonlethalHealAmount;
-			-- end
+			nNonlethal = nNonlethal - nNonlethalHealAmount;
+			if (not bPFMode) and (rDamageOutput.sType == "fheal") then
+				nHealAmount = nHealAmount - nNonlethalHealAmount;
+			end
 
 			local nOriginalWounds = nWounds;
 			
@@ -1334,14 +1332,14 @@ function applyDamage(rSource, rTarget, bSecret, sRollType, sDamage, nTotal)
 			nWounds = nWounds - nWoundHealAmount;
 			
 			-- SET THE ACTUAL HEAL AMOUNT FOR DISPLAY
-			rDamageOutput.nVal = nWoundHealAmount;
+			rDamageOutput.nVal = nNonlethalHealAmount + nWoundHealAmount;
 			if nWoundHealAmount > 0 then
 				rDamageOutput.sVal = "" .. nWoundHealAmount;
-				-- if nNonlethalHealAmount > 0 then
-					-- rDamageOutput.sVal = rDamageOutput.sVal .. " (+" .. nNonlethalHealAmount .. " NL)";
-				-- end
-			-- elseif nNonlethalHealAmount > 0 then
-				-- rDamageOutput.sVal = "" .. nNonlethalHealAmount .. " NL";
+				if nNonlethalHealAmount > 0 then
+					rDamageOutput.sVal = rDamageOutput.sVal .. " (+" .. nNonlethalHealAmount .. " NL)";
+				end
+			elseif nNonlethalHealAmount > 0 then
+				rDamageOutput.sVal = "" .. nNonlethalHealAmount .. " NL";
 			else
 				rDamageOutput.sVal = "0";
 			end
@@ -1518,11 +1516,11 @@ function applyDamage(rSource, rTarget, bSecret, sRollType, sDamage, nTotal)
 	if sTargetNodeType == "pc" then
 		DB.setValue(nodeTarget, "hp.temporary", "number", nTempHP);
 		DB.setValue(nodeTarget, "hp.wounds", "number", nWounds);
-		-- DB.setValue(nodeTarget, "hp.nonlethal", "number", nNonlethal);
+		DB.setValue(nodeTarget, "hp.nonlethal", "number", nNonlethal);
 	else
 		DB.setValue(nodeTarget, "hptemp", "number", nTempHP);
 		DB.setValue(nodeTarget, "wounds", "number", nWounds);
-		-- DB.setValue(nodeTarget, "nonlethal", "number", nNonlethal);
+		DB.setValue(nodeTarget, "nonlethal", "number", nNonlethal);
 	end
 
 	-- Check for status change

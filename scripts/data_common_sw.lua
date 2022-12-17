@@ -58,6 +58,8 @@ healthstatuswounded = "wounded";
 alignment_lawchaos = {
 	["lawful"] = 1,
 	["chaotic"] = 3,
+	["l"] = 1,
+	["c"] = 3,
 	["lg"] = 1,
 	["ln"] = 1,
 	["le"] = 1,
@@ -68,6 +70,8 @@ alignment_lawchaos = {
 alignment_goodevil = {
 	["good"] = 1,
 	["evil"] = 3,
+	["g"] = 1,
+	["e"] = 3,
 	["lg"] = 1,
 	["le"] = 3,
 	["ng"] = 1,
@@ -104,6 +108,8 @@ creaturedefaulttype = "humanoid";
 creaturehalftype = "half-";
 creaturehalftypesubrace = "human";
 creaturetype = {
+	-- "magical beast",
+	-- "monstrous humanoid",
 	-- "aberration",
 	"animal",
 	-- "construct",
@@ -111,8 +117,6 @@ creaturetype = {
 	-- "elemental",
 	-- "fey",
 	-- "giant",
-	-- "humanoid",
-	-- "magical beast",
 	-- "monstrous humanoid",
 	-- "ooze",
 	-- "outsider",
@@ -121,7 +125,8 @@ creaturetype = {
 	-- "vermin",
 };
 creaturesubtype = {
-	"air", -- Monster subtypes
+	-- "living construct", -- Monster subtypes
+	"air",
 	-- "angel",
 	-- "aquatic",
 	-- "archon",
@@ -137,7 +142,6 @@ creaturesubtype = {
 	-- "good",
 	-- "incorporeal",
 	-- "lawful",
-	-- "living construct",
 	-- "native",
 	-- "psionic",
 	-- "shapechanger",
@@ -206,6 +210,8 @@ bonuscomps = {
 	"ABIL",
 	"AC",
 	"ATK",
+	"CMB",
+	"CMD",
 	"DMG",
 	"DMGS",
 	"HEAL",
@@ -285,8 +291,10 @@ targetableeffectcomps = {
 	"COVER",
 	"SCOVER",
 	"AC",
+	"CMD",
 	"SAVE",
 	"ATK",
+	"CMB",
 	"DMG",
 	"IMMUNE",
 	"VULN",
@@ -306,25 +314,32 @@ rangetypes = {
 
 -- Damage types supported
 energytypes = {
-	"acid",			-- ENERGY DAMAGE TYPES
+	"acid",  		-- ENERGY DAMAGE TYPES
 	"cold",
 	"electricity",
 	"energy",
 	"fire",
+	"ion",
 	"sonic",
 };
 
 immunetypes = {
-	"acid",			-- ENERGY DAMAGE TYPES
+	"acid",  		-- ENERGY DAMAGE TYPES
 	"cold",
 	"electricity",
 	"energy",
 	"fire",
+	"ion",
 	"sonic",
 	"critical",
 	"poison",		-- OTHER IMMUNITY TYPES
-	"fear",
-	"disease",	
+	-- "sleep",
+	-- "paralysis",
+	-- "petrification",
+	-- "charm",
+	-- "fear",
+	-- "disease",
+	-- "mind-affecting",
 };
 
 dmgtypes = {
@@ -333,13 +348,28 @@ dmgtypes = {
 	"electricity",
 	"fire",
 	"sonic",
+	"force",  		-- OTHER SPELL DAMAGE TYPES
+	"positive",
+	"negative",
 	"adamantine", 	-- WEAPON PROPERTY DAMAGE TYPES
 	"bludgeoning",
+	-- "cold iron",
 	"energy",
+	-- "epic",
+	"ion",
+	-- "magic",
 	"piercing",
+	-- "silver",
 	"slashing",
+	-- "chaotic",		-- ALIGNMENT DAMAGE TYPES
+	-- "evil",
+	-- "good",
+	-- "lawful",
+	-- "nonlethal",	-- SPECIAL DAMAGE TYPES
+	-- "spell",
 	"critical",
-	"precision",
+	-- "precision",
+
 };
 
 basicdmgtypes = {
@@ -347,14 +377,18 @@ basicdmgtypes = {
 	"cold",
 	"electricity",
 	"fire",
+	"ion",
 	"sonic",
 	"bludgeoning", 	-- WEAPON PROPERTY DAMAGE TYPES
 	"energy",
+	"ion",
 	"piercing",
 	"slashing",
 };
 
 specialdmgtypes = {
+	-- "nonlethal",
+	-- "spell",
 	"critical",
 	"precision",
 };

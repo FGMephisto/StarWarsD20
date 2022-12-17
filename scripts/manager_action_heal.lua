@@ -23,16 +23,21 @@ function getRoll(rActor, rAction)
 	-- Save the heal clauses in the roll structure
 	rRoll.clauses = rAction.clauses;
 	
+	-- Add heal type to roll data
+	if rAction.subtype == "temp" then
+		rRoll.healtype = "temp";
+	else
+		rRoll.healtype = "health";
+	end
+
 	-- Add the dice and modifiers
 	for _,vClause in pairs(rRoll.clauses) do
-		for _,vDie in ipairs(vClause.dice) do
-			table.insert(rRoll.aDice, vDie);
-		end
+		DiceRollManager.addHealDice(rRoll.aDice, vClause.dice, { healtype = rRoll.healtype });
 		rRoll.nMod = rRoll.nMod + vClause.modifier;
 	end
 
 	-- Encode the damage types
-	encodeHealClauses(rRoll);
+	ActionHeal.encodeHealClauses(rRoll);
 
 	-- Handle temporary hit points
 	if rAction.subtype == "temp" then
@@ -52,7 +57,7 @@ function getRoll(rActor, rAction)
 end
 
 function modHeal(rSource, rTarget, rRoll)
-	decodeHealClauses(rRoll);
+	ActionHeal.decodeHealClauses(rRoll);
 	CombatManager2.addRightClickDiceToClauses(rRoll);
 
 	-- Set up
@@ -103,14 +108,7 @@ function modHeal(rSource, rTarget, rRoll)
 		if (nEffectCount > 0) then
 			bEffects = true;
 			
-			for _,vDie in ipairs(aAddDice) do
-				table.insert(aEffectDice, vDie);
-				if vDie:sub(1,1) == "-" then
-					table.insert(rRoll.aDice, "-p" .. vDie:sub(3));
-				else
-					table.insert(rRoll.aDice, "p" .. vDie:sub(2));
-				end
-			end
+			DiceRollManager.addHealDice(rRoll.aDice, aAddDice, { iconcolor = "FF00FF", healtype = rRoll.healtype });
 			nEffectMod = nEffectMod + nAddMod;
 			rRoll.nMod = rRoll.nMod + nAddMod;
 		end
@@ -152,7 +150,7 @@ function onHeal(rSource, rTarget, rRoll)
 		nEmpowerMod = math.floor(nEmpowerTotal / 2);
 		
 		local sReplace = string.format(" [EMPOWER %+d]", nEmpowerMod);
-		rRoll.sDesc = string.gsub(rRoll.sDesc, " %[EMPOWER%]", sReplace);
+		rRoll.sDesc = rRoll.sDesc:gsub(" %[EMPOWER%]", sReplace);
 		rRoll.nMod = rRoll.nMod + nEmpowerMod;
 	end
 	
@@ -185,7 +183,7 @@ end
 function decodeHealClauses(rRoll)
 	-- Process each type clause in the damage description
 	rRoll.clauses = {};
-	for sDice, sStat, sStatMax, sStatMult in string.gmatch(rRoll.sDesc, "%[CLAUSE: %(([^)]*)%) %(([^)]*)%) %(([^)]*)%) %(([^)]*)%)]") do
+	for sDice, sStat, sStatMax, sStatMult in rRoll.sDesc:gmatch("%[CLAUSE: %(([^)]*)%) %(([^)]*)%) %(([^)]*)%) %(([^)]*)%)]") do
 		local rClause = {};
 		rClause.dice, rClause.modifier = StringManager.convertStringToDice(sDice);
 		rClause.stat = sStat;
@@ -196,6 +194,6 @@ function decodeHealClauses(rRoll)
 	end
 	
 	-- Remove heal clause information from roll description
-	rRoll.sDesc = string.gsub(rRoll.sDesc, " %[CLAUSE:[^]]*%]", "");
+	rRoll.sDesc = rRoll.sDesc:gsub(" %[CLAUSE:[^]]*%]", "");
 end
 

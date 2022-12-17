@@ -21,6 +21,7 @@ end
 -- Shown in Modifiers window
 -- NOTE: Set strings for "modifier_category_*" and "modifier_label_*"
 -- ===================================================================================================================
+-- ToDo: ATT_MULTISHOT / AUTO should come directly from the attack, not as a modifier
 _tModifierWindowPresets =
 {
 	{ 
@@ -71,6 +72,8 @@ _tModifierWindowPresets =
 		}
 	},
 };
+
+-- ToDo: ATT_MULTISHOT / AUTO should come directly from the attack, not as a modifier
 _tModifierExclusionSets =
 {
 	{ "DEF_PCOVER", "DEF_COVER", "DEF_SCOVER" },

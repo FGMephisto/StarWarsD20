@@ -1,22 +1,18 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars 3.5E
 --
 
 function onInit()
 	registerDiceRolls();
 	registerOptions();
-	DecalManager.setDefault("images/decals/stw_decal.jpg@Star Wars D20 Assets");
 end
 
--- ToDo: Review die connections to damage
 function registerDiceRolls()
 	DiceRollManager.registerDamageKey();
 	DiceRollManager.registerDamageTypeKey("acid", "life");
 	DiceRollManager.registerDamageTypeKey("cold", "frost");
-	DiceRollManager.registerDamageTypeKey("energy", "fire");
-	DiceRollManager.registerDamageTypeKey("ion", "lightning");
+	DiceRollManager.registerDamageTypeKey("electricity", "lightning");
 	DiceRollManager.registerDamageTypeKey("fire", "fire");
 	DiceRollManager.registerDamageTypeKey("force", "arcane");
 	DiceRollManager.registerDamageTypeKey("negative", "shadow");
@@ -26,6 +22,13 @@ function registerDiceRolls()
 	DiceRollManager.registerDamageTypeKey("bludgeoning");
 	DiceRollManager.registerDamageTypeKey("piercing");
 	DiceRollManager.registerDamageTypeKey("slashing");
+
+	DiceRollManager.registerDamageTypeKey("adamantine");
+	DiceRollManager.registerDamageTypeKey("cold iron");
+	DiceRollManager.registerDamageTypeKey("silver");
+
+	DiceRollManager.registerDamageTypeKey("epic");
+	DiceRollManager.registerDamageTypeKey("magic");
 
 	DiceRollManager.registerHealKey();
 	DiceRollManager.registerHealTypeKey("health", "light");
