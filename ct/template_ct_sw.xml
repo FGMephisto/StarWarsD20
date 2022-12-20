@@ -15,14 +15,14 @@
 			<script file="ct/scripts/ct_menu.lua" />
 		</buttoncontrol>
 	</template>
-
+	
 	<template name="label_ct_host_rounds">
 		<label_ct>
 			<bounds>-158,-43,50,20</bounds>
 			<static textres="ct_label_round" />
 		</label_ct>
 	</template>
-
+	
 	<template name="number_ct_host_rounds">
 		<simplenumber name="round">
 			<bounds>-108,-43,40,20</bounds>
@@ -51,7 +51,7 @@
 			</script>
 		</number_ct>
 	</template>
-
+	
 	<template name="number_ct_save">
 		<number_ct>
 			<displaysign />
@@ -72,7 +72,7 @@
 			</script>
 		</number_ct>
 	</template>
-
+	
 	<template name="number_ct_grapple">
 		<number_ct>
 			<displaysign />
@@ -112,7 +112,7 @@
 			<disabled />
 		</genericcontrol>
 	</template>
-
+	
 	<template name="string_clientct_status">
 		<simplestring name="status">
 			<anchored to="healthbase" position="over" />
@@ -122,7 +122,7 @@
 			<invisible />
 		</simplestring>
 	</template>
-
+	
 	<template name="number_clientct_wounds">
 		<number_ct_static name="wounds">
 			<anchored to="healthbase" width="30" height="20">
@@ -136,22 +136,33 @@
 			</script>
 		</number_ct_static>
 	</template>
-
-	<template name="number_clientct_hp">
-		<number_ct_static name="hp">
+	
+	<template name="number_clientct_hptemp">
+		<number_ct_static name="hptemp">
 			<anchored to="wounds" width="30" height="20">
 				<top />
 				<right anchor="left" offset="-10" />
 			</anchored>
+			<color>0000AA</color>
+			<script>
+				function onValueChanged()
+					window.onHealthChanged();
+				end
+			</script>
 		</number_ct_static>
 	</template>
-
-	<template name="number_clientct_hptemp">
-		<number_ct_static name="hptemp">
-			<anchored to="hp" width="30" height="20">
+	
+	<template name="number_clientct_hp">
+		<number_ct_static name="hp">
+			<anchored to="hptemp" width="30" height="20">
 				<top />
 				<right anchor="left" offset="-10" />
 			</anchored>
+			<script>
+				function onValueChanged()
+					window.onHealthChanged();
+				end
+			</script>
 		</number_ct_static>
 	</template>
 </root>

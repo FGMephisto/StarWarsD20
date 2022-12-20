@@ -55,7 +55,7 @@
 	<includefile source="ct/ct_host_sw.xml" />
 	<includefile source="ct/ct_host_entry_sw.xml" />
 	<includefile source="ct/ct_host_entry_section.xml" />
-	<includefile source="ct/template_ct.xml" />
+	<includefile source="ct/template_ct_sw.xml" />
 
 
 	<!-- Desktop -->
@@ -74,8 +74,8 @@
 	<includefile source="ps/template_ps.xml" />	
 
 	<!-- Reference -->
-	<includefile source="ref/ref_equipment_sw.xml" />
-	<includefile source="ref/ref_equipment_lists_sw.xml" />
+	<includefile source="ref/ref_equipment.xml" />
+	<includefile source="ref/ref_equipment_lists.xml" />
 
 	<!-- High-level scripts -->
 	<script name="DataCommon" file="scripts/data_common_sw.lua" />

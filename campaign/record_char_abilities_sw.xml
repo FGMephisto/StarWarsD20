@@ -9,10 +9,24 @@
 <root>
 	<!-- =================================================================================================================== -->
 	<!-- General Frame -->
-	<!-- =================================================================================================================== -->	
+	<!-- =================================================================================================================== -->
 	<windowclass name="charsheet_abilities">
+		<script>
+			function onDrop(x, y, draginfo)
+				return handleDrop(draginfo, nil);
+			end
+			
+			function handleDrop(draginfo, nodeTargetList)
+				if draginfo.isType("shortcut") then
+					local sClass, sRecord = draginfo.getShortcutData();
+					if StringManager.contains({"referencefeat", "referenceclassability", "referenceracialtrait"}, sClass) then
+						CharManager.addInfoDB(getDatabaseNode(), sClass, sRecord, nodeTargetList);
+						return true;
+					end
+				end
+			end
+		</script>
 		<sheetdata>
-
 			<frame_char name="charsheet_abilities_frame">
 				<bounds>15,0,-29,-2</bounds>
 			</frame_char>
@@ -41,7 +55,7 @@
 	</windowclass>
 
 	<!-- =================================================================================================================== -->
-	<!-- Windowclass Abilities -->
+	<!-- Windowclass Abilities - Modified in 5E style -->
 	<!-- =================================================================================================================== -->
 	<windowclass name="charsheet_abilities_contents">
 		<script>
@@ -200,21 +214,20 @@
 	<windowclass name="char_ability_feat">
 		<margins control="0,0,0,2" />
 		<sheetdata>
-
 			<genericcontrol name="rightanchor">
 				<anchored height="0" width="0">
 					<top />
 					<right />
 				</anchored>
 			</genericcontrol>
-
+			
 			<button_idelete name="idelete">
 				<anchored>
 					<top offset="2" />
 					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
 				</anchored>
 			</button_idelete>
-
+			
 			<linkcontrol name="shortcut">
 				<anchored width="20" height="20">
 					<top offset="2" />
@@ -224,7 +237,7 @@
 				<description field="name" />
 				<readonly />
 			</linkcontrol>
-
+			
 			<string_textlistitem name="name">
 				<anchored>
 					<top offset="2" />
@@ -233,7 +246,6 @@
 				</anchored>
 				<multilinespacing>20</multilinespacing>
 			</string_textlistitem>
-
 		</sheetdata>
 	</windowclass>
 
@@ -249,14 +261,14 @@
 					<right />
 				</anchored>
 			</genericcontrol>
-
+			
 			<button_idelete name="idelete">
 				<anchored>
 					<top offset="2" />
 					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
 				</anchored>
 			</button_idelete>
-
+			
 			<linkcontrol name="shortcut">
 				<anchored width="20" height="20">
 					<top offset="2" />
@@ -266,7 +278,7 @@
 				<description field="name" />
 				<readonly />
 			</linkcontrol>
-
+			
 			<string_textlistitem name="name">
 				<anchored>
 					<top offset="2" />
@@ -290,14 +302,14 @@
 					<right />
 				</anchored>
 			</genericcontrol>
-
+			
 			<button_idelete name="idelete">
 				<anchored>
 					<top offset="2" />
 					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
 				</anchored>
 			</button_idelete>
-
+			
 			<linkcontrol name="shortcut">
 				<anchored width="20" height="20">
 					<top offset="2" />
@@ -307,7 +319,7 @@
 				<description field="name" />
 				<readonly />
 			</linkcontrol>
-
+			
 			<string_textlistitem name="name">
 				<anchored>
 					<top offset="2" />
@@ -331,14 +343,14 @@
 					<right />
 				</anchored>
 			</genericcontrol>
-
+			
 			<button_idelete name="idelete">
 				<anchored>
 					<top offset="2" />
 					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
 				</anchored>
 			</button_idelete>
-
+			
 			<linkcontrol name="shortcut">
 				<anchored width="20" height="20">
 					<top offset="2" />
@@ -348,7 +360,7 @@
 				<description field="name" />
 				<readonly />
 			</linkcontrol>
-
+			
 			<string_textlistitem name="name">
 				<anchored>
 					<top offset="2" />
@@ -373,28 +385,18 @@
 		</sizelimits>
 		<minimize>minimized_reference</minimize>
 		<tooltip field="name" />
-		<script>
-			function onLockChanged()
-				if header.subwindow then
-					header.subwindow.update();
-				end
-				
-				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
-				text.setReadOnly(bReadOnly);
-			end
-		</script>
+		<script file="common/scripts/record_window.lua" />
 		<sheetdata>
 			<sub_record_header name="header">
 				<class>ref_proficiency_header</class>
 			</sub_record_header>
 
 			<frame_record_content />
-
+			
 			<ft_record name="text">
 				<anchored to="contentframe" position="over" />
-				<footer>footer_wide</footer>
 			</ft_record>
-
+			
 			<scrollbar>
 				<anchored to="text" />
 				<target>text</target>
@@ -410,17 +412,9 @@
 	<!-- =================================================================================================================== -->
 	<windowclass name="ref_proficiency_header">
 		<margins control="0,0,0,2" />
-		<script>
-			function onInit()
-				update();
-			end
-			function update()
-				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
-				name.setReadOnly(bReadOnly);
-			end
-		</script>
+		<script file="common/scripts/record_header_simple.lua" />
 		<sheetdata>
-			<link_record_header>
+			<link_record_header name="link">
 				<class>referenceproficiency</class>
 			</link_record_header>
 
@@ -432,7 +426,7 @@
 				<empty textres="library_recordtype_empty_proficiency" />
 			</string_record_name>
 
-			<label_recordtype name="recordtype">
+			<label_recordtype name="recordtype_label">
 				<static textres="record_label_proficiency" />
 			</label_recordtype>	
 		</sheetdata>

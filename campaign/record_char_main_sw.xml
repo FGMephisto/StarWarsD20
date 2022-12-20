@@ -296,12 +296,12 @@
 
 			<!-- =================================================================================================================== -->
 			<!-- ToDo: Calc from Class and onSourceUpdate -->
-			<basicnumber name="vp" source="hp.vp">
+			<number_dropadd name="vp" source="hp.vp">
 				<anchored to="hpframe" position="insidetopleft" offset="20,27" width="40" height="28" />
 				<frame name="fieldlight" offset="7,5,7,5" />
 				<description textres="vp" />
 				<!-- <readonly /> -->
-			</basicnumber>
+			</number_dropadd>
 			<label_fieldtop name="vp_label">
 				<anchored to="vp" />
 				<static textres="vp" />
@@ -321,6 +321,7 @@
 					end
 
 					function onValueChanged()
+						-- ToDo: make this on Helath Changed
 						window.onVitalityChanged();
 					end
 				</script>
@@ -328,32 +329,35 @@
 			<label_fieldtop name="hptemp_label">
 				<anchored to="hptemp" />
 				<static textres="char_label_hptemp" />
-				<tooltip textres="char_tooltip_hptemp" />
 			</label_fieldtop>
 
 			<!-- =================================================================================================================== -->
-			<basicnumber name="hp" source="hp.total">
+			<number_dropadd name="hp" source="hp.total">
 				<anchored to="vp" width="40" height="28" >
 					<top anchor="top" />
 					<left anchor="right" relation="relative" offset="15" />
 				</anchored>
-				<frame name="fieldlight" offset="7,5,7,5" />
+				<!-- <frame name="fieldlight" offset="7,5,7,5" /> -->
 				<description textres="char_tooltip_hp" />
 				<script>
-					function onInit()
-					-- ToDo onSOurceUpdate
-						setValue(DB.getValue(getDatabaseNode().getChild("..."), "abilities.constitution.score", 0))
-					end
-
 					function onValueChanged()
-						setValue(DB.getValue(getDatabaseNode().getChild("..."), "abilities.constitution.score", 0))
+						window.onHealthChanged();
 					end
 				</script>
-			</basicnumber>
+				<!-- <script> -->
+					<!-- function onInit() -->
+					<!-- ToDo onSOurceUpdate -->
+						<!-- setValue(DB.getValue(getDatabaseNode().getChild("..."), "abilities.constitution.score", 0)) -->
+					<!-- end -->
+
+					<!-- function onValueChanged() -->
+						<!-- setValue(DB.getValue(getDatabaseNode().getChild("..."), "abilities.constitution.score", 0)) -->
+					<!-- end -->
+				<!-- </script> -->
+			</number_dropadd>
 			<label_fieldtop name="hp_label">
 				<anchored to="hp" />
 				<static textres="hp" />
-				<tooltip textres="char_tooltip_hp" />
 			</label_fieldtop>
 
 			<!-- =================================================================================================================== -->
@@ -367,10 +371,11 @@
 			<label_fieldtop name="wounds_label">
 				<anchored to="wounds" />
 				<static textres="char_label_wounds" />
-				<tooltip textres="char_tooltip_wounds" />
 			</label_fieldtop>
 
 			<!-- =================================================================================================================== -->
+			<!-- ToDo: Check if we move this -->
+			<!-- <string_labeled name="dr" source="defenses.damagereduction"> -->
 			<string_labeled name="dr" source="ac.damagereduction">
 				<anchored to="hpframe" position="insidetop" offset="-20,63" height="20" />
 				<labelres>char_label_dr</labelres>

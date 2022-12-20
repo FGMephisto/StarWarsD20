@@ -59,13 +59,11 @@
 				<center />
 			</label>
 
-
 			<label name="intlabel">
 				<anchored to="conlabel" position="righthigh" offset="8,0" width="25" />
 				<static textres="int" />
 				<center />
 			</label>
-
 
 			<label name="wislabel">
 				<anchored to="intlabel" position="righthigh" offset="8,0" width="25" />
@@ -73,13 +71,11 @@
 				<center />
 			</label>
 
-
 			<label name="chalabel">
 				<anchored to="wislabel" position="righthigh" offset="8,0" width="25" />
 				<static textres="cha" />
 				<center />
 			</label>
-
 
 			<label name="aclabel">
 				<anchored to="abilitieslabel" position="righthigh" offset="15,0" width="25" />
@@ -87,13 +83,11 @@
 				<center />
 			</label>
 
-
 			<label name="ffaclabel">
 				<anchored to="aclabel" position="righthigh" offset="8,0" width="25" />
 				<static textres="acff" />
 				<center />
 			</label>
-
 
 			<label name="taclabel">
 				<anchored to="ffaclabel" position="righthigh" offset="8,0" width="25" />
@@ -101,13 +95,11 @@
 				<center />
 			</label>
 
-
 			<label name="fortitudelabel">
 				<anchored to="taclabel" position="righthigh" offset="15,0" width="25" />
 				<center />
 				<static textres="fort" />
 			</label>
-
 
 			<label name="reflexlabel">
 				<anchored to="fortitudelabel" position="righthigh" offset="8,0" width="25" />
@@ -115,13 +107,11 @@
 				<static textres="ref" />
 			</label>
 
-
 			<label name="willlabel">
 				<anchored to="reflexlabel" position="righthigh" offset="8,0" width="25" />
 				<center />
 				<static textres="will" />
 			</label>
-
 
 			<label name="drlabel">
 				<anchored to="aclabel" position="belowleft" offset="0,-3">
@@ -279,7 +269,6 @@
 		<margins control="0,0,0,10" />
 		<frame>partysheetentry</frame>
 		<sheetdata>
-			<htoken name="token" />
 			<hlink name="link">
 				<script>
 					function onValueChanged()
@@ -292,57 +281,42 @@
 			<hnx name="hptemp" />
 			<hnx name="wounds" />
 
-			<portrait_base>
+			<portrait_ps_base>
 				<bounds>10,10,40,40</bounds>
-			</portrait_base>
-			<portrait name="portrait">
+			</portrait_ps_base>
+			<portrait_ps name="portrait">
 				<bounds>10,10,40,40</bounds>
-			</portrait>
+			</portrait_ps>
 
-			<!-- =================================================================================================================== -->
-			<!-- Name Field -->
-			<!-- =================================================================================================================== -->
 			<string_ps name="name">
 				<anchored position="insidetopleft" offset="55,10" width="180" />
 				<empty textres="library_recordtype_empty_charsheet" />
 			</string_ps>
 
-			<!-- =================================================================================================================== -->
-			<!-- Class Field -->
-			<!-- =================================================================================================================== -->
 			<string_ps name="class">
 				<anchored position="insidetopleft" offset="55,30" width="145" />
 				<tooltip textres="ps_label_class" />
 			</string_ps>
 
-			<!-- =================================================================================================================== -->
-			<!-- Level Field -->
-			<!-- =================================================================================================================== -->
 			<number_ps_linked name="level">
 				<anchored position="insidetopleft" offset="205,30" width="30" />
 				<tooltip textres="level" />
 			</number_ps_linked>
 
-			<!-- =================================================================================================================== -->
-			<!-- Health Bar -->
-			<!-- =================================================================================================================== -->
-			<progressbar name="hpbar">
+			<progressbar_health_d20 name="hpbar">
 				<anchored position="insidetopleft" offset="245,10" width="10" height="40" />
 				<source><max>hptotal</max><used>hptemp</used></source>
 				<textprefix><textres>ps_label_hp</textres></textprefix>
 				<healthbar />
-			</progressbar>
+			</progressbar_health_d20>
 
-			<progressbar name="woundsbar">
+			<progressbar_health_d20 name="woundsbar">
 				<anchored position="insidetopleft" offset="270,10" width="10" height="40" />
 				<source><max>constitution</max><used>wounds</used></source>
 				<textprefix><textres>ps_label_wounds</textres></textprefix>
 				<healthbar />
-			</progressbar>
+			</progressbar_health_d20>
 
-			<!-- =================================================================================================================== -->
-			<!-- Ability Checks -->
-			<!-- =================================================================================================================== -->
 			<number_ps_ability name="strength">
 				<anchored to="woundsbar">
 					<left offset="12" />
@@ -399,9 +373,6 @@
 				<target>charisma</target>
 			</number_ps_abilitycheck>
 
-			<!-- =================================================================================================================== -->
-			<!-- Defenses -->
-			<!-- =================================================================================================================== -->
 			<number_ps_defense name="ac">
 				<anchored to="charisma">
 					<left offset="15" />
@@ -416,9 +387,6 @@
 				<anchored to="flatfootedac" />
 			</number_ps_defense>
 
-			<!-- =================================================================================================================== -->
-			<!-- Saves -->
-			<!-- =================================================================================================================== -->
 			<number_ps_save name="fortitude">
 				<anchored to="touchac">
 					<left offset="15" />
@@ -436,9 +404,6 @@
 				<target>will</target>
 			</number_ps_save>
 
-			<!-- =================================================================================================================== -->
-			<!-- Damage Reduction & Special Defenses -->
-			<!-- =================================================================================================================== -->
 			<string_ps name="dr">
 				<anchored height="20">
 					<left parent="ac" />

@@ -6,12 +6,9 @@
   File adjusted for Star Wars 3.5E
 -->
 
-<!-- Will be adjusted based on feedback -->
-
 <root>
 	<windowclass name="ps_skills">
 		<script file="ps/scripts/ps_skill_sw.lua" />
-
 		<sheetdata>
 			<anchor_partysheet_skills_header />
 			
@@ -24,22 +21,22 @@
 			<genericcontrol name="skillanchor">
 				<anchored to="headeranchor" position="insidetopleft" offset="163,17" width="0" height="20" />
 			</genericcontrol>
-
+			
 			<label_ps_skill name="spotlabel">
 				<static textres="ps_label_spot" />
 				<tooltip textres="skill_value_spot" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="listenlabel">
 				<static textres="ps_label_listen" />
 				<tooltip textres="skill_value_listen" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="searchlabel">
 				<static textres="ps_label_search" />
 				<tooltip textres="skill_value_search" />
 			</label_ps_skill>
-
+			
 			<label name="passivelabel">
 				<anchored>
 					<top parent="headeranchor" />
@@ -49,7 +46,7 @@
 				<static textres="ps_label_passive" />
 				<center />
 			</label>
-
+			
 			<label_ps_skill name="alienspecieslabel">
 				<anchored>
 					<left offset="15" />
@@ -57,32 +54,32 @@
 				<static textres="ps_label_knowalienspecies" />
 				<tooltip textres="skill_value_knowalienspecies" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="historylabel">
 				<static textres="ps_label_knowhistory" />
 				<tooltip textres="skill_value_knowhistory" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="jedilorelabel">
 				<static textres="ps_label_knowjedilore" />
 				<tooltip textres="skill_value_knowjedilore" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="streetwiselabel">
 				<static textres="ps_label_knowstreetwise" />
 				<tooltip textres="skill_value_knowstreetwise" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="tacticslabel">
 				<static textres="ps_label_knowtactics" />
 				<tooltip textres="skill_value_knowtactics" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="worldlorelabel">
 				<static textres="ps_label_knowworldlore" />
 				<tooltip textres="skill_value_knowworldlore" />
 			</label_ps_skill>
-
+			
 			<label name="knowledgeskillslabel">
 				<anchored>
 					<top parent="headeranchor" />
@@ -100,22 +97,22 @@
 				<static textres="ps_label_bluff" />
 				<tooltip textres="skill_value_bluff" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="diplomacylabel">
 				<static textres="ps_label_diplomacy" />
 				<tooltip textres="skill_value_diplomacy" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="gatherinfolabel">
 				<static textres="ps_label_gatherinfo" />
 				<tooltip textres="skill_value_gatherinfo" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="intimidatelabel">
 				<static textres="ps_label_intimidate" />
 				<tooltip textres="skill_value_intimidate" />
 			</label_ps_skill>
-
+			
 			<label name="socialskillslabel">
 				<anchored>
 					<top parent="headeranchor" />
@@ -125,7 +122,7 @@
 				<static textres="ps_label_social" />
 				<center />
 			</label>
-
+			
 			<label_ps_skill name="climblabel">
 				<anchored>
 					<left offset="15" />
@@ -133,27 +130,27 @@
 				<static textres="ps_label_climb" />
 				<tooltip textres="skill_value_climb" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="jumplabel">
 				<static textres="ps_label_jump" />
 				<tooltip textres="skill_value_jump" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="survivallabel">
 				<static textres="ps_label_survival" />
 				<tooltip textres="skill_value_survival" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="hidelabel">
 				<static textres="ps_label_hide" />
 				<tooltip textres="skill_value_hide" />
 			</label_ps_skill>
-
+			
 			<label_ps_skill name="movesilentlabel">
 				<static textres="ps_label_movesilent" />
 				<tooltip textres="skill_value_movesilent" />
 			</label_ps_skill>
-
+			
 			<label name="physicalskillslabel">
 				<anchored>
 					<top parent="headeranchor" />
@@ -163,10 +160,10 @@
 				<static textres="ps_label_physical" />
 				<center />
 			</label>
-
+			
 			<list_psskills />
 			<scrollbar_list />
-	
+			
 			<anchor_partysheet_main_footer />
 			
 			<genericcontrol name="leftanchor">
@@ -184,7 +181,7 @@
 				<state icon="visibilityoff" tooltipres="ps_tooltip_showrolloff" />
 				<gmvisibleonly />
 			</buttonfield>
-
+			
 			<genericcontrol name="partyskillframe">
 				<anchored to="leftanchor" height="20" width="295">
 					<top />
@@ -192,20 +189,20 @@
 				</anchored>
 				<frame name="groupbox" offset="10,10,10,10" />
 				<gmvisibleonly />
-			</genericcontrol>			
-
+			</genericcontrol>
+			
 			<button_roll name="skillroll">
 				<anchored to="partyskillframe" position="insidetopleft" offset="5,0" />
 				<script file="ps/scripts/ps_roll_skill.lua" />
 				<gmvisibleonly />
 			</button_roll>
-
+			
 			<label name="skilllabel">
 				<anchored to="skillroll" position="righthigh" offset="5,0" />
 				<static textres="ps_label_groupskill" />
 				<gmvisibleonly />
-			</label>	
-
+			</label>
+			
 			<combobox name="selectedskill">
 				<anchored to="skilllabel" position="righthigh" offset="10,0" width="120" height="20" />
 				<empty textres="ps_empty_skill" />
@@ -217,17 +214,17 @@
 					end
 				</script>
 			</combobox>
-
+			
 			<label name="skilldclabel">
 				<anchored to="selectedskill" position="righthigh" offset="10,0" />
 				<static textres="dc" />
 				<gmvisibleonly />
 			</label>
-
+			
 			<basicnumber name="skilldc">
 				<anchored to="skilldclabel" position="righthigh" offset="10,0" width="30" height="20" />
 				<gmvisibleonly />
-			</basicnumber>			
+			</basicnumber>
 		</sheetdata>
 	</windowclass>
 	
@@ -243,12 +240,12 @@
 				</script>
 			</hlink>
 			
-			<portrait_base>
+			<portrait_ps_base>
 				<bounds>10,10,40,40</bounds>
-			</portrait_base>
-			<portrait name="portrait">
+			</portrait_ps_base>
+			<portrait_ps name="portrait">
 				<bounds>10,10,40,40</bounds>
-			</portrait>
+			</portrait_ps>
 			
 			<string_ps name="name">
 				<anchored position="insidetopleft" offset="55,20" width="110" height="20" />
@@ -261,19 +258,19 @@
 					<left anchor="right" offset="-3" />
 				</anchored>
 			</genericcontrol>
-
+			
 			<number_ps_skill name="spot">
 				<skill>Spot</skill>
 			</number_ps_skill>
-
+			
 			<number_ps_skill name="listen">
 				<skill>Listen</skill>
 			</number_ps_skill>
-
+			
 			<number_ps_skill name="search">
 				<skill>Search</skill>
 			</number_ps_skill>
-
+			
 			<number_ps_skill name="alienspecies">
 				<anchored>
 					<left offset="15" />
@@ -281,47 +278,47 @@
 				<skill>Knowledge</skill>
 				<subskill>Alien Species</subskill>
 			</number_ps_skill>
-
+			
 			<number_ps_skill name="history">
 				<skill>Knowledge</skill>
 				<subskill>History</subskill>
 			</number_ps_skill>
-
+			
 			<number_ps_skill name="jedilore">
 				<skill>Knowledge</skill>
 				<subskill>Jedi Lore</subskill>
 			</number_ps_skill>
-
+			
 			<number_ps_skill name="streetwise">
 				<skill>Knowledge</skill>
 				<subskill>Streetwise</subskill>
 			</number_ps_skill>
-
+			
 			<number_ps_skill name="tactics">
 				<skill>Knowledge</skill>
 				<subskill>Tactics</subskill>
 			</number_ps_skill>
-
+			
 			<number_ps_skill name="worldlore">
 				<skill>Knowledge</skill>
 				<subskill>World Lore</subskill>
 			</number_ps_skill>
-
+			
 			<number_ps_skill name="bluff">
 				<anchored>
 					<left offset="15" />
 				</anchored>
 				<skill>Bluff</skill>
 			</number_ps_skill>
-
+			
 			<number_ps_skill name="diplomacy">
 				<skill>Diplomacy</skill>
 			</number_ps_skill>
-
+			
 			<number_ps_skill name="gatherinfo">
 				<skill>Gather Information</skill>
 			</number_ps_skill>
-
+			
 			<number_ps_skill name="intimidate">
 				<skill>Intimidate</skill>
 			</number_ps_skill>
@@ -329,7 +326,7 @@
 			<number_ps_skill name="climb">
 				<anchored>
 					<left offset="15" />
-				</anchored>			
+				</anchored>
 				<skill>Climb</skill>
 			</number_ps_skill>
 
@@ -355,9 +352,9 @@
 					<right parent="worldlore" />
 					<top offset="30" />
 				</anchored>
-				<tooltip textres="char_label_senses" />
+				<tooltip textres="ps_label_senses" />
 			</string_ps>
-
+			
 			<stringu name="languages">
 				<anchored height="20">
 					<left parent="bluff" />
@@ -366,7 +363,7 @@
 				</anchored>
 				<readonly />
 				<nodrag />
-				<tooltip textres="char_label_languages" />
+				<tooltip textres="ps_label_languages" />
 			</stringu>
 		</sheetdata>
 	</windowclass>
