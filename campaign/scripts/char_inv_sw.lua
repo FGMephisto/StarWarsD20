@@ -5,29 +5,29 @@
 --
 
 function onInit()
-	onEncumbranceChanged();
+	onEncumbranceLimitChanged();
 	DB.addHandler(DB.getPath(getDatabaseNode(), "abilities.strength.score"), "onUpdate", onStrengthChanged);
 	DB.addHandler(DB.getPath(getDatabaseNode(), "size"), "onUpdate", onSizeChanged);
-	DB.addHandler(DB.getPath(getDatabaseNode(), "encumbrance.stradj"), "onUpdate", onEncumbranceChanged);
-	DB.addHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", onEncumbranceChanged);
+	DB.addHandler(DB.getPath(getDatabaseNode(), "encumbrance.stradj"), "onUpdate", onEncumbranceLimitChanged);
+	DB.addHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", onEncumbranceLimitChanged);
 end
 
 function onClose()
 	DB.removeHandler(DB.getPath(getDatabaseNode(), "abilities.strength.score"), "onUpdate", onStrengthChanged);
 	DB.removeHandler(DB.getPath(getDatabaseNode(), "size"), "onUpdate", onSizeChanged);
-	DB.removeHandler(DB.getPath(getDatabaseNode(), "encumbrance.stradj"), "onUpdate", onEncumbranceChanged);
-	DB.removeHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", onEncumbranceChanged);
+	DB.removeHandler(DB.getPath(getDatabaseNode(), "encumbrance.stradj"), "onUpdate", onEncumbranceLimitChanged);
+	DB.removeHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", onEncumbranceLimitChanged);
 end
 
 function onStrengthChanged()
-	onEncumbranceChanged();
+	onEncumbranceLimitChanged();
 end
 
 function onSizeChanged()
-	onEncumbranceChanged();
+	onEncumbranceLimitChanged();
 end
 
-function onEncumbranceChanged()
+function onEncumbranceLimitChanged()
 	local nodeChar = getDatabaseNode();
 
 	local nLight = 0;
@@ -73,7 +73,7 @@ function onEncumbranceChanged()
 	
 	nHeavy = nHeavy * DB.getValue(nodeChar, "encumbrance.carrymult", 1);
 
-	local nSize = ActorManager35E.getSize(ActorManager.resolveActor(nodeChar));
+	local nSize = ActorCommonManager.getCreatureSizeDnD3(ActorManager.resolveActor(nodeChar));
 	if (nSize < 0) then
 		local nMult = 0;
 		if (nSize == -1) then
@@ -85,7 +85,13 @@ function onEncumbranceChanged()
 		elseif (nSize == -4) then
 			nMult = .125;
 		end
-			
+
+		nLight = math.floor(((nLight * nMult) * 100) + 0.5) / 100;
+		nMedium = math.floor(((nMedium * nMult) * 100) + 0.5) / 100;
+		nHeavy = math.floor(((nHeavy * nMult) * 100) + 0.5) / 100;
+		nLiftOver = math.floor(((nLiftOver * nMult) * 100) + 0.5) / 100;
+		nLiftOff = math.floor(((nLiftOff * nMult) * 100) + 0.5) / 100;
+		nPushDrag = math.floor(((nPushDrag * nMult) * 100) + 0.5) / 100;
 	elseif (nSize > 0) then
 		local nMult = math.pow(2, nSize);
 		

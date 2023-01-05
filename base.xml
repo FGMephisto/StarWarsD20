@@ -80,7 +80,7 @@
 	<!-- High-level scripts -->
 	<script name="DataCommon" file="scripts/data_common_sw.lua" />
 	<script name="Desktop35E" file="scripts/data_desktop_sw.lua" />
-	<script name="LibraryData35E" file="scripts/data_library_35E.lua" />
+	<script name="LibraryData35E" file="scripts/data_library_sw.lua" />
 	<script name="Options35E" file="scripts/data_options_sw.lua" />	
 	<script name="ActionAbility" file="scripts/manager_action_ability.lua" />
 	<script name="ActionAttack" file="scripts/manager_action_attack_sw.lua" />

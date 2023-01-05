@@ -20,21 +20,21 @@
 		<script file="campaign/scripts/item_main_sw.lua" />
 		<sheetdata>
 			<anchor_column name="columnanchor" />
-
+			
 			<label_column name="nonid_name_label">
 				<static textres="item_label_unidentified" />
 			</label_column>
 
 			<string_columnh name="nonid_name" />
-
+			
 			<label_column name="nonidentified_label">
 				<static textres="item_label_unidentifiednotes" />
 			</label_column>
 
 			<string_columnh name="nonidentified" />
-
+			
 			<line_column name="divider" />
-
+			
 			<label_column name="type_label">
 				<static textres="item_label_type" />
 			</label_column>
@@ -64,65 +64,51 @@
 			</label_column>
 			
 			<string_columnh name="cost" />
-
+			
 			<label_column name="weight_label">
 				<static textres="item_label_weight" />
 			</label_column>
-
+			
 			<number_columnh name="weight" />
-
+			
 			<line_column name="divider3" />
+			
+			<sub_column name="type_stats" />
+			
+			<line_column name="divider4" />
+			
+			<!-- <label_column name="prerequisites_label"> -->
+				<!-- <static textres="item_label_prereq" /> -->
+			<!-- </label_column> -->
+			
+			<!-- <string_columnh name="prerequisites" /> -->
 
-			<label_column name="damage_label">
-				<static textres="item_label_damage" />
-			</label_column>
+			<!-- <line_column name="divider5" /> -->
 
-			<string_columnh name="damage" />
+			<ft_columnh name="description" />
 
-			<label_column name="damagetype_label">
-				<static textres="item_label_dmgtype" />
-			</label_column>
+			<sub_column name="type_lists" />
+		</sheetdata>
+	</windowclass>
 
-			<string_columnh name="damagetype" />
-
-			<label_column name="critical_label">
-				<static textres="item_label_critical" />
-			</label_column>
-
-			<number_columnh name="critical" />
-
-			<label_column name="range_label">
-				<static textres="item_label_range" />
-			</label_column>
-
-			<number_columnh name="range" />
-
-			<label_column name="stundc_label">
-				<static textres="item_label_stundc" />
-			</label_column>
-
-			<number_columnh name="stundc" />
-
-			<label_column name="firingmodes_label">
-				<static textres="item_label_firingmodes" />
-			</label_column>
-
-			<string_columnh name="firingmodes" />
-
-			<label_column name="size_label">
-				<static textres="item_label_size" />
-			</label_column>
-
-			<string_columnh name="size" />
-
-			<label_column name="properties_label">
-				<static textres="item_label_properties" />
-			</label_column>
+	<windowclass name="item_main_armor">
+		<margins control="0,0,0,2" />
+		<script>
+			function update(bReadOnly)
+				dr.update(bReadOnly);
+				maxstatbonus.update(bReadOnly);
+				checkpenalty.update(bReadOnly);
+				speed30.update(bReadOnly);
+				speed20.update(bReadOnly);
+				properties.update(bReadOnly);
+			end
+		</script>
+		<sheetdata>
+			<anchor_column name="columnanchor" />
 
 			<label_column name="dr_label">
 				<static textres="item_label_dr" />
 			</label_column>
-
 			<number_columnh name="dr">
 				<delaykeyupdate />
 				<displaysign />
@@ -131,7 +117,6 @@
 			<label_column name="maxstatbonus_label">
 				<static textres="item_label_maxstat" />
 			</label_column>
-
 			<number_columnh name="maxstatbonus">
 				<delaykeyupdate />
 				<displaysign />
@@ -140,7 +125,6 @@
 			<label_column name="checkpenalty_label">
 				<static textres="item_label_scp" />
 			</label_column>
-
 			<number_columnh name="checkpenalty">
 				<delaykeyupdate />
 				<displaysign />
@@ -149,35 +133,77 @@
 			<label_column name="speed30_label">
 				<static textres="item_label_speed30" />
 			</label_column>
-
 			<number_columnh name="speed30" />
 
 			<label_column name="speed20_label">
 				<static textres="item_label_speed20" />
 			</label_column>
-
 			<number_columnh name="speed20" />
 
+			<label_column name="properties_label">
+				<static textres="item_label_properties" />
+			</label_column>
 			<string_columnh name="properties" />
+		</sheetdata>
+	</windowclass>
+	
+	<windowclass name="item_main_weapon">
+		<margins control="0,0,0,2" />
+		<script>
+			function update(bReadOnly)
+				damage.update(bReadOnly);
+				damagetype.update(bReadOnly);
+				critical.update(bReadOnly);
+				range.update(bReadOnly);
+				stundc.update(bReadOnly);
+				firingmodes.update(bReadOnly);
+				size.update(bReadOnly);
+				properties.update(bReadOnly);
+			end
+		</script>
+		<sheetdata>
+			<anchor_column name="columnanchor" />
+			
+			<label_column name="damage_label">
+				<static textres="item_label_damage" />
+			</label_column>
+			<string_columnh name="damage" />
 
-			<line_column name="divider4" />
+			<label_column name="damagetype_label">
+				<static textres="item_label_dmgtype" />
+			</label_column>
+			<string_columnh name="damagetype" />
 
-			<label_column name="prerequisites_label">
-				<static textres="item_label_prereq" />
+			<label_column name="critical_label">
+				<static textres="item_label_critical" />
+			</label_column>
+			<number_columnh name="critical" />
+
+			<label_column name="range_label">
+				<static textres="item_label_range" />
+			</label_column>
+			<number_columnh name="range" />
+
+			<label_column name="stundc_label">
+				<static textres="item_label_stundc" />
+			</label_column>
+			<number_columnh name="stundc" />
+
+			<label_column name="firingmodes_label">
+				<static textres="item_label_firingmodes" />
+			</label_column>
+			<string_columnh name="firingmodes" />
+
+			<label_column name="size_label">
+				<static textres="item_label_size" />
+			</label_column>
+			<string_columnh name="size" />
+
+			<label_column name="properties_label">
+				<static textres="item_label_properties" />
 			</label_column>
 
-			<string_columnh name="prerequisites">
-				<!-- Deactivated -->
-				<invisible />
-			</string_columnh>
-
-			<line_column name="divider5">
-				<!-- Deactivated -->
-				<invisible />
-			</line_column>
-
-			<ft_columnh name="description" />
-
+			<string_columnh name="properties" />
 		</sheetdata>
 	</windowclass>
 </root>

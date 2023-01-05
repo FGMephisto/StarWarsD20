@@ -7,44 +7,6 @@
 -->
 
 <root>
-<!-- =================================================================================================================== -->
-<!-- Imported from 5E -->
-<!-- =================================================================================================================== -->
-	<template name="label_charframetop">
-		<metalplate>
-			<frame name="metalplate" offset="10,2,10,2"/>
-			<!-- <font>subwindowsmalltitle</font> -->
-			<font>sheetlabel</font>
-			<center />
-			<nodrag />
-			<readonly />
-			<script file="campaign/scripts/char_labelframetop.lua" />
-		</metalplate>
-	</template>
-
-	<template name="list_abilities">
-		<list_text>
-			<child></child>
-			<child><backcolor>1A40301E</backcolor></child>
-			<allowcreate />
-			<allowdelete />
-			<sortby><control>name</control></sortby>
-			<noscroll />
-			<script>
-				function addEntry(bFocus)
-					local w = createWindow();
-					if bFocus then
-						w.name.setFocus();
-					end
-					return w;
-				end
-			</script>
-		</list_text>
-	</template>
-
-<!-- =================================================================================================================== -->
-<!-- Original -->
-<!-- =================================================================================================================== -->
 	<template name="windowtitlebar_char">
 		<windowtitlebar>
 			<bounds merge="replace">0,10,-1,40</bounds>
@@ -63,7 +25,7 @@
 			</script>
 		</windowtitlebar>
 	</template>
-
+	
 	<template name="anchor_title_charsheethelper">
 		<genericcontrol>
 			<anchored height="0">
@@ -74,7 +36,7 @@
 			<disabled />
 		</genericcontrol>
 	</template>
-
+	
 	<template name="close_charsheethelper">
 		<close>
 			<anchored>
@@ -83,7 +45,7 @@
 			</anchored>
 		</close>
 	</template>
-
+	
 	<template name="resize_charsheethelper">
 		<resize>
 			<anchored>
@@ -92,7 +54,7 @@
 			</anchored>
 		</resize>
 	</template>
-
+	
 	<template name="stringc_charclasslevel">
 		<stringc_labeled>
 			<anchored height="20" />
@@ -111,18 +73,18 @@
 				function update()
 					setValue(CharManager.getClassLevelSummary(window.getDatabaseNode(), true));
 				end
-
+				
 				function onClickDown(button, x, y)
 					return true;
 				end
-
+				
 				function onClickRelease(button, x, y)
 					Interface.openWindow("charsheet_classes", window.getDatabaseNode());
 				end
 			</script>
 		</stringc_labeled>
 	</template>
-
+	
 	<template name="button_charclasslevel">
 		<buttoncontrol>
 			<anchored width="20" height="20" />
@@ -162,6 +124,33 @@
 		</windowreferencecontrol>
 	</template>
 	
+	<template name="button_charmini">
+		<windowreferencecontrol>
+			<icon normal="button_minisheet" pressed="button_minisheet_down" />
+			<class>charsheetmini</class>
+			<tooltip textres="char_label_minisheet" />
+			<description field="name" />
+			<script>
+				function onClickRelease(button, x, y)
+					local w = activate();
+					if w then
+						local tabindex = window.tabs.getIndex();
+						if tabindex == 1 or tabindex == 2 or tabindex == 6 then
+							w.tabs.activateTab(1);
+						elseif tabindex == 3 or tabindex == 4 then
+							w.tabs.activateTab(2);
+						elseif tabindex == 5 then
+							w.tabs.activateTab(3);
+						elseif tabindex == 7 then
+							w.tabs.activateTab(4);
+						end
+					end
+					return true;
+				end
+			</script>
+		</windowreferencecontrol>
+	</template>
+	
 	<template name="string_charclasslevelsummary">
 		<simplestringc>
 			<controlline />
@@ -177,48 +166,62 @@
 			<script file="common/scripts/number_linked.lua" />
 		</simplenumberc>
 	</template>
-
+	
 	<template name="number_chartotal">
 		<number_modifier>
 			<frame name="fieldlight" offset="7,5,7,5" />
 			<showemptywidget />
 		</number_modifier>
 	</template>
-
+	
 	<template name="number_chartotalwithability">
 		<number_chartotal>
 			<ability mergerule="resetandadd" />
 			<script file="campaign/scripts/char_totalwithability.lua" />
 		</number_chartotal>
 	</template>
-
+	
 	<template name="number_chartotalnomod">
 		<number_linked>
 			<frame name="fieldlight" offset="7,5,7,5" />
 		</number_linked>
 	</template>
-
+	
 	<template name="number_chartotalwithabilitynomod">
 		<number_chartotalnomod>
 			<ability mergerule="resetandadd" />
 			<script file="campaign/scripts/char_totalwithability.lua" />
 		</number_chartotalnomod>
 	</template>
-
+	
 	<template name="number_charabilityscore">
 		<basicnumber>
 			<anchored position="belowleft" offset="0,10" width="32" height="22" />
 			<default>10</default>
 		</basicnumber>
 	</template>
-
+	
+	<template name="number_charminiabilityscore">
+		<basicnumber>
+			<anchored position="belowleft" offset="0,9" width="32" height="20" />
+			<default>10</default>
+		</basicnumber>
+	</template>
+	
 	<template name="string_charabilitylabel">
 		<label>
 			<anchored position="lefthigh" width="120" height="24" />
 			<static />
 		</label>
 	</template>
-
+	
+	<template name="string_charminiabilitylabel">
+		<label>
+			<anchored position="lefthigh" width="85" height="20" />
+			<static />
+		</label>
+	</template>
+	
 	<template name="number_charabilitydamage">
 		<basicnumber>
 			<anchored position="right" offset="65,0" width="30" />
@@ -233,7 +236,13 @@
 			</script>
 		</basicnumber>
 	</template>
-
+	
+	<template name="number_charminiabilitydamage">
+		<number_charabilitydamage>
+			<anchored position="right" offset="55,0" width="30" />
+		</number_charabilitydamage>
+	</template>
+	
 	<template name="number_charabilitybonus">
 		<number_chartotal>
 			<anchored position="right" offset="25,0" width="30" />
@@ -246,8 +255,21 @@
 					local nodeWin = window.getDatabaseNode();
 					local nCurrentScore = DB.getValue(nodeWin, "abilities." .. target[1] .. ".score", 10);
 					
-					nCurrentScore = nCurrentScore - DB.getValue(nodeWin, "abilities." .. target[1] .. ".damage", 0);
-					setValue(math.floor((nCurrentScore - 10) / 2) + getModifier());
+					if DataCommon.isPFRPG() then
+						local nBonus = math.floor((nCurrentScore - 10) / 2) + getModifier();
+						
+						local nDamage = DB.getValue(nodeWin, "abilities." .. target[1] .. ".damage", 0);
+						if nDamage &gt; 0 then
+							nBonus = nBonus - math.floor(nDamage / 2);
+						elseif nDamage &lt; 0 then
+							nBonus = nBonus - math.ceil(nDamage / 2);
+						end
+
+						setValue(nBonus);
+					else
+						nCurrentScore = nCurrentScore - DB.getValue(nodeWin, "abilities." .. target[1] .. ".damage", 0);
+						setValue(math.floor((nCurrentScore - 10) / 2) + getModifier());
+					end
 				end
 
 				function onInit()
@@ -273,9 +295,16 @@
 			</script>
 		</number_chartotal>
 	</template>
-
+	
+	<template name="number_charminiabilitybonus">
+		<number_charabilitybonus>
+			<anchored position="right" offset="15,0" width="30" />
+		</number_charabilitybonus>
+	</template>
+	
 	<template name="number_charwounds">
 		<number_dropadd>
+			<!-- <hideonvalue value="0" /> -->
 			<script>
 				function onInit()
 					if super.onInit then
@@ -477,19 +506,19 @@
 				function onSourceUpdate()
 					local nMaxMod = -1;
 					local bMaxActive = sources["encumbrance.armormaxstatbonusactive"].getValue();
-
+					
 					if bMaxActive &gt; 0 then
 						nMaxMod = sources["encumbrance.armormaxstatbonus"].getValue();
 					end
-
+					
 					local nAbility = getAbilityBonus(nMaxMod);
-
+					
 					setValue(10 + calculateSources() + nAbility);
 				end
 			</script>
 		</number_chartotalwithability>
 	</template>
-
+	
 	<template name="number_charflatfootedac">
 		<number_chartotalwithabilitynomod>
 			<description textres="armorclassff" />
@@ -511,13 +540,13 @@
 					if nAbility &gt; 0 then
 						nAbility = 0;
 					end
-
+					
 					setValue(10 + calculateSources() + nAbility);
 				end
 			</script>
 		</number_chartotalwithabilitynomod>
 	</template>
-
+	
 	<template name="number_chartouchac">
 		<number_chartotalwithabilitynomod>
 			<description textres="armorclasstouch" />
@@ -544,6 +573,38 @@
 				end
 			</script>
 		</number_chartotalwithabilitynomod>
+	</template>
+	
+	<template name="number_charcmd">
+		<number_chartotalwithabilitynomod>
+			<description textres="cmd" />
+			<source><name>ac.sources.size</name><op>-</op></source>
+			<source><name>ac.sources.deflection</name><op>+</op></source>
+			<source><name>ac.sources.dodge</name><op>+</op></source>
+			<source><name>ac.sources.cmdmisc</name><op>+</op></source>
+			<source><name>ac.sources.temporary</name><op>+</op></source>
+			<ability><source>ac.sources.ability</source><default>dexterity</default></ability>
+			<ability><source>ac.sources.ability2</source></ability>
+			<ability><source>ac.sources.cmdbase</source><default>bab</default></ability>
+			<ability><source>ac.sources.cmdability</source><default>strength</default></ability>
+			<script>
+				function onSourceUpdate()
+					local nAbility = getAbilityBonus();
+					
+					setValue(10 + calculateSources() + nAbility);
+				end
+			</script>
+		</number_chartotalwithabilitynomod>
+	</template>
+	
+	<template name="number_charsr">
+		<number_chartotal>
+			<modifiersize>mini</modifiersize>
+			<description textres="spellresistance" />
+			<modifierfield>defenses.sr.temporary</modifierfield>
+			<source><name>defenses.sr.base</name><op>+</op></source>
+			<source><name>defenses.sr.misc</name><op>+</op></source>
+		</number_chartotal>
 	</template>
 	
 	<template name="number_charspeed">
@@ -918,15 +979,23 @@
 			<script file="campaign/scripts/char_weaponlist.lua" />
 		</windowlist>
 	</template>
-
+	
 	<template name="state_charweapontype">
 		<buttonfield>
 			<anchored width="25" height="25" />
 			<state icon="char_weapon_melee" tooltipres="char_tooltip_weapontypemelee" />
 			<state icon="char_weapon_ranged" tooltipres="char_tooltip_weapontyperanged" />
+			<script>
+				function onInit()
+					if DataCommon.isPFRPG() then
+						setStateIcons(2, "char_weapon_cm");
+						setStateTooltipText(2, Interface.getString("char_tooltip_weapontypecm"));
+					end
+				end
+			</script>
 		</buttonfield>
 	</template>
-
+	
 	<template name="number_charweaponattacktotal">
 		<number_linked>
 			<displaysign />
@@ -974,7 +1043,7 @@
 			<script file="campaign/scripts/char_weaponfullattack.lua" />
 		</basicnumber>
 	</template>
-
+	
 	<template name="number_charweaponattackmod">
 		<simplenumber>
 			<stateframe>
@@ -985,7 +1054,7 @@
 			<displaysign />
 		</simplenumber>
 	</template>
-
+	
 	<template name="state_charammocounter">
 		<buttongroup_counter>
 			<sourcefields>
@@ -993,5 +1062,40 @@
 				<current>ammo</current>
 			</sourcefields>
 		</buttongroup_counter>
+	</template>
+
+<!-- =================================================================================================================== -->
+<!-- Imported from 5E -->
+<!-- =================================================================================================================== -->
+	<template name="label_charframetop">
+		<metalplate>
+			<frame name="metalplate" offset="10,2,10,2"/>
+			<!-- <font>subwindowsmalltitle</font> -->
+			<font>sheetlabel</font>
+			<center />
+			<nodrag />
+			<readonly />
+			<script file="campaign/scripts/char_labelframetop.lua" />
+		</metalplate>
+	</template>
+
+	<template name="list_abilities">
+		<list_text>
+			<child></child>
+			<child><backcolor>1A40301E</backcolor></child>
+			<allowcreate />
+			<allowdelete />
+			<sortby><control>name</control></sortby>
+			<noscroll />
+			<script>
+				function addEntry(bFocus)
+					local w = createWindow();
+					if bFocus then
+						w.name.setFocus();
+					end
+					return w;
+				end
+			</script>
+		</list_text>
 	</template>
 </root>

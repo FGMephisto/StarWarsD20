@@ -78,7 +78,9 @@ tokenLightDefaults = {
 };
 
 function onInit()
-	VisionManager.addVisionField("specialqualities");
+	if not DataCommon.isPFRPG() then
+		VisionManager.addVisionField("specialqualities");
+	end
 	VisionManager.addLightDefaults(tokenLightDefaults);
 
 	-- Add ruleset to supported rulesets for Encumberance calculation
@@ -171,11 +173,19 @@ end
 
 function getDeathThreshold(rActor)
 	local nDying = 10;
-	nDying = nStat - ActorManager35E.getAbilityDamage(rActor, "constitution");
-	
-	if nDying < 1 then
-		nDying = 1;
+
+	if DataCommon.isPFRPG() then
+		local nStat = ActorManager35E.getAbilityScore(rActor, "constitution");
+		if nStat < 0 then
+			nDying = 10;
+		else
+			nDying = nStat - ActorManager35E.getAbilityDamage(rActor, "constitution");
+			if nDying < 1 then
+				nDying = 1;
+			end
+		end
 	end
+	
 	return nDying;
 end
 

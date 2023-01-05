@@ -319,11 +319,6 @@
 					function onInit()
 						onValueChanged()
 					end
-
-					function onValueChanged()
-						-- ToDo: make this on Helath Changed
-						window.onVitalityChanged();
-					end
 				</script>
 			</number_dropadd>
 			<label_fieldtop name="hptemp_label">

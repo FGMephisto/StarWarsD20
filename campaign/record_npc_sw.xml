@@ -100,7 +100,9 @@
 			<label_column name="type_label">
 				<static textres="npc_label_type" />
 			</label_column>
-			<string_columnh name="type" />
+			<string_columnh name="type">
+				<delaykeyupdate />
+			</string_columnh>
 
 			<label_column name="init_label">
 				<static textres="initiative" />
@@ -115,6 +117,7 @@
 
 			<number_column_right name="cr">
 				<anchored to="init" />
+				<delaykeyupdate />
 			</number_column_right>
 
 			<label_column name="senses_label">

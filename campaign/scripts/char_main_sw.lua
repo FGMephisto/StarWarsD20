@@ -22,11 +22,6 @@ function onHealthChanged()
 	wounds.setColor(sColor);
 end
 
-function onVitalityChanged()
-	local sColor = ActorManager35E.getPCSheetVitalityColor(getDatabaseNode());
-	hptemp.setColor(sColor);
-end
-
 function onDrop(x, y, draginfo)
 	if draginfo.isType("shortcut") then
 		local sClass, sRecord = draginfo.getShortcutData();

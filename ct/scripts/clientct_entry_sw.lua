@@ -18,7 +18,9 @@ function onHealthChanged()
 	local rActor = ActorManager.resolveActor(getDatabaseNode());
 	local sColor = ActorHealthManager.getHealthColor(rActor);
 	
-	wounds.setColor(sColor);
+	if wounds then
+		wounds.setColor(sColor);
+	end
 	status.setColor(sColor);
 end
 
@@ -32,19 +34,40 @@ function updateHealthDisplay()
 	end
 	
 	if sOption == "detailed" then
-		hptemp.setVisible(true);
-		hp.setVisible(true);
-		wounds.setVisible(true);
+		if hp then
+			hp.setVisible(true);
+		end
+		if hptemp then
+			hptemp.setVisible(true);
+		end
+		if wounds then
+			wounds.setVisible(true);
+		end
+
 		status.setVisible(false);
 	elseif sOption == "status" then
-		hptemp.setVisible(false);
-		hp.setVisible(false);
-		wounds.setVisible(false);
+		if hp then
+			hp.setVisible(false);
+		end
+		if hptemp then
+			hptemp.setVisible(false);
+		end
+		if wounds then
+			wounds.setVisible(false);
+		end
+
 		status.setVisible(true);
 	else
-		hptemp.setVisible(false);
-		hp.setVisible(false);
-		wounds.setVisible(false);
+		if hp then
+			hp.setVisible(false);
+		end
+		if hptemp then
+			hptemp.setVisible(false);
+		end
+		if wounds then
+			wounds.setVisible(false);
+		end
+
 		status.setVisible(false);
 	end
 end

@@ -104,29 +104,6 @@ function getPCSheetWoundColor(nodePC)
 	return sColor;
 end
 
-function getPCSheetVitalityColor(nodePC)
-	local nHP = 0;
-	local nTemp = 0;
-
-	if nodePC then
-		nHP = math.max(DB.getValue(nodePC, "hp.total", 0), 0);
-		nTemp = math.max(DB.getValue(nodePC, "hp.temporary", 0), 0);
-	end
-
-	local nPercentLethal = 0;
-
-	if nHP > 0 then
-		nPercentLethal = 1 - (nTemp / nHP);
-	end
-	
-	if nPercentLethal == 0 then
-		return ColorManager.COLOR_HEALTH_SIMPLE_BLOODIED;
-	end
-
-	local sColor = ColorManager.getHealthColor(nPercentLethal, false);
-	return sColor;
-end
-
 --
 --	ABILITY SCORES
 --
