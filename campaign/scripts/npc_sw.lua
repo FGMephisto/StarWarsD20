@@ -13,7 +13,9 @@ end
 function TypeChanged()
 	local sType = DB.getValue(getDatabaseNode(), "npctype", "");
 	
-	if sType == "Vehicle" then
+	if sType == "Trap" then
+		-- tabs.setTab(1, "main_trap", "tab_main");
+	elseif sType == "Vehicle" then
 		tabs.setTab(1, "main_vehicle", "tab_main");
 	else
 		tabs.setTab(1, "main_creature", "tab_main");
@@ -24,6 +26,9 @@ function onLockChanged()
 	StateChanged();
 end
 
+-- ===================================================================================================================
+-- Modified
+-- ===================================================================================================================
 function StateChanged()
 	if header.subwindow then
 		header.subwindow.update();
@@ -47,6 +52,9 @@ function StateChanged()
 	text.setReadOnly(bReadOnly);
 end
 
+-- ===================================================================================================================
+-- Modified
+-- ===================================================================================================================
 function onIDChanged()
 	if Session.IsHost then
 		-- if main_trap.subwindow then

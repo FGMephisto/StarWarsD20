@@ -27,11 +27,12 @@ function onSizeChanged()
 	onEncumbranceLimitChanged();
 end
 
+-- ===================================================================================================================
+-- Modified
+-- ===================================================================================================================
 function onEncumbranceLimitChanged()
 	local nodeChar = getDatabaseNode();
 
-	local nLight = 0;
-	local nMedium = 0;
 	local nHeavy = 0;
 	local nStrength = DB.getValue(nodeChar, "abilities.strength.score", 10);
 	nStrength = nStrength + DB.getValue(nodeChar, "encumbrance.stradj", 0);
@@ -52,7 +53,13 @@ function onEncumbranceLimitChanged()
 	end
 	
 	nHeavy = nHeavy * DB.getValue(nodeChar, "encumbrance.carrymult", 1);
-	
+
+	local nLight = 0;
+	local nMedium = 0;
+	local nLiftOver = nHeavy;
+	local nLiftOff = nHeavy * 2;
+	local nPushDrag = nHeavy * 5;
+
 	-- Calculate Light, adding required adjustment to compensate for rounding down to the next x.5 
 	if math.fmod(nHeavy / 3, math.floor(nHeavy / 3)) >= 0.5 then
 		nLight = math.floor(nHeavy / 3)+0.5;
@@ -65,13 +72,7 @@ function onEncumbranceLimitChanged()
 		nMedium = math.floor(nHeavy / 3 * 2) + 0.5;
 	else
 		nMedium = math.floor(nHeavy / 3 * 2);
-	end
-
-	local nLiftOver = nHeavy;
-	local nLiftOff = nHeavy * 2;
-	local nPushDrag = nHeavy * 5;
-	
-	nHeavy = nHeavy * DB.getValue(nodeChar, "encumbrance.carrymult", 1);
+	end	
 
 	local nSize = ActorCommonManager.getCreatureSizeDnD3(ActorManager.resolveActor(nodeChar));
 	if (nSize < 0) then

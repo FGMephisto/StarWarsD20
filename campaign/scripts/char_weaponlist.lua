@@ -4,13 +4,13 @@
 --
 
 function onInit()
-	DB.addHandler(DB.getPath(getDatabaseNode()), "onChildAdded", onChildAdded);
+	DB.addHandler(getDatabaseNode(), "onChildAdded", onChildAdded);
 
 	onModeChanged();
 end
 
 function onListChanged()
-	DB.removeHandler(DB.getPath(getDatabaseNode()), "onChildAdded", onChildAdded);
+	DB.removeHandler(getDatabaseNode(), "onChildAdded", onChildAdded);
 
 	update();
 end

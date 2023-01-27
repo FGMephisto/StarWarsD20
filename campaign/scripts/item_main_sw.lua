@@ -28,6 +28,9 @@ function updateControl(sControl, bReadOnly, bID)
 	return self[sControl].update(bReadOnly);
 end
 
+-- ===================================================================================================================
+-- Modified
+-- ===================================================================================================================
 function update()
 	local nodeRecord = getDatabaseNode();
 	local bReadOnly = WindowManager.getReadOnlyState(nodeRecord);
@@ -140,5 +143,5 @@ function onClose()
 		DB.deleteChild(nodeRecord, "size")
 	end
 	
-	-- ToDo Vehicles
+	-- ToDo Clean up Vehicles fields
 end

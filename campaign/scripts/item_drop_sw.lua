@@ -4,8 +4,10 @@
 -- File adjusted for Star Wars 3.5E
 --
 
+-- ===================================================================================================================
+-- Modified
+-- ===================================================================================================================
 function onDrop(x, y, draginfo)
--- ToDo Adjust for different item fields
 	local sDragType = draginfo.getType();
 	if sDragType ~= "shortcut" then
 		return false;
@@ -65,7 +67,6 @@ function onDrop(x, y, draginfo)
 				DB.setValue(nodeTarget, "dr", "number", DB.getValue(nodeSource, "ac", 0));
 				DB.setValue(nodeTarget, "maxstatbonus", "number", DB.getValue(nodeSource, "maxstatbonus", 0));
 				DB.setValue(nodeTarget, "checkpenalty", "number", DB.getValue(nodeSource, "checkpenalty", 0));
-				-- DB.setValue(nodeTarget, "spellfailure", "number", DB.getValue(nodeSource, "spellfailure", 0));
 				DB.setValue(nodeTarget, "speed30", "number", DB.getValue(nodeSource, "speed30", 0));
 				DB.setValue(nodeTarget, "speed20", "number", DB.getValue(nodeSource, "speed20", 0));
 				DB.setValue(nodeTarget, "properties", "string", DB.getValue(nodeSource, "properties", ""));
@@ -89,9 +90,9 @@ function onDrop(x, y, draginfo)
 			DB.setValue(nodeTarget, "prerequisites", "string", DB.getValue(nodeSource, "prerequisites", ""));
 			
 			if nodeSource and nodeTarget then
-				local nodeSourceDesc = nodeSource.getChild("description");
+				local nodeSourceDesc = DB.getChild(nodeSource, "description");
 				if nodeSourceDesc then
-					local nodeTargetDesc = nodeTarget.createChild("description", "formattedtext");
+					local nodeTargetDesc = DB.createChild(nodeTarget, "description", "formattedtext");
 					if nodeTargetDesc then
 						DB.copyNode(nodeSourceDesc, nodeTargetDesc);
 					end

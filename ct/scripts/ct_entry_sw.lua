@@ -9,11 +9,15 @@ function onInit()
 	self.onHealthChanged();
 end
 
+-- ===================================================================================================================
+-- Modified
+-- ===================================================================================================================
 function onHealthChanged()
 	local rActor = ActorManager.resolveActor(getDatabaseNode());
 	local _,sStatus,sColor = ActorHealthManager.getHealthInfo(rActor);
 	
 	wounds.setColor(sColor);
+	-- nonlethal.setColor(sColor);
 	status.setValue(sStatus);
 	
 	if not self.isPC() then
@@ -21,40 +25,49 @@ function onHealthChanged()
 	end
 end
 
+-- ===================================================================================================================
+-- Modified
+-- ===================================================================================================================
 function linkPCFields()
 	local nodeChar = link.getTargetDatabaseNode();
 	if nodeChar then
-		name.setLink(nodeChar.createChild("name", "string"), true);
-		senses.setLink(nodeChar.createChild("senses", "string"), true);
+		name.setLink(DB.createChild(nodeChar, "name", "string"), true);
+		senses.setLink(DB.createChild(nodeChar, "senses", "string"), true);
 
-		hp.setLink(nodeChar.createChild("hp.total", "number"));
-		hptemp.setLink(nodeChar.createChild("hp.temporary", "number"));
-		wounds.setLink(nodeChar.createChild("hp.wounds", "number"));
+		hp.setLink(DB.createChild(nodeChar, "hp.total", "number"));
+		hptemp.setLink(DB.createChild(nodeChar, "hp.temporary", "number"));
+		-- nonlethal.setLink(DB.createChild(nodeChar, "hp.nonlethal", "number"));
+		wounds.setLink(DB.createChild(nodeChar, "hp.wounds", "number"));
 
 		if DataCommon.isPFRPG() then
 			type.addSource(DB.getPath(nodeChar, "alignment"), true);
 		else
-			alignment.setLink(nodeChar.createChild("alignment", "string"));
+			alignment.setLink(DB.createChild(nodeChar, "alignment", "string"));
 		end
 		type.addSource(DB.getPath(nodeChar, "size"), true);
 		type.addSource(DB.getPath(nodeChar, "race"));
 		
-		grapple.setLink(nodeChar.createChild("attackbonus.grapple.total", "number"), true);
+		-- ToDo: Needed/Present?
+		grapple.setLink(DB.createChild(nodeChar, "attackbonus.grapple.total", "number"), true);
 		
-		ac_final.setLink(nodeChar.createChild("ac.totals.general", "number"), true);
-		ac_touch.setLink(nodeChar.createChild("ac.totals.touch", "number"), true);
-		ac_flatfooted.setLink(nodeChar.createChild("ac.totals.flatfooted", "number"), true);
+		ac_final.setLink(DB.createChild(nodeChar, "ac.totals.general", "number"), true);
+		ac_touch.setLink(DB.createChild(nodeChar, "ac.totals.touch", "number"), true);
+		ac_flatfooted.setLink(DB.createChild(nodeChar, "ac.totals.flatfooted", "number"), true);
+		-- cmd.setLink(DB.createChild(nodeChar, "ac.totals.cmd", "number"), true);
 		
-		fortitudesave.setLink(nodeChar.createChild("saves.fortitude.total", "number"), true);
-		reflexsave.setLink(nodeChar.createChild("saves.reflex.total", "number"), true);
-		willsave.setLink(nodeChar.createChild("saves.will.total", "number"), true);
+		fortitudesave.setLink(DB.createChild(nodeChar, "saves.fortitude.total", "number"), true);
+		reflexsave.setLink(DB.createChild(nodeChar, "saves.reflex.total", "number"), true);
+		willsave.setLink(DB.createChild(nodeChar, "saves.will.total", "number"), true);
 		
-		sr.setLink(nodeChar.createChild("defenses.sr.total", "number"), true);
+		sr.setLink(DB.createChild(nodeChar, "defenses.sr.total", "number"), true);
 
-		init.setLink(nodeChar.createChild("initiative.total", "number"), true);
+		init.setLink(DB.createChild(nodeChar, "initiative.total", "number"), true);
 	end
 end
 
+-- ===================================================================================================================
+-- ToDo: Needed?
+-- ===================================================================================================================
 function onSectionChanged(sKey)
 	local sSectionName = "sub_" .. sKey;
 
