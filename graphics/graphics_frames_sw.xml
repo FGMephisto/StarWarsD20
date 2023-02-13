@@ -9,7 +9,7 @@
 <root>
 	<!-- Character sheet -->
 	<framedef name="charsheethelper">
-		<bitmap file="graphics/frames_new/charsheet.png" />
+		<bitmap file="graphics/frames_sw/charsheet.png" />
 		<offset>25,40,25,25</offset>
 		<insideoffset>0,0,7,7</insideoffset>
 	</framedef>
@@ -58,21 +58,21 @@
 
  	<!-- Die Cup (Local mode) -->
 	<framedef name="collector">
-		<bitmap file="graphics/frames_new/collector.png" />
+		<bitmap file="graphics/frames_sw/collector.png" />
 		<offset>7,7,3,3</offset>
 	</framedef>
 
 	<!-- Override CoreRPG ruleset graphics -->
 	<!-- Calendar -->
 	<framedef name="calendar">
-		<bitmap file="graphics/frames_new/charsheet.png" />
+		<bitmap file="graphics/frames_sw/charsheet.png" />
 		<offset>25,40,25,25</offset>
 		<insideoffset>0,0,7,7</insideoffset>
 	</framedef>
 
 	<!-- Chat window -->
 	<framedef name="chatbox">
-		<bitmap file="graphics/frames_new/chatbox.png" />
+		<bitmap file="graphics/frames_sw/chatbox.png" />
 		<topleft rect="0,0,18,15" />
 		<top rect="18,0,487,15" />
 		<topright rect="505,0,18,15" />
@@ -86,34 +86,34 @@
 
 	<!-- Characters -->
 	<framedef name="charsheet">
-		<bitmap file="graphics/frames_new/charsheet.png" />
+		<bitmap file="graphics/frames_sw/charsheet.png" />
 		<offset>25,40,25,25</offset>
 		<insideoffset>0,0,7,7</insideoffset>
 	</framedef>
 
 	<framedef name="charsheethelper">
-		<bitmap file="graphics/frames_new/charsheet.png" />
+		<bitmap file="graphics/frames_sw/charsheet.png" />
 		<offset>25,40,25,25</offset>
 		<insideoffset>0,0,7,7</insideoffset>
 	</framedef>
 
 	<!-- Character selection -->	
 	<framedef name="charselect">
-		<bitmap file="graphics/frames_new/charselect.png" />
+		<bitmap file="graphics/frames_sw/charselect.png" />
 		<offset>68,75,77,51</offset>
 		<insideoffset>0,0,5,7</insideoffset>
 	</framedef>
 
 	<!-- Combat tracker -->
 	<framedef name="ctbox">
-		<bitmap file="graphics/frames_new/ctbox.png" />
+		<bitmap file="graphics/frames_sw/ctbox.png" />
 		<offset>32,32,19,50</offset>
 		<insideoffset>0,0,7,7</insideoffset>
 	</framedef>
 
 	<!-- Controls -->
 	<framedef name="metalplate">
-		<bitmap file="graphics/frames_new/metaltag.png" />
+		<bitmap file="graphics/frames_sw/metaltag.png" />
 		<topleft rect="0,0,11,10" />
 		<top rect="11,0,177,10" />
 		<topright rect="188,0,12,10" />
@@ -127,7 +127,7 @@
 
 	<!-- Desktop background -->
 	<framedef name="desktop">
-		<bitmap file="graphics/frames_new/desktop.jpg" />
+		<bitmap file="graphics/frames_sw/desktop.jpg" />
 		<top rect="1,1,2000,400" />
 		<middle rect="1,1,2000,2000" />
 		<right rect="1800,0,400,2000" />
@@ -136,7 +136,7 @@
 	</framedef>
 
 	<framedef name="shortcuts">
-		<bitmap file="graphics/frames_new/shortcuts.png" />
+		<bitmap file="graphics/frames_sw/shortcuts.png" />
 		<left rect="450,0,25,144" />
 		<middle rect="475,0,50,144" />
 		<right rect="525,0,25,144" />
@@ -144,89 +144,89 @@
 
 	<!-- Hot key bar -->	
 	<framedef name="hotkeybox">
-		<bitmap file="graphics/frames_new/hotkeybox.png" />
+		<bitmap file="graphics/frames_sw/hotkeybox.png" />
 		<offset>2,5,2,2</offset>
 	</framedef>
 
 	<framedef name="hotkeytitlebox">
-		<bitmap file="graphics/frames_new/hotkeytitlebox.png" />
+		<bitmap file="graphics/frames_sw/hotkeytitlebox.png" />
 		<offset>0,0,4,5</offset>
 	</framedef>
 
 	<!-- Images -->
 	<framedef name="imagebox">
-		<bitmap file="graphics/frames_new/imagebox.png" />
+		<bitmap file="graphics/frames_sw/imagebox.png" />
 		<offset>60,30,30,60</offset>
 		<insideoffset>0,0,20,22</insideoffset>
 	</framedef>
 
 	<!-- Other Campaign Records -->
 	<framedef name="recordsheet">
-		<bitmap file="graphics/frames_new/charsheet.png" />
+		<bitmap file="graphics/frames_sw/charsheet.png" />
 		<offset>25,40,25,25</offset>
 		<insideoffset>0,0,7,7</insideoffset>
 	</framedef>
 
 	<!-- Party Sheet -->
 	<framedef name="partysheet">
-		<bitmap file="graphics/frames_new/partysheet.png" />
+		<bitmap file="graphics/frames_sw/partysheet.png" />
 		<offset>25,40,25,25</offset>
 		<insideoffset>0,0,7,7</insideoffset>
 	</framedef>
 
 	<!-- Story and Notes -->
 	<framedef name="storybox">
-		<bitmap file="graphics/frames_new/storybox.png" />
+		<bitmap file="graphics/frames_sw/storybox.png" />
 		<offset>41,172,41,49</offset>
 		<insideoffset>0,0,10,5</insideoffset>
 	</framedef>
 
 	<!-- Token Bag -->
 	<framedef name="tokenbag">
-		<bitmap file="graphics/frames_new/tokenbag.png" />
+		<bitmap file="graphics/frames_sw/tokenbag.png" />
 		<offset>19,19,24,24</offset>
 		<insideoffset>0,0,13,13</insideoffset>
 	</framedef>
 
 	<!-- Utility -->
 	<framedef name="referencelist">
-		<bitmap file="graphics/frames_new/referencepage.png" />
+		<bitmap file="graphics/frames_sw/referencepage.png" />
 		<offset>130,100,100,100</offset>
 		<insideoffset>0,0,5,5</insideoffset>
 	</framedef>
 
 	<framedef name="referencepage">
-		<bitmap file="graphics/frames_new/referencepage.png" />
+		<bitmap file="graphics/frames_sw/referencepage.png" />
 		<offset>130,100,100,100</offset>
 		<insideoffset>0,0,5,5</insideoffset>
 	</framedef>
 
 	<framedef name="utilitybox">
-		<bitmap file="graphics/frames_new/utilitybox.png" />
+		<bitmap file="graphics/frames_sw/utilitybox.png" />
 		<offset>22,22,22,22</offset>
 		<insideoffset>0,0,10,10</insideoffset>
 	</framedef>
 
 	<framedef name="utilitybox2">
-		<bitmap file="graphics/frames_new/utilitybox2.png" />
+		<bitmap file="graphics/frames_sw/utilitybox2.png" />
 		<offset>92,100,100,110</offset>
 		<insideoffset>0,0,7,8</insideoffset>
 	</framedef>
 
 	<framedef name="utilitybox3">
-		<bitmap file="graphics/frames_new/utilitybox3.png" />
+		<bitmap file="graphics/frames_sw/utilitybox3.png" />
 		<offset>74,75,77,51</offset>
 		<insideoffset>0,0,5,7</insideoffset>
 	</framedef>
 
 	<!-- Windows -->
 	<framedef name="windowtitle">
-		<bitmap file="graphics/frames_new/windowtitle.png" />
+		<bitmap file="graphics/frames_sw/windowtitle.png" />
 		<offset>25,0,30,0</offset>
 	</framedef>
 
 	<framedef name="durationadjustment">
-		<bitmap file="graphics/frames_new/durationadjustment.png" />
+		<bitmap file="graphics/frames_sw/durationadjustment.png" />
 		<topleft rect="0,0,12,12" />
 		<top rect="12,0,200,12" />
 		<topright rect="212,0,12,12" />

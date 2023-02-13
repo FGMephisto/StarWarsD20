@@ -27,10 +27,10 @@
 	<icon name="button_skillpe_down" file="graphics/buttons/button_skillpe_down.png" />
 	<icon name="button_skillpr" file="graphics/buttons/button_skillpr.png" />
 	<icon name="button_skillpr_down" file="graphics/buttons/button_skillpr_down.png" />
-	<icon name="button_skillrw" file="graphics/buttons_new/button_skillrw.png" />
-	<icon name="button_skillrw_down" file="graphics/buttons_new/button_skillrw_down.png" />
-	<icon name="button_skillsl" file="graphics/buttons_new/button_skillsl.png" />
-	<icon name="button_skillsl_down" file="graphics/buttons_new/button_skillsl_down.png" />
+	<icon name="button_skillrw" file="graphics/buttons_sw/button_skillrw.png" />
+	<icon name="button_skillrw_down" file="graphics/buttons_sw/button_skillrw_down.png" />
+	<icon name="button_skillsl" file="graphics/buttons_sw/button_skillsl.png" />
+	<icon name="button_skillsl_down" file="graphics/buttons_sw/button_skillsl_down.png" />
 	
 	<!-- Buttons -->
 	<icon name="button_fullsheet" file="graphics/buttons/button_fullsheet.png" />
