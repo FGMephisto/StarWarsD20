@@ -7,6 +7,9 @@
 -->
 
 <root>
+	<!-- =================================================================================================================== -->
+	<!-- Adjusted -->
+	<!-- =================================================================================================================== -->
 	<windowclass name="ps_main">
 		<script file="ps/scripts/ps_main_sw.lua" />
 		<sheetdata>
@@ -131,10 +134,11 @@
 				<anchored to="headeranchor" position="insidebottomright" offset="10,10" />
 				<target>list</target>
 				<gmvisibleonly />
+				<edittarget>list</edittarget>
 			</button_iedit>
 
-			<list_psmain />
-			<scrollbar_list />
+			<list_psmain name="list" />
+			<scrollbar_list name="scrollbar_list" />
 
 			<anchor_partysheet_main_footer />
 
@@ -265,6 +269,9 @@
 		</sheetdata>
 	</windowclass>
 
+	<!-- =================================================================================================================== -->
+	<!-- Adjusted -->
+	<!-- =================================================================================================================== -->
 	<windowclass name="ps_mainitem">
 		<margins control="0,0,0,10" />
 		<frame>partysheetentry</frame>
@@ -423,6 +430,7 @@
 
 			<button_idelete name="idelete">
 				<anchored position="insidetopright" offset="10,10" />
+				<editmode>list_iedit</editmode>
 			</button_idelete>
 		</sheetdata>
 	</windowclass>

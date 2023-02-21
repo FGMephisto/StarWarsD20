@@ -5,14 +5,13 @@
 --
 
 -- ===================================================================================================================
--- Modified
+-- Adjusted
 -- ===================================================================================================================
 function onInit()
 	registerMenuItem(Interface.getString("menu_addweapon"), "insert", 3);
 	-- registerMenuItem(Interface.getString("menu_addspellclass"), "insert", 5);
  
-	updateAbility();
-	update();
+	self.updateAbility();
 
 	local node = getDatabaseNode();
 	DB.addHandler(DB.getPath(node, "abilities"), "onChildUpdate", updateAbility);
@@ -21,7 +20,7 @@ function onInit()
 end
 
 -- ===================================================================================================================
--- Modified
+-- Adjusted
 -- ===================================================================================================================
 function onClose()
 	local node = getDatabaseNode();
@@ -31,7 +30,7 @@ function onClose()
 end
 
 -- ===================================================================================================================
--- Modified
+-- Adjusted
 -- ===================================================================================================================
 function onMenuSelection(selection)
 	if selection == 3 then
@@ -60,7 +59,7 @@ end
 local bUpdateLock = false;
 
 -- ===================================================================================================================
--- Modified
+-- Adjusted
 -- ===================================================================================================================
 function updateAbility()
 	if bUpdateLock then
@@ -80,13 +79,16 @@ function updateAbility()
 end
 
 -- ===================================================================================================================
--- Modified
+-- Adjusted - Obsolete
 -- ===================================================================================================================
-function update()
-	weaponlist.update();
+-- function update()
+	-- weaponlist.update();
 	-- spellclasslist.update();
-end
+-- end
 
-function getEditMode()
-	return (parentcontrol.window.actions_iedit.getValue() == 1);
-end
+-- ===================================================================================================================
+-- Adjusted - Obsolete
+-- ===================================================================================================================
+-- function getEditMode()
+	-- return (parentcontrol.window.actions_iedit.getValue() == 1);
+-- end

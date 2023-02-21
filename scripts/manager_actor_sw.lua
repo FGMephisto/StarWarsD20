@@ -4,14 +4,17 @@
 -- File adjusted for Star Wars 3.5E
 --
 
+
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onInit()
 	initActorHealth();
 end
 
---
---	HEALTH
--- 
 
+-- ===================================================================================================================
+--	HEALTH
+-- ===================================================================================================================
 function initActorHealth()
 	ActorHealthManager.registerStatusHealthColor(ActorHealthManager.STATUS_UNCONSCIOUS, ColorManager.COLOR_HEALTH_UNCONSCIOUS);
 	ActorHealthManager.registerStatusHealthColor(ActorHealthManager.STATUS_DISABLED, ColorManager.COLOR_HEALTH_SIMPLE_BLOODIED);
@@ -20,12 +23,16 @@ function initActorHealth()
 	ActorHealthManager.getWoundPercent = getWoundPercent;
 end
 
+-- ===================================================================================================================
 -- NOTE: Always default to using CT node as primary to make sure 
 --		that all bars and statuses are synchronized in combat tracker
 --		(Cross-link network updates between PC and CT fields can occur in either order, 
 --		depending on where the scripts or end user updates.)
 -- NOTE 2: We can not use default effect checking in this function; 
 -- 		as it will cause endless loop with conditionals that check health
+-- ===================================================================================================================
+-- Adjusted
+-- ===================================================================================================================
 function getWoundPercent(v)
 	local rActor = ActorManager.resolveActor(v);
 
@@ -79,6 +86,8 @@ function getWoundPercent(v)
 	return nPercentLethal, sStatus, nPercentLethal;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getPCSheetWoundColor(nodePC)
 	local nHP = 0;
 	local nWounds = 0;
@@ -104,10 +113,9 @@ function getPCSheetWoundColor(nodePC)
 	return sColor;
 end
 
---
+-- ===================================================================================================================
 --	ABILITY SCORES
---
-
+-- ===================================================================================================================
 function getAbilityEffectsBonus(rActor, sAbility)
 	if not rActor or not sAbility then
 		return 0, 0;
@@ -163,6 +171,8 @@ function getAbilityEffectsBonus(rActor, sAbility)
 	return nAbilityMod, nAbilityEffects;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getAbilityDamage(rActor, sAbility)
 	if not sAbility then
 		return 0;
@@ -198,6 +208,8 @@ function getAbilityDamage(rActor, sAbility)
 	return nStatDamage;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getAbilityScore(rActor, sAbility)
 	if not sAbility then
 		return -1;
@@ -270,6 +282,8 @@ function getAbilityScore(rActor, sAbility)
 	return nStatScore;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getAbilityBonus(rActor, sAbility)
 	if not sAbility then
 		return 0;
@@ -332,10 +346,9 @@ function getAbilityBonus(rActor, sAbility)
 	return nStatVal;
 end
 
---
+-- ===================================================================================================================
 --	DEFENSES
---
-
+-- ===================================================================================================================
 function getSpellDefense(rActor)
 	local sNodeType, nodeActor = ActorManager.getTypeAndNode(rActor);
 	if not nodeActor then
@@ -361,6 +374,8 @@ function getSpellDefense(rActor)
 	return nSR;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getArmorComps(rActor)
 	local sNodeType, nodeActor = ActorManager.getTypeAndNode(rActor);
 	if not nodeActor then
@@ -447,6 +462,8 @@ function getArmorComps(rActor)
 	return aComps;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getDefenseValue(rAttacker, rDefender, rRoll)
 	-- VALIDATE
 	if not rDefender or not rRoll then

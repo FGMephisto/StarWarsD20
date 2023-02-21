@@ -4,6 +4,8 @@
 -- File adjusted for Star Wars 3.5E
 --
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onInit()
 	onEncumbranceLimitChanged();
 	DB.addHandler(DB.getPath(getDatabaseNode(), "abilities.strength.score"), "onUpdate", onStrengthChanged);
@@ -12,6 +14,8 @@ function onInit()
 	DB.addHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", onEncumbranceLimitChanged);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onClose()
 	DB.removeHandler(DB.getPath(getDatabaseNode(), "abilities.strength.score"), "onUpdate", onStrengthChanged);
 	DB.removeHandler(DB.getPath(getDatabaseNode(), "size"), "onUpdate", onSizeChanged);
@@ -19,16 +23,20 @@ function onClose()
 	DB.removeHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", onEncumbranceLimitChanged);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onStrengthChanged()
 	onEncumbranceLimitChanged();
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onSizeChanged()
 	onEncumbranceLimitChanged();
 end
 
 -- ===================================================================================================================
--- Modified
+-- Adjusted
 -- ===================================================================================================================
 function onEncumbranceLimitChanged()
 	local nodeChar = getDatabaseNode();

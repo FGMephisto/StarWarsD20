@@ -4,7 +4,9 @@
 -- File adjusted for Star Wars 3.5E
 --
 
+-- ===================================================================================================================
 -- Ruleset action types
+-- ===================================================================================================================
 actions = {
 	["dice"] = { bUseModStack = true },
 	["table"] = { },
@@ -13,31 +15,50 @@ actions = {
 	["grapple"] = { sIcon = "action_attack", sTargeting = "each", bUseModStack = true },
 	["damage"] = { sIcon = "action_damage", sTargeting = "each", bUseModStack = true },
 	["heal"] = { sIcon = "action_heal", sTargeting = "all", bUseModStack = true },
+	["cast"] = { sTargeting = "each" },
+	["castclc"] = { sTargeting = "each" },
+	["castsave"] = { sTargeting = "each" },
+	["clc"] = { sTargeting = "each", bUseModStack = true },
+	["spellsave"] = { sTargeting = "each" },
+	["spdamage"] = { sIcon = "action_damage", sTargeting = "all", bUseModStack = true },
 	["skill"] = { bUseModStack = true },
 	["init"] = { bUseModStack = true },
 	["save"] = { bUseModStack = true },
 	["ability"] = { bUseModStack = true },
+	-- PF SPECIFIC
+	["concentration"] = { bUseModStack = true },
 	-- TRIGGERED
 	["critconfirm"] = { sIcon = "action_attack" },
 	["misschance"] = { },
 	["stabilization"] = { },
 };
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 targetactions = {
 	"attack",
 	"critconfirm",
 	"grapple",
 	"damage",
+	"spdamage",
 	"heal",
-	"effect"
+	"effect",
+	"cast",
+	"clc",
+	"spellsave"
 };
 
+-- ===================================================================================================================
+-- Adjusted
+-- ===================================================================================================================
 currencies = { 
 	{ name = "Hard Currency", weight = 0.0, value = 1 },
 	{ name = "Credit Chip", weight = 0.0, value = 1 },
 };
 currencyDefault = "Credit Chip";
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 tokenLightDefaults = {
 	["candle"] = {
 		sColor = "FFFFFCC3",
@@ -77,6 +98,9 @@ tokenLightDefaults = {
 	},
 };
 
+-- ===================================================================================================================
+-- Adjusted
+-- ===================================================================================================================
 function onInit()
 	if not DataCommon.isPFRPG() then
 		VisionManager.addVisionField("specialqualities");
@@ -143,6 +167,8 @@ function onInit()
 	}
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getCharSelectDetailHost(nodeChar)
 	local sValue = "";
 	local nLevel = DB.getValue(nodeChar, "level", 0);
@@ -152,14 +178,20 @@ function getCharSelectDetailHost(nodeChar)
 	return sValue;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function requestCharSelectDetailClient()
 	return "name,#level";
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function receiveCharSelectDetailClient(vDetails)
 	return vDetails[1], "Level " .. math.floor(vDetails[2]*100)*0.01;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getCharSelectDetailLocal(nodeLocal)
 	local vDetails = {};
 	table.insert(vDetails, DB.getValue(nodeLocal, "name", ""));
@@ -167,10 +199,14 @@ function getCharSelectDetailLocal(nodeLocal)
 	return receiveCharSelectDetailClient(vDetails);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getDistanceUnitsPerGrid()
 	return 5;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getDeathThreshold(rActor)
 	local nDying = 10;
 
@@ -189,6 +225,8 @@ function getDeathThreshold(rActor)
 	return nDying;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getStabilizationRoll(rActor)
 	local rRoll = { sType = "stabilization", sDesc = "[STABILIZATION]" };
 	
@@ -221,12 +259,16 @@ function getStabilizationRoll(rActor)
 	return rRoll;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function modStabilization(rSource, rTarget, rRoll)
 	if DataCommon.isPFRPG() then
 		ActionAbility.modRoll(rSource, rTarget, rRoll);
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getStabilizationResult(rRoll)
 	local bSuccess = false;
 	
@@ -250,6 +292,8 @@ function getStabilizationResult(rRoll)
 	return bSuccess;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function performConcentrationCheck(draginfo, rActor, nodeSpellClass)
 	if DataCommon.isPFRPG() then
 		local rRoll = { sType = "concentration", sDesc = "[CONCENTRATION]", aDice = { "d20" } };

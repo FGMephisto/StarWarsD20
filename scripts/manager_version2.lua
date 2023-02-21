@@ -11,9 +11,9 @@ function onInit()
 		updateCampaign();
 	end
 
-	DB.onAuxCharLoad = onCharImport;
-	DB.onImport = onImport;
-	Module.onModuleLoad = onModuleLoad;
+	DB.addEventHandler("onAuxCharLoad", onCharImport);
+	DB.addEventHandler("onImport", onImport);
+	Module.addEventHandler("onModuleLoad", onModuleLoad);
 end
 
 function onCharImport(nodePC)
@@ -22,7 +22,7 @@ function onCharImport(nodePC)
 end
 
 function onImport(node)
-	local aPath = StringManager.split(node.getPath(), ".");
+	local aPath = StringManager.split(DB.getPath(node), ".");
 	if #aPath == 2 and aPath[1] == "charsheet" then
 		local _, _, aMajor, _ = DB.getImportRulesetVersion();
 		updateChar(node, aMajor[rsname]);
@@ -194,9 +194,9 @@ function migrateCharAbility17(nodeAbility)
 end
 
 function migrateCharProf17(nodePC, nodeAbility, sPrefix)
-	local nodeProfList = nodePC.createChild("proficiencylist");
+	local nodeProfList = DB.createChild(nodePC, "proficiencylist");
 	if nodeProfList then
-		local nodeProf = nodeProfList.createChild();
+		local nodeProf = DB.createChild(nodeProfList);
 		if nodeProf then
 			DB.setValue(nodeProf, "name", "string", sPrefix .. DB.getValue(nodeAbility, "value", ""));
 		end
@@ -204,55 +204,55 @@ function migrateCharProf17(nodePC, nodeAbility, sPrefix)
 end
 
 function migrateChar17(nodePC)
-	for _,nodeRecord in pairs(DB.getChildren(nodePC, "featlist")) do
+	for _,nodeRecord in ipairs(DB.getChildList(nodePC, "featlist")) do
 		migrateCharFeat17(nodeRecord);
 	end
-	for _,nodeRecord in pairs(DB.getChildren(nodePC, "specialabilitylist")) do
+	for _,nodeRecord in ipairs(DB.getChildList(nodePC, "specialabilitylist")) do
 		migrateCharAbility17(nodeRecord);
 	end
 	
-	for _,nodeRecord in pairs(DB.getChildren(nodePC, "proficiencyarmor")) do
+	for _,nodeRecord in ipairs(DB.getChildList(nodePC, "proficiencyarmor")) do
 		migrateCharProf17(nodePC, nodeRecord, "Armor: ");
 	end
 	DB.deleteChild(nodePC, "proficiencyarmor");
-	for _,nodeRecord in pairs(DB.getChildren(nodePC, "proficiencyweapon")) do
+	for _,nodeRecord in ipairs(DB.getChildList(nodePC, "proficiencyweapon")) do
 		migrateCharProf17(nodePC, nodeRecord, "Weapon: ");
 	end
 	DB.deleteChild(nodePC, "proficiencyweapon");
 end
 
 function convertChar17()
-	for _,nodePC in pairs(DB.getChildren("charsheet")) do
+	for _,nodePC in ipairs(DB.getChildList("charsheet")) do
 		migrateChar17(nodePC);
 	end
 end
 
 function convertNotes16()
-	for _,vNote in pairs(DB.getChildren("notes")) do
+	for _,vNote in ipairs(DB.getChildList("notes")) do
 		convertFTEntry16(vNote, "text");
 	end
 end
 
 function convertStories16()
-	for _,vStory in pairs(DB.getChildren("encounter")) do
+	for _,vStory in ipairs(DB.getChildList("encounter")) do
 		convertFTEntry16(vStory, "text");
 	end
 end
 
 function convertModuleStories16(nodeRoot)
-	for _,vStory in pairs(DB.getChildren(nodeRoot, "encounter")) do
+	for _,vStory in ipairs(DB.getChildList(nodeRoot, "encounter")) do
 		convertFTEntry16(vStory, "text");
 	end
 end
 
 function convertQuests16()
-	for _,vQuest in pairs(DB.getChildren("quest")) do
+	for _,vQuest in ipairs(DB.getChildList("quest")) do
 		convertFTEntry16(vQuest, "description");
 	end
 end
 
 function convertModuleQuests16(nodeRoot)
-	for _,vQuest in pairs(DB.getChildren(nodeRoot, "quest")) do
+	for _,vQuest in ipairs(DB.getChildList(nodeRoot, "quest")) do
 		convertFTEntry16(vQuest, "description");
 	end
 end
@@ -260,21 +260,21 @@ end
 function convertFTEntry16(vNode, sField)
 	local vText = DB.getChild(vNode, sField);
 	if vText then
-		local sFT = vText.getValue();
+		local sFT = DB.getValue(vText);
 		sFT = sFT:gsub("recordname=\"library\.d20monsters\.entries\.", "recordname=\"reference\.npcdata\.");
 		sFT = sFT:gsub("recordname=\"library\.PFBestiary\.entries\.", "recordname=\"reference\.npcdata\.");
-		vText.setValue(sFT);
+		DB.setValue(vText, ".", "formattedtext", sFT);
 	end
 end
 
 function convertTables16()
-	for _,vTable in pairs(DB.getChildren("tables")) do
+	for _,vTable in ipairs(DB.getChildList("tables")) do
 		convertTable16(vTable);
 	end
 end
 
 function convertModuleTables16(nodeRoot)
-	for _,vTable in pairs(DB.getChildren(nodeRoot, "tables")) do
+	for _,vTable in ipairs(DB.getChildList(nodeRoot, "tables")) do
 		convertTable16(vTable);
 	end
 end
@@ -282,10 +282,10 @@ end
 function convertTable16(vTable)
 	local vRows = DB.getChild(vTable, "tablerows");
 	if vRows then
-		for _,vRow in pairs(vRows.getChildren()) do
+		for _,vRow in ipairs(DB.getChildList(vRows)) do
 			local vResults = DB.getChild(vRow, "results");
 			if vResults then
-				for _,vResult in pairs(vResults.getChildren()) do
+				for _,vResult in ipairs(DB.getChildList(vResults)) do
 					local sClass, sRecord = DB.getValue(vResult, "resultlink", "", "");
 					sRecord = sRecord:gsub("library\.d20monsters\.entries\.", "reference\.npcdata\.");
 					sRecord = sRecord:gsub("library\.PFBestiary\.entries\.", "reference\.npcdata\.");
@@ -297,13 +297,13 @@ function convertTable16(vTable)
 end
 
 function convertEncounters16()
-	for _,vEncounter in pairs(DB.getChildren("battle")) do
+	for _,vEncounter in ipairs(DB.getChildList("battle")) do
 		convertEncounter16(vEncounter);
 	end
 end
 
 function convertModuleEncounters16(nodeRoot)
-	for _,vEncounter in pairs(DB.getChildren(nodeRoot, "battle")) do
+	for _,vEncounter in ipairs(DB.getChildList(nodeRoot, "battle")) do
 		convertEncounter16(vEncounter);
 	end
 end
@@ -311,7 +311,7 @@ end
 function convertEncounter16(vEncounter)
 	local vNPCs = DB.getChild(vEncounter, "npclist");
 	if vNPCs then
-		for _,vNPC in pairs(vNPCs.getChildren()) do
+		for _,vNPC in ipairs(DB.getChildList(vNPCs)) do
 			local sClass, sRecord = DB.getValue(vNPC, "link", "", "");
 			sRecord = sRecord:gsub("library\.d20monsters\.entries\.", "reference\.npcdata\.");
 			sRecord = sRecord:gsub("library\.PFBestiary\.entries\.", "reference\.npcdata\.");
@@ -321,19 +321,19 @@ function convertEncounter16(vEncounter)
 end
 
 function convertPSEnc15()
-	for _,vEnc in pairs(DB.getChildren("partysheet.encounters")) do
+	for _,vEnc in ipairs(DB.getChildList("partysheet.encounters")) do
 		DB.setValue(vEnc, "exp", "number", DB.getValue(vEnc, "xp", "number"));
 	end
 end
 
 function convertNPC14()
-	for _,vNPC in pairs(DB.getChildren("npc")) do
+	for _,vNPC in ipairs(DB.getChildList("npc")) do
 		migrateSpells12(vNPC);
 	end
 end
 
 function migrateModuleParcel12(nodeRecord)
-	for _,vItem in pairs(DB.getChildren(nodeRecord, "itemlist")) do
+	for _,vItem in ipairs(DB.getChildList(nodeRecord, "itemlist")) do
 		if DB.getType(DB.getPath(vItem, "description")) == "string" then
 			convertItemInList11(vItem);
 		end
@@ -341,22 +341,22 @@ function migrateModuleParcel12(nodeRecord)
 end
 
 function convertModuleParcels12(nodeRoot)
-	for _,vParcel in pairs(DB.getChildren(nodeRoot, "treasureparcels")) do
+	for _,vParcel in ipairs(DB.getChildList(nodeRoot, "treasureparcels")) do
 		migrateModuleParcel12(vParcel);
 	end
 end
 
 function convertModuleNPCs13(nodeRoot)
-	for _,vNPC in pairs(DB.getChildren(nodeRoot, "npc")) do
+	for _,vNPC in ipairs(DB.getChildList(nodeRoot, "npc")) do
 		migrateSpells12(vNPC);
 	end
 end
 
 function migrateSpells12(nodeCreature)
-	for _,vClass in pairs(DB.getChildren(nodeCreature, "spellset")) do
-		for _,vLevel in pairs(DB.getChildren(vClass, "levels")) do
-			for _,vSpell in pairs(DB.getChildren(vLevel, "spells")) do
-				for _,vAction in pairs(DB.getChildren(vSpell, "actions")) do
+	for _,vClass in ipairs(DB.getChildList(nodeCreature, "spellset")) do
+		for _,vLevel in ipairs(DB.getChildList(vClass, "levels")) do
+			for _,vSpell in ipairs(DB.getChildList(vLevel, "spells")) do
+				for _,vAction in ipairs(DB.getChildList(vSpell, "actions")) do
 					local bCleanup = false;
 					
 					local sType = DB.getValue(vAction, "type", "");
@@ -465,7 +465,7 @@ function migrateSpells12(nodeCreature)
 end
 
 function migrateChar12(nodePC)
-	for _,nodeWeapon in pairs(DB.getChildren(nodePC, "weaponlist")) do
+	for _,nodeWeapon in ipairs(DB.getChildList(nodePC, "weaponlist")) do
 		if not DB.getChild(nodeWeapon, "damagelist") then
 			local nodeDmgList = DB.createChild(nodeWeapon, "damagelist");
 			if nodeDmgList then
@@ -538,7 +538,7 @@ function migrateChar12(nodePC)
 end
 
 function convertChar12()
-	for _,nodePC in pairs(DB.getChildren("charsheet")) do
+	for _,nodePC in ipairs(DB.getChildList("charsheet")) do
 		migrateChar12(nodePC);
 	end
 end
@@ -549,7 +549,7 @@ function migrateChar11(nodePC)
 end
 
 function convertChar11()
-	for _,nodePC in pairs(DB.getChildren("charsheet")) do
+	for _,nodePC in ipairs(DB.getChildList("charsheet")) do
 		migrateChar11(nodePC);
 	end
 end
@@ -563,7 +563,7 @@ function convertCombat11()
 	local nodeList = DB.createNode("combattracker.list");
 	
 	for _,vNPC in pairs(aCombatants) do
-		local nodeNew = nodeList.createChild();
+		local nodeNew = DB.createChild(nodeList);
 
 		-- Get rid of type field
 		DB.deleteChild(vNPC, "type");
@@ -590,7 +590,7 @@ function convertCombat11()
 		end
 		
 		-- Delete the old record
-		vNPC.delete();
+		DB.deleteNode(vNPC);
 	end
 	
 	-- Migrate round counter to new location
@@ -604,17 +604,17 @@ function convertItemInList11(vItem)
 	local nodeNew = nil;
 	local sClass, sRecord = DB.getValue(vItem, "shortcut");
 	if sClass and sRecord and sRecord ~= "" then
-		nodeNew = ItemManager.addItemToList(vItem.getParent(), sClass, sRecord);
+		nodeNew = ItemManager.addItemToList(DB.getParent(vItem), sClass, sRecord);
 		if nodeNew then
 			DB.setValue(nodeNew, "count", "number", nCount);
-			vItem.delete();
+			DB.deleteNode(vItem);
 		end
 	end
 	if not nodeNew then
 		local sName = DB.getValue(vItem, "description", "");
 		
 		if nCount == 0 and sName == "" then
-			vItem.delete();
+			DB.deleteNode(vItem);
 		else
 			DB.deleteChild(vItem, "description");
 			DB.setValue(vItem, "name", "string", sName);
@@ -624,14 +624,14 @@ function convertItemInList11(vItem)
 end
 
 function convertParty11()
-	for _,vItem in pairs(DB.getChildren("partysheet.treasureparcelitemlist")) do
+	for _,vItem in ipairs(DB.getChildList("partysheet.treasureparcelitemlist")) do
 		convertItemInList11(vItem);
 	end
 end
 
 function convertParcel11()
-	for _,vParcel in pairs(DB.getChildren("treasureparcels")) do
-		for _,vItem in pairs(DB.getChildren(vParcel, "itemlist")) do
+	for _,vParcel in ipairs(DB.getChildList("treasureparcels")) do
+		for _,vItem in ipairs(DB.getChildList(vParcel, "itemlist")) do
 			convertItemInList11(vItem);
 		end
 	end
@@ -654,7 +654,7 @@ function convertLog10()
 		local nodeNewLog = DB.createNode("calendar.log");
 		if nodeNewLog then
 			DB.copyNode(nodeLog, nodeNewLog);
-			nodeLog.delete();
+			DB.deleteNode(nodeLog);
 		end
 	end
 end
@@ -671,25 +671,25 @@ function migrateChar9(nodeChar)
 end
 
 function convertCharacters9()
-	for _,nodeChar in pairs(DB.getChildren("charsheet")) do
+	for _,nodeChar in ipairs(DB.getChildList("charsheet")) do
 		migrateChar9(nodeChar);
 	end
 end
 
 function migrateEncounter9(nodeRecord)
-	for _,nodeNPC in pairs(DB.getChildren(nodeRecord, "npclist")) do
-		for _,nodeMapLink in pairs(DB.getChildren(nodeNPC, "maplink")) do
-			local nodeImageLink = nodeMapLink.getChild("imagelink");
+	for _,nodeNPC in ipairs(DB.getChildList(nodeRecord, "npclist")) do
+		for _,nodeMapLink in ipairs(DB.getChildList(nodeNPC, "maplink")) do
+			local nodeImageLink = DB.getChild(nodeMapLink, "imagelink");
 			if nodeImageLink then
-				DB.setValue(nodeMapLink, "imageref", "windowreference", "imagewindow", nodeImageLink.getValue());
-				nodeImageLink.delete();
+				DB.setValue(nodeMapLink, "imageref", "windowreference", "imagewindow", DB.getValue(nodeImageLink));
+				DB.deleteNode(nodeImageLink);
 			end
 		end
 	end
 end
 
 function convertEncounters9()
-	for _,nodeEnc in pairs(DB.getChildren("battle")) do
+	for _,nodeEnc in ipairs(DB.getChildList("battle")) do
 		migrateEncounter9(nodeEnc);
 	end
 end
@@ -701,69 +701,69 @@ function convertOptions9()
 	end
 	
 	local sOptionHRNH = "off";
-	local nodeOptionRHPS = nodeOptions.getChild("RHPS");
+	local nodeOptionRHPS = DB.getChild(nodeOptions, "RHPS");
 	if nodeOptionRHPS then
-		if nodeOptionRHPS.getValue() == "on" then
+		if DB.getValue(nodeOptionRHPS) == "on" then
 			sOptionHRNH = "random";
 		end
-		nodeOptionRHPS.delete();
+		DB.deleteNode(nodeOptionRHPS);
 	end
 	DB.setValue(nodeOptions, "HRNH", "string", sOptionHRNH);
 end
 
 function migrateChar8(nodeChar)
-	local nodeSpecial = nodeChar.getChild("special");
+	local nodeSpecial = DB.getChild(nodeChar, "special");
 	if nodeSpecial then
-		local nodeSR = nodeSpecial.getChild("spellresistance");
+		local nodeSR = DB.getChild(nodeSpecial, "spellresistance");
 		if nodeSR then
-			DB.setValue(nodeChar, "defenses.sr.base", "number", nodeSR.getValue());
+			DB.setValue(nodeChar, "defenses.sr.base", "number", DB.getValue(nodeSR));
 		end
 	
-		local nodeDR = nodeSpecial.getChild("damagereduction");
+		local nodeDR = DB.getChild(nodeSpecial, "damagereduction");
 		if nodeDR then
-			local nDR = nodeDR.getValue();
+			local nDR = DB.getValue(nodeDR);
 			if nDR ~= 0 then
 				DB.setValue(nodeChar, "defenses.damagereduction", "string", nDR);
 			end
 		end
 		
-		local nodeSF = nodeSpecial.getChild("spellfailure");
+		local nodeSF = DB.getChild(nodeSpecial, "spellfailure");
 		if nodeSF then
-			DB.setValue(nodeChar, "encumbrance.spellfailure", "number", nodeSF.getValue());
+			DB.setValue(nodeChar, "encumbrance.spellfailure", "number", DB.getValue(nodeSF));
 		end
 
-		nodeSpecial.delete();
+		DB.deleteNode(nodeSpecial);
 	end
 	
-	local nodeEnc = nodeChar.getChild("encumbrance");
+	local nodeEnc = DB.getChild(nodeChar, "encumbrance");
 	if nodeEnc then
-		local nodeEncMaxBonus = nodeEnc.getChild("armormaxdexbonus");
+		local nodeEncMaxBonus = DB.getChild(nodeEnc, "armormaxdexbonus");
 		if nodeEncMaxBonus then
-			DB.setValue(nodeEnc, "armormaxstatbonus", "number", nodeEncMaxBonus.getValue());
-			nodeEncMaxBonus.delete();
+			DB.setValue(nodeEnc, "armormaxstatbonus", "number", DB.getValue(nodeEncMaxBonus));
+			DB.deleteNode(nodeEncMaxBonus);
 		end
 		
-		local nodeEncMaxBonusActive = nodeEnc.getChild("armormaxdexbonusactive");
+		local nodeEncMaxBonusActive = DB.getChild(nodeEnc, "armormaxdexbonusactive");
 		if nodeEncMaxBonusActive then
-			DB.setValue(nodeEnc, "armormaxstatbonusactive", "number", nodeEncMaxBonusActive.getValue());
-			nodeEncMaxBonusActive.delete();
+			DB.setValue(nodeEnc, "armormaxstatbonusactive", "number", DB.getValue(nodeEncMaxBonusActive));
+			DB.deleteNode(nodeEncMaxBonusActive);
 		end
 	end
 	
-	local nodeSpeed = nodeChar.getChild("speed");
+	local nodeSpeed = DB.getChild(nodeChar, "speed");
 	if nodeSpeed then
-		local nSpeed = nodeSpeed.getValue();
-		nodeSpeed.delete();
+		local nSpeed = DB.getValue(nodeSpeed);
+		DB.deleteNode(nodeSpeed);
 		DB.setValue(nodeChar, "speed.base", "number", nSpeed);
 	end
 	
 	local aClasses = {};
-	local nodeClassList = nodeChar.getChild("classes");
+	local nodeClassList = DB.getChild(nodeChar, "classes");
 	if nodeClassList then
 		local nodeOldClass, nodeNewClass, sClass, nLevel;
 		
 		for i = 1, 3 do
-			nodeOldClass = nodeClassList.getChild("slot" .. i);
+			nodeOldClass = DB.getChild(nodeClassList, "slot" .. i);
 			if nodeOldClass then
 				sClass = DB.getValue(nodeOldClass, "name", "");
 				nLevel = DB.getValue(nodeOldClass, "level", 0);
@@ -771,19 +771,19 @@ function migrateChar8(nodeChar)
 				table.insert(aClasses, sClass);
 				
 				if (sClass ~= "") or (nLevel ~= 0) then
-					local nodeNewClass = nodeClassList.createChild();
+					local nodeNewClass = DB.createChild(nodeClassList);
 					if nodeNewClass then
 						DB.setValue(nodeNewClass, "name", "string", sClass);
 						DB.setValue(nodeNewClass, "level", "number", nLevel);
 					end
 				end
 
-				nodeOldClass.delete();
+				DB.deleteNode(nodeOldClass);
 			end
 		end
 	end
 	
-	for _,nodeSkill in pairs(DB.getChildren(nodeChar, "skilllist")) do
+	for _,nodeSkill in ipairs(DB.getChildList(nodeChar, "skilllist")) do
 		local aLabelWords = StringManager.parseWords(DB.getValue(nodeSkill, "label", ""));
 		for i = 1, #aLabelWords do
 			if aLabelWords[i] ~= "" and aLabelWords[i] ~= "of" then
@@ -793,10 +793,10 @@ function migrateChar8(nodeChar)
 		DB.setValue(nodeSkill, "label", "string", table.concat(aLabelWords, " "));
 	end
 	
-	for _,nodeWeapon in pairs(DB.getChildren(nodeChar, "weaponlist")) do
-		local nodeCritRng = nodeWeapon.getChild("critrange");
+	for _,nodeWeapon in ipairs(DB.getChildList(nodeChar, "weaponlist")) do
+		local nodeCritRng = DB.getChild(nodeWeapon, "critrange");
 		if nodeCritRng then
-			local sCritRng = nodeCritRng.getValue();
+			local sCritRng = DB.getValue(nodeCritRng);
 			
 			local nDash = string.find(sCritRng, "-");
 			if nDash then
@@ -806,12 +806,12 @@ function migrateChar8(nodeChar)
 			
 			DB.setValue(nodeWeapon, "critatkrange", "number", nCritThreshold);
 			
-			nodeCritRng.delete();
+			DB.deleteNode(nodeCritRng);
 		end
 		
-		local nodeCritMult = nodeWeapon.getChild("critmultiplier");
+		local nodeCritMult = DB.getChild(nodeWeapon, "critmultiplier");
 		if nodeCritMult then
-			local sCritMult = nodeCritMult.getValue();
+			local sCritMult = DB.getValue(nodeCritMult);
 			
 			local nCritMult = 2;
 			local sCritMultNum = string.match(sCritMult, "%d+");
@@ -824,30 +824,30 @@ function migrateChar8(nodeChar)
 			
 			DB.setValue(nodeWeapon, "critdmgmult", "number", nCritMult);
 		
-			nodeCritMult.delete();
+			DB.deleteNode(nodeCritMult);
 		end
 	end
 	
-	local nodeSpellClassList = nodeChar.getChild("spellset");
+	local nodeSpellClassList = DB.getChild(nodeChar, "spellset");
 	if nodeSpellClassList then
 		local nodeSpellClass, nodeNewSpellClass;
 		
 		for i = 1, 3 do
-			nodeSpellClass = nodeSpellClassList.getChild("set" .. i);
+			nodeSpellClass = DB.getChild(nodeSpellClassList, "set" .. i);
 			if nodeSpellClass then
-				nodeNewSpellClass = nodeSpellClassList.createChild();
+				nodeNewSpellClass = DB.createChild(nodeSpellClassList);
 				if nodeNewSpellClass then
 					DB.copyNode(nodeSpellClass, nodeNewSpellClass);
 					
 					local sCasterType = "";
-					local nodeSpontaneous = nodeNewSpellClass.getChild("spontaneous");
+					local nodeSpontaneous = DB.getChild(nodeNewSpellClass, "spontaneous");
 					if nodeSpontaneous then
-						local nSpontaneous = nodeSpontaneous.getValue();
+						local nSpontaneous = DB.getValue(nodeSpontaneous);
 						if nSpontaneous == 1 then
 							sCasterType = "spontaneous";
 						end
 						
-						nodeSpontaneous.delete();
+						DB.deleteNode(nodeSpontaneous);
 					end
 					DB.setValue(nodeNewSpellClass, "castertype", "string", sCasterType);
 					
@@ -855,7 +855,7 @@ function migrateChar8(nodeChar)
 						DB.setValue(nodeNewSpellClass, "label", "string", aClasses[i]);
 					end
 
-					nodeSpellClass.delete();
+					DB.deleteNode(nodeSpellClass);
 				end
 			end
 		end
@@ -863,7 +863,7 @@ function migrateChar8(nodeChar)
 end
 
 function convertCharacters()
-	for _,nodeChar in pairs(DB.getChildren("charsheet")) do
+	for _,nodeChar in ipairs(DB.getChildList("charsheet")) do
 		migrateChar8(nodeChar);
 	end
 end
@@ -875,31 +875,30 @@ function convertCT()
 	end
 	
 	-- REMOVE OLD GROUPS
-	local aCTChildren = nodeCT.getChildren();
-	for _,nodeGroup in pairs(aCTChildren) do
-		if nodeGroup.getChild("entries") then
+	for _,nodeGroup in ipairs(DB.getChildList(nodeCT)) do
+		if DB.getChild(nodeGroup, "entries") then
 			-- EXISTENCE OF ENTRIES LIST INDICATES OLD GROUP FORMAT
-			for _,nodeEntry in pairs(DB.getChildren(nodeGroup, "entries")) do
-				local nodeNewEntry = nodeCT.createChild();
+			for _,nodeEntry in ipairs(DB.getChildList(nodeGroup, "entries")) do
+				local nodeNewEntry = DB.createChild(nodeCT);
 				if nodeNewEntry then
 					DB.copyNode(nodeEntry, nodeNewEntry);
 				end
 			end
 			
-			nodeGroup.delete();
+			DB.deleteNode(nodeGroup);
 		end
 	end
 	
 	-- TRANSLATE INDIVIDUAL ENTRIES
-	for _,nodeEntry in pairs(nodeCT.getChildren()) do
+	for _,nodeEntry in ipairs(DB.getChildList(nodeCT)) do
 		-- TYPE
-		local nodeType = nodeEntry.getChild("type");
+		local nodeType = DB.getChild(nodeEntry, "type");
 		if not nodeType then
 			local sType = "npc";
 			
-			local nodeLink = nodeEntry.getChild("link");
+			local nodeLink = DB.getChild(nodeEntry, "link");
 			if nodeLink then
-				local sClass, sRecord = nodeLink.getValue();
+				local sClass, sRecord = DB.getValue(nodeLink);
 				if sRecord and string.match(sRecord, "^charsheet%.") then
 					sType = "pc";
 				end
@@ -913,9 +912,9 @@ function convertCT()
 		end
 		
 		-- AC (BOTH)
-		local nodeAC = nodeEntry.getChild("ac");
+		local nodeAC = DB.getChild(nodeEntry, "ac");
 		if nodeAC then
-			local sAC = nodeAC.getValue();
+			local sAC = DB.getValue(nodeAC);
 			DB.setValue(nodeEntry, "ac_final", "number", tonumber(string.match(sAC, "^(%d+)")) or 10);
 			DB.setValue(nodeEntry, "ac_touch", "number", tonumber(string.match(sAC, "touch (%d+)")) or 10);
 			local sFlatFooted = string.match(sAC, "flat[%-–]footed (%d+)");
@@ -924,47 +923,47 @@ function convertCT()
 			end
 			DB.setValue(nodeEntry, "ac_flatfooted", "number", tonumber(sFlatFooted) or 10);
 			
-			nodeAC.delete();
+			DB.deleteNode(nodeAC);
 		end
 		
 		-- ATTACK / FULL ATTACK (BOTH)
-		local nodeAttacks = nodeEntry.createChild("attacks");
+		local nodeAttacks = DB.createChild(nodeEntry, "attacks");
 		if nodeAttacks then
-			local nodeAtk = nodeEntry.getChild("atk");
+			local nodeAtk = DB.getChild(nodeEntry, "atk");
 			if nodeAtk then
-				local nodeNewAtk = nodeAttacks.createChild();
+				local nodeNewAtk = DB.createChild(nodeAttacks);
 				if nodeNewAtk then
-					DB.setValue(nodeNewAtk, "value", "string", nodeAtk.getValue());
+					DB.setValue(nodeNewAtk, "value", "string", DB.getValue(nodeAtk));
 					
-					nodeAtk.delete();
+					DB.deleteNode(nodeAtk);
 				end
 			end
-			local nodeFullAtk = nodeEntry.getChild("fullatk");
+			local nodeFullAtk = DB.getChild(nodeEntry, "fullatk");
 			if nodeFullAtk then
-				local nodeNewAtk = nodeAttacks.createChild();
+				local nodeNewAtk = DB.createChild(nodeAttacks);
 				if nodeNewAtk then
-					DB.setValue(nodeNewAtk, "value", "string", nodeFullAtk.getValue());
+					DB.setValue(nodeNewAtk, "value", "string", DB.getValue(nodeFullAtk));
 					
-					nodeFullAtk.delete();
+					DB.deleteNode(nodeFullAtk);
 				end
 			end
 		end
 		
 		-- TOKEN
-		local nodeOldTokenRefId = nodeEntry.getChild("token_refid");
+		local nodeOldTokenRefId = DB.getChild(nodeEntry, "token_refid");
 		if nodeOldTokenRefId then
-			DB.setValue(nodeEntry, "tokenrefid", "string", nodeOldTokenRefId.getValue());
-			nodeOldTokenRefId.delete();
+			DB.setValue(nodeEntry, "tokenrefid", "string", DB.getValue(nodeOldTokenRefId));
+			DB.deleteNode(nodeOldTokenRefId);
 		end
-		local nodeOldTokenRefNode = nodeEntry.getChild("token_refnode");
+		local nodeOldTokenRefNode = DB.getChild(nodeEntry, "token_refnode");
 		if nodeOldTokenRefNode then
-			DB.setValue(nodeEntry, "tokenrefnode", "string", nodeOldTokenRefNode.getValue());
-			nodeOldTokenRefNode.delete();
+			DB.setValue(nodeEntry, "tokenrefnode", "string", DB.getValue(nodeOldTokenRefNode));
+			DB.deleteNode(nodeOldTokenRefNode);
 		end
-		local nodeOldTokenRefScale = nodeEntry.getChild("token_scale");
+		local nodeOldTokenRefScale = DB.getChild(nodeEntry, "token_scale");
 		if nodeOldTokenRefScale then
-			DB.setValue(nodeEntry, "tokenscale", "number", nodeOldTokenRefScale.getValue());
-			nodeOldTokenRefScale.delete();
+			DB.setValue(nodeEntry, "tokenscale", "number", DB.getValue(nodeOldTokenRefScale));
+			DB.deleteNode(nodeOldTokenRefScale);
 		end
 	end
 end
@@ -976,15 +975,15 @@ function convertEncounters()
 		return;
 	end
 	
-	for _,nodeOldEnc in pairs(nodeCombat.getChildren()) do
-		local nodeNewEnc = nodeBattle.createChild();
+	for _,nodeOldEnc in ipairs(DB.getChildList(nodeCombat)) do
+		local nodeNewEnc = DB.createChild(nodeBattle);
 		if nodeNewEnc then
 			DB.setValue(nodeNewEnc, "name", "string", DB.getValue(nodeOldEnc, "name", ""));
 		
-			local nodeNewActors = nodeNewEnc.createChild("npclist");
+			local nodeNewActors = DB.createChild(nodeNewEnc, "npclist");
 			if nodeNewActors then
-				for _,nodeOldActor in pairs(DB.getChildren(nodeOldEnc, "actors")) do
-					local nodeNewActor = nodeNewActors.createChild();
+				for _,nodeOldActor in ipairs(DB.getChildList(nodeOldEnc, "actors")) do
+					local nodeNewActor = DB.createChild(nodeNewActors);
 					if nodeNewActor then
 						DB.setValue(nodeNewActor, "name", "string", DB.getValue(nodeOldActor, "name", ""));
 						DB.setValue(nodeNewActor, "token", "token", DB.getValue(nodeOldActor, "token", ""));
@@ -994,7 +993,7 @@ function convertEncounters()
 		end
 	end
 	
-	nodeCombat.delete();
+	DB.deleteNode(nodeCombat);
 end
 
 function convertOptions()

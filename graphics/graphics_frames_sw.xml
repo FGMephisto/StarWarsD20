@@ -8,12 +8,6 @@
 
 <root>
 	<!-- Character sheet -->
-	<framedef name="charsheethelper">
-		<bitmap file="graphics/frames_sw/charsheet.png" />
-		<offset>25,40,25,25</offset>
-		<insideoffset>0,0,7,7</insideoffset>
-	</framedef>
-
 	<framedef name="acicon">
 		<bitmap file="graphics/frames/acicon.png" />
 		<topleft rect="0,0,40,44" />
@@ -56,13 +50,22 @@
 		<bottomright rect="212,199,12,12" />
 	</framedef>
 
+	<!-- Override CoreRPG ruleset graphics -->
+
+	<!-- Adjusted for Star Wars 3.5E -->
+	<!-- Character sheet -->
+	<framedef name="charsheethelper">
+		<bitmap file="graphics/frames_sw/charsheet.png" />
+		<offset>25,40,25,25</offset>
+		<insideoffset>0,0,7,7</insideoffset>
+	</framedef>
+
  	<!-- Die Cup (Local mode) -->
 	<framedef name="collector">
 		<bitmap file="graphics/frames_sw/collector.png" />
 		<offset>7,7,3,3</offset>
 	</framedef>
 
-	<!-- Override CoreRPG ruleset graphics -->
 	<!-- Calendar -->
 	<framedef name="calendar">
 		<bitmap file="graphics/frames_sw/charsheet.png" />

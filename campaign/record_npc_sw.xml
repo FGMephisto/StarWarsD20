@@ -7,6 +7,9 @@
 -->
 
 <root>
+	<!-- =================================================================================================================== -->
+	<!-- Adjusted -->
+	<!-- =================================================================================================================== -->
 	<windowclass name="npc">
 		<frame>recordsheet</frame>
 		<placement>
@@ -39,10 +42,15 @@
 			<subwindow_record name="main_creature">
 				<class>npc_combat_creature</class>
 			</subwindow_record>
-
+			<!-- <subwindow_record name="main_trap"> -->
+				<!-- <class>npc_combat_trap</class> -->
+			<!-- </subwindow_record> -->
 			<subwindow_record name="main_vehicle">
 				<class>npc_combat_vehicle</class>
 			</subwindow_record>
+			<!-- <subwindow_record name="spells"> -->
+				<!-- <class>npc_spells</class> -->
+			<!-- </subwindow_record> -->
 
 			<ft_record name="text">
 				<anchored to="contentframe" position="over" />
@@ -52,11 +60,15 @@
 			<scrollbar_record>
 				<target>main_creature</target>
 			</scrollbar_record>
-
+			<!-- <scrollbar_record> -->
+				<!-- <target>main_trap</target> -->
+			<!-- </scrollbar_record> -->
 			<scrollbar_record>
 				<target>main_vehicle</target>
 			</scrollbar_record>
-
+			<!-- <scrollbar_record> -->
+				<!-- <target>spells</target> -->
+			<!-- </scrollbar_record> -->
 			<scrollbar_record>
 				<target>text</target>
 			</scrollbar_record>
@@ -66,12 +78,14 @@
 					<icon>tab_main</icon>
 					<subwindow>main_creature</subwindow>
 				</tab>
-
+				<!-- <tab> -->
+					<!-- <icon>tab_spells</icon> -->
+					<!-- <subwindow>spells</subwindow> -->
+				<!-- </tab> -->
 				<tab>
 					<icon>tab_other</icon>
 					<subwindow>text</subwindow>
 				</tab>
-
 			</tabs_recordsheet>
 
 			<frame_record_lower name="controlframe" />
@@ -82,6 +96,9 @@
 		</sheetdata>
 	</windowclass>
 
+	<!-- =================================================================================================================== -->
+	<!-- Adjusted -->
+	<!-- =================================================================================================================== -->
 	<windowclass name="npc_combat_creature">
 		<margins control="0,0,0,2" />
 
@@ -104,17 +121,20 @@
 				<delaykeyupdate />
 			</string_columnh>
 
+			<!-- <label_column name="alignment_label"> -->
+				<!-- <static textres="npc_label_alignment" /> -->
+			<!-- </label_column> -->
+			<!-- <string_columnh name="alignment" /> -->
+
 			<label_column name="init_label">
 				<static textres="initiative" />
 			</label_column>
-
 			<number_npc_init name="init" />
 
 			<label_column_right name="cr_label">
 				<anchored to="init" />
 				<static textres="npc_label_cr" />
 			</label_column_right>
-
 			<number_column_right name="cr">
 				<anchored to="init" />
 				<delaykeyupdate />
@@ -129,6 +149,10 @@
 				<script file="campaign/scripts/npc_skill.lua" />
 			</string_columnh>
 
+			<!-- <label_column name="aura_label"> -->
+				<!-- <static textres="npc_label_aura" /> -->
+			<!-- </label_column> -->
+			<!-- <string_columnh name="aura" /> -->
 			<header_column>
 				<static textres="npc_header_defense" />
 			</header_column>
@@ -139,14 +163,23 @@
 			<string_columnh name="ac" />
 
 			<label_column name="hp_label">
-				<static textres="hptemp" />
-			</label_column>
-			<number_column name="hptemp" />
-
-			<label_column name="hp_label">
 				<static textres="hp" />
 			</label_column>
 			<number_column name="hp" />
+
+			<label_column name="vp_label">
+				<static textres="vp" />
+			</label_column>
+			<number_column name="vp" />
+
+			<label_column_right name="hptemp_label">
+				<anchored to="vp" />
+				<static textres="hptemp" />
+			</label_column_right>
+			<number_column_right name="hptemp">
+				<anchored to="vp" />
+				<delaykeyupdate />
+			</number_column_right>
 
 			<label_column>
 				<anchored>
@@ -383,6 +416,83 @@
 		</sheetdata>
 	</windowclass>
 
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
+	<windowclass name="npc_combat_trap">
+		<margins control="0,0,0,2" />
+		<script file="campaign/scripts/npc_main.lua" />
+		<sheetdata>
+			<anchor_column name="columnanchor" />
+			
+			<label_column name="nonid_name_label">
+				<static textres="npc_label_unidentified" />
+			</label_column>
+			<string_columnh name="nonid_name" />
+
+			<line_column name="divider" />
+			
+			<label_column name="type_label">
+				<static textres="npc_label_type" />
+			</label_column>
+			<string_columnh name="type" />
+			
+			<label_column name="hp_label">
+				<static textres="hp" />
+			</label_column>
+			<number_column name="hp" />
+
+			<label_column_right name="cr_label">
+				<anchored to="hp" />
+				<static textres="npc_label_cr" />
+			</label_column_right>
+			<number_column_right name="cr">
+				<anchored to="hp" />
+			</number_column_right>
+
+			<string_column_full name="senses">
+				<script file="common/scripts/column_string.lua" />
+			</string_column_full>
+
+			<header_column>
+				<static textres="npc_header_effects" />
+			</header_column>
+			
+			<label_column name="trigger_label">
+				<static textres="npc_label_trigger" />
+			</label_column>
+			<string_columnh name="trigger" />
+			
+			<label_column name="reset_label">
+				<static textres="npc_label_reset" />
+			</label_column>
+			<string_columnh name="reset" />
+			
+			<label_column name="atk_label">
+				<static textres="npc_label_effect" />
+			</label_column>
+			<string_columnh name="atk">
+				<actorpath>..</actorpath>
+				<script file="common/scripts/string_attackline.lua" />
+			</string_columnh>
+			
+			<label_column name="fullatk_label">
+				<static textres="npc_label_effect2" />
+			</label_column>
+			<string_columnh name="fullatk">
+				<actorpath>..</actorpath>
+				<script file="common/scripts/string_attackline.lua" />
+			</string_columnh>
+
+			<label_column name="specialqualities_label">
+				<static textres="npc_label_destruction" />
+			</label_column>
+			<string_columnh name="specialqualities" />
+		</sheetdata>
+	</windowclass>
+
+	<!-- =================================================================================================================== -->
+	<!-- Adjusted -->
+	<!-- =================================================================================================================== -->
 	<windowclass name="npc_combat_vehicle">
 		<margins control="0,0,0,2" />
 		<script file="campaign/scripts/npc_main.lua" />
@@ -497,6 +607,121 @@
 				<static textres="npc_label_weapons" />
 			</label_column>
 			<string_columnh name="weapons" />
+		</sheetdata>
+	</windowclass>
+
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
+	<windowclass name="npc_spells">
+		<margins control="0,0,0,2" />
+		<script file="campaign/scripts/npc_spells.lua" />
+		<sheetdata>
+			<button_expand name="expand_full">
+				<anchored position="insidetopleft" offset="5,2" width="20" height="20" />
+				<target>spellclasslist,levels,spells</target>
+				<togglelevel>2</togglelevel>
+				<invisible />
+			</button_expand>
+			<button_collapse name="collapse_full">
+				<anchored position="insidetopleft" offset="35,2" width="20" height="20" />
+				<target>spellclasslist,levels,spells</target>
+				<togglelevel>2</togglelevel>
+				<invisible />
+			</button_collapse>
+			<button_expand name="expand_mini">
+				<anchored position="insidetopleft" offset="5,2" width="20" height="20" />
+				<target>spellclasslist_mini,levels,spells</target>
+				<togglelevel>2</togglelevel>
+				<invisible />
+			</button_expand>
+			<button_collapse name="collapse_mini">
+				<anchored position="insidetopleft" offset="35,2" width="20" height="20" />
+				<target>spellclasslist_mini,levels,spells</target>
+				<togglelevel>2</togglelevel>
+				<invisible />
+			</button_collapse>
+			<label name="label_mode">
+				<anchored position="insidetopleft" offset="75,2" height="20" />
+				<static textres="spell_label_mode" />
+				<invisible />
+			</label>
+			<button_stringcycler name="spellmode">
+				<anchored to="label_mode" position="righthigh" offset="10,0" width="80" />
+				<parameters>
+					<labelsres>spell_label_modeprep|spell_label_modecombat</labelsres>
+					<values>preparation|combat</values>
+					<defaultlabelres>spell_label_modestd</defaultlabelres>
+				</parameters>
+				<invisible />
+				<script>
+					function onValueChanged()
+						window.onModeChanged();
+					end
+				</script>
+			</button_stringcycler>
+			<buttoncontrol name="spellclass_iadd">
+				<anchored position="insidetopright" offset="35,2" width="20" height="20" />
+				<icon normal="button_star" pressed="button_star_down" />
+				<tooltip textres="npc_tooltip_spelladdclass" />
+				<invisible />
+				<script>
+					function onButtonPress()
+						window.addSpellClass();
+					end
+				</script>
+			</buttoncontrol>
+			<button_iedit name="actions_iedit">
+				<anchored position="insidetopright" offset="5,2" width="20" height="20" />
+				<tooltip textres="npc_tooltip_spelledit" />
+				<target>spellclasslist</target>
+				<invisible />
+			</button_iedit>
+
+			<list_spellclass name="spellclasslist">
+				<anchored position="insidetop" offset="0,30" />
+				<class>spell_class</class>
+				<npc />
+				<invisible />
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						registerMenuItem(Interface.getString("menu_addspellclass"), "insert", 5);
+						registerMenuItem(Interface.getString("menu_resetspells"), "lockvisibilityon", 8);
+					end
+					
+					function onMenuSelection(selection)
+						if selection == 5 then
+							window.addSpellClass();
+						elseif selection == 8 then
+							SpellManager.resetSpells(window.getDatabaseNode());
+						end
+					end
+				</script>
+			</list_spellclass>
+			<list_spellclass name="spellclasslist_mini">
+				<anchored position="insidetop" offset="0,30" />
+				<class>spell_class_mini</class>
+				<npc />
+				<minisheet />
+				<readonly />
+				<invisible />
+				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						registerMenuItem(Interface.getString("menu_resetspells"), "lockvisibilityon", 8);
+					end
+					
+					function onMenuSelection(selection)
+						if selection == 8 then
+							SpellManager.resetSpells(window.getDatabaseNode());
+						end
+					end
+				</script>
+			</list_spellclass>
 		</sheetdata>
 	</windowclass>
 </root>

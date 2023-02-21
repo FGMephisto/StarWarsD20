@@ -11,13 +11,15 @@ function isInitialized()
 end
 
 -- ===================================================================================================================
--- Modified
+-- Adjusted
 -- ===================================================================================================================
 function onInit()
 	bInitialized = true;
 	
 	acstat.onValueChanged();
 	acstat2.onValueChanged();
+	-- cmdbase.onValueChanged();
+	-- cmdstat.onValueChanged();
 	fortitudestat.onValueChanged();
 	reflexstat.onValueChanged();
 	willstat.onValueChanged();
@@ -25,10 +27,12 @@ function onInit()
 	meleestat.onValueChanged();
 	rangedstat.onValueChanged();
 	grapplestat.onValueChanged();
+	
+	-- onSystemChanged();
 end
 
 -- ===================================================================================================================
--- Modified
+-- Adjusted
 -- ===================================================================================================================
 function onSystemChanged()
 	-- local bPFMode = DataCommon.isPFRPG();

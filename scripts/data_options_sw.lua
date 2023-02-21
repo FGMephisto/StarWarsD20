@@ -4,19 +4,26 @@
 -- File adjusted for Star Wars 3.5E
 --
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onInit()
 	registerDiceRolls();
 	registerOptions();
 	DecalManager.setDefault("images/decals/stw_decal.jpg@Star Wars D20 Assets");
 end
 
+-- ===================================================================================================================
+-- Adjusted
 -- ToDo: Review die connections to damage
+-- ===================================================================================================================
 function registerDiceRolls()
+	DiceRollManager.registerDamageTypeMode("critical");
+	DiceRollManager.registerDamageTypeMode("precision");
 	DiceRollManager.registerDamageKey();
 	DiceRollManager.registerDamageTypeKey("acid", "life");
 	DiceRollManager.registerDamageTypeKey("cold", "frost");
-	DiceRollManager.registerDamageTypeKey("energy", "fire");
-	DiceRollManager.registerDamageTypeKey("ion", "lightning");
+	DiceRollManager.registerDamageTypeKey("electricity", "lightning");
+	
 	DiceRollManager.registerDamageTypeKey("fire", "fire");
 	DiceRollManager.registerDamageTypeKey("force", "arcane");
 	DiceRollManager.registerDamageTypeKey("negative", "shadow");
@@ -27,11 +34,23 @@ function registerDiceRolls()
 	DiceRollManager.registerDamageTypeKey("piercing");
 	DiceRollManager.registerDamageTypeKey("slashing");
 
+	-- DiceRollManager.registerDamageTypeKey("adamantine");
+	-- DiceRollManager.registerDamageTypeKey("cold iron");
+	-- DiceRollManager.registerDamageTypeKey("silver");
+
+	-- DiceRollManager.registerDamageTypeKey("epic");
+	-- DiceRollManager.registerDamageTypeKey("magic");
+
+	DiceRollManager.registerDamageTypeKey("energy", "fire");
+	DiceRollManager.registerDamageTypeKey("ion", "lightning");
+	
 	DiceRollManager.registerHealKey();
 	DiceRollManager.registerHealTypeKey("health", "light");
 	DiceRollManager.registerHealTypeKey("temp", "water");
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function registerOptions()
 	OptionsManager.registerOption2("RMMT", true, "option_header_client", "option_label_RMMT", "option_entry_cycler", 
 			{ labels = "option_val_on|option_val_multi", values = "on|multi", baselabel = "option_val_off", baseval = "off", default = "multi" });

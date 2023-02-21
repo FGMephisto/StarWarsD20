@@ -7,6 +7,8 @@
 -->
 
 <root>
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<template name="button_specialability_type">
 		<button_masterindex_option_view>
 			<recordtype>specialability</recordtype>
@@ -14,6 +16,9 @@
 			<recordpath>reference.specialabilitiesbytype</recordpath>
 		</button_masterindex_option_view>
 	</template>
+
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<template name="button_feat_type">
 		<button_masterindex_option_view>
 			<recordtype>feat</recordtype>
@@ -22,6 +27,8 @@
 		</button_masterindex_option_view>
 	</template>
 
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<template name="frame_record_editor">
 		<genericcontrol name="contentframe">
 			<anchored>
@@ -34,6 +41,9 @@
 			<disabled />
 		</genericcontrol>
 	</template>
+
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<template name="frame_record_lower">
 		<genericcontrol>
 			<anchored>
@@ -46,6 +56,10 @@
 			<disabled />
 		</genericcontrol>
 	</template>
+
+	<!-- =================================================================================================================== -->
+	<!-- Adjusted -->
+	<!-- =================================================================================================================== -->
 	<template name="radio_record_npctype">
 		<buttongroup_radio>
 			<anchored to="controlframe" height="20">
@@ -65,6 +79,8 @@
 		</buttongroup_radio>
 	</template>
 
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<template name="number_npc_init">
 		<number_column>
 			<displaysign />
@@ -85,6 +101,9 @@
 			</script>
 		</number_column>
 	</template>
+
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<template name="number_npc_save">
 		<basicnumber>
 			<displaysign />
@@ -106,6 +125,9 @@
 			</script>
 		</basicnumber>
 	</template>
+
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<template name="number_npc_ability">
 		<basicnumber>
 			<default>10</default>
@@ -129,6 +151,8 @@
 		</basicnumber>
 	</template>
 
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<template name="cycler_ability">
 		<button_stringcycler>
 			<frame mergerule="replace" name="fielddark" offset="7,5,7,5" />
@@ -143,21 +167,8 @@
 		</button_stringcycler>
 	</template>
 
-	<template name="button_toggledetail">
-		<buttoncontrol>
-			<anchored width="20" height="20" />
-			<state icon="button_details" />
-			<state icon="button_details_down" />
-			<script>
-				function onValueChanged()
-					if window.toggleDetail then
-						window.toggleDetail();
-					end
-				end
-			</script>
-		</buttoncontrol>
-	</template>
-
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<template name="button_enc_refreshcr">
 		<buttoncontrol>
 			<anchored width="23" height="23">
@@ -173,6 +184,9 @@
 			</script>
 		</buttoncontrol>
 	</template>
+
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<template name="button_enc_refreshxp">
 		<buttoncontrol>
 			<anchored width="23" height="23">
@@ -189,6 +203,9 @@
 		</buttoncontrol>
 	</template>
 
+	<!-- =================================================================================================================== -->
+	<!-- Adjusted -->
+	<!-- =================================================================================================================== -->
 	<template name="list_editor">
 		<windowlist name="list">
 			<anchored>
@@ -211,16 +228,16 @@
 					end
 				end
 				
-				function onListChanged()
-					update();
-				end
+				-- function onListChanged()
+					-- update();
+				-- end
 
-				function update()
-					local bEditMode = (window.list_iedit.getValue() == 1);
-					for _,w in pairs(getWindows()) do
-						w.idelete.setVisibility(bEditMode);
-					end
-				end
+				-- function update()
+					-- local bEditMode = (window.list_iedit.getValue() == 1);
+					-- for _,w in pairs(getWindows()) do
+						-- w.idelete.setVisibility(bEditMode);
+					-- end
+				-- end
 				
 				function addEntry(bFocus)
 					return createWindow();
@@ -230,7 +247,25 @@
 	</template>
 
 	<!-- =================================================================================================================== -->
-	<!-- Imported from 5E -->
+	<!-- Added -->
+	<!-- =================================================================================================================== -->
+	<template name="button_toggledetail">
+		<buttoncontrol>
+			<anchored width="20" height="20" />
+			<state icon="button_details" />
+			<state icon="button_details_down" />
+			<script>
+				function onValueChanged()
+					if window.toggleDetail then
+						window.toggleDetail();
+					end
+				end
+			</script>
+		</buttoncontrol>
+	</template>
+
+	<!-- =================================================================================================================== -->
+	<!-- Added - Imported from 5E -->
 	<!-- =================================================================================================================== -->
 	<template name="anchor_column">
 		<genericcontrol>
@@ -240,6 +275,9 @@
 		</genericcontrol>
 	</template>
 
+	<!-- =================================================================================================================== -->
+	<!-- Added - Imported from 5E -->
+	<!-- =================================================================================================================== -->
 	<template name="header_column">
 		<label>
 			<anchored height="20">
@@ -251,6 +289,9 @@
 		</label>
 	</template>
 	
+	<!-- =================================================================================================================== -->
+	<!-- Added - Imported from 5E -->
+	<!-- =================================================================================================================== -->
 	<template name="metalplate">
 		<stringcontrol>
 			<frame name="metalplate" offset="10,2,10,2"/>

@@ -4,32 +4,26 @@
 -- File adjusted for Star Wars 3.5E
 --
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onInit()
 	self.update();
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function VisDataCleared()
 	self.update();
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function InvisDataAdded()
 	self.update();
 end
 
-function updateControl(sControl, bReadOnly, bID)
-	if not self[sControl] then
-		return false;
-	end
-		
-	if not bID then
-		return self[sControl].update(bReadOnly, true);
-	end
-	
-	return self[sControl].update(bReadOnly);
-end
-
 -- ===================================================================================================================
--- Modified
+-- Adjusted
 -- ===================================================================================================================
 function update()
 	local nodeRecord = getDatabaseNode();
@@ -42,23 +36,23 @@ function update()
 	
 	local bSection1 = false;
 	if Session.IsHost then
-		if self.updateControl("nonid_name", bReadOnly, true) then bSection1 = true; end;
+		if WindowManager.callSafeControlUpdate(self, "nonid_name", bReadOnly) then bSection1 = true; end;
 	else
-		self.updateControl("nonid_name", false);
+		WindowManager.callSafeControlUpdate(self, "nonid_name", bReadOnly, true);
 	end
 	if (Session.IsHost or not bID) then
-		if self.updateControl("nonidentified", bReadOnly, true) then bSection1 = true; end;
+		if WindowManager.callSafeControlUpdate(self, "nonidentified", bReadOnly) then bSection1 = true; end;
 	else
-		self.updateControl("nonidentified", false);
+		WindowManager.callSafeControlUpdate(self, "nonidentified", bReadOnly, true);
 	end
 
 	local bSection2 = false;
-	if self.updateControl("type", bReadOnly, bID) then bSection2 = true; end
-	if self.updateControl("subtype", bReadOnly, bID) then bSection2 = true; end
+	if WindowManager.callSafeControlUpdate(self, "type", bReadOnly, not bID) then bSection2 = true; end
+	if WindowManager.callSafeControlUpdate(self, "subtype", bReadOnly, not bID) then bSection2 = true; end
 	
 	local bSection3 = false;
-	if self.updateControl("cost", bReadOnly, bID) then bSection3 = true; end
-	if self.updateControl("weight", bReadOnly, bID) then bSection3 = true; end
+	if WindowManager.callSafeControlUpdate(self, "cost", bReadOnly, not bID) then bSection3 = true; end
+	if WindowManager.callSafeControlUpdate(self, "weight", bReadOnly, not bID) then bSection3 = true; end
 	
 	local bSection4 = true;
 	if Session.IsHost or bID then 
@@ -93,7 +87,9 @@ function update()
 	if updateControl("properties", bReadOnly, bID and (bWeapon or bArmor)) then bSection4 = true; end
 
 	local bSection5 = false;
-	if self.updateControl("prerequisites", bReadOnly, bID) then bSection5 = true; end
+	-- if WindowManager.callSafeControlUpdate(self, "aura", bReadOnly, not bID) then bSection5 = true; end
+	-- if WindowManager.callSafeControlUpdate(self, "cl", bReadOnly, not bID) then bSection5 = true; end
+	if WindowManager.callSafeControlUpdate(self, "prerequisites", bReadOnly, not bID) then bSection5 = true; end
 
 	local bSection6 = bID;
 	description.setVisible(bID);
@@ -117,6 +113,7 @@ function update()
 end
 
 -- ===================================================================================================================
+-- Added
 -- ===================================================================================================================
 function onClose()
 	self.update()
@@ -144,4 +141,19 @@ function onClose()
 	end
 	
 	-- ToDo Clean up Vehicles fields
+end
+
+-- ===================================================================================================================
+-- Obsolete
+-- ===================================================================================================================
+function updateControl(sControl, bReadOnly, bID)
+	if not self[sControl] then
+		return false;
+	end
+		
+	if not bID then
+		return self[sControl].update(bReadOnly, true);
+	end
+	
+	return self[sControl].update(bReadOnly);
 end

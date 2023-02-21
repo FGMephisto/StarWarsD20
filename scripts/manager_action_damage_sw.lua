@@ -10,6 +10,8 @@
 OOB_MSGTYPE_APPLYDMG = "applydmg";
 OOB_MSGTYPE_APPLYDMGSTATE = "applydmgstate";
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onInit()
 	OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_APPLYDMG, handleApplyDamage);
 	OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_APPLYDMGSTATE, handleApplyDamageState);
@@ -26,6 +28,8 @@ function onInit()
 	ActionsManager.registerResultHandler("stabilization", onStabilization);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function handleApplyDamage(msgOOB)
 	local rSource = ActorManager.resolveActor(msgOOB.sSourceNode);
 	local rTarget = ActorManager.resolveActor(msgOOB.sTargetNode);
@@ -37,6 +41,8 @@ function handleApplyDamage(msgOOB)
 	ActionDamage.applyDamage(rSource, rTarget, (tonumber(msgOOB.nSecret) == 1), msgOOB.sRollType, msgOOB.sDamage, nTotal);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function notifyApplyDamage(rSource, rTarget, bSecret, sRollType, sDesc, nTotal)
 	if not rTarget then
 		return;
@@ -61,12 +67,16 @@ function notifyApplyDamage(rSource, rTarget, bSecret, sRollType, sDesc, nTotal)
 	Comm.deliverOOBMessage(msgOOB, "");
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function performStabilizationRoll(rActor)
 	local rRoll = GameSystem.getStabilizationRoll(rActor);
 
 	ActionsManager.performAction(nil, rActor, rRoll);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getRoll(rActor, rAction)
 	local rRoll = {};
 	rRoll.sType = "damage";
@@ -107,16 +117,22 @@ function getRoll(rActor, rAction)
 	return rRoll;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function performRoll(draginfo, rActor, rAction)
 	local rRoll = ActionDamage.getRoll(rActor, rAction);
 	
 	ActionsManager.performAction(draginfo, rActor, rRoll);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function modStabilization(rSource, rTarget, rRoll)
 	GameSystem.modStabilization(rSource, rTarget, rRoll);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function modDamage(rSource, rTarget, rRoll)
 	ActionDamage.setupModRoll(rRoll, rSource, rTarget);
 	
@@ -141,6 +157,8 @@ function modDamage(rSource, rTarget, rRoll)
 	ActionDamage.finalizeModRoll(rRoll);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onDamageRoll(rSource, rRoll)
 	-- Set up for meta damage processing
 	local bMaximize = rRoll.sDesc:match(" %[MAXIMIZE%]");
@@ -208,6 +226,8 @@ function onDamageRoll(rSource, rRoll)
 	ActionDamage.encodeDamageText(rRoll);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onDamage(rSource, rTarget, rRoll)
 	local rMessage = ActionsManager.createActionMessage(rSource, rRoll);
 	rMessage.text = string.gsub(rMessage.text, " %[MOD:[^]]*%]", "");
@@ -228,6 +248,8 @@ function onDamage(rSource, rTarget, rRoll)
 	ActionDamage.notifyApplyDamage(rSource, rTarget, rRoll.bTower, rRoll.sType, rMessage.text, nTotal);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onStabilization(rSource, rTarget, rRoll)
 	local rMessage = ActionsManager.createActionMessage(rSource, rRoll);
 
@@ -247,10 +269,9 @@ function onStabilization(rSource, rTarget, rRoll)
 	end
 end
 
---
+-- ===================================================================================================================
 -- MOD ROLL HELPERS
---
-
+-- ===================================================================================================================
 function setupModRoll(rRoll, rSource, rTarget)
 	ActionDamage.decodeDamageTypes(rRoll);
 	CombatManager2.addRightClickDiceToClauses(rRoll);
@@ -273,6 +294,8 @@ function setupModRoll(rRoll, rSource, rTarget)
 	rRoll.nEffectMod = 0;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function applyAbilityEffectsToModRoll(rRoll, rSource, rTarget)
 	for _,vClause in ipairs(rRoll.clauses) do
 		-- Get original stat modifier
@@ -320,6 +343,8 @@ function applyAbilityEffectsToModRoll(rRoll, rSource, rTarget)
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function applyCriticalToModRoll(rRoll, rSource, rTarget)
 	table.insert(rRoll.tNotifications, "[CRITICAL]");
 
@@ -365,6 +390,8 @@ function applyCriticalToModRoll(rRoll, rSource, rTarget)
 	rRoll.clauses = aNewClauses;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function applyDmgEffectsToModRoll(rRoll, rSource, rTarget)
 	local tEffects, nEffectCount;
 	if rRoll.sType == "spdamage" then
@@ -454,6 +481,8 @@ function applyDmgEffectsToModRoll(rRoll, rSource, rTarget)
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function applyConditionsToModRoll(rRoll, rSource, rTarget)
 	if rRoll.sType ~= "spdamage" then
 		if EffectManager35E.hasEffectCondition(rSource, "Sickened") then
@@ -469,19 +498,17 @@ function applyConditionsToModRoll(rRoll, rSource, rTarget)
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function applyEffectModNotificationToModRoll(rRoll)
 	if rRoll.bEffects then
-		local sEffects;
 		local sMod = StringManager.convertDiceToString(rRoll.tEffectDice, rRoll.nEffectMod, true);
-		if sMod ~= "" then
-			sEffects = "[" .. Interface.getString("effects_tag") .. " " .. sMod .. "]";
-		else
-			sEffects = "[" .. Interface.getString("effects_tag") .. "]";
-		end
-		table.insert(rRoll.tNotifications, sEffects);
+		table.insert(rRoll.tNotifications, EffectManager.buildEffectOutput(sMod));
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function applyDmgTypeEffectsToModRoll(rRoll, rSource, rTarget)
 	local tAddDmgTypes = {};
 	local tDmgTypeEffects;
@@ -511,17 +538,20 @@ function applyDmgTypeEffectsToModRoll(rRoll, rSource, rTarget)
 			end
 		end
 
-		local sNotification = "[" .. Interface.getString("effects_tag") .. " " .. table.concat(tAddDmgTypes, ",") .. "]";
-		table.insert(rRoll.tNotifications, sNotification);
+		table.insert(rRoll.tNotifications, EffectManager.buildEffectOutput(table.concat(tAddDmgTypes, ",")));
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function applyModifierKeysToModRoll(rRoll, rSource, rTarget)
 	if ModifierManager.getKey("DMG_HALF") then
 		table.insert(rRoll.tNotifications, "[HALF]");
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function finalizeModRoll(rRoll)
 	if #(rRoll.tNotifications) > 0 then
 		rRoll.sDesc = rRoll.sDesc .. " " .. table.concat(rRoll.tNotifications, " ");
@@ -537,11 +567,11 @@ function finalizeModRoll(rRoll)
 	ActionDamage.encodeDamageTypes(rRoll);
 end
 
---
+-- ===================================================================================================================
 -- APPLY DAMAGE EFFECT HELPERS
---
-
+-- ===================================================================================================================
 -- NOTE: Dice determined randomly, instead of rolled
+-- ===================================================================================================================
 function applyTargetedDmgEffectsToDamageOutput(rDamageOutput, rSource, rTarget)
 	local tTargetedDamage;
 	if rDamageOutput.sRollType == "spdamage" then
@@ -576,17 +606,12 @@ function applyTargetedDmgEffectsToDamageOutput(rDamageOutput, rSource, rTarget)
 
 	if nDamageEffectCount > 0 then
 		rDamageOutput.nVal = rDamageOutput.nVal + nDamageEffectTotal;
-
-		local sNotification;
-		if nDamageEffectTotal ~= 0 then
-			sNotification = string.format("[" .. Interface.getString("effects_tag") .. " %+d]", nDamageEffectTotal);
-		else
-			sNotification = "[" .. Interface.getString("effects_tag") .. "]";
-		end
-		table.insert(rDamageOutput.tNotifications, sNotification);
+		table.insert(rDamageOutput.tNotifications, EffectManager.buildEffectOutput(nDamageEffectTotal));
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function applyTargetedDmgTypeEffectsToDamageOutput(rDamageOutput, rSource, rTarget)
 	local tAddDmgTypes = {};
 	local tDmgTypeEffects;
@@ -619,15 +644,13 @@ function applyTargetedDmgTypeEffectsToDamageOutput(rDamageOutput, rSource, rTarg
 		end
 		rDamageOutput.aDamageTypes = tNewDmgTypes;
 
-		local sNotification = "[" .. Interface.getString("effects_tag") .. " " .. table.concat(tAddDmgTypes, ",") .. "]";
-		table.insert(rDamageOutput.tNotifications, sNotification);
+		table.insert(rDamageOutput.tNotifications, EffectManager.buildEffectOutput(table.concat(tAddDmgTypes, ",")));
 	end
 end
 
---
+-- ===================================================================================================================
 -- UTILITY FUNCTIONS
---
-
+-- ===================================================================================================================
 function encodeDamageTypes(rRoll)
 	for _,vClause in ipairs(rRoll.clauses) do
 		local sDice = StringManager.convertDiceToString(vClause.dice, vClause.modifier);
@@ -635,6 +658,8 @@ function encodeDamageTypes(rRoll)
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function decodeDamageTypes(rRoll, bFinal)
 	-- Process each type clause in the damage description as encoded previously
 	local nMainDieIndex = 0;
@@ -740,6 +765,8 @@ function decodeDamageTypes(rRoll, bFinal)
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getDamageTypesFromString(sDamageTypes)
 	local sLower = string.lower(sDamageTypes);
 	local aSplit = StringManager.split(sLower, ",", true);
@@ -754,10 +781,9 @@ function getDamageTypesFromString(sDamageTypes)
 	return aDamageTypes;
 end
 
---
+-- ===================================================================================================================
 -- DAMAGE APPLICATION
---
-
+-- ===================================================================================================================
 function getParenDepth(sText, nIndex)
 	local nDepth = 0;
 	
@@ -776,6 +802,8 @@ function getParenDepth(sText, nIndex)
 	return nDepth;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function decodeAndOrClauses(sText)
 	local nIndexOR;
 	local nStartOR, nEndOR, nStartAND, nEndAND;
@@ -857,6 +885,8 @@ function decodeAndOrClauses(sText)
 	return aClausesOR, aSkipOR;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function matchAndOrClauses(aClausesOR, aMatchWords)
 	for kClauseOR, aClausesAND in ipairs(aClausesOR) do
 		local bMatchAND = true;
@@ -879,6 +909,8 @@ function matchAndOrClauses(aClausesOR, aMatchWords)
 	return false;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getDamageAdjust(rSource, rTarget, nDamage, rDamageOutput)
 	-- SETUP
 	local nDamageAdjust = 0;
@@ -1131,7 +1163,9 @@ function getDamageAdjust(rSource, rTarget, nDamage, rDamageOutput)
 	return nDamageAdjust, nNonlethal, bVulnerable, bResist;
 end
 
+-- ===================================================================================================================
 -- Collapse damage clauses by damage type (in the original order, if possible)
+-- ===================================================================================================================
 function getDamageStrings(clauses)
 	local aOrderedTypes = {};
 	local aDmgTypes = {};
@@ -1157,6 +1191,8 @@ function getDamageStrings(clauses)
 	return aOrderedTypes;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function encodeDamageText(rRoll)
 	local aDamage = getDamageStrings(rRoll.clauses);
 	for _, rDamage in ipairs(aDamage) do
@@ -1182,6 +1218,9 @@ function encodeDamageText(rRoll)
 	end
 end
 
+-- ===================================================================================================================
+-- Adjusted
+-- ===================================================================================================================
 function decodeDamageText(nDamage, sDamageDesc)
 	local rDamageOutput = {};
 	rDamageOutput.sOriginal = sDamageDesc;
@@ -1275,6 +1314,9 @@ function decodeDamageText(nDamage, sDamageDesc)
 	return rDamageOutput;
 end
 
+-- ===================================================================================================================
+-- Adjusted
+-- ===================================================================================================================
 function applyDamage(rSource, rTarget, bSecret, sRollType, sDamage, nTotal)
 	local nTotalHP = 0;
 	local nTempHP = 0;
@@ -1474,7 +1516,7 @@ function applyDamage(rSource, rTarget, bSecret, sRollType, sDamage, nTotal)
 					local aActualDamageTypes = StringManager.split(table.concat(aTempDamageTypes, ","), ",", true);
 					
 					-- Check target's effects for regeneration effects that match
-					for _,v in pairs(DB.getChildren(nodeTargetCT, "effects")) do
+					for _,v in ipairs(DB.getChildList(nodeTargetCT, "effects")) do
 						local nActive = DB.getValue(v, "isactive", 0);
 						if (nActive == 1) then
 							local bMatch = false;
@@ -1536,7 +1578,7 @@ function applyDamage(rSource, rTarget, bSecret, sRollType, sDamage, nTotal)
 	end
 	if bShowStatus then
 		if sOriginalStatus ~= sNewStatus then
-			table.insert(rDamageOutput.tNotifications, "[" .. Interface.getString("combat_tag_status") .. ": " .. sNewStatus .. "]");
+			table.insert(rDamageOutput.tNotifications, string.format("[%s: %s]", Interface.getString("combat_tag_status"), sNewStatus));
 		end
 	end
 	
@@ -1576,6 +1618,8 @@ function applyDamage(rSource, rTarget, bSecret, sRollType, sDamage, nTotal)
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function messageDamage(rSource, rTarget, bSecret, sDamageType, sDamageDesc, sTotal, sExtraResult)
 	if not (rTarget or sExtraResult ~= "") then
 		return;
@@ -1606,6 +1650,8 @@ function messageDamage(rSource, rTarget, bSecret, sDamageType, sDamageDesc, sTot
 	ActionsManager.outputResult(bSecret, rSource, rTarget, msgLong, msgShort);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function applyFailedStabilization(rActor)
 	local sDamageTypeOutput = "Damage";
 	local sDamage = "[DAMAGE] Dying";
@@ -1685,12 +1731,13 @@ function applyFailedStabilization(rActor)
 	ActionDamage.messageDamage(nil, rActor, false, sDamageTypeOutput, sDamage, sDamageOutput, table.concat(aNotifications, " "));
 end
 
---
+-- ===================================================================================================================
 -- TRACK DAMAGE STATE
---
-
+-- ===================================================================================================================
 local aDamageState = {};
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function applyDamageState(rSource, rTarget, sAttack, sState)
 	local msgOOB = {};
 	msgOOB.type = OOB_MSGTYPE_APPLYDMGSTATE;
@@ -1704,6 +1751,8 @@ function applyDamageState(rSource, rTarget, sAttack, sState)
 	Comm.deliverOOBMessage(msgOOB, "");
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function handleApplyDamageState(msgOOB)
 	local rSource = ActorManager.resolveActor(msgOOB.sSourceNode);
 	local rTarget = ActorManager.resolveActor(msgOOB.sTargetNode);
@@ -1713,6 +1762,8 @@ function handleApplyDamageState(msgOOB)
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function setDamageState(rSource, rTarget, sAttack, sState)
 	if not Session.IsHost then
 		ActionDamage.applyDamageState(rSource, rTarget, sAttack, sState);
@@ -1737,6 +1788,8 @@ function setDamageState(rSource, rTarget, sAttack, sState)
 	aDamageState[sSourceCT][sAttack][sTargetCT] = sState;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getDamageState(rSource, rTarget, sAttack)
 	local sSourceCT = ActorManager.getCTNodeName(rSource);
 	local sTargetCT = ActorManager.getCTNodeName(rTarget);

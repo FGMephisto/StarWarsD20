@@ -20,6 +20,7 @@ end
 -- ===================================================================================================================
 -- Shown in Modifiers window
 -- NOTE: Set strings for "modifier_category_*" and "modifier_label_*"
+-- Adjusted
 -- ===================================================================================================================
 -- ToDo: ATT_MULTISHOT / AUTO should come directly from the attack, not as a modifier
 _tModifierWindowPresets =
@@ -61,7 +62,7 @@ _tModifierWindowPresets =
 			"DEF_PCONC",
 			"DEF_CONC",
 			"DEF_SCONC",
-			"DEF_TCONC"
+			"DEF_TCONC",
 		},
 	},
 	{ 

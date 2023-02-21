@@ -4,20 +4,11 @@
 --
 
 function onInit()
-	DB.addHandler(getDatabaseNode(), "onChildAdded", onChildAdded);
-
-	onModeChanged();
-end
-
-function onListChanged()
-	DB.removeHandler(getDatabaseNode(), "onChildAdded", onChildAdded);
-
-	update();
+	self.onModeChanged();
 end
 
 function onChildAdded()
-	onModeChanged();
-	update();
+	self.onModeChanged();
 end
 
 function onModeChanged()
@@ -29,17 +20,6 @@ function onModeChanged()
 	end
 	
 	applyFilter();
-end
-
-function update()
-	if minisheet then
-		return;
-	end
-
-	local bEditMode = window.getEditMode();
-	for _,w in pairs(getWindows()) do
-		w.idelete.setVisibility(bEditMode);
-	end
 end
 
 function addEntry(bFocus)
@@ -55,15 +35,9 @@ function onDrop(x, y, draginfo)
 end
 
 function onFilter(w)
+	local bEquipped = (w.carried.getValue() >= 2);
 	if minisheet then
-		if (w.carried.getValue() < 2) then
-			return false;
-		end
-	else
-		if (DB.getValue(window.getDatabaseNode(), "spellmode", "") == "combat") and (w.carried.getValue() < 2) then
-			return false;
-		end
+		return bEquipped;
 	end
-	
-	return true;
+	return (bEquipped or (DB.getValue(window.getDatabaseNode(), "spellmode", "") ~= "combat"));
 end

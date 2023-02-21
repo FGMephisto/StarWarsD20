@@ -7,6 +7,8 @@
 -->
 
 <root>
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<windowclass name="charsheet_main">
 		<script file="campaign/scripts/char_main_sw.lua" />
 		<sheetdata>
@@ -295,10 +297,28 @@
 			</frame_char>
 
 			<!-- =================================================================================================================== -->
+			<number_dropadd name="hp" source="hp.total">
+				<anchored to="hpframe" position="insidetopleft" offset="20,27" width="40" height="28" />
+				<description textres="char_tooltip_hp" />
+				<script>
+					function onValueChanged()
+						window.onHealthChanged();
+					end
+				</script>
+			</number_dropadd>
+
+			<label_fieldtop name="hp_label">
+				<anchored to="hp" />
+				<static textres="hp" />
+			</label_fieldtop>
+
+			<!-- =================================================================================================================== -->
 			<!-- ToDo: Calc from Class and onSourceUpdate -->
 			<number_dropadd name="vp" source="hp.vp">
-				<anchored to="hpframe" position="insidetopleft" offset="20,27" width="40" height="28" />
-				<frame name="fieldlight" offset="7,5,7,5" />
+				<anchored to="hp" width="40" height="28" >
+					<top anchor="top" />
+					<left anchor="right" relation="relative" offset="15" />
+				</anchored>
 				<description textres="vp" />
 				<!-- <readonly /> -->
 			</number_dropadd>
@@ -310,14 +330,14 @@
 
 			<!-- =================================================================================================================== -->
 			<number_dropadd name="hptemp" source="hp.temporary">
-				<anchored to="vp" width="40" height="28" >
+				<anchored to="hp" width="40" height="28" >
 					<top anchor="top" />
 					<left anchor="right" relation="relative" offset="15" />
 				</anchored>
 				<description textres="char_tooltip_hptemp" />
 				<script>
 					function onInit()
-						onValueChanged()
+						window.onHealthChanged();
 					end
 				</script>
 			</number_dropadd>
@@ -327,37 +347,8 @@
 			</label_fieldtop>
 
 			<!-- =================================================================================================================== -->
-			<number_dropadd name="hp" source="hp.total">
-				<anchored to="vp" width="40" height="28" >
-					<top anchor="top" />
-					<left anchor="right" relation="relative" offset="15" />
-				</anchored>
-				<!-- <frame name="fieldlight" offset="7,5,7,5" /> -->
-				<description textres="char_tooltip_hp" />
-				<script>
-					function onValueChanged()
-						window.onHealthChanged();
-					end
-				</script>
-				<!-- <script> -->
-					<!-- function onInit() -->
-					<!-- ToDo onSOurceUpdate -->
-						<!-- setValue(DB.getValue(getDatabaseNode().getChild("..."), "abilities.constitution.score", 0)) -->
-					<!-- end -->
-
-					<!-- function onValueChanged() -->
-						<!-- setValue(DB.getValue(getDatabaseNode().getChild("..."), "abilities.constitution.score", 0)) -->
-					<!-- end -->
-				<!-- </script> -->
-			</number_dropadd>
-			<label_fieldtop name="hp_label">
-				<anchored to="hp" />
-				<static textres="hp" />
-			</label_fieldtop>
-
-			<!-- =================================================================================================================== -->
 			<number_charwounds name="wounds" source="hp.wounds">
-				<anchored to="vp" width="40" height="28" >
+				<anchored to="hp" width="40" height="28" >
 					<top anchor="top" />
 					<left anchor="right" relation="relative" offset="15" />
 				</anchored>
@@ -487,6 +478,8 @@
 		</sheetdata>
 	</windowclass>
 
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<windowclass name="char_class">
 		<margins control="0,0,0,2" />
 		<sheetdata>
@@ -522,7 +515,9 @@
 			</stringu>
 		</sheetdata>
 	</windowclass>
-	
+
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->	
 	<windowclass name="charsheet_classes">
 		<frame>charsheethelper</frame>
 		<placement>
@@ -726,6 +721,8 @@
 		</sheetdata>
 	</windowclass>
 
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<windowclass name="charsheet_class">
 		<margins control="0,0,0,2" />
 		<sizelimits>	

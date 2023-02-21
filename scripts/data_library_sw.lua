@@ -3,10 +3,14 @@
 -- attribution and copyright information.
 --
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getItemIsIdentified(vRecord, vDefault)
 	return LibraryData.getIDState("item", vRecord, true);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getCRGroupedList(v)
 	local nOutput = v or 0;
 	if nOutput > 0 then
@@ -25,6 +29,8 @@ function getCRGroupedList(v)
 	return tostring(nOutput);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getCRGroup(v)
 	local nOutput = v or 0;
 	if nOutput > 0 then
@@ -43,10 +49,14 @@ function getCRGroup(v)
 	return tostring(nOutput);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getNPCCRValue(vNode)
 	return getCRGroup(DB.getValue(vNode, "cr", 0));
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getTypeGroup(v)
 	local sOutput = "";
 	if v then
@@ -61,15 +71,21 @@ function getTypeGroup(v)
 	return sOutput;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getNPCTypeValue(vNode)
 	return getTypeGroup(DB.getValue(vNode, "type", ""));
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function isItemIdentifiable(vNode)
 	local sBasePath = UtilityManager.getDataBaseNodePathSplit(vNode)
 	return (sBasePath ~= "reference");
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getSpellSchoolValue(vNode)
 	local v = StringManager.trim(DB.getValue(vNode, "school", ""));
 	local sType = v:match("^%w+");
@@ -80,10 +96,14 @@ function getSpellSchoolValue(vNode)
 	return v;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getSpellSourceValue(vNode)
 	return StringManager.split(DB.getValue(vNode, "level", ""), ",", true);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getClassTypeValue(vNode)
 	local sClassType = DB.getValue(vNode, "classtype", "");
 	if sClassType == "prestige" then
@@ -94,6 +114,8 @@ function getClassTypeValue(vNode)
 	return Interface.getString("class_label_classtype_base");
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 aRecordOverrides = {
 	-- CoreRPG overrides
 	["image"] = { 
@@ -171,6 +193,8 @@ aRecordOverrides = {
 	},
 };
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 aListViews = {
 	["npc"] = {
 		["byletter"] = {
@@ -227,6 +251,7 @@ aListViews = {
 				{ sName = "name", sType = "string", sHeadingRes = "item_grouped_label_name", nWidth=200 },
 				{ sName = "cost", sType = "string", sHeadingRes = "item_grouped_label_cost", bCentered=true },
 				{ sName = "damage", sType = "string", sHeadingRes = "item_grouped_label_damage", nWidth=60, bCentered=true },
+				-- ToDo: Should that be a string?
 				{ sName = "critical", sType = "number", sHeadingRes = "item_grouped_label_critical", bCentered=true },
 				{ sName = "range", sType = "number", sHeadingRes = "item_grouped_label_range", sTooltipRes = "item_grouped_tooltip_range", nWidth=30, bCentered=true },
 				{ sName = "weight", sType = "number", sHeadingRes = "item_grouped_label_weight", sTooltipRes = "item_grouped_tooltip_weight", nWidth=30, bCentered=true },
@@ -277,6 +302,8 @@ aListViews = {
 	},
 };
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onInit()
 	LibraryData.setCustomFilterHandler("item_isidentified", getItemIsIdentified);
 	LibraryData.setCustomGroupOutputHandler("npc_cr", getCRGroupedList);

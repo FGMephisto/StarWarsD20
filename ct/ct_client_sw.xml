@@ -33,7 +33,7 @@
 	</windowclass>
 
 	<windowclass name="client_ct_entry" merge="join">
-		<script file="ct/scripts/clientct_entry_sw.lua" />
+		<script file="ct/scripts/clientct_entry_dnd.lua" />
 		<sheetdata>
 			<base_clientct_health name="healthbase" insertbefore="initresult" />
 			<string_clientct_status name="status" insertbefore="initresult" />

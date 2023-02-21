@@ -6,6 +6,8 @@
 
 local aFieldMap = {};
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onInit()
 	if Session.IsHost then
 		DB.addHandler("charsheet.*.classes", "onChildUpdate", linkPCClasses);
@@ -14,18 +16,20 @@ function onInit()
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function linkPCClasses(nodeClass)
 	if not nodeClass then
 		return;
 	end
 
-	local nodePS = PartyManager.mapChartoPS(nodeClass.getParent());
+	local nodePS = PartyManager.mapChartoPS(DB.getParent(nodeClass));
 
 	if not nodePS then
 		return;
 	end
 
-	DB.setValue(nodePS, "class", "string", CharManager.getClassLevelSummary(nodeClass.getParent()));
+	DB.setValue(nodePS, "class", "string", CharManager.getClassLevelSummary(DB.getParent(nodeClass)));
 end
 
 function linkPCLanguages(nodeLanguages)
@@ -33,7 +37,7 @@ function linkPCLanguages(nodeLanguages)
 		return;
 	end
 
-	local nodePS = PartyManager.mapChartoPS(nodeLanguages.getParent());
+	local nodePS = PartyManager.mapChartoPS(DB.getParent(nodeLanguages));
 
 	if not nodePS then
 		return;
@@ -57,6 +61,9 @@ function linkPCSkill(nodeSkill, nodePS, sPSField)
 	PartyManager.linkRecordField(nodeSkill, nodePS, "total", "number", sPSField);
 end
 
+-- ===================================================================================================================
+-- Adjusted
+-- ===================================================================================================================
 function linkPCSkills(nodeSkills)
 
 	if not nodeSkills then
@@ -136,6 +143,9 @@ function linkPCSkills(nodeSkills)
 	end
 end
 
+-- ===================================================================================================================
+-- Adjusted
+-- ===================================================================================================================
 function linkPCFields(nodePS)
 	local sClass, sRecord = DB.getValue(nodePS, "link", "", "");
 
@@ -162,6 +172,7 @@ function linkPCFields(nodePS)
 	PartyManager.linkRecordField(nodeChar, nodePS, "hp.total", "number", "hptotal");
 	PartyManager.linkRecordField(nodeChar, nodePS, "hp.temporary", "number", "hptemp");
 	PartyManager.linkRecordField(nodeChar, nodePS, "hp.wounds", "number", "wounds");
+	-- PartyManager.linkRecordField(nodeChar, nodePS, "hp.nonlethal", "number", "nonlethal");
 	
 	PartyManager.linkRecordField(nodeChar, nodePS, "abilities.strength.score", "number", "strength");
 	PartyManager.linkRecordField(nodeChar, nodePS, "abilities.constitution.score", "number", "constitution");
@@ -188,15 +199,14 @@ function linkPCFields(nodePS)
 	PartyManager.linkRecordField(nodeChar, nodePS, "defenses.damagereduction", "string", "dr");
 	PartyManager.linkRecordField(nodeChar, nodePS, "defenses.sr.total", "number", "sr");
 
-	linkPCClasses(nodeChar.getChild("classes"));
-	linkPCSkills(nodeChar.getChild("skilllist"));
-	linkPCLanguages(nodeChar.getChild("languagelist"));
+	linkPCClasses(DB.getChild(nodeChar, "classes"));
+	linkPCSkills(DB.getChild(nodeChar, "skilllist"));
+	linkPCLanguages(DB.getChild(nodeChar, "languagelist"));
 end
 
---
+-- ===================================================================================================================
 -- DROP HANDLING
---
-
+-- ===================================================================================================================
 function addEncounter(nodeEnc)
 	if not nodeEnc then
 		return;
@@ -215,10 +225,9 @@ function addQuest(nodeQuest)
 	DB.copyNode(nodeQuest, nodePSQuest);
 end
 
---
+-- ===================================================================================================================
 -- XP DISTRIBUTION
---
-
+-- ===================================================================================================================
 function awardQuestsToParty(nodeEntry)
 	local nXP = 0;
 
@@ -228,7 +237,7 @@ function awardQuestsToParty(nodeEntry)
 			DB.setValue(nodeEntry, "xpawarded", "number", 1);
 		end
 	else
-		for _,v in pairs(DB.getChildren("partysheet.quests")) do
+		for _,v in ipairs(DB.getChildList("partysheet.quests")) do
 			if DB.getValue(v, "xpawarded", 0) == 0 then
 				nXP = nXP + DB.getValue(v, "xp", 0);
 				DB.setValue(v, "xpawarded", "number", 1);
@@ -241,6 +250,8 @@ function awardQuestsToParty(nodeEntry)
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function awardEncountersToParty(nodeEntry)
 	local nXP = 0;
 
@@ -250,7 +261,7 @@ function awardEncountersToParty(nodeEntry)
 			DB.setValue(nodeEntry, "xpawarded", "number", 1);
 		end
 	else
-		for _,v in pairs(DB.getChildren("partysheet.encounters")) do
+		for _,v in ipairs(DB.getChildList("partysheet.encounters")) do
 			if DB.getValue(v, "xpawarded", 0) == 0 then
 				nXP = nXP + DB.getValue(v, "exp", 0);
 				DB.setValue(v, "xpawarded", "number", 1);
@@ -263,11 +274,13 @@ function awardEncountersToParty(nodeEntry)
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function awardXP(nXP) 
 	-- Determine members of party
 	local aParty = {};
 
-	for _,v in pairs(PartyManager.getPartyNodes()) do
+	for _,v in ipairs(PartyManager.getPartyNodes()) do
 		local sClass, sRecord = DB.getValue(v, "link");
 		if sClass == "charsheet" and sRecord then
 			local nodePC = DB.findNode(sRecord);
@@ -319,6 +332,8 @@ function awardXP(nXP)
 	Comm.deliverChatMessage(msg);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function awardXPtoPC(nXP, nodePC)
 	local nCharXP = DB.getValue(nodePC, "exp", 0);
 	nCharXP = nCharXP + nXP;
@@ -329,7 +344,7 @@ function awardXPtoPC(nXP, nodePC)
 	msg.text = "[" .. nXP .. " XP] -> " .. DB.getValue(nodePC, "name");
 	Comm.deliverChatMessage(msg, "");
 
-	local sOwner = nodePC.getOwner();
+	local sOwner = DB.getOwner(nodePC);
 	if (sOwner or "") ~= "" then
 		Comm.deliverChatMessage(msg, sOwner);
 	end

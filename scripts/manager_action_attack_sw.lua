@@ -7,6 +7,8 @@
 OOB_MSGTYPE_APPLYATK = "applyatk";
 OOB_MSGTYPE_APPLYHRFC = "applyhrfc";
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onInit()
 	OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_APPLYATK, handleApplyAttack);
 	OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_APPLYHRFC, handleApplyHRFC);
@@ -22,6 +24,8 @@ function onInit()
 	ActionsManager.registerResultHandler("grapple", onGrapple);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function handleApplyAttack(msgOOB)
 	local rSource = ActorManager.resolveActor(msgOOB.sSourceNode);
 	local rTarget = ActorManager.resolveActor(msgOOB.sTargetNode);
@@ -30,6 +34,8 @@ function handleApplyAttack(msgOOB)
 	ActionAttack.applyAttack(rSource, rTarget, (tonumber(msgOOB.nSecret) == 1), msgOOB.sAttackType, msgOOB.sDesc, nTotal, msgOOB.sResults);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function notifyApplyAttack(rSource, rTarget, bSecret, sAttackType, sDesc, nTotal, sResults)
 	if not rTarget then
 		return;
@@ -54,10 +60,14 @@ function notifyApplyAttack(rSource, rTarget, bSecret, sAttackType, sDesc, nTotal
 	Comm.deliverOOBMessage(msgOOB, "");
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function handleApplyHRFC(msgOOB)
 	TableManager.processTableRoll("", msgOOB.sTable);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function notifyApplyHRFC(sTable)
 	local msgOOB = {};
 	msgOOB.type = OOB_MSGTYPE_APPLYHRFC;
@@ -67,6 +77,8 @@ function notifyApplyHRFC(sTable)
 	Comm.deliverOOBMessage(msgOOB, "");
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onTargeting(rSource, aTargeting, rRolls)
 	if OptionsManager.isOption("RMMT", "multi") then
 		local aTargets = {};
@@ -86,6 +98,8 @@ function onTargeting(rSource, aTargeting, rRolls)
 	return aTargeting;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function performPartySheetVsRoll(draginfo, rActor, rAction)
 	local rRoll = ActionAttack.getRoll(nil, rAction);
 	
@@ -97,12 +111,16 @@ function performPartySheetVsRoll(draginfo, rActor, rAction)
 	ActionsManager.actionDirect(nil, "attack", { rRoll }, { { rActor } });
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function performRoll(draginfo, rActor, rAction)
 	local rRoll = ActionAttack.getRoll(rActor, rAction);
 	
 	ActionsManager.performAction(draginfo, rActor, rRoll);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getRoll(rActor, rAction)
 	local rRoll = {};
 	if rAction.cm then
@@ -151,12 +169,16 @@ function getRoll(rActor, rAction)
 	return rRoll;
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function performGrappleRoll(draginfo, rActor, rAction)
 	local rRoll = ActionAttack.getGrappleRoll(rActor, rAction);
 	
 	ActionsManager.performAction(draginfo, rActor, rRoll);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function getGrappleRoll(rActor, rAction)
 	local rRoll = {};
 	rRoll.sType = "grapple";
@@ -185,6 +207,9 @@ function getGrappleRoll(rActor, rAction)
 	return rRoll;
 end
 
+-- ===================================================================================================================
+-- Adjusted
+-- ===================================================================================================================
 function modAttack(rSource, rTarget, rRoll)
 	ActionAttack.clearCritState(rSource);
 	
@@ -489,7 +514,7 @@ function modAttack(rSource, rTarget, rRoll)
 			else
 				sEffects = "[" .. Interface.getString("effects_tag") .. "]";
 			end
-			table.insert(aAddDesc, sEffects);
+			table.insert(aAddDesc, EffectManager.buildEffectOutput(sMod));
 		end
 	end
 
@@ -508,7 +533,8 @@ function modAttack(rSource, rTarget, rRoll)
 	rRoll.nMod = rRoll.nMod + nAddMod;
 end
 
-
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onAttack(rSource, rTarget, rRoll)
 	local rMessage = ActionsManager.createActionMessage(rSource, rRoll);
 
@@ -535,13 +561,11 @@ function onAttack(rSource, rTarget, rRoll)
 		rRoll.nDefenseVal, rRoll.nAtkEffectsBonus, rRoll.nDefEffectsBonus, rRoll.nMissChance = ActorManager35E.getDefenseValue(rSource, rTarget, rRoll);
 		if rRoll.nAtkEffectsBonus ~= 0 then
 			rRoll.nTotal = rRoll.nTotal + rRoll.nAtkEffectsBonus;
-			local sFormat = "[" .. Interface.getString("effects_tag") .. " %+d]";
-			table.insert(rRoll.aMessages, string.format(sFormat, rRoll.nAtkEffectsBonus));
+			table.insert(rRoll.aMessages, EffectManager.buildEffectOutput(rRoll.nAtkEffectsBonus));
 		end
 		if rRoll.nDefEffectsBonus ~= 0 then
 			rRoll.nDefenseVal = rRoll.nDefenseVal + rRoll.nDefEffectsBonus;
-			local sFormat = "[" .. Interface.getString("effects_def_tag") .. " %+d]";
-			table.insert(rRoll.aMessages, string.format(sFormat, rRoll.nDefEffectsBonus));
+			table.insert(rRoll.aMessages, string.format("[%s %+d]", Interface.getString("effects_def_tag"), rRoll.nDefEffectsBonus));
 		end
 	end
 
@@ -634,10 +658,14 @@ function onAttack(rSource, rTarget, rRoll)
 	ActionAttack.onPostAttackResolve(rSource, rTarget, rRoll, rMessage);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onPreAttackResolve(rSource, rTarget, rRoll, rMessage)
 	-- Do nothing; location to override
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onAttackResolve(rSource, rTarget, rRoll, rMessage)
 	Comm.deliverChatMessage(rMessage);
 
@@ -668,8 +696,7 @@ function onAttackResolve(rSource, rTarget, rRoll, rMessage)
 			end
 
 			if (rRoll.nAtkEffectsBonus or 0) ~= 0 then
-				local sFormat = "[" .. Interface.getString("effects_tag") .. " %+d]";
-				rCritConfirmRoll.sDesc = rCritConfirmRoll.sDesc .. " " .. string.format(sFormat, rRoll.nAtkEffectsBonus);
+				rCritConfirmRoll.sDesc = string.format("%s %s", rCritConfirmRoll.sDesc, EffectManager.buildEffectOutput(rRoll.nAtkEffectsBonus));
 			end
 			
 			ActionsManager.roll(rSource, { rTarget }, rCritConfirmRoll, true);
@@ -703,6 +730,8 @@ function onAttackResolve(rSource, rTarget, rRoll, rMessage)
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onPostAttackResolve(rSource, rTarget, rRoll, rMessage)
 	-- HANDLE FUMBLE/CRIT HOUSE RULES
 	local sOptionHRFC = OptionsManager.getOption("HRFC");
@@ -714,6 +743,8 @@ function onPostAttackResolve(rSource, rTarget, rRoll, rMessage)
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onGrapple(rSource, rTarget, rRoll)
 	if DataCommon.isPFRPG() then
 		ActionAttack.onAttack(rSource, rTarget, rRoll);
@@ -731,6 +762,8 @@ function onGrapple(rSource, rTarget, rRoll)
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function onMissChance(rSource, rTarget, rRoll)
 	local rMessage = ActionsManager.createActionMessage(rSource, rRoll);
 
@@ -756,6 +789,8 @@ function onMissChance(rSource, rTarget, rRoll)
 	Comm.deliverChatMessage(rMessage);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function applyAttack(rSource, rTarget, bSecret, sAttackType, sDesc, nTotal, sResults)
 	local msgShort = {font = "msgfont"};
 	local msgLong = {font = "msgfont"};
@@ -794,6 +829,8 @@ end
 
 aCritState = {};
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function setCritState(rSource, rTarget)
 	local sSourceCT = ActorManager.getCreatureNodeName(rSource);
 	if sSourceCT == "" then
@@ -810,6 +847,8 @@ function setCritState(rSource, rTarget)
 	table.insert(aCritState[sSourceCT], sTargetCT);
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function clearCritState(rSource, rTarget)
 	if rTarget then
 		ActionAttack.isCrit(rSource, rTarget);
@@ -822,6 +861,8 @@ function clearCritState(rSource, rTarget)
 	end
 end
 
+-- ===================================================================================================================
+-- ===================================================================================================================
 function isCrit(rSource, rTarget)
 	local sSourceCT = ActorManager.getCreatureNodeName(rSource);
 	if sSourceCT == "" then

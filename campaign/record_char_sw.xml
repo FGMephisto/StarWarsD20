@@ -7,6 +7,9 @@
 -->
 
 <root>
+	<!-- =================================================================================================================== -->
+	<!-- Adjusted -->
+	<!-- =================================================================================================================== -->
 	<windowclass name="charsheet">
 		<frame>charsheet</frame>
 		<placement>
@@ -23,69 +26,93 @@
 		<export>character</export>
 		<script file="campaign/scripts/char.lua" />
 		<sheetdata>
-			<button_charactivate name="speak">
-				<bounds>-41,30,23,22</bounds>
-			</button_charactivate>
+			<sub_charsheet_overview name="overview" />
 
-			<token_char name="token">
-				<bounds>-86,23,40,40</bounds>
-			</token_char>
-
-			<genericcontrol name="portraitbase">
-				<bounds>-137,21,45,45</bounds>
-				<icon>charlist_base</icon>
-				<disabled />
-			</genericcontrol>
-
-			<portrait_char name="portrait">
-				<bounds>-137,21,45,45</bounds>
-			</portrait_char>
-
-			<frame_char name="overviewframe">
-				<bounds>15,20,-140,45</bounds>
-			</frame_char>
-
-			<string_labeled name="name">
-				<anchored to="overviewframe" position="insidetopleft" offset="15,10" height="20">
-					<right offset="-15" />
-				</anchored>
-				<labelres>char_label_name</labelres>
-			</string_labeled>
-
-			<subwindow name="main">
-				<bounds>0,65,-1,-20</bounds>
+			<sub_charsheet name="main">
 				<class>charsheet_main</class>
-			</subwindow>
-
-			<subwindow name="combat">
-				<bounds>0,65,-1,-20</bounds>
+			</sub_charsheet>
+			<sub_charsheet name="combat">
 				<class>charsheet_combat</class>
-			</subwindow>
-
-			<subwindow name="skills">
-				<bounds>0,65,-1,-20</bounds>
+			</sub_charsheet>
+			<sub_charsheet name="skills">
 				<class>charsheet_skills</class>
-			</subwindow>
-
-			<subwindow name="abilities">
-				<bounds>0,65,-1,-20</bounds>
+			</sub_charsheet>
+			<sub_charsheet name="abilities">
 				<class>charsheet_abilities</class>
-			</subwindow>
-
-			<subwindow name="inventory">
-				<bounds>0,65,-1,-20</bounds>
+			</sub_charsheet>
+			<sub_charsheet name="inventory">
 				<class>charsheet_inventory</class>
-			</subwindow>
-
-			<subwindow name="notes">
-				<bounds>0,65,-1,-20</bounds>
+			</sub_charsheet>
+			<sub_charsheet name="notes">
 				<class>charsheet_notes</class>
-			</subwindow>
-
-			<subwindow name="actions">
-				<bounds>0,65,-1,-20</bounds>
+			</sub_charsheet>
+			<sub_charsheet name="actions">
 				<class>charsheet_actions</class>
-			</subwindow>
+			</sub_charsheet>
+
+			<!-- <button_charactivate name="speak"> -->
+				<!-- <bounds>-41,30,23,22</bounds> -->
+			<!-- </button_charactivate> -->
+
+			<!-- <token_char name="token"> -->
+				<!-- <bounds>-86,23,40,40</bounds> -->
+			<!-- </token_char> -->
+
+			<!-- <genericcontrol name="portraitbase"> -->
+				<!-- <bounds>-137,21,45,45</bounds> -->
+				<!-- <icon>charlist_base</icon> -->
+				<!-- <disabled /> -->
+			<!-- </genericcontrol> -->
+
+			<!-- <portrait_char name="portrait"> -->
+				<!-- <bounds>-137,21,45,45</bounds> -->
+			<!-- </portrait_char> -->
+
+			<!-- <frame_char name="overviewframe"> -->
+				<!-- <bounds>15,20,-140,45</bounds> -->
+			<!-- </frame_char> -->
+
+			<!-- <string_labeled name="name"> -->
+				<!-- <anchored to="overviewframe" position="insidetopleft" offset="15,10" height="20"> -->
+					<!-- <right offset="-15" /> -->
+				<!-- </anchored> -->
+				<!-- <labelres>char_label_name</labelres> -->
+			<!-- </string_labeled> -->
+
+			<!-- <subwindow name="main"> -->
+				<!-- <bounds>0,65,-1,-20</bounds> -->
+				<!-- <class>charsheet_main</class> -->
+			<!-- </subwindow> -->
+
+			<!-- <subwindow name="combat"> -->
+				<!-- <bounds>0,65,-1,-20</bounds> -->
+				<!-- <class>charsheet_combat</class> -->
+			<!-- </subwindow> -->
+
+			<!-- <subwindow name="skills"> -->
+				<!-- <bounds>0,65,-1,-20</bounds> -->
+				<!-- <class>charsheet_skills</class> -->
+			<!-- </subwindow> -->
+
+			<!-- <subwindow name="abilities"> -->
+				<!-- <bounds>0,65,-1,-20</bounds> -->
+				<!-- <class>charsheet_abilities</class> -->
+			<!-- </subwindow> -->
+
+			<!-- <subwindow name="inventory"> -->
+				<!-- <bounds>0,65,-1,-20</bounds> -->
+				<!-- <class>charsheet_inventory</class> -->
+			<!-- </subwindow> -->
+
+			<!-- <subwindow name="notes"> -->
+				<!-- <bounds>0,65,-1,-20</bounds> -->
+				<!-- <class>charsheet_notes</class> -->
+			<!-- </subwindow> -->
+
+			<!-- <subwindow name="actions"> -->
+				<!-- <bounds>0,65,-1,-20</bounds> -->
+				<!-- <class>charsheet_actions</class> -->
+			<!-- </subwindow> -->
 
 			<tabs_charsheet name="tabs">
 				<tab>

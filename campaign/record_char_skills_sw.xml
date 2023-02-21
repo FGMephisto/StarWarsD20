@@ -7,6 +7,8 @@
 -->
 
 <root>
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<windowclass name="charsheet_skills">
 		<sheetdata>
 			<frame_char name="skillpointframe">
@@ -15,14 +17,14 @@
 
 			<button_iedit name="skills_iedit">
 				<anchored to="skillpointframe" position="insidetopright" offset="25,15" />
-				<target>skills</target>
-				<script>
-					function onValueChanged()
-						local bEdit = (getValue() == 1);
+				<!-- <target>skills</target> -->
+				<!-- <script> -->
+					-- function onValueChanged()
+						-- local bEdit = (getValue() == 1);
 						
-						window.skills.update();
-					end
-				</script>
+						-- window.skills.update();
+					-- end
+				<!-- </script> -->
 			</button_iedit>
 
 			<buttoncontrol name="skills_iadd_profession">
@@ -105,6 +107,7 @@
 				<anchored to="skillframe" position="insidetopleft" offset="17,15" width="10" height="10" />
 				<icon>char_quicklist</icon>
 				<tooltip textres="char_tooltip_skillshowmini" />
+				<invisible />
 			</genericcontrol>
 
 			<genericcontrol>
@@ -126,14 +129,18 @@
 				<invisible />
 			</genericcontrol>
 
-			<genericcontrol name="idelete_header">
-				<anchored to="rightanchor" width="20" height="20">
-					<top />
-					<right anchor="left" relation="relative" offset="-2" />
-				</anchored>
-				<disabled />
-				<invisible />
-			</genericcontrol>
+			<spacer_header_idelete name="idelete_header">
+				<editmode>skills_iedit</editmode>
+			</spacer_header_idelete>
+			
+			<!-- <genericcontrol name="idelete_header"> -->
+				<!-- <anchored to="rightanchor" width="20" height="20"> -->
+					<!-- <top /> -->
+					<!-- <right anchor="left" relation="relative" offset="-2" /> -->
+				<!-- </anchored> -->
+				<!-- <disabled /> -->
+				<!-- <invisible /> -->
+			<!-- </genericcontrol> -->
 
 			<label>
 				<anchored to="rightanchor" width="44">
@@ -188,6 +195,8 @@
 		</sheetdata>
 	</windowclass>
 
+	<!-- =================================================================================================================== -->
+	<!-- =================================================================================================================== -->
 	<windowclass name="char_skill">
 		<margins control="0,0,0,2" />
 		<script file="campaign/scripts/char_skill.lua" />
@@ -200,16 +209,17 @@
 				</script>
 			</hn>
 
-			<!-- <button_checkbox name="showonminisheet"> -->
-				<!-- <bounds>6,8,12,12</bounds> -->
-				<!-- <default>1</default> -->
-			<!-- </button_checkbox> -->
+			<button_checkbox name="showonminisheet">
+				<bounds>6,8,12,12</bounds>
+				<default>1</default>
+				<invisible />
+			</button_checkbox>
 
 			<button_checkbox name="state">
 				<bounds>22,8,12,12</bounds>
 				<script>
 					function onValueChanged()
-						CharManager.updateSkillPoints(window.getDatabaseNode().getChild("..."));
+						CharManager.updateSkillPoints(DB.getChild(window.getDatabaseNode(), "..."));
 					end
 				</script>
 			</button_checkbox>

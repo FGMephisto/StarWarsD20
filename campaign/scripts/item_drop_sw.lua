@@ -5,7 +5,7 @@
 --
 
 -- ===================================================================================================================
--- Modified
+-- Adjusted
 -- ===================================================================================================================
 function onDrop(x, y, draginfo)
 	local sDragType = draginfo.getType();
@@ -67,6 +67,7 @@ function onDrop(x, y, draginfo)
 				DB.setValue(nodeTarget, "dr", "number", DB.getValue(nodeSource, "ac", 0));
 				DB.setValue(nodeTarget, "maxstatbonus", "number", DB.getValue(nodeSource, "maxstatbonus", 0));
 				DB.setValue(nodeTarget, "checkpenalty", "number", DB.getValue(nodeSource, "checkpenalty", 0));
+				-- DB.setValue(nodeTarget, "spellfailure", "number", DB.getValue(nodeSource, "spellfailure", 0));
 				DB.setValue(nodeTarget, "speed30", "number", DB.getValue(nodeSource, "speed30", 0));
 				DB.setValue(nodeTarget, "speed20", "number", DB.getValue(nodeSource, "speed20", 0));
 				DB.setValue(nodeTarget, "properties", "string", DB.getValue(nodeSource, "properties", ""));
@@ -86,7 +87,9 @@ function onDrop(x, y, draginfo)
 			local nSourceBonus = DB.getValue(nodeSource, "bonus", 0);
 			local nTargetBonus = DB.getValue(nodeTarget, "bonus", 0);
 			DB.setValue(nodeTarget, "bonus", "number", nSourceBonus + nTargetBonus);
-			
+
+			-- DB.setValue(nodeTarget, "aura", "string", DB.getValue(nodeSource, "aura", ""));
+			-- DB.setValue(nodeTarget, "cl", "number", DB.getValue(nodeSource, "cl", 0));			
 			DB.setValue(nodeTarget, "prerequisites", "string", DB.getValue(nodeSource, "prerequisites", ""));
 			
 			if nodeSource and nodeTarget then

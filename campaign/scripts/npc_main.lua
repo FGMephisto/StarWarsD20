@@ -7,14 +7,6 @@ function onInit()
 	update();
 end
 
-function updateControl(sControl, bReadOnly, bForceHide)
-	if not self[sControl] then
-		return false;
-	end
-		
-	return self[sControl].update(bReadOnly, bForceHide);
-end
-
 function update()
 	local nodeRecord = getDatabaseNode();
 	local bReadOnly = WindowManager.getReadOnlyState(nodeRecord);
@@ -22,9 +14,9 @@ function update()
 
 	local bSection1 = false;
 	if Session.IsHost then
-		if updateControl("nonid_name", bReadOnly) then bSection1 = true; end;
+		if WindowManager.callSafeControlUpdate(self, "nonid_name", bReadOnly) then bSection1 = true; end;
 	else
-		updateControl("nonid_name", bReadOnly, true);
+		WindowManager.callSafeControlUpdate(self, "nonid_name", bReadOnly, true);
 	end
 	divider.setVisible(bSection1);
 
@@ -35,9 +27,9 @@ function update()
 		if sType == "Vehicle" then
 			babgrp_label.setValue(Interface.getString("npc_label_cm"));
 			if bPFMode then
-				updateControl("babgrp", bReadOnly);
+				WindowManager.callSafeControlUpdate(self, "babgrp", bReadOnly);
 			else
-				updateControl("babgrp", bReadOnly, true);
+				WindowManager.callSafeControlUpdate(self, "babgrp", bReadOnly, true);
 			end
 		else
 			if bPFMode then
@@ -48,55 +40,55 @@ function update()
 		end
 	end
 
-	updateControl("type", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "type", bReadOnly);
 	if bPFMode then
-		updateControl("alignment", bReadOnly, true);
+		WindowManager.callSafeControlUpdate(self, "alignment", bReadOnly, true);
 	else
-		updateControl("alignment", bReadOnly);
+		WindowManager.callSafeControlUpdate(self, "alignment", bReadOnly);
 	end
 	if bPFMode then
-		updateControl("senses", bReadOnly);
-		updateControl("aura", bReadOnly);
+		WindowManager.callSafeControlUpdate(self, "senses", bReadOnly);
+		WindowManager.callSafeControlUpdate(self, "aura", bReadOnly);
 	else
-		updateControl("senses", bReadOnly, true);
-		updateControl("aura", bReadOnly, true);
+		WindowManager.callSafeControlUpdate(self, "senses", bReadOnly, true);
+		WindowManager.callSafeControlUpdate(self, "aura", bReadOnly, true);
 	end
 	
-	updateControl("ac", bReadOnly);
-	updateControl("hd", bReadOnly);
-	updateControl("specialqualities", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "ac", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "hd", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "specialqualities", bReadOnly);
 	
-	updateControl("speed", bReadOnly);
-	updateControl("atk", bReadOnly);
-	updateControl("fullatk", bReadOnly);
-	updateControl("spacereach", bReadOnly);
-	updateControl("specialattacks", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "speed", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "atk", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "fullatk", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "spacereach", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "specialattacks", bReadOnly);
 	
-	updateControl("babgrp", bReadOnly);
-	updateControl("feats", bReadOnly);
-	updateControl("skills", bReadOnly);
-	updateControl("languages", bReadOnly);
-	updateControl("advancement", bReadOnly);
-	updateControl("leveladjustment", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "babgrp", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "feats", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "skills", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "languages", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "advancement", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "leveladjustment", bReadOnly);
 
-	updateControl("environment", bReadOnly);
-	updateControl("organization", bReadOnly);
-	updateControl("treasure", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "environment", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "organization", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "treasure", bReadOnly);
 	
 	-- Trap
-	updateControl("trigger", bReadOnly);
-	updateControl("reset", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "trigger", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "reset", bReadOnly);
 
 	-- Vehicle
-	updateControl("squares", bReadOnly);
-	updateControl("basesave", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "squares", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "basesave", bReadOnly);
 	
-	updateControl("prop", bReadOnly);
-	updateControl("drive", bReadOnly);
-	updateControl("ff", bReadOnly);
-	updateControl("drived", bReadOnly);
-	updateControl("drives", bReadOnly);
-	updateControl("crew", bReadOnly);
-	updateControl("decks", bReadOnly);
-	updateControl("weapons", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "prop", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "drive", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "ff", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "drived", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "drives", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "crew", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "decks", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "weapons", bReadOnly);
 end

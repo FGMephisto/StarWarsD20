@@ -10,7 +10,7 @@ function onInit()
 end
 
 -- ===================================================================================================================
--- Modified
+-- Adjusted
 -- ===================================================================================================================
 function onHealthChanged()
 	local rActor = ActorManager.resolveActor(getDatabaseNode());
@@ -26,7 +26,7 @@ function onHealthChanged()
 end
 
 -- ===================================================================================================================
--- Modified
+-- Adjusted
 -- ===================================================================================================================
 function linkPCFields()
 	local nodeChar = link.getTargetDatabaseNode();
@@ -62,36 +62,5 @@ function linkPCFields()
 		sr.setLink(DB.createChild(nodeChar, "defenses.sr.total", "number"), true);
 
 		init.setLink(DB.createChild(nodeChar, "initiative.total", "number"), true);
-	end
-end
-
--- ===================================================================================================================
--- ToDo: Needed?
--- ===================================================================================================================
-function onSectionChanged(sKey)
-	local sSectionName = "sub_" .. sKey;
-
-	local cSection = self[sSectionName];
-	if cSection then
-		local bShow = self.getSectionToggle(sKey);
-
-		if bShow then
-			local sSectionClass = "ct_section_" .. sKey;
-			if sKey == "active" then
-				if self.isRecordType("npc") then
-					sSectionClass = sSectionClass .. "_npc";
-				end
-			end
-			cSection.setValue(sSectionClass, getDatabaseNode());
-		else
-			cSection.setValue("", "");
-		end
-		cSection.setVisible(bShow);
-	end
-
-	local sSummaryName = "summary_" .. sKey;
-	local cSummary = self[sSummaryName];
-	if cSummary then
-		cSummary.onToggle();
 	end
 end
