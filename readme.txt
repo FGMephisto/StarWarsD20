@@ -1,45 +1,54 @@
+This ruleset is build for the Star Wars roleplaying game based on the d20 System used for the third edition of Dungeons & Dragons.
+
 ===================================================================================================================
-Release 221128
+Version v2023-02-24
 ===================================================================================================================
-This release is a major upgrade to the previous version. Characters from the previous release are migrated to the new version once you update the ruleset.
+* Added support for death markers
+* Add dice roll skin customization
+* Combat tracker entry subsections have been redesigned and migrated to subwindows
+* Item record subsections have been redesigned and migrated to subwindows
 
-PC character sheet
-* Skills Tab: Contains all Abilities and Specialties. Clicking on an Ability will filter the "Specialty" list to the Specialties linked to the Ability. Custom Specialties can be entered and linked to an Ability.
-* Abilities Tab: Allows entering of Qualities and Languages.
-* Inventory Tab: Equipment can be tracked and "carry status selected. Bulk and Armor will be considered on other tabs if maintained on an item. Weapons added to the inventory will also be added to the "Actions" tab. Weapons should be tracked from the "Items" section to the inventory for maximum comfort and automation.
-* Notes Tab: Basic PC data. Here you can also keep track of Destiny Points, Sorcery Points and XP.
-* Actions Tab: Contains a Health section, Combat Stats, often used Tests and all weapons.
+===================================================================================================================
+Version v2022-03-04
+===================================================================================================================
+* Updated ruleset for compatibility with CoreRPG 2022-03 update
 
-Items
-* Adjusted for Chronicle rules.
-* Additional fields will be shown if the item is of type "Armor" or "Weapon".
-* "Subtype" is used for building a sorted item table which you can find by clicking on the button "Armor" or "Weapon" on the "Items" window.
-* Item data is copied if added to the inventory of a PC by drag-and-drop.
+===================================================================================================================
+Version v2021-12-15
+===================================================================================================================
+* Updated ruleset for compatibility with CoreRPG 2021-12 update
+* Character Sheet Abilities tab adjusted to provide much more space for feats, class abilities, proficiencies and traits
+* Adjusted Vitality and Wound Points to work more smoothly with the Combat Tracker
+* Added an option to add gained Vitality Points in the "Class & Level" window
+* Various other little adjustments and tweaks
 
-NPC
-* Functional, but this section will see change, both to layout and data structure. Please do not enter NPC you need in your campaign right now. There will be no data migration from the current version of the NPC window to the final one.
-* When you enter "Actions" for an NPC, the dice fields can be edited by clicking on them once. Double-clicking will perform the role. Custom skills are not yet supported for NPC.
+===================================================================================================================
+Version v2021-08-02
+===================================================================================================================
+* Updated the Party Sheet to use appropriate Knowledge Skills
 
-Combat Tracker
-* Adjusted to allow tracking of Health, Fatigue, Injuries and Wounds.
-* Initiative can be rolled via the CT "Menu". Rolling of initiative per character to be fixed with next beta release, also a clean-up of the interface.
+===================================================================================================================
+Version v2021-04-21
+===================================================================================================================
+* Created ruleset specific modifiers to be used for attack rolls
+* Adjusted combat tracker for handling of health & wounds
+* Various other little adjustments and tweaks
 
-Party Sheet
-* Functional.
+===================================================================================================================
+Version v2021-03-17
+===================================================================================================================
+* Added "Speak Language" and "Read/Write Language" skills. You can add these skills via their respective buttons.
+* Renamed "Perform" skill to "Entertain" skill
+* Remove "Points spent" from the PC skill tab
+* Adjusted armor movement penalties to be based on "meters" instead of "feet".
+* Adjusted encumbrance calculation
+* Added "Class" to be a modifier for "Defense"
+* Adjusted Combat Tracker to show relevant "Wound Points" and "Vitaliy" stats
+* Adjusted "NPC" section to only show relevant stats (e.g. removing spells)
+* Adjusted "Items" section to only show relevant stats
+* Various other little adjustments and tweaks
 
-Modifiers
-* A number of presets included. Custom modifiers will likely not work if they affect Abilities, Specialties, Damage or rolls.
-
-Effects
-* Fully functional "Lights".
-* "Conditions" don't have an effect yet.
-
-Desktop
-* Buttons for extra dices added next to the "Modifier" box in the left lower corner. Buttons are cumulative, i.e. if you select "+1D", "+2D" and +"4D", the test will be performed with 7 additional test dice.
-* If you drag-and-drop a role, you can add additional bonus dice by just right-clicking the mouse button while dragging.
-
-Qualities / Specialties
-* Adjusted for Chronicle rules.
-
-Notes, Encounters, Images, Parcels, Quests, Story, Tables
-* Standard FGU functionality included
+===================================================================================================================
+Version v2021-03-08
+===================================================================================================================
+* Initial release
