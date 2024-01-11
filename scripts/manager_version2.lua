@@ -66,7 +66,7 @@ function updateCampaign()
 	end
 	
 	if major > 0 and major < rsmajorversion then
-		print("Migrating campaign database to latest data version.");
+		ChatManager.SystemMessage("Migrating campaign database to latest data version.");
 		DB.backup();
 		
 		if major < 8 then

@@ -10,6 +10,8 @@ function onInit()
 	CombatManager.setCustomTurnEnd(onTurnEnd);
 	CombatManager.setCustomCombatReset(resetInit);
 
+	ActorCommonManager.setDefaultSpaceReachFromActorSizeKey("D20");
+	ActorCommonManager.setRecordTypeSpaceReachCallback("charsheet", ActorCommonManager.getSpaceReachFromSizeFieldCore);
 	ActorCommonManager.setRecordTypeSpaceReachCallback("npc", ActorCommonManager.getSpaceReachDnD3Legacy);
 	CombatRecordManager.setRecordTypePostAddCallback("npc", onNPCPostAdd);
 end
@@ -786,14 +788,14 @@ function parseAttackLine(rActor, sLine)
 				local aClausesDamage = {};
 				local nIndexDamage = 1;
 				local nStartDamage, nEndDamage;
-				while nIndexDamage < #sDamage do
-					nStartDamage, nEndDamage = string.find(sDamage, ' plus ', nIndexDamage);
+				while nIndexDamage <= #sDamage do
+					nStartDamage, nEndDamage = sDamage:find(' plus ', nIndexDamage);
 					if nStartDamage then
-						table.insert(aClausesDamage, string.sub(sDamage, nIndexDamage, nStartDamage - 1));
+						table.insert(aClausesDamage, sDamage:sub(nIndexDamage, nStartDamage - 1));
 						nIndexDamage = nEndDamage;
 					else
-						table.insert(aClausesDamage, string.sub(sDamage, nIndexDamage));
-						nIndexDamage = #sDamage;
+						table.insert(aClausesDamage, sDamage:sub(nIndexDamage));
+						nIndexDamage = #sDamage + 1;
 					end
 				end
 

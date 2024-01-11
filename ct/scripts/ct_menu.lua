@@ -36,7 +36,7 @@ function onClickRelease(button, x, y)
 	end
 end
 
-function onMenuSelection(selection, subselection, subsubselection)
+function onMenuSelection(selection, subselection)
 	if Session.IsHost then
 		if selection == 7 then
 			if subselection == 4 then

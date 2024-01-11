@@ -117,7 +117,7 @@ function getRoll(rActor, sSave)
 		end
 	end
 
-	rRoll.sDesc = "[SAVE] " .. StringManager.capitalize(sSave);
+	rRoll.sDesc = "[SAVE] " .. StringManager.capitalizeAll(sSave);
 	if sAbility and sAbility ~= "" then
 		if (sSave == "fortitude" and sAbility ~= "constitution") or
 				(sSave == "reflex" and sAbility ~= "dexterity") or
@@ -215,6 +215,9 @@ function modSave(rSource, rTarget, rRoll)
 					bEffects = true;
 				end
 			else
+				for _,v2 in pairs(v.dice) do
+					table.insert(aAddDice, v2);
+				end
 				nAddMod = nAddMod + v.mod;
 				bEffects = true;
 			end

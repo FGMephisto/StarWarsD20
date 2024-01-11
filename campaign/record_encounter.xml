@@ -6,11 +6,10 @@
 -->
 
 <root>
-	<windowclass name="battle_header">
-		<margins control="0,0,0,2" />
+	<windowclass name="battle_header" merge="join">
 		<script>
 			function onInit()
-				update();
+				super.onInit();
 				
 				if DataCommon.isPFRPG() then
 					if cr.getValue() == 0 and exp.getValue() == 0 then
@@ -22,9 +21,9 @@
 			end
 			
 			function update()
+				super.update();
+
 				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
-				
-				name.setReadOnly(bReadOnly);
 				cr.setReadOnly(bReadOnly);
 				exp.setReadOnly(bReadOnly);
 				
@@ -34,28 +33,17 @@
 			end
 		</script>
 		<sheetdata>
-			<link_record_header name="link">
-				<class>battle</class>
-			</link_record_header>
-			
-			<anchor_record_header_right />
-			<icon_record_locked />
-			<button_record_locked />
-
-			<string_record_name name="name">
-				<empty textres="library_recordtype_empty_battle" />
-			</string_record_name>
+			<label_recordtype name="recordtype_label" merge="delete" />
 
 			<frame_record name="detailframe">
-				<anchored height="45">
-					<top parent="name" anchor="bottom" offset="10" />
+				<anchored height="40">
+					<top parent="name" anchor="bottom" offset="5" />
 					<left />
 					<right />
 				</anchored>
-				<frame offset="0,0,0,5" />
 			</frame_record>
 			<label name="cr_label">
-				<anchored to="detailframe" position="insidetopleft" offset="15,15" height="20" />
+				<anchored to="detailframe" position="insidetopleft" offset="15,10" />
 				<static textres="battle_label_cr" />
 				<tooltip textres="battle_tooltip_cr" />
 			</label>
@@ -67,11 +55,11 @@
 			<button_enc_refreshcr name="button_refreshcr" />
 
 			<basicnumber name="exp">
-				<anchored to="detailframe" position="insidetopright" offset="40,15" width="70" height="20" />
-				<tabtarget next="npcs" prev="level" />
+				<anchored to="detailframe" position="insidetopright" offset="40,10" width="70" height="20" />
+				<tabtarget next="npcs" prev="cr" />
 				<description textres="battle_tooltip_xp" />
 			</basicnumber>
-			<label>
+			<label name="exp_label">
 				<anchored to="exp" position="lefthigh" offset="10,0" />
 				<static textres="battle_label_xp" />
 				<tooltip textres="battle_label_xp" />

@@ -41,7 +41,7 @@ function getRoll(rActor, sAbilityStat)
 	rRoll.nMod = ActorManager35E.getAbilityBonus(rActor, sAbilityStat);
 	
 	rRoll.sDesc = "[ABILITY]";
-	rRoll.sDesc = rRoll.sDesc .. " " .. StringManager.capitalize(sAbilityStat);
+	rRoll.sDesc = rRoll.sDesc .. " " .. StringManager.capitalizeAll(sAbilityStat);
 	rRoll.sDesc = rRoll.sDesc .. " check";
 
 	return rRoll;
@@ -125,7 +125,7 @@ function onRoll(rSource, rTarget, rRoll)
 		local nTotal = ActionsManager.total(rRoll);
 		local nTargetDC = tonumber(rRoll.nTarget) or 0;
 		
-		rMessage.text = rMessage.text .. " (vs. DC " .. nTargetDC .. ")";
+		rMessage.text = rMessage.text .. " [vs. DC " .. nTargetDC .. "]";
 		if nTotal >= nTargetDC then
 			rMessage.text = rMessage.text .. " [SUCCESS]";
 		else

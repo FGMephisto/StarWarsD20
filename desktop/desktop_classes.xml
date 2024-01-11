@@ -48,21 +48,5 @@
 			</numbercontrol>
 		</sheetdata>
 	</windowclass>
-
-	<windowclass name="dicetower" merge="join">
-		<sheetdata>
-			<genericcontrol name="base">
-				<droptypes>
-					<type merge="add">attack</type>
-					<type merge="add">fullattack</type>
-					<type merge="add">damage</type>
-					<type merge="add">init</type>
-					<type merge="add">save</type>
-					<type merge="add">ability</type>
-					<type merge="add">skill</type>
-				</droptypes>
-			</genericcontrol>
-		</sheetdata>
-	</windowclass>
 </root>
 

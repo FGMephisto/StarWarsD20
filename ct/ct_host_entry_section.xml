@@ -170,7 +170,6 @@
 					<right />
 				</anchored>
 				<multilinespacing>20</multilinespacing>
-				<nodeletelast />
 				<nohighlight />
 				<actorpath>....</actorpath>
 				<delaykeyupdate merge="delete" />

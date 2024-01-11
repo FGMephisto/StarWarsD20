@@ -52,7 +52,7 @@ function getRoll(rActor, sSkillName, nSkillMod, sSkillStat, sExtra)
 	rRoll.sType = "skill";
 	rRoll.aDice = { "d20" };
 	rRoll.nMod = nSkillMod or 0;
-	rRoll.sDesc = "[SKILL] " .. sSkillName;
+	rRoll.sDesc = "[SKILL] " .. StringManager.capitalizeAll(sSkillName);
 	if sExtra then
 		rRoll.sDesc = rRoll.sDesc .. " " .. sExtra;
 	end
@@ -205,7 +205,7 @@ function onRoll(rSource, rTarget, rRoll)
 		local nTotal = ActionsManager.total(rRoll);
 		local nTargetDC = tonumber(rRoll.nTarget) or 0;
 		
-		rMessage.text = rMessage.text .. " (vs. DC " .. nTargetDC .. ")";
+		rMessage.text = rMessage.text .. " [vs. DC " .. nTargetDC .. "]";
 		if nTotal >= nTargetDC then
 			rMessage.text = rMessage.text .. " [SUCCESS]";
 		else

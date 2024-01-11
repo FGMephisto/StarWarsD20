@@ -4,7 +4,7 @@
 --
 
 function onInit()
-	update();
+	self.update();
 end
 
 function update()

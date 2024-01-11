@@ -56,27 +56,12 @@
 			<close_recordsheet />
 		</sheetdata>
 	</windowclass>
-
-	<windowclass name="ref_race_header">
-		<margins control="0,0,0,2" />
-		<script file="common/scripts/record_header.lua" />
-		<sheetdata>
-			<link_record_header name="link" />
-
-			<anchor_record_header_right />
-			<icon_record_locked />
-			<button_record_locked />
-
-			<string_record_name name="name" />
-			<label_recordtype name="recordtype_label" />
-		</sheetdata>
-	</windowclass>
-
+	<windowclass name="ref_race_header" copy="record_header" />
 	<windowclass name="ref_race_stats">
 		<margins control="0,0,0,7" />
 		<script>
 			function onInit()
-				update();
+				self.update();
 			end
 			function update()
 				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
@@ -119,47 +104,18 @@
 		</sheetdata>
 	</windowclass>
 	
-	<windowclass name="referenceracialtrait">
-		<frame>recordsheet</frame>
-		<placement>
-			<size width="350" height="350" />
-		</placement>
-		<sizelimits>
-			<minimum width="300" height="300" />
-			<dynamic />
-		</sizelimits>
-		<minimize>minimized_reference</minimize>
-		<tooltip field="name" />
-		<script file="common/scripts/record_window.lua" />
+	<windowclass name="referenceracialtrait" copy="record_window_text">
 		<sheetdata>
 			<sub_record_header name="header">
 				<class>ref_racialtrait_header</class>
 			</sub_record_header>
-
-			<frame_record_content />
-			<ft_record name="text">
-				<anchored to="contentframe" position="over" />
-			</ft_record>
-			<scrollbar>
-				<anchored to="text" />
-				<target>text</target>
-			</scrollbar>
-			
-			<resize_recordsheet />
-			<close_recordsheet />
 		</sheetdata>
 	</windowclass>
-	<windowclass name="ref_racialtrait_header">
-		<margins control="0,0,0,2" />
-		<script file="common/scripts/record_header_simple.lua" />
+	<windowclass name="ref_racialtrait_header" copy="record_header_simple">
 		<sheetdata>
 			<link_record_header name="link">
 				<class>referenceracialtrait</class>
 			</link_record_header>
-
-			<anchor_record_header_right />
-			<icon_record_locked />
-			<button_record_locked />
 
 			<string_record_name name="name">
 				<empty textres="library_recordtype_empty_racialtrait" />

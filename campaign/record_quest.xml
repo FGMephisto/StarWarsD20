@@ -18,33 +18,29 @@
 			end
 		</script>
 		<sheetdata>
-			<label_column name="type_label" insertbefore="description">
+			<label_column name="type_label" insertbefore="description_header">
 				<static textres="quest_label_type" />
 			</label_column>
-			<button_stringcycler name="type" insertbefore="description">
-				<anchored width="50">
-					<left offset="97" />
-					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
-				</anchored>
-				<font>reference-r</font>
+			<button_stringcycler_column name="type" insertbefore="description_header">
 				<parameters>
 					<defaultlabelres>quest_label_typeminor</defaultlabelres>
 					<labelsres>quest_label_typemajor</labelsres>
 					<values>Major</values>
 				</parameters>		
-			</button_stringcycler>
+			</button_stringcycler_column>
 
-			<label_column name="level_label" insertbefore="description">
+			<label_column name="level_label" insertbefore="description_header">
 				<static textres="level" />
 			</label_column>
-			<number_column name="level" insertbefore="description" />
+			<number_column name="level" insertbefore="description_header" />
 
-			<label_column name="xp_label" insertbefore="description">
+			<label_column_right name="xp_label" insertbefore="description_header">
+				<anchored to="level" />
 				<static textres="quest_label_xp" />
-			</label_column>
-			<number_column name="xp" insertbefore="description">
-				<anchored width="65" />
-			</number_column>
+			</label_column_right>
+			<number_column_right name="xp" insertbefore="description_header">
+				<anchored to="level" />
+			</number_column_right>
 		</sheetdata>
 	</windowclass>
 </root>

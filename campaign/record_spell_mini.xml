@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<windowclass name="spell_class_mini">
+		<minisheet />
+		<script file="campaign/scripts/spell_class.lua" />
+		<sheetdata>
+			<hs name="castertype">
+				<script>
+					function onValueChanged()
+						window.onCasterTypeChanged();
+					end
+				</script>
+			</hs>
+			<hn name="cl">
+				<script>
+					function onValueChanged()
+						window.onStatUpdate();
+					end
+				</script>
+			</hn>
+			<number_spellsavailable_mini name="availablelevel0" />
+			<number_spellsavailable_mini name="availablelevel1" />
+			<number_spellsavailable_mini name="availablelevel2" />
+			<number_spellsavailable_mini name="availablelevel3" />
+			<number_spellsavailable_mini name="availablelevel4" />
+			<number_spellsavailable_mini name="availablelevel5" />
+			<number_spellsavailable_mini name="availablelevel6" />
+			<number_spellsavailable_mini name="availablelevel7" />
+			<number_spellsavailable_mini name="availablelevel8" />
+			<number_spellsavailable_mini name="availablelevel9" />
+
+			<genericcontrol name="classframe">
+				<bounds>6,6,-6,36</bounds>
+				<frame name="groupbox2" offset="6,6,6,6" />
+				<disabled />
+			</genericcontrol>
+			
+			<genericcontrol name="hanchor">
+				<bounds>-6,0,0,0</bounds>
+				<invisible />
+			</genericcontrol>
+			<basicnumber name="pointsused">
+				<anchored width="20" height="20">
+					<top offset="11" />
+					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<min>0</min>
+				<tooltip textres="spell_tooltip_ppused" />
+				<script>
+					function onValueChanged()
+						window.onSpellCounterUpdate();
+					end
+				</script>
+			</basicnumber>
+			<label name="label_pointsused">
+				<anchored>
+					<top offset="11" />
+					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<static>/</static>
+			</label>
+			<basicnumber name="points">
+				<anchored width="20" height="20">
+					<top offset="11" />
+					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<min>0</min>
+				<tooltip textres="spell_tooltip_ppmax" />
+				<script>
+					function onValueChanged()
+						window.onSpellCounterUpdate();
+					end
+				</script>
+			</basicnumber>
+			<label name="label_points">
+				<anchored>
+					<top offset="11" />
+					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<static textres="spell_label_pp" />
+			</label>
+			<button_cc name="button_cc">
+				<anchored width="20" height="20">
+					<top offset="11" />
+					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+			</button_cc>
+			<label name="label_cc">
+				<anchored>
+					<top offset="11" />
+					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<static textres="spell_label_cc" />
+			</label>
+			<basicnumber name="cl">
+				<anchored width="20" height="20">
+					<top offset="11" />
+					<right parent="hanchor" anchor="left" relation="relative" offset="-8" />
+				</anchored>
+				<min>0</min>
+				<tooltip textres="casterlevel" />
+				<script>
+					function onValueChanged()
+						window.onStatUpdate();
+					end
+				</script>
+			</basicnumber>
+			<label name="label_cl">
+				<anchored>
+					<top offset="11" />
+					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<static textres="cl" />
+			</label>
+			<stringfield name="label">
+				<anchored height="20">
+					<top offset="11" />
+					<left parent="classframe" offset="10" />
+					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
+				</anchored>
+				<font>reference-b</font>
+				<readonly />
+				<empty textres="spellclass_emptyname" />
+			</stringfield>
+			
+			<list_spelllevel name="levels">
+				<anchored>
+					<top parent="classframe" anchor="bottom" offset="6" />
+					<left />
+					<right />
+				</anchored>
+				<class>spell_level_mini</class>
+				<minisheet />
+				<readonly />
+			</list_spelllevel>
+		</sheetdata>
+	</windowclass>
+	<windowclass name="spell_level_mini">
+		<minisheet />
+		<script file="campaign/scripts/spell_level.lua" />
+		<sheetdata>
+			<string_spelllevellabel_mini name="label">
+				<anchored position="insidetop" offset="0,2" height="20" />
+			</string_spelllevellabel_mini>
+
+			<list_spellitem name="spells">
+				<anchored position="insidetop" offset="0,22" />
+				<class>power_item_mini</class>
+				<readonly />
+			</list_spellitem>
+		</sheetdata>
+	</windowclass>
+</root>

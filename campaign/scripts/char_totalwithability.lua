@@ -48,9 +48,7 @@ function sourceupdate()
 end
 
 function onSourceUpdate()
-	local nAbility = getAbilityBonus();
-
-	setValue(calculateSources() + nAbility);
+	setValue(calculateSources() + getAbilityBonus());
 end
 
 function getAbilityBonus(nMaxMod)

@@ -10,7 +10,7 @@
 	<distance>
 		<base>2</base>
 		<diagmult>1.5</diagmult>
-		<suffix>m</suffix>
+		<suffix> m</suffix>
 	</distance>
 
 	<lightingsettings>

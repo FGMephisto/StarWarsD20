@@ -357,9 +357,6 @@ function addToWeaponDB(nodeItem)
 		sName = DB.getValue(nodeItem, "name", "");
 	else
 		sName = DB.getValue(nodeItem, "nonid_name", "");
-		if sName == "" then
-			sName = Interface.getString("item_unidentified");
-		end
 		sName = "** " .. sName .. " **";
 	end
 	local nBonus = 0;
@@ -699,9 +696,6 @@ function checkWeaponIDChange(nodeWeapon)
 		sName = DB.getValue(nodeItem, "name", "");
 	else
 		sName = DB.getValue(nodeItem, "nonid_name", "");
-		if sName == "" then
-			sName = Interface.getString("item_unidentified");
-		end
 		sName = "** " .. sName .. " **";
 	end
 	if sOldSuffix then
@@ -1298,8 +1292,7 @@ function handleRacialBasicTrait(nodeChar, nodeTrait, nodeTargetList)
 			return false;
 		end
 	end
-	local nodeEntry = DB.createChild(nodeTargetList);
-	DB.copyNode(nodeTrait, nodeEntry);
+	local nodeEntry = DB.createChildAndCopy(nodeTargetList, nodeTrait);
 	DB.setValue(nodeEntry, "source", "string", DB.getValue(nodeTrait, "...name", ""));
 	DB.setValue(nodeEntry, "locked", "number", 1);
 	return true;
@@ -1372,7 +1365,7 @@ function handleRacialLanguages(nodeChar, nodeTrait)
 		if StringManager.isPhrase(aWords, i, { "begin", "play", "speaking" }) then
 			local j = i + 3;
 			while aWords[j] do
-				if GameSystem.languages[aWords[j]] then
+				if LanguageManager.isCampaignLanguage(aWords[j]) then
 					table.insert(aLanguages, aWords[j]);
 				elseif not StringManager.isWord(aWords[j], "and") then
 					break;
@@ -2108,8 +2101,7 @@ function addClassFeature(nodeChar, sClass, sRecord, nodeTargetList)
 				return false;
 			end
 		end
-		local vNew = DB.createChild(nodeTargetList);
-		DB.copyNode(nodeSource, vNew);
+		local vNew = DB.createChildAndCopy(nodeTargetList, nodeSource);
 		DB.setValue(vNew, "name", "string", sFeatureName);
 		DB.setValue(vNew, "source", "string", sClassName);
 		DB.setValue(vNew, "locked", "number", 1);
@@ -3043,6 +3035,5 @@ function addFeat(nodeChar, sClass, sRecord, nodeTargetList)
 		end
 	end
 	
-	local nodeEntry = DB.createChild(nodeTargetList);
-	DB.copyNode(nodeSource, nodeEntry);
+	DB.createChildAndCopy(nodeTargetList, nodeSource);
 end
