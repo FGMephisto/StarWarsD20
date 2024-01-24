@@ -453,9 +453,6 @@
 	
 	<windowclass name="charsheet_classes">
 		<frame>charsheethelper</frame>
-		<placement>
-			<size width="400" height="350" />
-		</placement>
 		<sizelimits>
 			<minimum width="400" height="350" />
 			<dynamic />

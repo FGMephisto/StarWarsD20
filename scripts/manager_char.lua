@@ -1897,20 +1897,17 @@ function applyClassStats(nodeChar, nodeClass, nodeSource, nLevel, nTotalLevel)
 		local nSkillAbilityScore = DB.getValue(nodeChar, "abilities.intelligence.score", 10);
 		local nAbilitySkillPoints = math.floor((nSkillAbilityScore - 10) / 2);
 		local nBonusSkillPoints = 0;
-		if DataCommon.isPFRPG() then
-			if hasTrait(nodeChar, "Skilled") then
-				nBonusSkillPoints = nBonusSkillPoints + 1;
-			end
-		else
-			if nTotalLevel == 1 then
-				nSkillPoints = nSkillPoints * 4;
-				nAbilitySkillPoints = nAbilitySkillPoints * 4;
-			end
+		if DataCommon.isPFRPG() and hasTrait(nodeChar, "Skilled") then
+			nBonusSkillPoints = nBonusSkillPoints + 1;
 		end
 		
-		DB.setValue(nodeClass, "skillranks", "number", DB.getValue(nodeClass, "skillranks", 0) + nSkillPoints + nAbilitySkillPoints + nBonusSkillPoints);
+ 		local nAddPoints = math.max(nSkillPoints + nAbilitySkillPoints, 1);
+ 		if not DataCommon.isPFRPG() and (nTotalLevel == 1) then
+ 			nAddPoints = nAddPoints * 4;
+ 		end
+		DB.setValue(nodeClass, "skillranks", "number", DB.getValue(nodeClass, "skillranks", 0) + nAddPoints + nBonusSkillPoints);
 		
-		local sPoints = tostring(nSkillPoints) .. "+" .. tostring(nAbilitySkillPoints);
+		local sPoints = tostring(nAddPoints);
 		if nBonusSkillPoints > 0 then
 			sPoints = sPoints .. "+" .. nBonusSkillPoints;
 		end

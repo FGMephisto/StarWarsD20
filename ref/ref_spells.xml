@@ -8,9 +8,6 @@
 <root>
 	<!-- Class spell lists -->
 	<windowclass name="reference_classspelllist" copy="reference_groupindex_window">
-		<placement>
-			<size width="750" height="450" />
-		</placement>
 		<sizelimits>
 			<minimum width="750" height="450" />
 		</sizelimits>
@@ -64,9 +61,6 @@
 
 	<!-- Spells by school -->
 	<windowclass name="reference_schoolspelllist" copy="reference_groupindex_window">
-		<placement>
-			<size width="750" height="450" />
-		</placement>
 		<sizelimits>
 			<minimum width="750" height="450" />
 		</sizelimits>
@@ -105,9 +99,6 @@
 
 	<!-- Domain spells -->
 	<windowclass name="reference_domainlist" copy="reference_groupindex_window">
-		<placement>
-			<size width="750" height="450" />
-		</placement>
 		<sizelimits>
 			<minimum width="750" height="450" />
 		</sizelimits>

@@ -8,14 +8,11 @@
 <root>
 	<windowclass name="referenceclass">
 		<frame>recordsheet</frame>
-		<placement>
-			<size width="450" height="450" />
-		</placement>
-		<sharable />
 		<sizelimits>
 			<minimum width="350" height="350" />
 			<dynamic />
 		</sizelimits>
+		<sharable />
 		<minimize>minimized_reference</minimize>
 		<tooltip field="name" />
 		<sharable />

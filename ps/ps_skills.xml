@@ -247,7 +247,6 @@
 				<frame name="fielddark" offset="10,8,10,6" />
 				<state icon="visibilityon" tooltipres="ps_tooltip_showrollon" />
 				<state icon="visibilityoff" tooltipres="ps_tooltip_showrolloff" />
-				<gmvisibleonly />
 			</buttonfield>
 
 			<genericcontrol name="partyskillframe">
@@ -256,22 +255,20 @@
 					<left anchor="right" relation="relative" offset="15" />
 				</anchored>
 				<frame name="groupbox" offset="10,10,10,10" />
-				<gmvisibleonly />
 			</genericcontrol>			
 			<button_roll name="skillroll">
 				<anchored to="partyskillframe" position="insidetopleft" offset="5,0" />
 				<script file="ps/scripts/ps_roll_skill.lua" />
-				<gmvisibleonly />
 			</button_roll>
 			<label name="skilllabel">
 				<anchored to="skillroll" position="righthigh" offset="5,0" />
 				<static textres="ps_label_groupskill" />
-				<gmvisibleonly />
 			</label>
 			<combobox name="selectedskill">
 				<anchored to="skilllabel" position="righthigh" offset="10,0" width="120" height="20" />
 				<empty textres="ps_empty_skill" />
-				<gmvisibleonly />
+				<listdirection>down</listdirection>
+				<listmaxsize>5</listmaxsize>
 				<script>
 					function onInit()
 						super.onInit();
@@ -282,11 +279,9 @@
 			<label name="skilldclabel">
 				<anchored to="selectedskill" position="righthigh" offset="10,0" />
 				<static textres="dc" />
-				<gmvisibleonly />
 			</label>
 			<basicnumber name="skilldc">
 				<anchored to="skilldclabel" position="righthigh" offset="10,0" width="30" height="20" />
-				<gmvisibleonly />
 			</basicnumber>
 		</sheetdata>
 	</windowclass>
@@ -324,9 +319,6 @@
 				</script>
 			</hlink>
 			
-			<portrait_ps_base>
-				<bounds>10,10,40,40</bounds>
-			</portrait_ps_base>
 			<portrait_ps name="portrait">
 				<bounds>10,10,40,40</bounds>
 			</portrait_ps>

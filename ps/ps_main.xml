@@ -161,6 +161,8 @@
 			<combobox name="abilityselected">
 				<anchored to="abilitylabel" position="righthigh" offset="10,0" width="100" height="20" />
 				<default textres="ps_default_groupability" />
+				<listdirection>down</listdirection>
+				<listmaxsize>3</listmaxsize>
 				<script>
 					function onInit()
 						super.onInit();
@@ -194,6 +196,8 @@
 			<combobox name="saveselected">
 				<anchored to="savelabel" position="righthigh" offset="10,0" width="75" height="20" />
 				<default textres="ps_default_groupsave" />
+				<listdirection>down</listdirection>
+				<listmaxsize>3</listmaxsize>
 				<script>
 					function onInit()
 						super.onInit();
@@ -252,9 +256,6 @@
 			<hnx name="wounds" />
 			<hnx name="nonlethal" />
 		
-			<portrait_ps_base>
-				<bounds>10,10,40,40</bounds>
-			</portrait_ps_base>
 			<portrait_ps name="portrait">
 				<bounds>10,10,40,40</bounds>
 			</portrait_ps>

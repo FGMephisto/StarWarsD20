@@ -8,9 +8,6 @@
 <root>
 	<windowclass name="npc">
 		<frame>recordsheet</frame>
-		<placement>
-			<size width="450" height="550" />
-		</placement>
 		<sizelimits>
 			<minimum width="450" height="550" />
 			<dynamic />
@@ -132,11 +129,11 @@
 			<label_column name="senses_label">
 				<static textres="npc_label_senses" />
 			</label_column>
-			<string_columnh name="senses">
+			<string_columnh_multiroll name="senses">
 				<senses_only />
 				<delaykeyupdate />
 				<script file="campaign/scripts/npc_skill.lua" />
-			</string_columnh>
+			</string_columnh_multiroll>
 
 			<label_column name="aura_label">
 				<static textres="npc_label_aura" />
@@ -336,9 +333,9 @@
 			<label_column name="skills_label">
 				<static textres="npc_label_skills" />
 			</label_column>
-			<string_columnh name="skills">
+			<string_columnh_multiroll name="skills">
 				<script file="campaign/scripts/npc_skill.lua" />
-			</string_columnh>
+			</string_columnh_multiroll>
 
 			<label_column name="languages_label">
 				<static textres="npc_label_languages" />

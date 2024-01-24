@@ -30,9 +30,9 @@
 	</windowclass>
 	<windowclass name="ps_xp_battleentry" merge="join">
 		<sheetdata>
-			<number_listitem_right_static name="level" insertbefore="name">
+			<number_listitem_right name="level" insertbefore="name">
 				<anchored width="30" />
-			</number_listitem_right_static>
+			</number_listitem_right>
 		</sheetdata>
 	</windowclass>
 
@@ -53,9 +53,9 @@
 	</windowclass>
 	<windowclass name="ps_xp_questentry" merge="join">
 		<sheetdata>
-			<number_listitem_right_static name="level" insertbefore="name">
+			<number_listitem_right name="level" insertbefore="name">
 				<anchored width="30" />
-			</number_listitem_right_static>
+			</number_listitem_right>
 			<stringcycler_listitem_right name="type" insertbefore="name">
 				<anchored width="50" />
 				<parameters>

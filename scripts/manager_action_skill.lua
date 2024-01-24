@@ -40,10 +40,6 @@ end
 function performRoll(draginfo, rActor, sSkillName, nSkillMod, sSkillStat, sExtra)
 	local rRoll = getRoll(rActor, sSkillName, nSkillMod, sSkillStat, sExtra);
 	
-	if Session.IsHost and CombatManager.isCTHidden(ActorManager.getCTNode(rActor)) then
-		rRoll.bSecret = true;
-	end
-	
 	ActionsManager.performAction(draginfo, rActor, rRoll);
 end
 

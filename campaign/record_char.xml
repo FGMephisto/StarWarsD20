@@ -8,9 +8,6 @@
 <root>
 	<windowclass name="charsheet">
 		<frame>charsheet</frame>
-		<placement>
-			<size width="525" height="568" />
-		</placement>
 		<sizelimits>
 			<minimum width="525" height="568" />
 			<dynamic />
@@ -87,9 +84,6 @@
 
 	<windowclass name="charsheetmini">
 		<frame>charsheet</frame>
-		<placement>
-			<size width="450" height="425" />
-		</placement>
 		<sizelimits>
 			<minimum width="450" height="425" />
 			<dynamic />

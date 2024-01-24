@@ -345,9 +345,6 @@
 	
 	<windowclass name="char_weapon_editor">
 		<frame>recordsheet</frame>
-		<placement>
-			<size width="400" height="350" />
-		</placement>
 		<sizelimits>
 			<minimum width="400" height="350" />
 			<dynamic />

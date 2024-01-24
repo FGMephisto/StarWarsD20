@@ -150,9 +150,6 @@
 
 	<windowclass name="charsheet_encumbrance">
 		<frame>charsheethelper</frame>
-		<placement>
-			<size width="300" height="150" />
-		</placement>
 		<sizelimits>
 			<minimum width="300" height="150" />
 			<dynamic />
