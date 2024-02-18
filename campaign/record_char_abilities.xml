@@ -277,25 +277,8 @@
 		</sheetdata>
 	</windowclass>
 
-	<windowclass name="referenceproficiency" copy="record_window_text">
-		<sheetdata>
-			<sub_record_header name="header">
-				<class>ref_proficiency_header</class>
-			</sub_record_header>
-		</sheetdata>
-	</windowclass>
-	<windowclass name="ref_proficiency_header" copy="record_header_simple">
-		<sheetdata>
-			<link_record_header name="link">
-				<class>referenceproficiency</class>
-			</link_record_header>
-
-			<string_record_name name="name">
-				<empty textres="library_recordtype_empty_proficiency" />
-			</string_record_name>
-			<label_recordtype name="recordtype_label">
-				<static textres="record_label_proficiency" />
-			</label_recordtype>	
-		</sheetdata>
+	<windowclass name="referenceproficiency" copy="record_window_text" />
+	<windowclass name="referenceproficiency_header" copy="record_header">
+		<name_emptyres>library_recordtype_empty_proficiency</name_emptyres>
 	</windowclass>
 </root>

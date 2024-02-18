@@ -7,11 +7,7 @@
 
 <root>
 	<windowclass name="item" merge="join">
-		<sheetdata>
-			<subwindow_record name="content">
-				<script file="campaign/scripts/item_drop.lua" />
-			</subwindow_record>
-		</sheetdata>
+		<script file="campaign/scripts/item_drop.lua" />
 	</windowclass>
 	<windowclass name="referencearmor" copy="item" />
 	<windowclass name="referenceequipment" copy="item" />

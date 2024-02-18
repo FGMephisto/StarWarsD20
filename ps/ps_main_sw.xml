@@ -10,147 +10,152 @@
 	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
 	<!-- =================================================================================================================== -->
-	<windowclass name="ps_main">
-		<script file="ps/scripts/ps_main_sw.lua" />
+	<windowclass name="ps_main_labels">
 		<sheetdata>
-			<anchor_partysheet_main_header />
-
-			<label name="namelabel">
-				<anchored to="headeranchor" position="insidetopleft" offset="55,0" width="180" />
+			<label_list_content_base name="namelabel">
+				<anchored position="insidetopleft" offset="55,0" width="180" />
 				<static textres="ps_label_name" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="classlabel">
-				<anchored to="headeranchor" position="insidetopleft" offset="55,17" width="180" />
+			<label_list_content_base name="classlabel">
+				<anchored position="insidetopleft" offset="55,17" width="180" />
 				<static textres="ps_label_class" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="vplabel">
-				<anchored to="headeranchor" position="insidetopleft" offset="242,0" width="20" />
+			<label_list_content_base name="vplabel">
+				<anchored position="insidetopleft" offset="235,0" width="30" />
 				<static textres="vp" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="hplabel">
-				<anchored to="headeranchor" position="insidetopleft" offset="264,0" width="25" />
+			<label_list_content_base name="hplabel">
+				<anchored position="insidetopleft" position="insidetopleft" offset="264,0" width="25" />
 				<static textres="wp" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="abilitieslabel">
-				<anchored to="headeranchor" position="insidetopleft" offset="290,0" width="190" />
+			<label_list_content_base name="abilitieslabel">
+				<anchored position="insidetopleft" offset="290,0" width="190" />
 				<static textres="ps_label_abilities" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="strlabel">
+			<label_list_content_base name="strlabel">
 				<anchored to="abilitieslabel" position="belowleft" offset="0,-3" width="25" />
 				<static textres="str" />
 				<center />
-			</label>
-			<label name="dexlabel">
+			</label_list_content_base>
+			<label_list_content_base name="dexlabel">
 				<anchored to="strlabel" position="righthigh" offset="8,0" width="25" />
 				<static textres="dex" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="conlabel">
+			<label_list_content_base name="conlabel">
 				<anchored to="dexlabel" position="righthigh" offset="8,0" width="25" />
 				<static textres="con" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="intlabel">
+			<label_list_content_base name="intlabel">
 				<anchored to="conlabel" position="righthigh" offset="8,0" width="25" />
 				<static textres="int" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="wislabel">
+			<label_list_content_base name="wislabel">
 				<anchored to="intlabel" position="righthigh" offset="8,0" width="25" />
 				<static textres="wis" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="chalabel">
+			<label_list_content_base name="chalabel">
 				<anchored to="wislabel" position="righthigh" offset="8,0" width="25" />
 				<static textres="cha" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="aclabel">
+			<label_list_content_base name="aclabel">
 				<anchored to="abilitieslabel" position="righthigh" offset="15,0" width="25" />
 				<static textres="ac" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="ffaclabel">
+			<label_list_content_base name="ffaclabel">
 				<anchored to="aclabel" position="righthigh" offset="8,0" width="25" />
 				<static textres="acff" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="taclabel">
+			<label_list_content_base name="taclabel">
 				<anchored to="ffaclabel" position="righthigh" offset="8,0" width="25" />
 				<static textres="actouch" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="fortitudelabel">
+			<label_list_content_base name="fortitudelabel">
 				<anchored to="taclabel" position="righthigh" offset="15,0" width="25" />
 				<center />
 				<static textres="fort" />
-			</label>
+			</label_list_content_base>
 
-			<label name="reflexlabel">
+			<label_list_content_base name="reflexlabel">
 				<anchored to="fortitudelabel" position="righthigh" offset="8,0" width="25" />
 				<center />
 				<static textres="ref" />
-			</label>
+			</label_list_content_base>
 
-			<label name="willlabel">
+			<label_list_content_base name="willlabel">
 				<anchored to="reflexlabel" position="righthigh" offset="8,0" width="25" />
 				<center />
 				<static textres="will" />
-			</label>
+			</label_list_content_base>
 
-			<label name="drlabel">
+			<label_list_content_base name="drlabel">
 				<anchored to="aclabel" position="belowleft" offset="0,-3">
 					<right parent="reflexlabel" />
 				</anchored>
 				<static textres="ps_label_dr" />
 				<center />
-			</label>
+			</label_list_content_base>
 
-			<label name="srlabel">
+			<label_list_content_base name="srlabel">
 				<anchored to="drlabel" position="righthigh" offset="5,0" width="30" />
 				<static textres="sr" />
 				<center />
-			</label>
+			</label_list_content_base>
+		</sheetdata>
+	</windowclass>
 
-			<button_iedit name="list_iedit">
-				<anchored to="headeranchor" position="insidebottomright" offset="10,10" />
-				<target>list</target>
-				<gmvisibleonly />
-				<edittarget>list</edittarget>
-			</button_iedit>
-
-			<list_psmain name="list" />
-			<scrollbar_list name="scrollbar_list" />
-
-			<anchor_partysheet_main_footer />
-
+	<!-- =================================================================================================================== -->
+	<!-- Adjusted -->
+	<!-- =================================================================================================================== -->
+	<windowclass name="ps_main_rolls">
+		<margins control="0,0,0,10" />
+		<script>
+			function onInit()
+				OptionsManager.registerCallback("REVL", update);
+				self.update();
+			end
+			function onClose()
+				OptionsManager.unregisterCallback("REVL", update);
+			end
+			function update()
+				hiderollresults.setVisible(OptionsManager.isOption("REVL", "on"));
+			end
+		</script>
+		<sheetdata>
 			<genericcontrol name="leftanchor">
-				<anchored to="footeranchor" position="insidetopleft" width="0" height="20" />
-				<gmvisibleonly />
+				<anchored position="insidetopleft" offset="0,10" width="0" height="20" />
+				<disabled />
 			</genericcontrol>
 
 			<buttonfield name="hiderollresults">
 				<anchored to="leftanchor" height="20" width="20">
 					<top />
-					<left anchor="right" relation="relative" offset="15" />
+					<left anchor="right" relation="relative" offset="150" />
 				</anchored>
 				<frame name="fielddark" offset="10,8,10,6" />
 				<state icon="visibilityon" tooltipres="ps_tooltip_showrollon" />
@@ -164,25 +169,23 @@
 					<left anchor="right" relation="relative" offset="15" />
 				</anchored>
 				<frame name="groupbox" offset="10,10,10,10" />
-				<gmvisibleonly />
 			</genericcontrol>
 
 			<button_roll name="abilityroll">
-				<anchored to="abilitydcframe" position="insidetopleft" offset="5,0" />
+				<anchored to="abilitydcframe" position="insidetopleft" offset="2,0" />
 				<script file="ps/scripts/ps_roll_ability.lua" />
-				<gmvisibleonly />
 			</button_roll>
 
 			<label name="abilitylabel">
-				<anchored to="abilityroll" position="righthigh" offset="5,0" />
+				<anchored to="abilityroll" position="righthigh" offset="3,0" />
 				<static textres="ps_label_groupability" />
-				<gmvisibleonly />
 			</label>
 
 			<combobox name="abilityselected">
 				<anchored to="abilitylabel" position="righthigh" offset="10,0" width="90" height="20" />
 				<default textres="ps_default_groupability" />
-				<gmvisibleonly />
+				<listdirection>down</listdirection>
+				<listmaxsize>3</listmaxsize>
 				<script>
 					function onInit()
 						super.onInit();
@@ -194,36 +197,35 @@
 			<label name="abilitydclabel">
 				<anchored to="abilityselected" position="righthigh" offset="10,0" />
 				<static textres="dc" />
-				<gmvisibleonly />
 			</label>
 
 			<basicnumber name="abilitydc">
 				<anchored to="abilitydclabel" position="righthigh" offset="10,0" width="30" height="20" />
-				<gmvisibleonly />
 			</basicnumber>
 
-			<genericcontrol name="partysaveframe">
-				<anchored to="abilitydcframe" position="righthigh" offset="15,0" height="20" width="215" />
+			<genericcontrol name="saveframe">
+				<anchored to="leftanchor" height="20" width="215">
+					<top />
+					<left anchor="right" relation="relative" offset="15" />
+				</anchored>
 				<frame name="groupbox" offset="10,10,10,10" />
-				<gmvisibleonly />
 			</genericcontrol>
 
 			<button_roll name="saveroll">
-				<anchored to="partysaveframe" position="insidetopleft" offset="5,0" />
+				<anchored to="saveframe" position="insidetopleft" offset="2,0" />
 				<script file="ps/scripts/ps_roll_save.lua" />
-				<gmvisibleonly />
 			</button_roll>
 
 			<label name="savelabel">
 				<anchored to="saveroll" position="righthigh" offset="5,0" />
 				<static textres="save" />
-				<gmvisibleonly />
 			</label>
 
 			<combobox name="saveselected">
 				<anchored to="savelabel" position="righthigh" offset="10,0" width="75" height="20" />
 				<default textres="ps_default_groupsave" />
-				<gmvisibleonly />
+				<listdirection>down</listdirection>
+				<listmaxsize>3</listmaxsize>
 				<script>
 					function onInit()
 						super.onInit();
@@ -235,36 +237,33 @@
 			<label name="savedclabel">
 				<anchored to="saveselected" position="righthigh" offset="10,0" />
 				<static textres="dc" />
-				<gmvisibleonly />
 			</label>
 
 			<basicnumber name="savedc">
 				<anchored to="savedclabel" position="righthigh" offset="10,0" width="30" height="20" />
-				<gmvisibleonly />
 			</basicnumber>
 
-			<genericcontrol name="partyatkframe">
-				<anchored to="partysaveframe" position="righthigh" offset="15,0" height="20" width="150" />
+			<genericcontrol name="attackframe">
+				<anchored to="leftanchor" height="20" width="150">
+					<top />
+					<left anchor="right" relation="relative" offset="15" />
+				</anchored>
 				<frame name="groupbox" offset="10,10,10,10" />
-				<gmvisibleonly />
 			</genericcontrol>
 
 			<button_roll name="partyatkroll">
-				<anchored to="partyatkframe" position="insidetopleft" offset="5,0" />
+				<anchored to="attackframe" position="insidetopleft" offset="2,0" />
 				<script file="ps/scripts/ps_roll_atk.lua" />
-				<gmvisibleonly />
 			</button_roll>
 
 			<label name="partyatklabel">
 				<anchored to="partyatkroll" position="righthigh" offset="5,0" />
 				<static textres="ps_label_groupatk" />
-				<gmvisibleonly />
 			</label>
 
 			<basicnumber name="bonus">
 				<anchored to="partyatklabel" position="righthigh" offset="10,0" width="30" height="20" />
 				<displaysign />
-				<gmvisibleonly />
 			</basicnumber>
 		</sheetdata>
 	</windowclass>
@@ -287,10 +286,6 @@
 			<hnx name="hptotal" />
 			<hnx name="hptemp" />
 			<hnx name="wounds" />
-
-			<portrait_ps_base>
-				<bounds>10,10,40,40</bounds>
-			</portrait_ps_base>
 			<portrait_ps name="portrait">
 				<bounds>10,10,40,40</bounds>
 			</portrait_ps>

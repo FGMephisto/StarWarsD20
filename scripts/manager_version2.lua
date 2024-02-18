@@ -358,55 +358,56 @@ function migrateSpells12(nodeCreature)
 			for _,vSpell in ipairs(DB.getChildList(vLevel, "spells")) do
 				for _,vAction in ipairs(DB.getChildList(vSpell, "actions")) do
 					local bCleanup = false;
-					
-					local sType = DB.getValue(vAction, "type", "");
-					if sType == "damage" then
-						DB.setValue(vAction, "meta", "string", DB.getValue(vAction, "dmgmeta", ""));
-						
-						local nodeDmgList = DB.createChild(vAction, "damagelist");
-						if nodeDmgList then
-							local nodeDmg = DB.createChild(nodeDmgList);
-							if nodeDmg then
-								DB.setValue(nodeDmg, "dice", "dice", DB.getValue(vAction, "dmgdice", {}));
-								DB.setValue(nodeDmg, "dicestat", "string", DB.getValue(vAction, "dmgdicemult", ""));
-								DB.setValue(nodeDmg, "dicestatmax", "number", DB.getValue(vAction, "dmgdicemultmax", 0));
-								local nStatMult = DB.getValue(vAction, "dmgstatmult", 0);
-								if nStatMult > 0 then
-									DB.setValue(nodeDmg, "statmult", "number", nStatMult);
-									DB.setValue(nodeDmg, "stat", "string", DB.getValue(vAction, "dmgstat", ""));
+					if DB.isNode(DB.getPath(vAction, "dmgmeta")) or DB.isNode(DB.getPath(vAction, "healmeta")) then
+						local sType = DB.getValue(vAction, "type", "");
+						if sType == "damage" then
+							DB.setValue(vAction, "meta", "string", DB.getValue(vAction, "dmgmeta", ""));
+							
+							local nodeDmgList = DB.createChild(vAction, "damagelist");
+							if nodeDmgList then
+								local nodeDmg = DB.createChild(nodeDmgList);
+								if nodeDmg then
+									DB.setValue(nodeDmg, "dice", "dice", DB.getValue(vAction, "dmgdice", {}));
+									DB.setValue(nodeDmg, "dicestat", "string", DB.getValue(vAction, "dmgdicemult", ""));
+									DB.setValue(nodeDmg, "dicestatmax", "number", DB.getValue(vAction, "dmgdicemultmax", 0));
+									local nStatMult = DB.getValue(vAction, "dmgstatmult", 0);
+									if nStatMult > 0 then
+										DB.setValue(nodeDmg, "statmult", "number", nStatMult);
+										DB.setValue(nodeDmg, "stat", "string", DB.getValue(vAction, "dmgstat", ""));
+									end
+									DB.setValue(nodeDmg, "statmax", "number", DB.getValue(vAction, "dmgmaxstat", 0));
+									DB.setValue(nodeDmg, "bonus", "number", DB.getValue(vAction, "dmgmod", 0));
+									DB.setValue(nodeDmg, "type", "string", DB.getValue(vAction, "dmgtype", ""));
+									
+									bCleanup = true;
 								end
-								DB.setValue(nodeDmg, "statmax", "number", DB.getValue(vAction, "dmgmaxstat", 0));
-								DB.setValue(nodeDmg, "bonus", "number", DB.getValue(vAction, "dmgmod", 0));
-								DB.setValue(nodeDmg, "type", "string", DB.getValue(vAction, "dmgtype", ""));
-								
-								bCleanup = true;
 							end
-						end
-						
-					elseif sType == "heal" then
-						DB.setValue(vAction, "meta", "string", DB.getValue(vAction, "healmeta", ""));
-						
-						local nodeHealList = DB.createChild(vAction, "heallist");
-						if nodeHealList then
-							local nodeHeal = DB.createChild(nodeHealList);
-							if nodeHeal then
-								DB.setValue(nodeHeal, "dice", "dice", DB.getValue(vAction, "hdice", {}));
-								DB.setValue(nodeHeal, "dicestat", "string", DB.getValue(vAction, "hdicemult", ""));
-								DB.setValue(nodeHeal, "dicestatmax", "number", DB.getValue(vAction, "hdicemultmax", 0));
-								local nStatMult = DB.getValue(vAction, "hstatmult", 0);
-								if nStatMult > 0 then
-									DB.setValue(nodeHeal, "statmult", "number", nStatMult);
-									DB.setValue(nodeHeal, "stat", "string", DB.getValue(vAction, "hstat", ""));
+							
+						elseif sType == "heal" then
+							DB.setValue(vAction, "meta", "string", DB.getValue(vAction, "healmeta", ""));
+							
+							local nodeHealList = DB.createChild(vAction, "heallist");
+							if nodeHealList then
+								local nodeHeal = DB.createChild(nodeHealList);
+								if nodeHeal then
+									DB.setValue(nodeHeal, "dice", "dice", DB.getValue(vAction, "hdice", {}));
+									DB.setValue(nodeHeal, "dicestat", "string", DB.getValue(vAction, "hdicemult", ""));
+									DB.setValue(nodeHeal, "dicestatmax", "number", DB.getValue(vAction, "hdicemultmax", 0));
+									local nStatMult = DB.getValue(vAction, "hstatmult", 0);
+									if nStatMult > 0 then
+										DB.setValue(nodeHeal, "statmult", "number", nStatMult);
+										DB.setValue(nodeHeal, "stat", "string", DB.getValue(vAction, "hstat", ""));
+									end
+									DB.setValue(nodeHeal, "statmax", "number", DB.getValue(vAction, "hmaxstat", 0));
+									DB.setValue(nodeHeal, "bonus", "number", DB.getValue(vAction, "hmod", 0));
+									
+									bCleanup = true;
 								end
-								DB.setValue(nodeHeal, "statmax", "number", DB.getValue(vAction, "hmaxstat", 0));
-								DB.setValue(nodeHeal, "bonus", "number", DB.getValue(vAction, "hmod", 0));
-								
-								bCleanup = true;
 							end
-						end
 
-					else
-						bCleanup = true;
+						else
+							bCleanup = true;
+						end
 					end
 					
 					if bCleanup then

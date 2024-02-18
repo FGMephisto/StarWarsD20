@@ -343,18 +343,26 @@
 		</sheetdata>
 	</windowclass>
 	
-	<windowclass name="char_weapon_editor">
-		<frame>recordsheet</frame>
+	<windowclass name="char_weapon_editor" ruleset="PFRPG|3.5E">
+		<frame>charsheethelper</frame>
 		<sizelimits>
 			<minimum width="400" height="350" />
 			<dynamic />
 		</sizelimits>
 		<sheetdata>
-			<windowtitlebar name="title">
+			<windowtitlebar_charsheethelper name="title">
 				<resource>weapon_title</resource>
-			</windowtitlebar>
+			</windowtitlebar_charsheethelper>
+			<anchor_title_charsheethelper name="contentanchor" />
 			
-			<frame_record_editor name="contentframe" />
+			<genericcontrol name="contentframe">
+				<anchored to="contentanchor">
+					<top anchor="bottom" offset="0" />
+					<left />
+					<right />
+					<bottom parent="" offset="-30" />
+				</anchored>
+			</genericcontrol>
 
 			<subwindow_record name="main">
 				<class>char_weapon_editor_main</class>
@@ -364,8 +372,8 @@
 				<target>main</target>
 			</scrollbar_record>
 
-			<resize_recordsheet />
-			<close_recordsheet />
+			<resize_charsheethelper />
+			<close_charsheethelper />
 		</sheetdata>
 	</windowclass>
 	<windowclass name="char_weapon_editor_main">

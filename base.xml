@@ -46,6 +46,7 @@
 
 	<!-- Reference -->
 	<includefile source="ref/ref_equipment_lists.xml" />
+	<!-- <includefile source="ref/ref_spells.xml" /> -->
 
 	<!-- Campaign Records -->
 	<includefile source="campaign/template_campaign_sw.xml" />
@@ -68,17 +69,18 @@
 	<!-- <includefile source="campaign/record_charmini_abilities.xml" /> -->
 	<!-- <includefile source="campaign/record_charmini_inventory.xml" /> -->
 	<!-- <includefile source="campaign/record_charmini_actions.xml" /> -->
+
+	<includefile source="campaign/record_battle.xml" />
+	<includefile source="campaign/record_item.xml" />
 	<includefile source="campaign/record_npc_sw.xml" />
-	<includefile source="campaign/record_encounter.xml" />
-	
-	<includefile source="campaign/record_item_sw.xml" />
 	<includefile source="campaign/record_quest.xml" />
-	<!-- <includefile source="campaign/record_spell.xml" /> -->
+	
 	
 	<includefile source="campaign/record_class.xml" />
 	<includefile source="campaign/record_feat.xml" />
 	<includefile source="campaign/record_race.xml" />
 	<includefile source="campaign/record_skill.xml" />
+	<!-- <includefile source="campaign/record_spell.xml" /> -->
 	
 	<!-- Combat tracker -->
 	<includefile source="ct/template_ct_sw.xml" />
@@ -104,8 +106,8 @@
 	<script name="EffectManager35E" file="scripts/manager_effect_35E.lua" />
 	<script name="ItemManager2" file="scripts/manager_item2.lua" />
 	<script name="PartyManager2" file="scripts/manager_ps2_sw.lua" />
-	<!-- <script name="PowerManager35E" file="scripts/manager_power_35E.lua" /> -->
-	<!-- <script name="SpellManager" file="scripts/manager_spell.lua" /> -->
+	<script name="PowerManager35E" file="scripts/manager_power_35E.lua" />
+	<script name="SpellManager" file="scripts/manager_spell.lua" />
 	<script name="TokenManager2" file="scripts/manager_token2.lua" />
 	<script name="VersionManager2" file="scripts/manager_version2.lua" />
 	
@@ -116,5 +118,5 @@
 	<script name="ActionInit" file="scripts/manager_action_init.lua" />
 	<script name="ActionSkill" file="scripts/manager_action_skill.lua" />
 	<script name="ActionSave" file="scripts/manager_action_save.lua" />
-	<!-- <script name="ActionSpell" file="scripts/manager_action_spell.lua" /> -->
+	<script name="ActionSpell" file="scripts/manager_action_spell.lua" />
 </root>

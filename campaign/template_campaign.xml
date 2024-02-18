@@ -21,49 +21,6 @@
 		</button_masterindex_option_view>
 	</template>
 
-	<template name="frame_record_editor">
-		<genericcontrol name="contentframe">
-			<anchored>
-				<top parent="title" anchor="bottom" offset="15" />
-				<left offset="35" />
-				<right offset="-35" />
-				<bottom offset="-32" />
-			</anchored>
-			<frame name="groupbox" offset="20,17,20,17" />
-			<disabled />
-		</genericcontrol>
-	</template>
-	<template name="frame_record_lower">
-		<genericcontrol>
-			<anchored>
-				<top anchor="bottom" offset="-50" />
-				<left offset="15" />
-				<right offset="-20" />
-				<bottom offset="-15" />
-			</anchored>
-			<frame name="groupbox" />
-			<disabled />
-		</genericcontrol>
-	</template>
-	<template name="radio_record_npctype">
-		<buttongroup_radio>
-			<anchored to="controlframe" height="20">
-				<top offset="8" />
-				<left anchor="center" offset="-150" />
-			</anchored>
-			<parameters>
-				<optionwidth>100</optionwidth>
-				<labelsres>npc_label_typecreature|npc_label_typetrap|npc_label_typevehicle</labelsres>
-				<values>Creature|Trap|Vehicle</values>
-			</parameters>
-			<script>
-				function onValueChanged()
-					window.TypeChanged();
-				end
-			</script>
-		</buttongroup_radio>
-	</template>
-
 	<template name="number_npc_init">
 		<number_column>
 			<displaysign />
@@ -140,29 +97,6 @@
 				<values mergerule="replace">strength|dexterity|constitution|intelligence|wisdom|charisma</values>
 			</parameters>
 		</button_stringcycler>
-	</template>
-
-	<template name="button_enc_refreshcr">
-		<button_refresh>
-			<anchored to="cr" position="rightlow" offset="5,0" />
-			<tooltip textres="enc_tooltip_refreshcr" />
-			<script>
-				function onButtonPress()
-					CombatManager2.calcBattleCR(window.getDatabaseNode());
-				end
-			</script>
-		</button_refresh>
-	</template>
-	<template name="button_enc_refreshxp">
-		<button_refresh>
-			<anchored to="exp" position="rightlow" offset="5,0" />
-			<tooltip textres="enc_tooltip_refreshxp" />
-			<script>
-				function onButtonPress()
-					CombatManager2.calcBattleXP(window.getDatabaseNode());
-				end
-			</script>
-		</button_refresh>
 	</template>
 
 	<template name="list_editor">

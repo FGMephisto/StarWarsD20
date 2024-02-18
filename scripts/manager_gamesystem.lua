@@ -180,13 +180,6 @@ function receiveCharSelectDetailClient(vDetails)
 	return vDetails[1], "Level " .. math.floor(vDetails[2]*100)*0.01;
 end
 
-function getCharSelectDetailLocal(nodeLocal)
-	local vDetails = {};
-	table.insert(vDetails, DB.getValue(nodeLocal, "name", ""));
-	table.insert(vDetails, DB.getValue(nodeLocal, "level", 0));
-	return receiveCharSelectDetailClient(vDetails);
-end
-
 function getDistanceUnitsPerGrid()
 	return 5;
 end

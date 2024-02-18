@@ -6,18 +6,10 @@
 -->
 
 <root>
-	<windowclass name="referenceskill" copy="record_window">
-		<sheetdata>
-			<sub_record_header name="header">
-				<class>ref_skill_header</class>
-			</sub_record_header>
-			<subwindow_record name="content">
-				<class>ref_skill_stats</class>
-			</subwindow_record>
-		</sheetdata>
-	</windowclass>
-	<windowclass name="ref_skill_header" copy="record_header" />
-	<windowclass name="ref_skill_stats">
+	<windowclass name="referenceskill" copy="record_window" />
+	<windowclass name="referenceskill_header" copy="record_header" />
+
+	<windowclass name="referenceskill_main">
 		<script>
 			function onInit()
 				self.update();

@@ -6,84 +6,85 @@
 -->
 
 <root>
-	<windowclass name="npc">
-		<frame>recordsheet</frame>
+	<template name="radio_record_npctype">
+		<buttongroup_radio>
+			<anchored to="area_controls" height="20">
+				<top offset="5" />
+				<left anchor="center" offset="-150" />
+			</anchored>
+			<parameters>
+				<optionwidth>100</optionwidth>
+				<labelsres>npc_label_typecreature|npc_label_typetrap|npc_label_typevehicle</labelsres>
+				<values>Creature|Trap|Vehicle</values>
+			</parameters>
+			<script>
+				function onValueChanged()
+					window.TypeChanged();
+				end
+			</script>
+		</buttongroup_radio>
+	</template>
+	<windowclass name="npc" copy="record_window_tabbed">
 		<sizelimits>
 			<minimum width="450" height="550" />
-			<dynamic />
 		</sizelimits>
 		<minimize>minimized_npc</minimize>
-		<tooltip field="name" />
 		<gmexport>npc</gmexport>
-		<script file="campaign/scripts/npc.lua" />
+		<tab>
+			<name>main</name>
+			<resource>tab_main</resource>
+			<embed />
+		</tab>
+		<tab merge="add">
+			<name>spells</name>
+			<resource>tab_spells</resource>
+			<class>npc_spells</class>
+			<embed />
+		</tab>
+		<tab merge="add">
+			<name>notes</name>
+			<resource>tab_notes</resource>
+			<class>record_content_text</class>
+			<embed />
+		</tab>
+		<script>
+			function onInit()
+				super.onInit();
+				self.TypeChanged();
+				self.onIDChanged();
+			end
+			function TypeChanged()
+				local sType = DB.getValue(getDatabaseNode(), "npctype", "");
+				if sType == "Trap" then
+					tabs.replaceTabClass(1, "npc_combat_trap");
+				elseif sType == "Vehicle" then
+					tabs.replaceTabClass(1, "npc_combat_vehicle");
+				else
+					tabs.replaceTabClass(1, "npc_combat_creature");
+				end
+			end
+			function onLockChanged()
+				super.onLockChanged();
+				npctype.setReadOnly(WindowManager.getReadOnlyState(getDatabaseNode()));
+			end
+			function onIDChanged()
+				super.onLockChanged();
+				if not Session.IsHost then
+					local bID = LibraryData.getIDState("npc", getDatabaseNode(), true);
+					tabs.setVisibility(bID);
+					npctype.setVisible(bID);
+				end
+			end
+		</script>
 		<sheetdata>
 			<hs name="spelldisplaymode">
 				<default>action</default>
 			</hs>
 			
-			<sub_record_header name="header">
-				<class>npc_header</class>
-			</sub_record_header>
-
-			<frame_record_content_tabbed name="contentframe">
-				<anchored>
-					<bottom offset="-65" />
-				</anchored>
-			</frame_record_content_tabbed>
-
-			<subwindow_record name="main_creature">
-				<class>npc_combat_creature</class>
-			</subwindow_record>
-			<subwindow_record name="main_trap">
-				<class>npc_combat_trap</class>
-			</subwindow_record>
-			<subwindow_record name="main_vehicle">
-				<class>npc_combat_vehicle</class>
-			</subwindow_record>
-			<subwindow_record name="spells">
-				<class>npc_spells</class>
-			</subwindow_record>
-			<ft_record name="text">
-				<anchored to="contentframe" position="over" />
-				<invisible />
-			</ft_record>
-
-			<scrollbar_record>
-				<target>main_creature</target>
-			</scrollbar_record>
-			<scrollbar_record>
-				<target>main_trap</target>
-			</scrollbar_record>
-			<scrollbar_record>
-				<target>main_vehicle</target>
-			</scrollbar_record>
-			<scrollbar_record>
-				<target>spells</target>
-			</scrollbar_record>
-			<scrollbar_record>
-				<target>text</target>
-			</scrollbar_record>
-
-			<tabs_recordsheet name="tabs">
-				<tab>
-					<icon>tab_main</icon>
-					<subwindow>main_creature</subwindow>
-				</tab>
-				<tab>
-					<icon>tab_spells</icon>
-					<subwindow>spells</subwindow>
-				</tab>
-				<tab>
-					<icon>tab_other</icon>
-					<subwindow>text</subwindow>
-				</tab>
-			</tabs_recordsheet>
-			
-			<frame_record_lower name="controlframe" />
+			<area_content_framed_groupbox_bottom name="area_controls">
+				<anchored height="30" />
+			</area_content_framed_groupbox_bottom>
 			<radio_record_npctype name="npctype" />
-			
-			<resize_recordsheet />
-			<close_recordsheet />
 		</sheetdata>
 	</windowclass>
 
