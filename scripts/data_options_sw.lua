@@ -4,8 +4,6 @@
 -- File adjusted for Star Wars 3.5E
 --
 
--- ===================================================================================================================
--- ===================================================================================================================
 function onInit()
 	registerDiceRolls();
 	registerOptions();
@@ -19,6 +17,7 @@ end
 function registerDiceRolls()
 	DiceRollManager.registerDamageTypeMode("critical");
 	DiceRollManager.registerDamageTypeMode("precision");
+	
 	DiceRollManager.registerDamageKey();
 	DiceRollManager.registerDamageTypeKey("acid", "life");
 	DiceRollManager.registerDamageTypeKey("cold", "frost");
@@ -49,16 +48,12 @@ function registerDiceRolls()
 	DiceRollManager.registerHealTypeKey("temp", "water");
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function registerOptions()
 	OptionsManager.registerOption2("RMMT", true, "option_header_client", "option_label_RMMT", "option_entry_cycler", 
 			{ labels = "option_val_on|option_val_multi", values = "on|multi", baselabel = "option_val_off", baseval = "off", default = "multi" });
 
 	OptionsManager.registerOption2("SHRR", false, "option_header_game", "option_label_SHRR", "option_entry_cycler", 
 			{ labels = "option_val_on|option_val_pc", values = "on|pc", baselabel = "option_val_off", baseval = "off", default = "on" });
-	OptionsManager.registerOption2("PSMN", false, "option_header_game", "option_label_PSMN", "option_entry_cycler", 
-			{ labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "off" });
 
 	OptionsManager.registerOption2("INIT", false, "option_header_combat", "option_label_INIT", "option_entry_cycler", 
 			{ labels = "option_val_on|option_val_group", values = "on|group", baselabel = "option_val_off", baseval = "off", default = "group" });

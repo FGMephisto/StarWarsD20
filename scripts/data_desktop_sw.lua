@@ -4,8 +4,6 @@
 -- File adjusted for Star Wars 3.5E
 --
 
--- ===================================================================================================================
--- ===================================================================================================================
 function onInit()
 	ModifierManager.addModWindowPresets(_tModifierWindowPresets);
 	ModifierManager.addKeyExclusionSets(_tModifierExclusionSets);

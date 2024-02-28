@@ -46,27 +46,6 @@
 	<!-- Adjusted -->
 	<!-- =================================================================================================================== -->
 	<windowclass name="ps_skills_labels">
-		<script>
-			function onInit()
-				local bPFMode = DataCommon.isPFRPG();
-				
-				spotlabel.setVisible(not bPFMode);
-				listenlabel.setVisible(not bPFMode);
-				searchlabel.setVisible(not bPFMode);
-				perceptionlabel.setVisible(bPFMode);
-				smlabel.setVisible(bPFMode);
-				
-				gatherinfolabel.setVisible(not bPFMode);
-				
-				acrobaticslabel.setVisible(bPFMode);
-				heallabel.setVisible(bPFMode);
-				jumplabel.setVisible(not bPFMode);
-				
-				hidelabel.setVisible(not bPFMode);
-				movesilentlabel.setVisible(not bPFMode);
-				stealthlabel.setVisible(bPFMode);
-			end
-		</script>
 		<sheetdata>
 			<label_list_content_base name="namelabel">
 				<anchored position="insidetopleft" offset="50,17" width="110" />
@@ -93,15 +72,15 @@
 				<tooltip textres="skill_value_search" />
 			</label_list_ps_skill>
 			
-			<label name="passivelabel">
+			<label_list_content_base name="passivelabel">
 				<anchored>
-					<top parent="headeranchor" />
+					<top />
 					<left parent="spotlabel" />
 					<right parent="searchlabel" />
 				</anchored>
 				<static textres="ps_label_passive" />
 				<center />
-			</label>
+			</label_list_content_base>
 			
 			<label_list_ps_skill name="alienspecieslabel">
 				<anchored>
@@ -138,7 +117,7 @@
 			
 			<label_list_content_base name="knowledgeskillslabel">
 				<anchored>
-					<top parent="headeranchor" />
+					<top />
 					<left parent="alienspecieslabel" />
 					<right parent="worldlorelabel" />
 				</anchored>
@@ -171,7 +150,7 @@
 			
 			<label_list_content_base name="socialskillslabel">
 				<anchored>
-					<top parent="headeranchor" />
+					<top />
 					<left parent="blufflabel" />
 					<right parent="intimidatelabel" />
 				</anchored>
@@ -210,8 +189,8 @@
 			<label_list_content_base name="physicalskillslabel">
 				<anchored>
 					<top />
-					<left parent="acrobaticslabel" />
-					<right parent="stealthlabel" />
+					<left parent="climblabel" />
+					<right parent="movesilentlabel" />
 				</anchored>
 				<static textres="ps_label_physical" />
 				<center />
@@ -256,7 +235,7 @@
 				</anchored>
 				<frame name="groupbox" offset="10,10,10,10" />
 			</genericcontrol>
-			
+
 			<button_roll name="skillroll">
 				<anchored to="partyskillframe" position="insidetopleft" offset="5,0" />
 				<script file="ps/scripts/ps_roll_skill.lua" />

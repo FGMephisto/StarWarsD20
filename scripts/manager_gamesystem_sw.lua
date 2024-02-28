@@ -4,9 +4,7 @@
 -- File adjusted for Star Wars 3.5E
 --
 
--- ===================================================================================================================
 -- Ruleset action types
--- ===================================================================================================================
 actions = {
 	["dice"] = { bUseModStack = true },
 	["table"] = { },
@@ -33,8 +31,6 @@ actions = {
 	["stabilization"] = { },
 };
 
--- ===================================================================================================================
--- ===================================================================================================================
 targetactions = {
 	"attack",
 	"critconfirm",
@@ -57,8 +53,6 @@ currencies = {
 };
 currencyDefault = "Credit Chip";
 
--- ===================================================================================================================
--- ===================================================================================================================
 tokenLightDefaults = {
 	["candle"] = {
 		sColor = "FFFFFCC3",
@@ -96,6 +90,24 @@ tokenLightDefaults = {
 		nDim = 12,
 		nDuration = 3600,
 	},
+	-- ["spell_darkness"] = {
+		-- sColor = "FF000000",
+		-- nBright = 4,
+		-- nDim = 4,
+		-- nDuration = 100,
+	-- },
+	-- ["spell_daylight"] = {
+		-- sColor = "FFFFF7E6",
+		-- nBright = 12,
+		-- nDim = 24,
+		-- nDuration = 300,
+	-- },
+	-- ["spell_light"] = {
+		-- sColor = "FFFFF3E1",
+		-- nBright = 4,
+		-- nDim = 8,
+		-- nDuration = 100,
+	-- },
 };
 
 -- ===================================================================================================================
@@ -107,9 +119,12 @@ function onInit()
 	end
 	VisionManager.addLightDefaults(tokenLightDefaults);
 
+	ImageDeathMarkerManager.registerStandardDeathMarkersDnD();
+
 	-- Add ruleset to supported rulesets for Encumberance calculation
 	CharEncumbranceManager.addStandardCalc("Star Wars D20")
-
+	
+	
 	-- Languages
 	languages = {
 		[Interface.getString("language_value_Basic")] = "Basic",
@@ -138,7 +153,17 @@ function onInit()
 		[Interface.getString("language_value_Yuuzhan_Vong")] = "Yuuzhan Vong",
 		[Interface.getString("language_value_Zabrak")] = "Zabrak",
 	}
-
+	if DataCommon.isPFRPG() then
+		-- languages[Interface.getString("language_value_aboleth")] = "";
+		languages[Interface.getString("language_value_catfolk")] = "";
+		languages[Interface.getString("language_value_grippli")] = "";
+		-- languages[Interface.getString("language_value_samsaran")] = "";
+		-- languages[Interface.getString("language_value_strix")] = "";
+		-- languages[Interface.getString("language_value_tengu")] = "";
+		languages[Interface.getString("language_value_vanaran")] = "";
+		languages[Interface.getString("language_value_vishkanya")] = "";
+		-- languages[Interface.getString("language_value_wayang")] = "";
+	end
 	languagefonts = {
 		[Interface.getString("language_value_Binary")] = "Infernal",
 		[Interface.getString("language_value_Bothese")] = "Infernal",
@@ -165,10 +190,12 @@ function onInit()
 		[Interface.getString("language_value_Yuuzhan_Vong")] = "Infernal",
 		[Interface.getString("language_value_Zabrak")] = "Infernal",
 	}
+
+	if DataCommon.isPFRPG() then
+		languages[Interface.getString("language_value_aklo")] = "";
+	end
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function getCharSelectDetailHost(nodeChar)
 	local sValue = "";
 	local nLevel = DB.getValue(nodeChar, "level", 0);
@@ -178,35 +205,18 @@ function getCharSelectDetailHost(nodeChar)
 	return sValue;
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function requestCharSelectDetailClient()
 	return "name,#level";
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function receiveCharSelectDetailClient(vDetails)
 	return vDetails[1], "Level " .. math.floor(vDetails[2]*100)*0.01;
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
-function getCharSelectDetailLocal(nodeLocal)
-	local vDetails = {};
-	table.insert(vDetails, DB.getValue(nodeLocal, "name", ""));
-	table.insert(vDetails, DB.getValue(nodeLocal, "level", 0));
-	return receiveCharSelectDetailClient(vDetails);
-end
-
--- ===================================================================================================================
--- ===================================================================================================================
 function getDistanceUnitsPerGrid()
 	return 5;
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function getDeathThreshold(rActor)
 	local nDying = 10;
 
@@ -225,8 +235,6 @@ function getDeathThreshold(rActor)
 	return nDying;
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function getStabilizationRoll(rActor)
 	local rRoll = { sType = "stabilization", sDesc = "[STABILIZATION]" };
 	
@@ -259,16 +267,12 @@ function getStabilizationRoll(rActor)
 	return rRoll;
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function modStabilization(rSource, rTarget, rRoll)
 	if DataCommon.isPFRPG() then
 		ActionAbility.modRoll(rSource, rTarget, rRoll);
 	end
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function getStabilizationResult(rRoll)
 	local bSuccess = false;
 	
@@ -292,8 +296,6 @@ function getStabilizationResult(rRoll)
 	return bSuccess;
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function performConcentrationCheck(draginfo, rActor, nodeSpellClass)
 	if DataCommon.isPFRPG() then
 		local rRoll = { sType = "concentration", sDesc = "[CONCENTRATION]", aDice = { "d20" } };
@@ -304,7 +306,7 @@ function performConcentrationCheck(draginfo, rActor, nodeSpellClass)
 			rRoll.sDesc = rRoll.sDesc .. " [MOD:" .. sAbilityEffect .. "]";
 		end
 
-		local nCL = 0
+		local nCL = DB.getValue(nodeSpellClass, "cl", 0);
 		rRoll.nMod = nCL + ActorManager35E.getAbilityBonus(rActor, sAbility);
 		
 		local nCCMisc = DB.getValue(nodeSpellClass, "cc.misc", 0);
@@ -328,10 +330,10 @@ function performConcentrationCheck(draginfo, rActor, nodeSpellClass)
 			local sSkills = DB.getValue(nodeActor, "skills", "");
 			local aSkillClauses = StringManager.split(sSkills, ",;\r\n", true);
 			for i = 1, #aSkillClauses do
-				local nStarts, nEnds, sLabel, sSign, sMod = string.find(aSkillClauses[i], "([%w%s\(\)]*[%w\(\)]+)%s*([%+%-â€“]?)(%d*)");
+				local nStarts, nEnds, sLabel, sSign, sMod = string.find(aSkillClauses[i], "([%w%s%(%)]*[%w%(%)]+)%s*([%+%-–]?)(%d*)");
 				if nStarts and string.lower(sSkill) == string.lower(sLabel) and sMod ~= "" then
 					nValue = tonumber(sMod) or 0;
-					if sSign == "-" or sSign == "â€“" then
+					if sSign == "-" or sSign == "–" then
 						nValue = 0 - nValue;
 					end
 					break;

@@ -14,7 +14,7 @@ function TypeChanged()
 	local sType = DB.getValue(getDatabaseNode(), "npctype", "");
 	
 	if sType == "Trap" then
-		-- tabs.setTab(1, "main_trap", "tab_main");
+		tabs.setTab(1, "main_trap", "tab_main");
 	elseif sType == "Vehicle" then
 		tabs.setTab(1, "main_vehicle", "tab_main");
 	else

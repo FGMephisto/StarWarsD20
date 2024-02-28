@@ -24,221 +24,128 @@
 		<offset>18,18,17,17</offset>
 	</framedef>
 
-	<framedef name="slottedmodifier">
-		<bitmap file="graphics/frames/slottedmodifier.png" />
-		<topleft rect="0,0,37,12" />
-		<top rect="37,0,160,12" />
-		<topright rect="212,0,12,12" />
-		<left rect="0,12,37,187" />
-		<middle rect="37,12,160,187" />
-		<right rect="212,12,12,187" />
-		<bottomleft rect="0,199,37,12" />
-		<bottom rect="37,199,160,12" />
-		<bottomright rect="212,199,12,12" />
-	</framedef>
-
-	<framedef name="slottedbonus">
-		<bitmap file="graphics/frames/slottedbonus.png" />
-		<topleft rect="0,0,68,12" />
-		<top rect="68,0,128,12" />
-		<topright rect="212,0,12,12" />
-		<left rect="0,12,68,187" />
-		<middle rect="68,12,128,187" />
-		<right rect="212,12,12,187" />
-		<bottomleft rect="0,199,68,12" />
-		<bottom rect="68,199,128,12" />
-		<bottomright rect="212,199,12,12" />
-	</framedef>
-
 	<!-- Override CoreRPG ruleset graphics -->
 
 	<!-- Adjusted for Star Wars 3.5E -->
 	<!-- Character sheet -->
 	<framedef name="charsheethelper">
 		<bitmap file="graphics/frames_sw/charsheet.png" />
-		<offset>25,40,25,25</offset>
-		<insideoffset>0,0,7,7</insideoffset>
-	</framedef>
-
- 	<!-- Die Cup (Local mode) -->
-	<framedef name="collector">
-		<bitmap file="graphics/frames_sw/collector.png" />
-		<offset>7,7,3,3</offset>
-	</framedef>
-
-	<!-- Calendar -->
-	<framedef name="calendar">
-		<bitmap file="graphics/frames_sw/charsheet.png" />
-		<offset>25,40,25,25</offset>
-		<insideoffset>0,0,7,7</insideoffset>
+		<offset>50,50,50,50</offset>
+		<insideoffset>0,0,0,0</insideoffset>
 	</framedef>
 
 	<!-- Chat window -->
-	<framedef name="chatbox">
+	<framedef name="chatbox" >
 		<bitmap file="graphics/frames_sw/chatbox.png" />
-		<topleft rect="0,0,18,15" />
-		<top rect="18,0,487,15" />
-		<topright rect="505,0,18,15" />
-		<left rect="0,15,18,476" />
-		<middle rect="18,15,487,476" />
-		<right rect="505,15,18,476" />
-		<bottomleft rect="0,491,18,12" />
-		<bottom rect="18,491,487,12" />
-		<bottomright rect="505,491,18,12" />
+		<offset>80,150,80,150</offset>
 	</framedef>
 
 	<!-- Characters -->
 	<framedef name="charsheet">
 		<bitmap file="graphics/frames_sw/charsheet.png" />
-		<offset>25,40,25,25</offset>
-		<insideoffset>0,0,7,7</insideoffset>
+		<offset>50,50,50,50</offset>
+		<insideoffset>0,0,0,0</insideoffset>
 	</framedef>
 
 	<framedef name="charsheethelper">
 		<bitmap file="graphics/frames_sw/charsheet.png" />
-		<offset>25,40,25,25</offset>
-		<insideoffset>0,0,7,7</insideoffset>
+		<offset>50,50,50,50</offset>
+		<insideoffset>0,0,0,0</insideoffset>
 	</framedef>
 
 	<!-- Character selection -->	
 	<framedef name="charselect">
 		<bitmap file="graphics/frames_sw/charselect.png" />
-		<offset>68,75,77,51</offset>
-		<insideoffset>0,0,5,7</insideoffset>
+		<offset>60,60,60,60</offset>
+		<insideoffset>0,0,1,1</insideoffset>
 	</framedef>
 
 	<!-- Combat tracker -->
 	<framedef name="ctbox">
 		<bitmap file="graphics/frames_sw/ctbox.png" />
-		<offset>32,32,19,50</offset>
-		<insideoffset>0,0,7,7</insideoffset>
+		<offset>60,60,60,60</offset>
+		<insideoffset>0,0,0,1</insideoffset>
 	</framedef>
 
 	<!-- Controls -->
 	<framedef name="metalplate">
-		<bitmap file="graphics/frames_sw/metaltag.png" />
-		<topleft rect="0,0,11,10" />
-		<top rect="11,0,177,10" />
-		<topright rect="188,0,12,10" />
-		<left rect="0,10,11,30" />
-		<middle rect="11,10,177,30" />
-		<right rect="188,10,12,30" />
-		<bottomleft rect="0,40,11,10" />
-		<bottom rect="11,40,177,10" />
-		<bottomright rect="188,40,12,10" />	
+		<bitmap file="graphics/frames_sw/headerplate.png" />
+		<offset>12,12,12,12</offset>
 	</framedef>
 
 	<!-- Desktop background -->
 	<framedef name="desktop">
 		<bitmap file="graphics/frames_sw/desktop.jpg" />
-		<top rect="1,1,2000,400" />
-		<middle rect="1,1,2000,2000" />
-		<right rect="1800,0,400,2000" />
-		<bottomright rect="1800,0,400,2000" />
-		<bottom rect="1,1,2000,400" />
+		<offset>0,5,0,5</offset>
 	</framedef>
 
 	<framedef name="shortcuts">
 		<bitmap file="graphics/frames_sw/shortcuts.png" />
-		<left rect="450,0,25,144" />
-		<middle rect="475,0,50,144" />
-		<right rect="525,0,25,144" />
+		<offset>0,0,0,0</offset>
 	</framedef>
 
 	<!-- Hot key bar -->	
 	<framedef name="hotkeybox">
 		<bitmap file="graphics/frames_sw/hotkeybox.png" />
-		<offset>2,5,2,2</offset>
+		<offset>5,10,5,5</offset>
 	</framedef>
 
 	<framedef name="hotkeytitlebox">
 		<bitmap file="graphics/frames_sw/hotkeytitlebox.png" />
-		<offset>0,0,4,5</offset>
+		<offset>5,5,5,5</offset>
 	</framedef>
 
 	<!-- Images -->
 	<framedef name="imagebox">
 		<bitmap file="graphics/frames_sw/imagebox.png" />
-		<offset>60,30,30,60</offset>
-		<insideoffset>0,0,20,22</insideoffset>
+		<offset>80,60,80,60</offset>
+		<insideoffset>0,0,2,0</insideoffset>
 	</framedef>
 
 	<!-- Other Campaign Records -->
 	<framedef name="recordsheet">
 		<bitmap file="graphics/frames_sw/charsheet.png" />
-		<offset>25,40,25,25</offset>
-		<insideoffset>0,0,7,7</insideoffset>
+		<offset>50,50,50,50</offset>
+		<insideoffset>0,0,0,0</insideoffset>
 	</framedef>
 
 	<!-- Party Sheet -->
 	<framedef name="partysheet">
 		<bitmap file="graphics/frames_sw/partysheet.png" />
-		<offset>25,40,25,25</offset>
-		<insideoffset>0,0,7,7</insideoffset>
+		<offset>60,60,60,60</offset>
+		<insideoffset>0,0,2,2</insideoffset>
 	</framedef>
 
 	<!-- Story and Notes -->
 	<framedef name="storybox">
 		<bitmap file="graphics/frames_sw/storybox.png" />
-		<offset>41,172,41,49</offset>
-		<insideoffset>0,0,10,5</insideoffset>
+		<offset>10,8,10,10</offset>
+		<insideoffset>0,0,2,5</insideoffset>
 	</framedef>
 
 	<!-- Token Bag -->
 	<framedef name="tokenbag">
 		<bitmap file="graphics/frames_sw/tokenbag.png" />
-		<offset>19,19,24,24</offset>
-		<insideoffset>0,0,13,13</insideoffset>
+		<offset>60,120,60,60</offset>
+		<insideoffset>0,0,0,0</insideoffset>
 	</framedef>
 
 	<!-- Utility -->
 	<framedef name="referencelist">
 		<bitmap file="graphics/frames_sw/referencepage.png" />
-		<offset>130,100,100,100</offset>
-		<insideoffset>0,0,5,5</insideoffset>
-	</framedef>
-
-	<framedef name="referencepage">
-		<bitmap file="graphics/frames_sw/referencepage.png" />
-		<offset>130,100,100,100</offset>
-		<insideoffset>0,0,5,5</insideoffset>
+		<offset>60,140,60,90</offset>
+		<insideoffset>0,0,3,3</insideoffset>
 	</framedef>
 
 	<framedef name="utilitybox">
 		<bitmap file="graphics/frames_sw/utilitybox.png" />
-		<offset>22,22,22,22</offset>
-		<insideoffset>0,0,10,10</insideoffset>
-	</framedef>
-
-	<framedef name="utilitybox2">
-		<bitmap file="graphics/frames_sw/utilitybox2.png" />
-		<offset>92,100,100,110</offset>
-		<insideoffset>0,0,7,8</insideoffset>
-	</framedef>
-
-	<framedef name="utilitybox3">
-		<bitmap file="graphics/frames_sw/utilitybox3.png" />
-		<offset>74,75,77,51</offset>
-		<insideoffset>0,0,5,7</insideoffset>
+		<offset>40,40,40,40</offset>
+		<insideoffset>0,0,0,0</insideoffset>
 	</framedef>
 
 	<!-- Windows -->
 	<framedef name="windowtitle">
 		<bitmap file="graphics/frames_sw/windowtitle.png" />
-		<offset>25,0,30,0</offset>
-	</framedef>
-
-	<framedef name="durationadjustment">
-		<bitmap file="graphics/frames_sw/durationadjustment.png" />
-		<topleft rect="0,0,12,12" />
-		<top rect="12,0,200,12" />
-		<topright rect="212,0,12,12" />
-		<left rect="0,12,12,187" />
-		<middle rect="12,12,200,187" />
-		<right rect="212,12,12,187" />
-		<bottomleft rect="0,199,12,12" />
-		<bottom rect="12,199,200,12" />
-		<bottomright rect="212,199,12,12" />
-		<decal rect="207,212,17,14" />
+		<offset>40,45,40,0</offset>
 	</framedef>
 </root>

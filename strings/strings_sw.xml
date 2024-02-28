@@ -719,9 +719,8 @@
 	<string name="hitpoints">Wound Points</string>
 	<string name="woundpoints">Wound Points</string>
 	<string name="hp">WP</string>
-	<string name="hptemp">cVP</string>
+	<string name="hptemp">VP</string>
 	<string name="wp">WP</string>
-	<string name="vp">VP</string>
 
 	<string name="menu_resetspells">Reset Force</string>
 	<string name="menu_addspellclass">Add Force Class</string>
@@ -810,10 +809,9 @@
 	<string name="skill_value_rwlanguage">Read/Write Language</string>
 	
 	<!-- Character - Main -->
-	<string name="char_label_hptemp">cVP</string>
-	<string name="char_tooltip_hptemp">Current Vitality Points</string>
+	<string name="char_label_hptemp">VP</string>
+	<string name="char_tooltip_hptemp">Vitality Points</string>
 	<string name="char_tooltip_hp">Wound Points</string>
-	<string name="char_tooltip_vp">Vitality Points</string>
 	<string name="char_title_selectspellclassincrease">Select Force Class Increase</string>
 	<string name="char_message_selectspellclassincrease">Choose %d Force class(es) from the list below to increase.</string>
 	

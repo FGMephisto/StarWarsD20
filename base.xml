@@ -15,7 +15,6 @@
 		<displayversion>Revised</displayversion>
 		<author>Mephisto</author>
 	</description>
-
 	<importinfo>
 		<acceptfrom ruleset="d20" />
 		<acceptfrom ruleset="PFRPG" />
@@ -23,7 +22,7 @@
 
 	<!-- Layers -->
 	<importruleset source="CoreRPG" />
-
+	
 	<!-- Tabletop settings -->
 	<includefile source="gameelements.xml" />
 
@@ -31,13 +30,13 @@
 	<includefile source="graphics/graphics_fonts.xml" />
 	<includefile source="graphics/graphics_frames_sw.xml" />
 	<includefile source="graphics/graphics_icons_sw.xml" />
-
+	
 	<!-- Strings -->
 	<includefile source="strings/strings_sw.xml" />
 
 	<!-- Desktop -->
 	<script name="Desktop35E" file="scripts/data_desktop_sw.lua" />
-	<script name="LibraryData35E" file="scripts/data_library_sw.lua" />
+	<script name="LibraryData35E" file="scripts/data_library_35E.lua" />
 	<script name="Options35E" file="scripts/data_options_sw.lua" />
 	<includefile source="desktop/desktop_classes.xml" />
 
@@ -49,7 +48,7 @@
 	<!-- <includefile source="ref/ref_spells.xml" /> -->
 
 	<!-- Campaign Records -->
-	<includefile source="campaign/template_campaign_sw.xml" />
+	<includefile source="campaign/template_campaign.xml" />
 	<includefile source="campaign/template_char_sw.xml" />
 	<!-- <includefile source="campaign/template_spell.xml" /> -->
 
@@ -75,15 +74,14 @@
 	<includefile source="campaign/record_npc_sw.xml" />
 	<includefile source="campaign/record_quest.xml" />
 	
-	
 	<includefile source="campaign/record_class.xml" />
 	<includefile source="campaign/record_feat.xml" />
 	<includefile source="campaign/record_race.xml" />
 	<includefile source="campaign/record_skill.xml" />
-	<!-- <includefile source="campaign/record_spell.xml" /> -->
-	
+	<includefile source="campaign/record_spell.xml" />
+
 	<!-- Combat tracker -->
-	<includefile source="ct/template_ct_sw.xml" />
+	<includefile source="ct/template_ct.xml" />
 	<includefile source="ct/ct_host_sw.xml" />
 	<includefile source="ct/ct_host_entry_sw.xml" />
 	<includefile source="ct/ct_host_entry_section.xml" />
@@ -91,7 +89,7 @@
 
 	<!-- Party sheet -->
 	<includefile source="ps/template_ps.xml" />
-	<includefile source="ps/ps_main_sw.xml" />
+	<includefile source="ps/ps_main.xml" />
 	<includefile source="ps/ps_skills_sw.xml" />
 	<includefile source="ps/ps_xp.xml" />
 
@@ -100,8 +98,8 @@
 	<script name="GameSystem" file="scripts/manager_gamesystem_sw.lua" />
 	<script name="CampaignDataManager2" file="scripts/manager_campaigndata2.lua" />
 
-	<script name="ActorManager35E" file="scripts/manager_actor_sw.lua" />
-	<script name="CharManager" file="scripts/manager_char_sw.lua" />
+	<script name="ActorManager35E" file="scripts/manager_actor_35E.lua" />
+	<script name="CharManager" file="scripts/manager_char.lua" />
 	<script name="CombatManager2" file="scripts/manager_combat2.lua" />
 	<script name="EffectManager35E" file="scripts/manager_effect_35E.lua" />
 	<script name="ItemManager2" file="scripts/manager_item2.lua" />
@@ -113,7 +111,7 @@
 	
 	<script name="ActionAbility" file="scripts/manager_action_ability.lua" />
 	<script name="ActionAttack" file="scripts/manager_action_attack_sw.lua" />
-	<script name="ActionDamage" file="scripts/manager_action_damage_sw.lua" />
+	<script name="ActionDamage" file="scripts/manager_action_damage.lua" />
 	<script name="ActionHeal" file="scripts/manager_action_heal.lua" />
 	<script name="ActionInit" file="scripts/manager_action_init.lua" />
 	<script name="ActionSkill" file="scripts/manager_action_skill.lua" />

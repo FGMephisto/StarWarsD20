@@ -7,8 +7,6 @@
 OOB_MSGTYPE_APPLYATK = "applyatk";
 OOB_MSGTYPE_APPLYHRFC = "applyhrfc";
 
--- ===================================================================================================================
--- ===================================================================================================================
 function onInit()
 	OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_APPLYATK, handleApplyAttack);
 	OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_APPLYHRFC, handleApplyHRFC);
@@ -24,50 +22,33 @@ function onInit()
 	ActionsManager.registerResultHandler("grapple", onGrapple);
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function handleApplyAttack(msgOOB)
 	local rSource = ActorManager.resolveActor(msgOOB.sSourceNode);
 	local rTarget = ActorManager.resolveActor(msgOOB.sTargetNode);
 	
-	local nTotal = tonumber(msgOOB.nTotal) or 0;
-	ActionAttack.applyAttack(rSource, rTarget, (tonumber(msgOOB.nSecret) == 1), msgOOB.sAttackType, msgOOB.sDesc, nTotal, msgOOB.sResults);
+	local rRoll = UtilityManager.decodeRollFromOOB(msgOOB);
+	ActionAttack.applyAttack(rSource, rTarget, rRoll);
 end
-
--- ===================================================================================================================
--- ===================================================================================================================
-function notifyApplyAttack(rSource, rTarget, bSecret, sAttackType, sDesc, nTotal, sResults)
+function notifyApplyAttack(rSource, rTarget, rRoll)
 	if not rTarget then
 		return;
 	end
 
-	local msgOOB = {};
-	msgOOB.type = OOB_MSGTYPE_APPLYATK;
+	rRoll.bSecret = rRoll.bTower;
+	rRoll.sResults = table.concat(rRoll.aMessages, " ");
 	
-	if bSecret then
-		msgOOB.nSecret = 1;
-	else
-		msgOOB.nSecret = 0;
-	end
-	msgOOB.sAttackType = sAttackType;
-	msgOOB.nTotal = nTotal;
-	msgOOB.sDesc = sDesc;
-	msgOOB.sResults = sResults;
-
+	local msgOOB = UtilityManager.encodeRollToOOB(rRoll);
+	msgOOB.type = ActionAttack.OOB_MSGTYPE_APPLYATK;
 	msgOOB.sSourceNode = ActorManager.getCreatureNodeName(rSource);
 	msgOOB.sTargetNode = ActorManager.getCreatureNodeName(rTarget);
 
 	Comm.deliverOOBMessage(msgOOB, "");
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function handleApplyHRFC(msgOOB)
 	TableManager.processTableRoll("", msgOOB.sTable);
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function notifyApplyHRFC(sTable)
 	local msgOOB = {};
 	msgOOB.type = OOB_MSGTYPE_APPLYHRFC;
@@ -77,8 +58,6 @@ function notifyApplyHRFC(sTable)
 	Comm.deliverOOBMessage(msgOOB, "");
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function onTargeting(rSource, aTargeting, rRolls)
 	if OptionsManager.isOption("RMMT", "multi") then
 		local aTargets = {};
@@ -98,8 +77,6 @@ function onTargeting(rSource, aTargeting, rRolls)
 	return aTargeting;
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function performPartySheetVsRoll(draginfo, rActor, rAction)
 	local rRoll = ActionAttack.getRoll(nil, rAction);
 	
@@ -111,16 +88,12 @@ function performPartySheetVsRoll(draginfo, rActor, rAction)
 	ActionsManager.actionDirect(nil, "attack", { rRoll }, { { rActor } });
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function performRoll(draginfo, rActor, rAction)
 	local rRoll = ActionAttack.getRoll(rActor, rAction);
 	
 	ActionsManager.performAction(draginfo, rActor, rRoll);
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function getRoll(rActor, rAction)
 	local rRoll = {};
 	if rAction.cm then
@@ -136,7 +109,7 @@ function getRoll(rActor, rAction)
 		if rAction.order and rAction.order > 1 then
 			rRoll.sDesc = rRoll.sDesc .. " #" .. rAction.order;
 		end
-		rRoll.sDesc = rRoll.sDesc .. "] " .. rAction.label;
+		rRoll.sDesc = rRoll.sDesc .. "] " .. StringManager.capitalizeAll(rAction.label);
 	else
 		rRoll.sDesc = "[ATTACK";
 		if rAction.order and rAction.order > 1 then
@@ -145,7 +118,7 @@ function getRoll(rActor, rAction)
 		if rAction.range then
 			rRoll.sDesc = rRoll.sDesc .. " (" .. rAction.range .. ")";
 		end
-		rRoll.sDesc = rRoll.sDesc .. "] " .. rAction.label;
+		rRoll.sDesc = rRoll.sDesc .. "] " .. StringManager.capitalizeAll(rAction.label);
 	end
 	
 	-- Add ability modifiers
@@ -169,16 +142,12 @@ function getRoll(rActor, rAction)
 	return rRoll;
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function performGrappleRoll(draginfo, rActor, rAction)
 	local rRoll = ActionAttack.getGrappleRoll(rActor, rAction);
 	
 	ActionsManager.performAction(draginfo, rActor, rRoll);
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function getGrappleRoll(rActor, rAction)
 	local rRoll = {};
 	rRoll.sType = "grapple";
@@ -191,7 +160,7 @@ function getGrappleRoll(rActor, rAction)
 		rRoll.sDesc = "[GRAPPLE]";
 	end
 	if rAction.label and rAction.label ~= "" then
-		rRoll.sDesc = rRoll.sDesc .. " " .. rAction.label;
+		rRoll.sDesc = rRoll.sDesc .. " " .. StringManager.capitalizeAll(rAction.label);
 	end
 	
 	-- Add ability modifiers
@@ -216,9 +185,29 @@ function modAttack(rSource, rTarget, rRoll)
 	local aAddDesc = {};
 	local aAddDice = {};
 	local nAddMod = 0;
-
+	
 	-- Check for opportunity attack
 	local bOpportunity = ModifierManager.getKey("ATT_OPP") or Input.isShiftPressed();
+
+	-- Check defense modifiers
+	local bTouch = ModifierManager.getKey("ATT_TCH");
+	local bFlatFooted = ModifierManager.getKey("ATT_FF");
+	local bCover = ModifierManager.getKey("DEF_COVER");
+	local bPartialCover = ModifierManager.getKey("DEF_PCOVER");
+	local bSuperiorCover = ModifierManager.getKey("DEF_SCOVER");
+	local bConceal = ModifierManager.getKey("DEF_CONC");
+	local bTotalConceal = ModifierManager.getKey("DEF_TCONC");
+
+	local bMinimumCover = ModifierManager.getKey("DEF_MCOVER");
+	local bTotalDefense = ModifierManager.getKey("DEF_TDEF");
+	local bDodging = ModifierManager.getKey("DEF_DOD");
+	local bKneeling = ModifierManager.getKey("DEF_KNE");
+	local bProne = ModifierManager.getKey("DEF_PRO");
+	local bRunning = ModifierManager.getKey("DEF_RUN");
+	local bPinned = ModifierManager.getKey("DEF_PIN");
+	local bMinimumConceal = ModifierManager.getKey("DEF_MCONC");
+	local bPartialConceal = ModifierManager.getKey("DEF_PCONC");
+	local bSuperiosConceal = ModifierManager.getKey("DEF_SCONC");
 
 	-- Check attack modifiers
 	local bMultifire = ModifierManager.getKey("ATT_MFI");
@@ -232,28 +221,6 @@ function modAttack(rSource, rTarget, rRoll)
 	local bAProne = ModifierManager.getKey("ATT_PRO");
 	local bAConceal = ModifierManager.getKey("ATT_CONC");	
 
-	-- Check defense modifiers
-	local bTouch = ModifierManager.getKey("ATT_TCH");
-	local bFlatFooted = ModifierManager.getKey("ATT_FF");
-
-	local bMinimumCover = ModifierManager.getKey("DEF_MCOVER");
-	local bPartialCover = ModifierManager.getKey("DEF_PCOVER");
-	local bCover = ModifierManager.getKey("DEF_COVER");
-	local bSuperiorCover = ModifierManager.getKey("DEF_SCOVER");
-
-	local bTotalDefense = ModifierManager.getKey("DEF_TDEF");
-	local bDodging = ModifierManager.getKey("DEF_DOD");
-	local bKneeling = ModifierManager.getKey("DEF_KNE");
-	local bProne = ModifierManager.getKey("DEF_PRO");
-	local bRunning = ModifierManager.getKey("DEF_RUN");
-	local bPinned = ModifierManager.getKey("DEF_PIN");
-
-	local bMinimumConceal = ModifierManager.getKey("DEF_MCONC");
-	local bPartialConceal = ModifierManager.getKey("DEF_PCONC");
-	local bConceal = ModifierManager.getKey("DEF_CONC");
-	local bSuperiosConceal = ModifierManager.getKey("DEF_SCONC");
-	local bTotalConceal = ModifierManager.getKey("DEF_TCONC");
-
 	-- Add attack modifiers and adjust attack roll string
 	if bOpportunity then
 		table.insert(aAddDesc, "[OPPORTUNITY]");
@@ -263,47 +230,38 @@ function modAttack(rSource, rTarget, rRoll)
 		table.insert(aAddDesc, "[Multifire]");
 		nAddMod = nAddMod - 4;
 	end
-
 	if bAutofire then
 		table.insert(aAddDesc, "[Autofire]");
 		nAddMod = nAddMod - 6;
 	end
-	
 	if bMultiShot then
 		table.insert(aAddDesc, "[MultiShot]");
 		nAddMod = nAddMod + 2;
 	end
-
 	if bRapidShot then
 		table.insert(aAddDesc, "[Rapid Shot]");
 		nAddMod = nAddMod - 2;
 	end
-
 	if bPointBlank then
 		table.insert(aAddDesc, "[Point Blank]");
 		nAddMod = nAddMod + 1;
 	end
-
 	if bFireintoMelee then
 		table.insert(aAddDesc, "[Fire into Melee]");
 		nAddMod = nAddMod - 4;
 	end
-
 	if bFlanking then
 		table.insert(aAddDesc, "[Flanking]");
 		nAddMod = nAddMod + 2;
 	end
-	
 	if bHigherGround then
 		table.insert(aAddDesc, "[Higher Ground]");
 		nAddMod = nAddMod + 1;
 	end	
-
 	if bAProne then
 		table.insert(aAddDesc, "[Attacker prone]");
 		nAddMod = nAddMod - 4;
 	end
-	
 	if bAConceal then
 		table.insert(aAddDesc, "[Attacker Concealed]");
 		nAddMod = nAddMod + 2;
@@ -315,50 +273,44 @@ function modAttack(rSource, rTarget, rRoll)
 			table.insert(aAddDesc, "[TOUCH]");
 		end
 	end
-	
 	if bFlatFooted then
 		table.insert(aAddDesc, "[FF]");
 	end
-
 	if bSuperiorCover then
 		table.insert(aAddDesc, "[COVER -10]");
-		nAddMod = nAddMod - 10;
 	elseif bCover then
 		table.insert(aAddDesc, "[COVER -7]");
-		nAddMod = nAddMod - 7;		
 	elseif bPartialCover then
 		table.insert(aAddDesc, "[COVER -4]");
-		nAddMod = nAddMod - 4;
 	elseif bMinimumCover then
-		nAddMod = nAddMod - 2;
 		table.insert(aAddDesc, "[COVER -2]");		
 	end
-
+	if bConceal then
+		table.insert(aAddDesc, "[CONCEAL]");
+	end
+	if bTotalConceal then
+		table.insert(aAddDesc, "[TOTAL CONC]");
+	end
 	if bTotalDefense then
 		table.insert(aAddDesc, "[Total Defense]");
 		nAddMod = nAddMod - 4;
 	end
-
 	if bDodging then
 		table.insert(aAddDesc, "[Dodging]");
 		nAddMod = nAddMod - 1;
 	end
-	
 	if bKneeling then
 		table.insert(aAddDesc, "[Defender kneeling]");
 		nAddMod = nAddMod + 2;
 	end
-
 	if bProne then
 		table.insert(aAddDesc, "[Defender prone]");
 		nAddMod = nAddMod + 4;
 	end
-	
 	if bRunning then
 		table.insert(aAddDesc, "[Defender running]");
 		nAddMod = nAddMod - 2;
 	end
-
 	if bPinned then
 		table.insert(aAddDesc, "[Defender pinned]");
 		nAddMod = nAddMod + 4;
@@ -392,7 +344,6 @@ function modAttack(rSource, rTarget, rRoll)
 
 		-- Build attack filter
 		local aAttackFilter = {};
-		
 		if sAttackType == "M" then
 			table.insert(aAttackFilter, "melee");
 		elseif sAttackType == "R" then
@@ -401,28 +352,25 @@ function modAttack(rSource, rTarget, rRoll)
 		if bOpportunity then
 			table.insert(aAttackFilter, "opportunity");
 		end
-
+		
 		-- Get attack effect modifiers
 		local bEffects = false;
 		local nEffectCount;
-
 		aAddDice, nAddMod, nEffectCount = EffectManager35E.getEffectsBonus(rSource, {"ATK"}, false, aAttackFilter, rTarget);
-
 		if (nEffectCount > 0) then
 			bEffects = true;
 		end
-
 		if rRoll.sType == "grapple" then
 			local aPFDice, nPFMod, nPFCount = EffectManager35E.getEffectsBonus(rSource, {"CMB"}, false, aAttackFilter, rTarget);
 			if nPFCount > 0 then
 				bEffects = true;
-				for k, v in ipairs(aPFDice) do
+				for _,v in ipairs(aPFDice) do
 					table.insert(aAddDice, v);
 				end
 				nAddMod = nAddMod + nPFMod;
 			end
 		end
-
+		
 		-- Get condition modifiers
 		if EffectManager35E.hasEffect(rSource, "Invisible") then
 			bEffects = true;
@@ -432,48 +380,40 @@ function modAttack(rSource, rTarget, rRoll)
 			bEffects = true;
 			table.insert(aAddDesc, "[CA]");
 		end
-
 		if EffectManager35E.hasEffect(rSource, "Blinded") then
 			bEffects = true;
 			table.insert(aAddDesc, "[BLINDED]");
 		end
-
 		if not DataCommon.isPFRPG() then
 			if EffectManager35E.hasEffect(rSource, "Incorporeal") and sAttackType == "M" and not string.match(string.lower(rRoll.sDesc), "incorporeal touch") then
 				bEffects = true;
 				table.insert(aAddDesc, "[INCORPOREAL]");
 			end
 		end
-
 		if EffectManager35E.hasEffectCondition(rSource, "Dazzled") then
 			bEffects = true;
 			nAddMod = nAddMod - 1;
 		end
-
 		if EffectManager35E.hasEffectCondition(rSource, "Slowed") then
 			bEffects = true;
 			nAddMod = nAddMod - 1;
 		end
-
 		if EffectManager35E.hasEffectCondition(rSource, "Entangled") then
 			bEffects = true;
 			nAddMod = nAddMod - 2;
 		end
-
 		if rRoll.sType == "attack" and 
 				(EffectManager35E.hasEffectCondition(rSource, "Pinned") or
 				EffectManager35E.hasEffectCondition(rSource, "Grappled")) then
 			bEffects = true;
 			nAddMod = nAddMod - 2;
 		end
-
 		if EffectManager35E.hasEffectCondition(rSource, "Frightened") or 
 				EffectManager35E.hasEffectCondition(rSource, "Panicked") or
 				EffectManager35E.hasEffectCondition(rSource, "Shaken") then
 			bEffects = true;
 			nAddMod = nAddMod - 2;
 		end
-
 		if EffectManager35E.hasEffectCondition(rSource, "Sickened") then
 			bEffects = true;
 			nAddMod = nAddMod - 2;
@@ -490,7 +430,7 @@ function modAttack(rSource, rTarget, rRoll)
 				nAddMod = nAddMod - 4;
 			end
 		end
-
+		
 		-- Get ability modifiers
 		local nBonusStat, nBonusEffects = ActorManager35E.getAbilityEffectsBonus(rSource, sActionStat);
 		if nBonusEffects > 0 then
@@ -507,21 +447,24 @@ function modAttack(rSource, rTarget, rRoll)
 
 		-- If effects, then add them
 		if bEffects then
-			local sEffects = "";
 			local sMod = StringManager.convertDiceToString(aAddDice, nAddMod, true);
-			if sMod ~= "" then
-				sEffects = "[" .. Interface.getString("effects_tag") .. " " .. sMod .. "]";
-			else
-				sEffects = "[" .. Interface.getString("effects_tag") .. "]";
-			end
 			table.insert(aAddDesc, EffectManager.buildEffectOutput(sMod));
 		end
 	end
-
+	
+	if bSuperiorCover then
+		nAddMod = nAddMod - 10;
+	elseif bCover then
+		nAddMod = nAddMod - 7;
+	elseif bPartialCover then
+		nAddMod = nAddMod - 4;
+	elseif bMinimumCover then
+		nAddMod = nAddMod - 2;
+	end
+	
 	if #aAddDesc > 0 then
 		rRoll.sDesc = rRoll.sDesc .. " " .. table.concat(aAddDesc, " ");
 	end
-
 	for _,vDie in ipairs(aAddDice) do
 		if vDie:sub(1,1) == "-" then
 			table.insert(rRoll.aDice, "-p" .. vDie:sub(3));
@@ -529,13 +472,12 @@ function modAttack(rSource, rTarget, rRoll)
 			table.insert(rRoll.aDice, "p" .. vDie:sub(2));
 		end
 	end
-
 	rRoll.nMod = rRoll.nMod + nAddMod;
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function onAttack(rSource, rTarget, rRoll)
+	ActionAttack.decodeAttackRoll(rRoll);
+	
 	local rMessage = ActionsManager.createActionMessage(rSource, rRoll);
 
 	local bIsSourcePC = ActorManager.isPC(rSource);
@@ -593,17 +535,18 @@ function onAttack(rSource, rTarget, rRoll)
 			if bAllowCC then
 				rRoll.sResult = "hit";
 				rRoll.bCritThreat = true;
-				table.insert(rRoll.aMessages, "[AUTOMATIC HIT]");
+				table.insert(rRoll.aMessages, "[CRITICAL THREAT]");
 			else
 				rRoll.sResult = "crit";
 				table.insert(rRoll.aMessages, "[CRITICAL HIT]");
 			end
 		else
 			rRoll.sResult = "hit";
-			table.insert(rRoll.aMessages, "[AUTOMATIC HIT]");
+			table.insert(rRoll.aMessages, "[HIT]");
 		end
 	elseif rRoll.nFirstDie == 1 then
 		if rRoll.sType == "critconfirm" then
+			table.insert(rRoll.aMessages, "[HIT]");
 			table.insert(rRoll.aMessages, "[CRIT NOT CONFIRMED]");
 			rRoll.sResult = "miss";
 		else
@@ -631,6 +574,7 @@ function onAttack(rSource, rTarget, rRoll)
 		else
 			rRoll.sResult = "miss";
 			if rRoll.sType == "critconfirm" then
+				table.insert(rRoll.aMessages, "[HIT]");
 				table.insert(rRoll.aMessages, "[CRIT NOT CONFIRMED]");
 			else
 				table.insert(rRoll.aMessages, "[MISS]");
@@ -658,14 +602,9 @@ function onAttack(rSource, rTarget, rRoll)
 	ActionAttack.onPostAttackResolve(rSource, rTarget, rRoll, rMessage);
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function onPreAttackResolve(rSource, rTarget, rRoll, rMessage)
 	-- Do nothing; location to override
 end
-
--- ===================================================================================================================
--- ===================================================================================================================
 function onAttackResolve(rSource, rTarget, rRoll, rMessage)
 	Comm.deliverChatMessage(rMessage);
 
@@ -680,25 +619,33 @@ function onAttackResolve(rSource, rTarget, rRoll, rMessage)
 		if rRoll.bCritThreat then
 			local rCritConfirmRoll = { sType = "critconfirm", aDice = {"d20"}, bTower = rRoll.bTower, bSecret = rRoll.bSecret };
 				
-			local nCCMod = EffectManager35E.getEffectsBonus(rSource, {"CC"}, true, nil, rTarget);
-			if nCCMod ~= 0 then
-				rCritConfirmRoll.sDesc = string.format("%s [CONFIRM %+d]", rRoll.sDesc, nCCMod);
+			local tCCDice, nCCMod, nCCEffects = EffectManager35E.getEffectsBonus(rSource, {"CC"}, false, nil, rTarget);
+			if (nCCEffects > 0) then
+				local sMod = StringManager.convertDiceToString(tCCDice, nCCMod, true);
+				rCritConfirmRoll.sDesc = string.format("%s [CONFIRM %s]", rRoll.sDesc, sMod);
 			else
 				rCritConfirmRoll.sDesc = rRoll.sDesc .. " [CONFIRM]";
 			end
+
+			for _,vDie in ipairs(tCCDice) do
+				if vDie:sub(1,1) == "-" then
+					table.insert(rCritConfirmRoll.aDice, "-p" .. vDie:sub(3));
+				else
+					table.insert(rCritConfirmRoll.aDice, "p" .. vDie:sub(2));
+				end
+			end
+			rCritConfirmRoll.nMod = rRoll.nMod + nCCMod;
+
 			if rRoll.nMissChance > 0 then
 				rCritConfirmRoll.sDesc = rCritConfirmRoll.sDesc .. " [MISS CHANCE " .. rRoll.nMissChance .. "%]";
 			end
-			rCritConfirmRoll.nMod = rRoll.nMod + nCCMod;
-			
 			if rRoll.nDefenseVal then
 				rCritConfirmRoll.sDesc = rCritConfirmRoll.sDesc .. " [AC " .. rRoll.nDefenseVal .. "]";
 			end
-
 			if (rRoll.nAtkEffectsBonus or 0) ~= 0 then
 				rCritConfirmRoll.sDesc = string.format("%s %s", rCritConfirmRoll.sDesc, EffectManager.buildEffectOutput(rRoll.nAtkEffectsBonus));
 			end
-			
+
 			ActionsManager.roll(rSource, { rTarget }, rCritConfirmRoll, true);
 		elseif (rRoll.sResult ~= "miss") and (rRoll.sResult ~= "fumble") then
 			bRollMissChance = true;
@@ -712,7 +659,7 @@ function onAttackResolve(rSource, rTarget, rRoll, rMessage)
 	end
 
 	if rTarget then
-		ActionAttack.notifyApplyAttack(rSource, rTarget, rRoll.bTower, rRoll.sType, rRoll.sDesc, rRoll.nTotal, table.concat(rRoll.aMessages, " "));
+		ActionAttack.notifyApplyAttack(rSource, rTarget, rRoll);
 		
 		-- REMOVE TARGET ON MISS OPTION
 		if (rRoll.sResult == "miss" or rRoll.sResult == "fumble") and rRoll.sType ~= "critconfirm" and not string.match(rRoll.sDesc, "%[FULL%]") then
@@ -729,9 +676,6 @@ function onAttackResolve(rSource, rTarget, rRoll, rMessage)
 		end
 	end
 end
-
--- ===================================================================================================================
--- ===================================================================================================================
 function onPostAttackResolve(rSource, rTarget, rRoll, rMessage)
 	-- HANDLE FUMBLE/CRIT HOUSE RULES
 	local sOptionHRFC = OptionsManager.getOption("HRFC");
@@ -743,9 +687,9 @@ function onPostAttackResolve(rSource, rTarget, rRoll, rMessage)
 	end
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function onGrapple(rSource, rTarget, rRoll)
+	ActionAttack.decodeAttackRoll(rRoll);
+
 	if DataCommon.isPFRPG() then
 		ActionAttack.onAttack(rSource, rTarget, rRoll);
 	else
@@ -762,8 +706,6 @@ function onGrapple(rSource, rTarget, rRoll)
 	end
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function onMissChance(rSource, rTarget, rRoll)
 	local rMessage = ActionsManager.createActionMessage(rSource, rRoll);
 
@@ -789,48 +731,75 @@ function onMissChance(rSource, rTarget, rRoll)
 	Comm.deliverChatMessage(rMessage);
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
-function applyAttack(rSource, rTarget, bSecret, sAttackType, sDesc, nTotal, sResults)
-	local msgShort = {font = "msgfont"};
-	local msgLong = {font = "msgfont"};
+function decodeAttackRoll(rRoll)
+	-- Rebuild detail fields if dragging from chat window
+	if not rRoll.nOrder then
+		rRoll.nOrder = tonumber(rRoll.sDesc:match("%[ATTACK.-#(%d+)")) or nil;
+	end
+	if not rRoll.sRange then
+		rRoll.sRange = rRoll.sDesc:match("%[ATTACK.-%((%w+)%)%]");
+	end
+	if not rRoll.sLabel then
+		rRoll.sLabel = StringManager.trim(rRoll.sDesc:match("%[ATTACK.-%]([^%[]+)"));
+	end
+end
+
+function applyAttack(rSource, rTarget, rRoll)
+	local msgShort = { font = "msgfont" };
+	local msgLong = { font = "msgfont" };
 	
-	if sAttackType == "grapple" then
-		msgShort.text = "Combat Man. ->";
-		msgLong.text = "Combat Man. [" .. nTotal .. "] ->";
+	if rRoll.sType == "grapple" then
+		msgShort.text = "Combat Man.";
+		msgLong.text = "Combat Man.";
 	else
-		msgShort.text = "Attack ->";
-		msgLong.text = "Attack [" .. nTotal .. "] ->";
+		msgShort.text = "Attack";
+		msgLong.text = "Attack";
 	end
+	if rRoll.nOrder then
+		msgShort.text = string.format("%s #%d", msgShort.text, rRoll.nOrder);
+		msgLong.text = string.format("%s #%d", msgLong.text, rRoll.nOrder);
+	end
+	if (rRoll.sRange or "") ~= "" then
+		msgShort.text = string.format("%s (%s)", msgShort.text, rRoll.sRange);
+		msgLong.text = string.format("%s (%s)", msgLong.text, rRoll.sRange);
+	end
+	if (rRoll.sLabel or "") ~= "" then
+		msgShort.text = string.format("%s (%s)", msgShort.text, rRoll.sLabel or "");
+		msgLong.text = string.format("%s (%s)", msgLong.text, rRoll.sLabel or "");
+	end
+	msgLong.text = string.format("%s [%d]", msgLong.text, rRoll.nTotal or 0);
+
+	-- Targeting information
+	msgShort.text = string.format("%s ->", msgShort.text);
+	msgLong.text = string.format("%s ->", msgLong.text);
 	if rTarget then
-		local sName = ActorManager.getDisplayName(rTarget);
-		msgShort.text = msgShort.text .. " [at " .. sName .. "]";
-		msgLong.text = msgLong.text .. " [at " .. sName .. "]";
+		local sTargetName = ActorManager.getDisplayName(rTarget);
+		msgShort.text = string.format("%s [at %s]", msgShort.text, sTargetName);
+		msgLong.text = string.format("%s [at %s]", msgLong.text, sTargetName);
 	end
-	if sResults ~= "" then
-		msgLong.text = msgLong.text .. " " .. sResults;
-	end
-	
+
+	-- Extra roll information
 	msgShort.icon = "roll_attack";
-	if string.match(sResults, "%[CRITICAL HIT%]") then
-		msgLong.icon = "roll_attack_crit";
-	elseif string.match(sResults, "HIT%]") then
-		msgLong.icon = "roll_attack_hit";
-	elseif string.match(sResults, "MISS%]") then
-		msgLong.icon = "roll_attack_miss";
-	elseif string.match(sResults, "CRITICAL THREAT%]") then
-		msgLong.icon = "roll_attack_hit";
+	if (rRoll.sResults or "") ~= "" then
+		msgLong.text = string.format("%s %s", msgLong.text, rRoll.sResults);
+		if rRoll.sResults:match("%[CRITICAL HIT%]") then
+			msgLong.icon = "roll_attack_crit";
+		elseif rRoll.sResults:match("HIT%]") then
+			msgLong.icon = "roll_attack_hit";
+		elseif rRoll.sResults:match("MISS%]") then
+			msgLong.icon = "roll_attack_miss";
+		else
+			msgLong.icon = "roll_attack";
+		end
 	else
 		msgLong.icon = "roll_attack";
 	end
-		
-	ActionsManager.outputResult(bSecret, rSource, rTarget, msgLong, msgShort);
+
+	ActionsManager.outputResult(rRoll.bSecret, rSource, rTarget, msgLong, msgShort);
 end
 
 aCritState = {};
 
--- ===================================================================================================================
--- ===================================================================================================================
 function setCritState(rSource, rTarget)
 	local sSourceCT = ActorManager.getCreatureNodeName(rSource);
 	if sSourceCT == "" then
@@ -847,8 +816,6 @@ function setCritState(rSource, rTarget)
 	table.insert(aCritState[sSourceCT], sTargetCT);
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function clearCritState(rSource, rTarget)
 	if rTarget then
 		ActionAttack.isCrit(rSource, rTarget);
@@ -861,8 +828,6 @@ function clearCritState(rSource, rTarget)
 	end
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function isCrit(rSource, rTarget)
 	local sSourceCT = ActorManager.getCreatureNodeName(rSource);
 	if sSourceCT == "" then

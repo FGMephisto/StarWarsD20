@@ -107,9 +107,10 @@ creaturesize = {
 creaturedefaulttype = "humanoid";
 creaturehalftype = "half-";
 creaturehalftypesubrace = "human";
+-- NOTE: Multi-word types must come before single word types
 creaturetype = {
 	-- "magical beast",
-	-- "monstrous humanoid",
+	"monstrous humanoid",
 	-- "aberration",
 	"animal",
 	-- "construct",
@@ -117,20 +118,21 @@ creaturetype = {
 	-- "elemental",
 	-- "fey",
 	-- "giant",
-	-- "monstrous humanoid",
-	-- "ooze",
+	"humanoid",
+	"ooze",
 	-- "outsider",
-	-- "plant",
+	"plant",
 	-- "undead",
-	-- "vermin",
+	"vermin",
 };
+-- NOTE: Multi-word types must come before single word types
 creaturesubtype = {
 	-- "living construct", -- Monster subtypes
-	"air",
+	-- "air",
 	-- "angel",
-	-- "aquatic",
+	"aquatic",
 	-- "archon",
-	-- "augmented",
+	"augmented",
 	-- "chaotic",
 	-- "cold",
 	-- "demon",
@@ -144,8 +146,8 @@ creaturesubtype = {
 	-- "lawful",
 	-- "native",
 	-- "psionic",
-	-- "shapechanger",
-	-- "swarm",
+	"shapechanger",
+	"swarm",
 	-- "water",
 	"aquatic", -- Humanoid subtypes
 	-- "dwarf",
@@ -176,31 +178,31 @@ conditions = {
 	"deafened", 
 	"entangled", 
 	"exhausted",
-	-- "fascinated",
+	"fascinated",
 	"fatigued",
 	"flat-footed",
 	"frightened", 
 	"grappled", 
 	"helpless",
-	-- "incorporeal", 
-	-- "invisible", 
+	"incorporeal", 
+	"invisible", 
 	"kneeling",
 	"nauseated",
 	"panicked", 
 	"paralyzed",
-	-- "petrified",
+	"petrified",
 	"pinned", 
 	"prone", 
-	-- "rebuked",
+	"rebuked",
 	"running",
 	"shaken", 
 	"sickened", 
 	"sitting",
 	"slowed", 
-	-- "squeezing", 
+	"squeezing", 
 	"stable", 
 	"stunned",
-	-- "turned",
+	"turned",
 	"unconscious"
 };
 
@@ -238,7 +240,7 @@ condcomps = {
 	["deafened"] = "cond_deafened",
 	["entangled"] = "cond_restrained",
 	["exhausted"] = "cond_weakened",
-	-- ["fascinated"] = "cond_charmed",
+	["fascinated"] = "cond_charmed",
 	["fatigued"] = "cond_weakened",
 	["flat-footed"] = "cond_surprised",
 	["flatfooted"] = "cond_surprised",
@@ -250,7 +252,7 @@ condcomps = {
 	["nauseated"] = "cond_sickened",
 	["panicked"] = "cond_frightened",
 	["paralyzed"] = "cond_paralyzed",
-	-- ["petrified"] = "cond_paralyzed",
+	["petrified"] = "cond_paralyzed",
 	["pinned"] = "cond_pinned",
 	["prone"] = "cond_prone",
 	["rebuked"] = "cond_turned",
@@ -258,7 +260,7 @@ condcomps = {
 	["sickened"] = "cond_sickened",
 	["slowed"] = "cond_slowed",
 	["stunned"] = "cond_stunned",
-	-- ["turned"] = "cond_turned",
+	["turned"] = "cond_turned",
 	["unconscious"] = "cond_unconscious",
 	-- Similar to conditions
 	["ca"] = "cond_advantage",
@@ -321,6 +323,9 @@ energytypes = {
 	"fire",
 	"ion",
 	"sonic",
+	"force",  		-- OTHER SPELL DAMAGE TYPES
+	"positive",
+	"negative"
 };
 
 immunetypes = {
@@ -331,15 +336,17 @@ immunetypes = {
 	"fire",
 	"ion",
 	"sonic",
+	"nonlethal",	-- SPECIAL DAMAGE TYPES
 	"critical",
 	"poison",		-- OTHER IMMUNITY TYPES
-	-- "sleep",
-	-- "paralysis",
-	-- "petrification",
-	-- "charm",
-	-- "fear",
-	-- "disease",
-	-- "mind-affecting",
+	"sleep",
+	"paralysis",
+	"petrification",
+	"charm",
+	"sleep",
+	"fear",
+	"disease",
+	"mind-affecting",
 };
 
 dmgtypes = {
@@ -365,10 +372,10 @@ dmgtypes = {
 	-- "evil",
 	-- "good",
 	-- "lawful",
-	-- "nonlethal",	-- SPECIAL DAMAGE TYPES
+	"nonlethal",	-- SPECIAL DAMAGE TYPES
 	-- "spell",
 	"critical",
-	-- "precision",
+	"precision",
 
 };
 
@@ -376,18 +383,20 @@ basicdmgtypes = {
 	"acid",  		-- ENERGY DAMAGE TYPES
 	"cold",
 	"electricity",
+	"energy",
 	"fire",
 	"ion",
 	"sonic",
+	"force",  		-- OTHER SPELL DAMAGE TYPES
+	"positive",
+	"negative",
 	"bludgeoning", 	-- WEAPON PROPERTY DAMAGE TYPES
-	"energy",
-	"ion",
 	"piercing",
 	"slashing",
 };
 
 specialdmgtypes = {
-	-- "nonlethal",
+	"nonlethal",
 	-- "spell",
 	"critical",
 	"precision",
