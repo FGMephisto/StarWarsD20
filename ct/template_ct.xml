@@ -112,13 +112,9 @@
 			</script>
 		</number_ct_static>
 	</template>
-	
-	<!-- =================================================================================================================== -->
-	<!-- Adjusted -->
-	<!-- =================================================================================================================== -->
 	<template name="number_clientct_hptemp">
 		<number_ct_static name="hptemp">
-			<anchored to="wounds" width="30" height="20">
+			<anchored to="nonlethal" width="30" height="20">
 				<top />
 				<right anchor="left" offset="-10" />
 			</anchored>

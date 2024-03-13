@@ -1,6 +1,7 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
+-- File adjusted for Star Wars 3.5E
 --
 
 function getItemIsIdentified(vRecord, vDefault)
@@ -277,6 +278,9 @@ aListViews = {
 	},
 };
 
+-- ===================================================================================================================
+-- Adjusted
+-- ===================================================================================================================
 function onInit()
 	LibraryData.setCustomFilterHandler("item_isidentified", getItemIsIdentified);
 	LibraryData.setCustomGroupOutputHandler("npc_cr", getCRGroupedList);
@@ -285,4 +289,5 @@ function onInit()
 	LibraryData.overrideRecordTypes(aRecordOverrides);
 	LibraryData.setRecordViews(aListViews);
 	LibraryData.setRecordTypeInfo("vehicle", nil);
+	LibraryData.setRecordTypeInfo("spells", nil);
 end

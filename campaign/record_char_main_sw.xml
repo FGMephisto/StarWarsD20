@@ -11,7 +11,7 @@
 	<!-- Adjusted -->
 	<!-- =================================================================================================================== -->
 	<windowclass name="charsheet_main">
-		<script file="campaign/scripts/char_main_sw.lua" />
+		<script file="campaign/scripts/char_main.lua" />
 		<sheetdata>
 			<!-- Race -->
 			<frame_char name="raceframe">

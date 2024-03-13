@@ -4,20 +4,12 @@
 -- File adjusted for Star Wars 3.5E
 --
 
--- ===================================================================================================================
--- ===================================================================================================================
 function onInit()
 	self.update();
 end
-
--- ===================================================================================================================
--- ===================================================================================================================
 function VisDataCleared()
 	self.update();
 end
-
--- ===================================================================================================================
--- ===================================================================================================================
 function InvisDataAdded()
 	self.update();
 end
@@ -70,21 +62,22 @@ function update()
 	end
 	type_stats.update(bReadOnly, bID);
 
-	if updateControl("damage", bReadOnly, bID and bWeapon) then bSection4 = true; end
-	if updateControl("damagetype", bReadOnly, bID and bWeapon) then bSection4 = true; end
-	if updateControl("critical", bReadOnly, bID and bWeapon) then bSection4 = true; end
-	if updateControl("range", bReadOnly, bID and bWeapon) then bSection4 = true; end
-	if updateControl("stundc", bReadOnly, bID and bWeapon) then bSection4 = true; end
-	if updateControl("firingmodes", bReadOnly, bID and bWeapon) then bSection4 = true; end
-	if updateControl("size", bReadOnly, bID and bWeapon) then bSection4 = true; end
+	-- ToDo: Is this needed?
+	-- if updateControl("damage", bReadOnly, bID and bWeapon) then bSection4 = true; end
+	-- if updateControl("damagetype", bReadOnly, bID and bWeapon) then bSection4 = true; end
+	-- if updateControl("critical", bReadOnly, bID and bWeapon) then bSection4 = true; end
+	-- if updateControl("range", bReadOnly, bID and bWeapon) then bSection4 = true; end
+	-- if updateControl("stundc", bReadOnly, bID and bWeapon) then bSection4 = true; end
+	-- if updateControl("firingmodes", bReadOnly, bID and bWeapon) then bSection4 = true; end
+	-- if updateControl("size", bReadOnly, bID and bWeapon) then bSection4 = true; end
 
-	if updateControl("dr", bReadOnly, bID and bArmor) then bSection4 = true; end
-	if updateControl("maxstatbonus", bReadOnly, bID and bArmor) then bSection4 = true; end
-	if updateControl("checkpenalty", bReadOnly, bID and bArmor) then bSection4 = true; end
-	if updateControl("speed30", bReadOnly, bID and bArmor) then bSection4 = true; end
-	if updateControl("speed20", bReadOnly, bID and bArmor) then bSection4 = true; end
+	-- if updateControl("dr", bReadOnly, bID and bArmor) then bSection4 = true; end
+	-- if updateControl("maxstatbonus", bReadOnly, bID and bArmor) then bSection4 = true; end
+	-- if updateControl("checkpenalty", bReadOnly, bID and bArmor) then bSection4 = true; end
+	-- if updateControl("speed30", bReadOnly, bID and bArmor) then bSection4 = true; end
+	-- if updateControl("speed20", bReadOnly, bID and bArmor) then bSection4 = true; end
 
-	if updateControl("properties", bReadOnly, bID and (bWeapon or bArmor)) then bSection4 = true; end
+	-- if updateControl("properties", bReadOnly, bID and (bWeapon or bArmor)) then bSection4 = true; end
 
 	local bSection5 = false;
 	-- if WindowManager.callSafeControlUpdate(self, "aura", bReadOnly, not bID) then bSection5 = true; end
@@ -98,7 +91,8 @@ function update()
 	divider.setVisible(bSection1 and bSection2);
 	divider2.setVisible((bSection1 or bSection2) and bSection3);
 	divider3.setVisible((bSection1 or bSection2 or bSection3) and bSection4);
-	divider4.setVisible((bSection1 or bSection2 or bSection3 or bSection4) and bSection6);
+	divider4.setVisible((bSection1 or bSection2 or bSection3 or bSection4) and bSection5);
+	divider5.setVisible((bSection1 or bSection2 or bSection3 or bSection4 or bSection5) and bSection6);
 
 	if Session.IsHost or bID then 
 		if ItemManager.isPack(nodeRecord) then
@@ -141,19 +135,4 @@ function onClose()
 	end
 	
 	-- ToDo Clean up Vehicles fields
-end
-
--- ===================================================================================================================
--- Obsolete
--- ===================================================================================================================
-function updateControl(sControl, bReadOnly, bID)
-	if not self[sControl] then
-		return false;
-	end
-		
-	if not bID then
-		return self[sControl].update(bReadOnly, true);
-	end
-	
-	return self[sControl].update(bReadOnly);
 end

@@ -973,30 +973,21 @@
 	<!-- =================================================================================================================== -->
 	<!-- Adjusted - Imported from 5E -->
 	<!-- =================================================================================================================== -->
-	<template name="label_charframetop">
-		<metalplate>
-			<frame name="metalplate" offset="10,2,10,2"/>
-			<!-- <font>subwindowsmalltitle</font> -->
-			<font>sheetlabel</font>
-			<center />
-			<nodrag />
-			<readonly />
-			<script file="campaign/scripts/char_labelframetop.lua" />
-		</metalplate>
-	</template>
-
-	<!-- =================================================================================================================== -->
-	<!-- Adjusted - Imported from 5E -->
-	<!-- =================================================================================================================== -->
 	<template name="list_abilities">
 		<list_text>
 			<child></child>
 			<child><backcolor>1A40301E</backcolor></child>
 			<allowcreate />
 			<allowdelete />
-			<sortby><control>name</control></sortby>
+			<sortby mergerule="replace"><control>name</control></sortby>
 			<noscroll />
 			<script>
+				function onListChanged()
+					if listheader and listheader[1] and not isVisible() then
+						window[listheader[1]].expand();
+					end
+				end
+
 				function addEntry(bFocus)
 					local w = createWindow();
 					if bFocus then

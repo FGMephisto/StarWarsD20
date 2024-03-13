@@ -4,8 +4,6 @@
 -- File adjusted for Star Wars 3.5E
 --
 
--- ===================================================================================================================
--- ===================================================================================================================
 function onInit()
 	onEncumbranceLimitChanged();
 	DB.addHandler(DB.getPath(getDatabaseNode(), "abilities.strength.score"), "onUpdate", onStrengthChanged);
@@ -14,8 +12,6 @@ function onInit()
 	DB.addHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", onEncumbranceLimitChanged);
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function onClose()
 	DB.removeHandler(DB.getPath(getDatabaseNode(), "abilities.strength.score"), "onUpdate", onStrengthChanged);
 	DB.removeHandler(DB.getPath(getDatabaseNode(), "size"), "onUpdate", onSizeChanged);
@@ -23,14 +19,10 @@ function onClose()
 	DB.removeHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", onEncumbranceLimitChanged);
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function onStrengthChanged()
 	onEncumbranceLimitChanged();
 end
 
--- ===================================================================================================================
--- ===================================================================================================================
 function onSizeChanged()
 	onEncumbranceLimitChanged();
 end
@@ -94,7 +86,7 @@ function onEncumbranceLimitChanged()
 		elseif (nSize == -4) then
 			nMult = .125;
 		end
-
+			
 		nLight = math.floor(((nLight * nMult) * 100) + 0.5) / 100;
 		nMedium = math.floor(((nMedium * nMult) * 100) + 0.5) / 100;
 		nHeavy = math.floor(((nHeavy * nMult) * 100) + 0.5) / 100;

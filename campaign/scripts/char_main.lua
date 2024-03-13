@@ -1,16 +1,12 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars 3.5E
 --
 
--- ===================================================================================================================
--- Adjusted
--- ===================================================================================================================
 function onInit()
 	onLevelChanged();
 	DB.addHandler(DB.getPath(getDatabaseNode(), "classes"), "onChildUpdate", onLevelChanged);
-	
+
 	onSystemChanged();
 end
 
@@ -22,9 +18,6 @@ function onLevelChanged()
 	CharManager.calcLevel(getDatabaseNode());
 end
 
--- ===================================================================================================================
--- Adjusted
--- ===================================================================================================================
 function onSystemChanged()
 	local bPFMode = DataCommon.isPFRPG();
 	
@@ -52,9 +45,6 @@ function onSystemChanged()
 	label_perception.setVisible(bPFMode);
 end
 
--- ===================================================================================================================
--- Adjusted
--- ===================================================================================================================
 function onHealthChanged()
 	local sColor = ActorManager35E.getPCSheetWoundColor(getDatabaseNode());
 	wounds.setColor(sColor);

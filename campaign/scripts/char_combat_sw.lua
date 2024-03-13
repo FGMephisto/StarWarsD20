@@ -27,8 +27,8 @@ function onInit()
 	meleestat.onValueChanged();
 	rangedstat.onValueChanged();
 	grapplestat.onValueChanged();
-	
-	-- onSystemChanged();
+
+	onSystemChanged();
 end
 
 -- ===================================================================================================================
@@ -56,10 +56,10 @@ function onSystemChanged()
 	-- cmdbasemod.setVisible(bPFMode);
 	
 	-- if bPFMode then
-		-- acframe.setStaticBounds(15,0,480,210);
+		-- acframe.setStaticBounds(0,0,480,210);
 		-- label_grapple.setValue(Interface.getString("cmb"));
 	-- else
-		-- acframe.setStaticBounds(15,0,480,140);
+		-- acframe.setStaticBounds(0,0,480,140);
 		-- label_grapple.setValue(Interface.getString("grapple"));
 	-- end
 end

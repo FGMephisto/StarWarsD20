@@ -9,14 +9,14 @@
 -- ===================================================================================================================
 function onInit()
 	registerMenuItem(Interface.getString("menu_addweapon"), "insert", 3);
-	-- registerMenuItem(Interface.getString("menu_addspellclass"), "insert", 5);
- 
+	registerMenuItem(Interface.getString("menu_addspellclass"), "insert", 5);
+	
 	self.updateAbility();
 
 	local node = getDatabaseNode();
 	DB.addHandler(DB.getPath(node, "abilities"), "onChildUpdate", updateAbility);
 	DB.addHandler(DB.getPath(node, "weaponlist"), "onChildUpdate", updateAbility);
-	-- DB.addHandler(DB.getPath(node, "spellset"), "onChildUpdate", updateAbility);
+	DB.addHandler(DB.getPath(node, "spellset"), "onChildUpdate", updateAbility);
 end
 
 -- ===================================================================================================================
@@ -26,7 +26,7 @@ function onClose()
 	local node = getDatabaseNode();
 	DB.removeHandler(DB.getPath(node, "abilities"), "onChildUpdate", updateAbility);
 	DB.removeHandler(DB.getPath(node, "weaponlist"), "onChildUpdate", updateAbility);
-	-- DB.removeHandler(DB.getPath(node, "spellset"), "onChildUpdate", updateAbility);
+	DB.removeHandler(DB.getPath(node, "spellset"), "onChildUpdate", updateAbility);
 end
 
 -- ===================================================================================================================
@@ -34,9 +34,9 @@ end
 -- ===================================================================================================================
 function onMenuSelection(selection)
 	if selection == 3 then
-		addWeapon();
-	-- elseif selection == 5 then
-		-- addSpellClass();
+		self.addWeapon();
+	elseif selection == 5 then
+		self.addSpellClass();
 	end
 end
 
@@ -71,24 +71,9 @@ function updateAbility()
 	for _,v in pairs(weaponlist.getWindows()) do
 		v.onDataChanged();
 	end
-	-- for _,v in pairs(spellclasslist.getWindows()) do
-		-- v.onStatUpdate();
-	-- end
+	for _,v in pairs(spellclasslist.getWindows()) do
+		v.onStatUpdate();
+	end
 
 	bUpdateLock = false;
 end
-
--- ===================================================================================================================
--- Adjusted - Obsolete
--- ===================================================================================================================
--- function update()
-	-- weaponlist.update();
-	-- spellclasslist.update();
--- end
-
--- ===================================================================================================================
--- Adjusted - Obsolete
--- ===================================================================================================================
--- function getEditMode()
-	-- return (parentcontrol.window.actions_iedit.getValue() == 1);
--- end

@@ -20,19 +20,19 @@
 
 	<windowclass name="ps_xp_battles" merge="join">
 		<sheetdata>
-			<label_list_content_number_right name="label_level" insertbefore="label_name">
-				<anchored width="30" />
-				<static textres="lvl" />
-				<tooltip textres="level" />
+			<label_list_content_number_right name="label_threat" insertbefore="label_name">
+				<anchored width="40" />
+				<static textres="threat" />
+				<tooltip textres="threat" />
 				<center />
 			</label_list_content_number_right>
 		</sheetdata>
 	</windowclass>
 	<windowclass name="ps_xp_battleentry" merge="join">
 		<sheetdata>
-			<number_listitem_right name="level" insertbefore="name">
-				<anchored width="30" />
-			</number_listitem_right>
+			<string_listitem_right name="threat" insertbefore="name">
+				<anchored width="40" />
+			</string_listitem_right>
 		</sheetdata>
 	</windowclass>
 

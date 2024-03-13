@@ -8,18 +8,24 @@
 -- Adjusted
 -- ===================================================================================================================
 function onDisplayChanged()
-	-- if not minisheet then
-		-- for _,v in pairs(actions.subwindow.spellclasslist.getWindows()) do
-			-- v.onDisplayChanged();
-		-- end
-	-- end
+	if not minisheet then
+		for _,v in pairs(actions.subwindow.spellclasslist.getWindows()) do
+			v.onDisplayChanged();
+		end
+	end
 end
 
 -- ===================================================================================================================
 -- Adjusted
 -- ===================================================================================================================
 function onModeChanged()
-	actions.subwindow.weaponlist.onModeChanged();
+	if minisheet then
+		weaponlist.onModeChanged();
+	else
+		actions.subwindow.weaponlist.onModeChanged();
+	end
+	
+	self.updateSpellCounters();
 end
 
 -- ===================================================================================================================
@@ -29,25 +35,25 @@ function onEditModeChanged()
 	local bEditMode = WindowManager.getEditMode(self, "actions_iedit");
 	
 	label_mode.setVisible(not bEditMode);
-	-- spellmode.setVisible(not bEditMode);
+	spellmode.setVisible(not bEditMode);
 	label_display.setVisible(not bEditMode);
-	-- spelldisplaymode.setVisible(not bEditMode);
-	-- if bEditMode then
-		-- DB.setValue(getDatabaseNode(), "spellmode", "string", "standard");
-	-- end
+	spelldisplaymode.setVisible(not bEditMode);
+	if bEditMode then
+		DB.setValue(getDatabaseNode(), "spellmode", "string", "standard");
+	end
 end
 
 -- ===================================================================================================================
 -- Adjusted
 -- ===================================================================================================================
 function updateSpellCounters()
-	-- if minisheet then
-		-- for _,v in pairs(spellclasslist.getWindows()) do
-			-- v.onSpellCounterUpdate();
-		-- end
-	-- else
-		-- for _,v in pairs(actions.subwindow.spellclasslist.getWindows()) do
-			-- v.onSpellCounterUpdate();
-		-- end
-	-- end
+	if minisheet then
+		for _,v in pairs(spellclasslist.getWindows()) do
+			v.onSpellCounterUpdate();
+		end
+	else
+		for _,v in pairs(actions.subwindow.spellclasslist.getWindows()) do
+			v.onSpellCounterUpdate();
+		end
+	end
 end

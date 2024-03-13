@@ -3,8 +3,8 @@
 -- attribution and copyright information.
 --
 
-local rsname = "3.5E";
-local rsmajorversion = 17;
+local rsname = "Star.Wars.D20";
+local rsmajorversion = 18;
 
 function onInit()
 	if Session.IsHost then
@@ -110,6 +110,9 @@ function updateCampaign()
 		end
 		if major < 17 then
 			convertChar17();
+		end
+		if major < 18 then
+			convertItem18();
 		end
 	end
 end
@@ -1006,5 +1009,23 @@ function convertOptions()
 	local sOptionINIT = DB.getValue(nodeOptions, "INIT", "");
 	if DB.getValue(nodeOptions, "INIT", "") == "all" then
 		DB.setValue(nodeOptions, "INIT", "string", "on");
+	end
+end
+
+function migrateItem18(nodeItem)
+	local nodeCritRng = DB.getChild(nodeItem, "critical");
+	local sType = DB.getValue(nodeItem, "type")
+
+	if nodeCritRng and sType == "Weapon" then
+		local nCritical = DB.getValue(nodeItem, "critical");
+		local sCritical = tostring(nCritical)
+		DB.deleteNode(nodeCritRng);
+		DB.setValue(nodeItem, "critical", "string", sCritical);
+	end
+end
+
+function convertItem18()
+	for _,nodeItem in ipairs(DB.getChildList("item")) do
+		migrateItem18(nodeItem);
 	end
 end

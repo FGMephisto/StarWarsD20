@@ -6,8 +6,8 @@
   File adjusted for Star Wars 3.5E
 -->
 
-<root version="3.0" release="3" logo="logo.png">
-	<announcement text="Star Wars D20 ruleset (v2023-02-21) for Fantasy Grounds.\nThe ruleset uses icons made by Lorc available on game-icons.net." font="emotefont" icon="rulesetlogo_CoreRPG" />
+<root version="3.0" release="18" logo="logo.png">
+	<announcement text="Star Wars D20 ruleset (v2024-03-12) for Fantasy Grounds.\nThe ruleset uses icons made by Lorc are available on game-icons.net." font="emotefont" icon="rulesetlogo_CoreRPG" />
 
 	<!-- Attributes -->
 	<description>
@@ -30,13 +30,14 @@
 	<includefile source="graphics/graphics_fonts.xml" />
 	<includefile source="graphics/graphics_frames_sw.xml" />
 	<includefile source="graphics/graphics_icons_sw.xml" />
+	<includefile source="graphics/graphics_sidebar_sw.xml" />
 	
 	<!-- Strings -->
 	<includefile source="strings/strings_sw.xml" />
 
 	<!-- Desktop -->
 	<script name="Desktop35E" file="scripts/data_desktop_sw.lua" />
-	<script name="LibraryData35E" file="scripts/data_library_35E.lua" />
+	<script name="LibraryData35E" file="scripts/data_library_sw.lua" />
 	<script name="Options35E" file="scripts/data_options_sw.lua" />
 	<includefile source="desktop/desktop_classes.xml" />
 
@@ -45,16 +46,16 @@
 
 	<!-- Reference -->
 	<includefile source="ref/ref_equipment_lists.xml" />
-	<!-- <includefile source="ref/ref_spells.xml" /> -->
+	<includefile source="ref/ref_spells.xml" />
 
 	<!-- Campaign Records -->
 	<includefile source="campaign/template_campaign.xml" />
 	<includefile source="campaign/template_char_sw.xml" />
-	<!-- <includefile source="campaign/template_spell.xml" /> -->
+	<includefile source="campaign/template_spell.xml" />
 
-	<!-- <includefile source="campaign/record_spell_entry.xml" /> -->
+	<includefile source="campaign/record_spell_entry.xml" />
 	<!-- <includefile source="campaign/record_spell_mini.xml" /> -->
-	<!-- <includefile source="campaign/record_spell_roll.xml" /> -->
+	<includefile source="campaign/record_spell_roll.xml" />
 
 	<includefile source="campaign/record_char_sw.xml" />
 	<includefile source="campaign/record_char_main_sw.xml" />
@@ -70,7 +71,7 @@
 	<!-- <includefile source="campaign/record_charmini_actions.xml" /> -->
 
 	<includefile source="campaign/record_battle.xml" />
-	<includefile source="campaign/record_item.xml" />
+	<includefile source="campaign/record_item_sw.xml" />
 	<includefile source="campaign/record_npc_sw.xml" />
 	<includefile source="campaign/record_quest.xml" />
 	
@@ -107,7 +108,7 @@
 	<script name="PowerManager35E" file="scripts/manager_power_35E.lua" />
 	<script name="SpellManager" file="scripts/manager_spell.lua" />
 	<script name="TokenManager2" file="scripts/manager_token2.lua" />
-	<script name="VersionManager2" file="scripts/manager_version2.lua" />
+	<script name="VersionManager2" file="scripts/manager_version2_sw.lua" />
 	
 	<script name="ActionAbility" file="scripts/manager_action_ability.lua" />
 	<script name="ActionAttack" file="scripts/manager_action_attack_sw.lua" />

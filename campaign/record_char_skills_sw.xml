@@ -18,12 +18,10 @@
 			<label name="spent_label">
 				<anchored to="skillpointframe" position="insidetopleft" offset="15,15" />
 				<static textres="char_label_skillpointsspent" />
-				<invisible />
 			</label>
 			<number_static name="spentskillpoints" source="skillpoints.spent">
 				<anchored to="spent_label" position="righthigh" offset="10,0" width="32" height="20" />
 				<nodrag />
-				<invisible />
 			</number_static>
 			<button_iedit name="skills_iedit">
 				<anchored to="skillpointframe" position="insidetopright" offset="25,15" />
@@ -249,7 +247,6 @@
 					<top offset="2" />
 					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
 				</anchored>
-				<invisible />
 				<script>
 					function update(statname)
 						setValue(DB.getValue(window.getDatabaseNode(), "...abilities." .. statname .. ".bonus", 0));

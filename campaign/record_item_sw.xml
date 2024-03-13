@@ -7,13 +7,27 @@
 -->
 
 <root>
+	<!-- =================================================================================================================== -->
+	<!-- Adjusted -->
+	<!-- =================================================================================================================== -->
 	<windowclass name="item" merge="join">
-		<script file="campaign/scripts/item_drop.lua" />
+		<script file="campaign/scripts/item_drop_sw.lua" />
+		<sheetdata>
+			<sub_content_framed_groupbox_top name="header">
+				<class>item_header</class>
+			</sub_content_framed_groupbox_top>
+			<sub_content_framed_groupbox name="content">
+				<class>item_main</class>
+			</sub_content_framed_groupbox>
+		</sheetdata>
 	</windowclass>
 	<windowclass name="referencearmor" copy="item" />
 	<windowclass name="referenceequipment" copy="item" />
 	<windowclass name="referenceweapon" copy="item" />
 
+	<!-- =================================================================================================================== -->
+	<!-- Adjusted -->
+	<!-- =================================================================================================================== -->
 	<windowclass name="item_main">
 		<margins control="0,0,0,2" />
 		<script file="campaign/scripts/item_main_sw.lua" />
@@ -100,7 +114,6 @@
 		<margins control="0,0,0,2" />
 		<script>
 			function update(bReadOnly)
-				dr.update(bReadOnly);
 				-- bonus.update(bReadOnly);
 				-- ac.update(bReadOnly);
 				maxstatbonus.update(bReadOnly);
@@ -109,6 +122,7 @@
 				speed30.update(bReadOnly);
 				speed20.update(bReadOnly);
 				properties.update(bReadOnly);
+				dr.update(bReadOnly);
 			end
 		</script>
 		<sheetdata>
@@ -186,10 +200,10 @@
 				damagetype.update(bReadOnly);
 				critical.update(bReadOnly);
 				range.update(bReadOnly);
+				properties.update(bReadOnly);
 				stundc.update(bReadOnly);
 				firingmodes.update(bReadOnly);
 				size.update(bReadOnly);
-				properties.update(bReadOnly);
 			end
 		</script>
 		<sheetdata>

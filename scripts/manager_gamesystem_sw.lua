@@ -48,10 +48,9 @@ targetactions = {
 -- Adjusted
 -- ===================================================================================================================
 currencies = { 
-	{ name = "Hard Currency", weight = 0.0, value = 1 },
-	{ name = "Credit Chip", weight = 0.0, value = 1 },
+	{ name = "Credits", weight = 0.0, value = 1 },
 };
-currencyDefault = "Credit Chip";
+currencyDefault = "Credits";
 
 tokenLightDefaults = {
 	["candle"] = {
@@ -114,17 +113,17 @@ tokenLightDefaults = {
 -- Adjusted
 -- ===================================================================================================================
 function onInit()
+	CharEncumbranceManager.addStandardCalc("Star Wars D20");
+	CombatListManager.registerStandardInitSupport();
+	ImageDeathMarkerManager.registerStandardDeathMarkersDnD();
+	SoundsetManager.registerStandardSettingsCastAndAttack();
+	SoundsetManager.setRecordTypeDropCallback("spell", SoundsetManager.handleStandardSpellDrop);
+
 	if not DataCommon.isPFRPG() then
 		VisionManager.addVisionField("specialqualities");
 	end
 	VisionManager.addLightDefaults(tokenLightDefaults);
 
-	ImageDeathMarkerManager.registerStandardDeathMarkersDnD();
-
-	-- Add ruleset to supported rulesets for Encumberance calculation
-	CharEncumbranceManager.addStandardCalc("Star Wars D20")
-	
-	
 	-- Languages
 	languages = {
 		[Interface.getString("language_value_Basic")] = "Basic",

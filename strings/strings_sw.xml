@@ -354,10 +354,11 @@
 	<string name="char_message_missingskilldesc">Unable to find skill record with the correct name.</string>
 
 	<!-- Character - Abilities -->
-	<string name="char_label_feats">Feats</string>
-	<string name="char_label_sa">Class Abilities</string>
-	<string name="char_label_proficiencies">Proficiency</string>
-	<string name="char_label_traits">Racial Traits</string>
+	<string name="char_abilities_label_feats">FEATS</string>
+	<string name="char_abilities_label_sa">CLASS ABILITIES</string>
+	<string name="char_abilities_label_proficiencies">PROFICIENCY</string>
+	<string name="char_abilities_label_traits">RACIAL TRAITS</string>
+	<string name="char_abilities_label_languages">LANGUAGES</string>
 	
 	<!-- Character - Inventory -->
 	<string name="char_tooltip_itemshowmini">Show on mini sheet</string>
@@ -710,7 +711,7 @@
 	<!-- Added -->
 	<!-- =================================================================================================================== -->
 	<!-- Common -->
-	<string name="armorclassff">Flat-Footed DEF</string>
+	<string name="armorclassff">Flat-F. DEF</string>
 	<string name="armorclasstouch">Touch DEF</string>
 	<string name="spellresistance">Force Resistance</string>
 	<string name="ac">DEF</string>
@@ -810,8 +811,10 @@
 	
 	<!-- Character - Main -->
 	<string name="char_label_hptemp">VP</string>
+	<string name="char_label_wounds">DMG</string>
 	<string name="char_tooltip_hptemp">Vitality Points</string>
 	<string name="char_tooltip_hp">Wound Points</string>
+	<string name="char_tooltip_wounds">Damage</string>
 	<string name="char_title_selectspellclassincrease">Select Force Class Increase</string>
 	<string name="char_message_selectspellclassincrease">Choose %d Force class(es) from the list below to increase.</string>
 	
