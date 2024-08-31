@@ -7,9 +7,7 @@
 -->
 
 <root>
-	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
-	<!-- =================================================================================================================== -->
 	<windowclass name="charsheet_inventory" merge="join">
 		<script file="campaign/scripts/char_inv_sw.lua" />
 		<sheetdata>
@@ -18,8 +16,8 @@
 					<top offset="5" />
 					<right anchor="left" relation="relative" offset="-5" />
 				</anchored>
-				<icon>char_quicklist</icon>
-				<tooltip textres="char_tooltip_itemshowmini" />
+				<!-- <icon>char_quicklist</icon> -->
+				<!-- <tooltip textres="char_tooltip_itemshowmini" /> -->
 				<invisible />
 			</genericcontrol>
 			
@@ -151,6 +149,7 @@
 					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
 				</anchored>
 				<default>1</default>
+				<invisible />
 			</button_checkbox>
 		</sheetdata>
 	</windowclass>

@@ -98,7 +98,7 @@ end
 function getRoll(rActor, sSave)
 	local rRoll = {};
 	rRoll.sType = "save";
-	rRoll.aDice = { "d20" };
+	rRoll.aDice = DiceRollManager.getActorDice({ "d20" }, rActor);
 	rRoll.nMod = 0;
 	
 	-- Look up actor specific information

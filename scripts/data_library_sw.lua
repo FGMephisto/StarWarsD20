@@ -278,9 +278,7 @@ aListViews = {
 	},
 };
 
--- ===================================================================================================================
 -- Adjusted
--- ===================================================================================================================
 function onInit()
 	LibraryData.setCustomFilterHandler("item_isidentified", getItemIsIdentified);
 	LibraryData.setCustomGroupOutputHandler("npc_cr", getCRGroupedList);

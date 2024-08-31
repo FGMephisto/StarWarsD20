@@ -7,49 +7,27 @@
 -->
 
 <root>
-	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
-	<!-- =================================================================================================================== -->
 	<windowclass name="item" merge="join">
 		<script file="campaign/scripts/item_drop_sw.lua" />
-		<sheetdata>
-			<sub_content_framed_groupbox_top name="header">
-				<class>item_header</class>
-			</sub_content_framed_groupbox_top>
-			<sub_content_framed_groupbox name="content">
-				<class>item_main</class>
-			</sub_content_framed_groupbox>
-		</sheetdata>
 	</windowclass>
 	<windowclass name="referencearmor" copy="item" />
 	<windowclass name="referenceequipment" copy="item" />
 	<windowclass name="referenceweapon" copy="item" />
 
-	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
-	<!-- =================================================================================================================== -->
 	<windowclass name="item_main">
 		<margins control="0,0,0,2" />
 		<script file="campaign/scripts/item_main_sw.lua" />
 		<sheetdata>
-			<anchor_column name="columnanchor" />
+			<anchor_content_top />
+
+			<sub_record_nonid_notes name="sub_nonid" />
 			
-			<label_column name="nonid_name_label">
-				<static textres="item_label_unidentified" />
-			</label_column>
-			<string_columnh name="nonid_name" />
-			
-			<label_column name="nonidentified_label">
-				<static textres="item_label_unidentifiednotes" />
-			</label_column>
-			<string_columnh name="nonidentified" />
-			
-			<line_column name="divider" />
-			
-			<label_column name="type_label">
+			<label_content_column name="type_label">
 				<static textres="item_label_type" />
-			</label_column>
-			<string_columnh name="type">
+			</label_content_column>
+			<string_content_columnh name="type">
 				<nohide />
 				<delaykeyupdate />
 				<script>
@@ -57,59 +35,57 @@
 						window.update();
 					end
 				</script>
-			</string_columnh>
+			</string_content_columnh>
 
-			<label_column name="subtype_label">
+			<label_content_column name="subtype_label">
 				<static textres="item_label_subtype" />
-			</label_column>
-			<string_columnh name="subtype">
+			</label_content_column>
+			<string_content_columnh name="subtype">
 				<delaykeyupdate />
-			</string_columnh>
+			</string_content_columnh>
 
-			<line_column name="divider2" />
+			<line_content_top name="divider2" />
 
-			<label_column name="cost_label">
+			<label_content_column name="cost_label">
 				<static textres="item_label_cost" />
-			</label_column>
-			<string_columnh name="cost" />
+			</label_content_column>
+			<string_content_columnh name="cost" />
 
-			<label_column name="weight_label">
+			<label_content_column name="weight_label">
 				<static textres="item_label_weight" />
-			</label_column>
-			<number_columnh name="weight" />
+			</label_content_column>
+			<number_content_columnh name="weight" />
 
-			<line_column name="divider3" />
+			<line_content_top name="divider3" />
 
-			<sub_column name="type_stats" />
+			<sub_content_column name="type_stats" />
 
-			<line_column name="divider4" />
+			<line_content_top name="divider4" />
 
-			<!-- <label_column name="aura_label"> -->
+			<!-- <label_content_column name="aura_label"> -->
 				<!-- <static textres="item_label_aura" /> -->
-			<!-- </label_column> -->
+			<!-- </label_content_column> -->
 			<!-- <string_columnh name="aura" /> -->
 
-			<!-- <label_column name="cl_label"> -->
+			<!-- <label_content_column name="cl_label"> -->
 				<!-- <static textres="casterlevel" /> -->
-			<!-- </label_column> -->
-			<!-- <number_columnh name="cl" /> -->
+			<!-- </label_content_column> -->
+			<!-- <number_content_columnh name="cl" /> -->
 
-			<label_column name="prerequisites_label">
+			<label_content_column name="prerequisites_label">
 				<static textres="item_label_prereq" />
-			</label_column>
-			<string_columnh name="prerequisites" />
+			</label_content_column>
+			<string_content_columnh name="prerequisites" />
 			
-			<line_column name="divider5" />
+			<line_content_top name="divider5" />
 
-			<ft_columnh name="description" />
+			<ft_content_columnh_full name="description" />
 
-			<sub_column name="type_lists" />
+			<sub_item_pack name="sub_pack" />
 		</sheetdata>
 	</windowclass>
 
-	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
-	<!-- =================================================================================================================== -->
 	<windowclass name="item_main_armor">
 		<margins control="0,0,0,2" />
 		<script>
@@ -126,69 +102,69 @@
 			end
 		</script>
 		<sheetdata>
-			<anchor_column name="columnanchor" />
+			<anchor_content_top />
 
-			<label_column name="dr_label">
+			<label_content_column name="dr_label">
 				<static textres="item_label_dr" />
-			</label_column>
-			<number_columnh name="dr">
+			</label_content_column>
+			<number_content_columnh name="dr">
 				<delaykeyupdate />
 				<displaysign />
-			</number_columnh>
+			</number_content_columnh>
 			
-			<label_column name="bonus_label">
+			<label_content_column name="bonus_label">
 				<static textres="item_label_bonus" />
-			</label_column>
-			<number_columnh name="bonus">
+			</label_content_column>
+			<number_content_columnh name="bonus">
 				<delaykeyupdate />
 				<displaysign />
-			</number_columnh>
+			</number_content_columnh>
 
-			<label_column name="ac_label">
+			<label_content_column name="ac_label">
 				<static textres="item_label_ac" />
-			</label_column>
-			<number_columnh name="ac">
+			</label_content_column>
+			<number_content_columnh name="ac">
 				<delaykeyupdate />
 				<displaysign />
-			</number_columnh>
+			</number_content_columnh>
 			
-			<label_column name="maxstatbonus_label">
+			<label_content_column name="maxstatbonus_label">
 				<static textres="item_label_maxstat" />
-			</label_column>
-			<number_columnh name="maxstatbonus">
+			</label_content_column>
+			<number_content_columnh name="maxstatbonus">
 				<delaykeyupdate />
 				<displaysign />
-			</number_columnh>
+			</number_content_columnh>
 			
-			<label_column name="checkpenalty_label">
+			<label_content_column name="checkpenalty_label">
 				<static textres="item_label_scp" />
-			</label_column>
-			<number_columnh name="checkpenalty">
+			</label_content_column>
+			<number_content_columnh name="checkpenalty">
 				<delaykeyupdate />
 				<displaysign />
-			</number_columnh>
+			</number_content_columnh>
 			
-			<!-- <label_column name="spellfailure_label"> -->
+			<!-- <label_content_column name="spellfailure_label"> -->
 				<!-- <static textres="item_label_spellfail" /> -->
-			<!-- </label_column> -->
+			<!-- </label_content_column> -->
 			<!-- <number_columnh name="spellfailure"> -->
 				<!-- <delaykeyupdate /> -->
 			<!-- </number_columnh> -->
 
-			<label_column name="speed30_label">
+			<label_content_column name="speed30_label">
 				<static textres="item_label_speed30" />
-			</label_column>
-			<number_columnh name="speed30" />
+			</label_content_column>
+			<number_content_columnh name="speed30" />
 			
-			<label_column name="speed20_label">
+			<label_content_column name="speed20_label">
 				<static textres="item_label_speed20" />
-			</label_column>
-			<number_columnh name="speed20" />
+			</label_content_column>
+			<number_content_columnh name="speed20" />
 
-			<label_column name="properties_label">
+			<label_content_column name="properties_label">
 				<static textres="item_label_properties" />
-			</label_column>
-			<string_columnh name="properties" />
+			</label_content_column>
+			<string_content_columnh name="properties" />
 		</sheetdata>
 	</windowclass>
 	<windowclass name="item_main_weapon">
@@ -207,54 +183,54 @@
 			end
 		</script>
 		<sheetdata>
-			<anchor_column name="columnanchor" />
+			<anchor_content_top />
 
-			<label_column name="bonus_label">
+			<label_content_column name="bonus_label">
 				<static textres="item_label_bonus" />
-			</label_column>
-			<number_columnh name="bonus">
+			</label_content_column>
+			<number_content_columnh name="bonus">
 				<delaykeyupdate />
-			</number_columnh>
+			</number_content_columnh>
 
-			<label_column name="damage_label">
+			<label_content_column name="damage_label">
 				<static textres="item_label_damage" />
-			</label_column>
-			<string_columnh name="damage" />
+			</label_content_column>
+			<string_content_columnh name="damage" />
 			
-			<label_column name="damagetype_label">
+			<label_content_column name="damagetype_label">
 				<static textres="item_label_dmgtype" />
-			</label_column>
-			<string_columnh name="damagetype" />
+			</label_content_column>
+			<string_content_columnh name="damagetype" />
 			
-			<label_column name="critical_label">
+			<label_content_column name="critical_label">
 				<static textres="item_label_critical" />
-			</label_column>
-			<string_columnh name="critical" />
+			</label_content_column>
+			<string_content_columnh name="critical" />
 			
-			<label_column name="range_label">
+			<label_content_column name="range_label">
 				<static textres="item_label_range" />
-			</label_column>
-			<number_columnh name="range" />
+			</label_content_column>
+			<number_content_columnh name="range" />
 
-			<label_column name="stundc_label">
+			<label_content_column name="stundc_label">
 				<static textres="item_label_stundc" />
-			</label_column>
-			<number_columnh name="stundc" />
+			</label_content_column>
+			<number_content_columnh name="stundc" />
 
-			<label_column name="firingmodes_label">
+			<label_content_column name="firingmodes_label">
 				<static textres="item_label_firingmodes" />
-			</label_column>
-			<string_columnh name="firingmodes" />
+			</label_content_column>
+			<string_content_columnh name="firingmodes" />
 
-			<label_column name="size_label">
+			<label_content_column name="size_label">
 				<static textres="item_label_size" />
-			</label_column>
-			<string_columnh name="size" />
+			</label_content_column>
+			<string_content_columnh name="size" />
 
-			<label_column name="properties_label">
+			<label_content_column name="properties_label">
 				<static textres="item_label_properties" />
-			</label_column>
-			<string_columnh name="properties" />
+			</label_content_column>
+			<string_content_columnh name="properties" />
 		</sheetdata>
 	</windowclass>
 </root>

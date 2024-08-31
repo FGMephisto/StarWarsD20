@@ -15,11 +15,9 @@ function onInit()
 	end
 end
 
--- ===================================================================================================================
 -- Shown in Modifiers window
 -- NOTE: Set strings for "modifier_category_*" and "modifier_label_*"
 -- Adjusted
--- ===================================================================================================================
 -- ToDo: ATT_MULTISHOT / AUTO should come directly from the attack, not as a modifier
 _tModifierWindowPresets =
 {
@@ -28,7 +26,9 @@ _tModifierWindowPresets =
 		tPresets = 
 		{
 			"ATT_TCH",
+			-- "DEF_PCOVER",
 			"ATT_FF",
+			-- "DEF_COVER",
 			"ATT_OPP",
 			"ATT_MULTIFIRE",
 			"ATT_MULTISHOT",

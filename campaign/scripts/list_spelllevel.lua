@@ -23,10 +23,6 @@ function onFilter(w)
 	return w.getFilter();
 end
 
-function addEntry()
-	return createWindow();
-end
-
 function onDrop(x, y, draginfo)
 	if isReadOnly() then
 		return false;

@@ -106,25 +106,11 @@
 				<left />
 				<right />
 			</anchored>
+			<allowcreate />
 			<allowdelete />
 			<child></child>
 			<child><backcolor>1A40301E</backcolor></child>
 			<noscroll />
-			<script>
-				function onInit()
-					registerMenuItem(Interface.getString("list_menu_createitem"), "insert", 5);
-				end
-				
-				function onMenuSelection(selection)
-					if selection == 5 then
-						self.addEntry(true);
-					end
-				end
-				
-				function addEntry(bFocus)
-					return createWindow();
-				end
-			</script>
 		</windowlist>
 	</template>
 </root>

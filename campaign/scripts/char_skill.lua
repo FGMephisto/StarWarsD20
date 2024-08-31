@@ -26,10 +26,10 @@ function onEditModeChanged()
 	
 	if bAllowDelete then
 		idelete_spacer.setVisible(false);
-		idelete.setVisibility(bEditMode);
+		idelete.setVisible(bEditMode);
 	else
 		idelete_spacer.setVisible(bEditMode);
-		idelete.setVisibility(false);
+		idelete.setVisible(false);
 	end
 end
 

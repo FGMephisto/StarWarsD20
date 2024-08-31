@@ -102,6 +102,7 @@
 	<script name="ActorManager35E" file="scripts/manager_actor_35E.lua" />
 	<script name="CharManager" file="scripts/manager_char.lua" />
 	<script name="CombatManager2" file="scripts/manager_combat2.lua" />
+	<script name="DiceManager35E" file="scripts/manager_dice_sw.lua" />
 	<script name="EffectManager35E" file="scripts/manager_effect_35E.lua" />
 	<script name="ItemManager2" file="scripts/manager_item2.lua" />
 	<script name="PartyManager2" file="scripts/manager_ps2_sw.lua" />

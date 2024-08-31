@@ -51,8 +51,8 @@
 			<cycler_column_classstat name="classtype">
 				<anchored width="80" />
 				<parameters>
-					<labelsres>class_label_classtype_base|class_label_classtype_prestige|class_label_classtype_npc</labelsres>
-					<values>base|prestige|npc</values>
+					<labelsres>class_label_classtype_base|class_label_classtype_prestige|class_label_classtype_npc|class_label_classtype_archetype</labelsres>
+					<values>base|prestige|npc|archetype</values>
 				</parameters>
 			</cycler_column_classstat>
 			

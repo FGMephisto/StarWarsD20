@@ -5,9 +5,9 @@
 --
 
 function onInit()
-	WindowTabManager.registerTab("partysheet_host", { sName = "skills", sIcon = "tab_skills", sClass = "ps_skills", sInsertBefore = "inventory" });
-	WindowTabManager.registerTab("partysheet_host", { sName = "xp", sIcon = "tab_xp", sClass = "ps_xp" });
-	WindowTabManager.registerTab("partysheet_client", { sName = "skills", sIcon = "tab_skills", sClass = "ps_skills", sOption = "PSMN", sInsertBefore = "inventory" });
+	WindowTabManager.registerTab("partysheet_host", { sName = "skills", sTabRes = "tab_skills", sClass = "ps_skills", sInsertBefore = "inventory" });
+	WindowTabManager.registerTab("partysheet_host", { sName = "xp", sTabRes = "tab_xp", sClass = "ps_xp" });
+	WindowTabManager.registerTab("partysheet_client", { sName = "skills", sTabRes = "tab_skills", sClass = "ps_skills", sOption = "PSMN", sInsertBefore = "inventory" });
 
 	if Session.IsHost then
 		DB.addHandler("charsheet.*.classes", "onChildUpdate", linkPCClasses);
@@ -53,9 +53,7 @@ function linkPCSkill(nodeSkill, nodePS, sPSField)
 	PartyManager.linkRecordField(nodeSkill, nodePS, "total", "number", sPSField);
 end
 
--- ===================================================================================================================
 -- Adjusted
--- ===================================================================================================================
 function linkPCSkills(nodeSkills)
 	if not nodeSkills then
 		return;

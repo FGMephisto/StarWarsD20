@@ -48,11 +48,16 @@
 			<class>record_content_text</class>
 			<embed />
 		</tab>
+		<tab merge="add">
+			<name>pictures</name>
+			<resource>tab_pictures</resource>
+			<class>record_content_pictures</class>
+			<embed />
+		</tab>
 		<script>
 			function onInit()
 				super.onInit();
 				self.TypeChanged();
-				self.onIDChanged();
 			end
 			function TypeChanged()
 				local sType = DB.getValue(getDatabaseNode(), "npctype", "");
@@ -69,10 +74,11 @@
 				npctype.setReadOnly(WindowManager.getReadOnlyState(getDatabaseNode()));
 			end
 			function onIDChanged()
-				super.onLockChanged();
+				super.onIDChanged();
 				if not Session.IsHost then
 					local bID = LibraryData.getIDState("npc", getDatabaseNode(), true);
-					tabs.setVisibility(bID);
+					tabs.setVisible(bID);
+					area_controls.setVisible(bID);
 					npctype.setVisible(bID);
 				end
 			end
@@ -89,21 +95,12 @@
 		</sheetdata>
 	</windowclass>
 
-	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
-	<!-- =================================================================================================================== -->
 	<windowclass name="npc_combat_creature">
 		<margins control="0,0,0,2" />
 		<script file="campaign/scripts/npc_main.lua" />
 		<sheetdata>
 			<anchor_column name="columnanchor" />
-			
-			<label_column name="nonid_name_label">
-				<static textres="npc_label_unidentified" />
-			</label_column>
-			<string_columnh name="nonid_name" />
-
-			<line_column name="divider" />
 			
 			<label_column name="type_label">
 				<static textres="npc_label_type" />
@@ -388,13 +385,6 @@
 		<sheetdata>
 			<anchor_column name="columnanchor" />
 			
-			<label_column name="nonid_name_label">
-				<static textres="npc_label_unidentified" />
-			</label_column>
-			<string_columnh name="nonid_name" />
-
-			<line_column name="divider" />
-			
 			<label_column name="type_label">
 				<static textres="npc_label_type" />
 			</label_column>
@@ -454,22 +444,13 @@
 		</sheetdata>
 	</windowclass>
 
-	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
-	<!-- To: Adjust for SW -->
-	<!-- =================================================================================================================== -->
+	<!-- ToDo: Adjust for SW -->
 	<windowclass name="npc_combat_vehicle">
 		<margins control="0,0,0,2" />
 		<script file="campaign/scripts/npc_main.lua" />
 		<sheetdata>
 			<anchor_column name="columnanchor" />
-			
-			<label_column name="nonid_name_label">
-				<static textres="npc_label_unidentified" />
-			</label_column>
-			<string_columnh name="nonid_name" />
-
-			<line_column name="divider" />
 			
 			<label_column name="type_label">
 				<static textres="npc_label_type" />

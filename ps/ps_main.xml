@@ -237,7 +237,7 @@
 
 	<windowclass name="ps_mainitem">
 		<margins control="0,0,0,10" />
-		<frame>partysheetentry</frame>
+		<frame>fieldlight</frame>
 		<script>
 			function onInit()
 				cmd.setVisible(DataCommon.isPFRPG());

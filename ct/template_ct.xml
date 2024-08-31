@@ -6,13 +6,10 @@
 -->
 
 <root>
-	<template name="button_ct_menu">
-		<buttoncontrol name="button_menu">
-			<bounds>120,-45,50,26</bounds>
-			<icon normal="button_menu" pressed="button_menu_down" />
-			<tooltip textres="ct_tooltip_menu" />
+	<template name="button_ct_controls_menu" merge="join">
+		<button_listitem_text_left_sm>
 			<script file="ct/scripts/ct_menu.lua" />
-		</buttoncontrol>
+		</button_listitem_text_left_sm>
 	</template>
 
 	<template name="number_ct_init">
@@ -118,8 +115,13 @@
 				<top />
 				<right anchor="left" offset="-10" />
 			</anchored>
-			<color>0000AA</color>
 			<script>
+				function onInit()
+					if super and super.onInit then
+						super.onInit();
+					end
+					setColor(ColorManager.getUIColor("health_shield"));
+				end
 				function onValueChanged()
 					window.onHealthChanged();
 				end

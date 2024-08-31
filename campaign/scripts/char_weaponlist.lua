@@ -22,14 +22,6 @@ function onModeChanged()
 	applyFilter();
 end
 
-function addEntry(bFocus)
-	local w = createWindow();
-	if bFocus and w then
-		w.name.setFocus();
-	end
-	return w;
-end
-
 function onDrop(x, y, draginfo)
 	return CharManager.onActionDrop(draginfo, window.getDatabaseNode());
 end

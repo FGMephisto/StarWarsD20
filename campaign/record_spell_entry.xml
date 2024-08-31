@@ -131,7 +131,7 @@
 					<left parent="castertype" anchor="right" offset="5" />
 					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
 				</anchored>
-				<font>reference-b</font>
+				<font>sheetlabel</font>
 				<empty textres="spellclass_emptyname" />
 				<tabtarget next="cl" />
 			</stringu>
@@ -145,7 +145,7 @@
 					<top parent="detailanchor" anchor="bottom" relation="relative" />
 					<left offset="5" />
 				</anchored>
-				<frame name="groupbox3" />
+				<frame name="groupbox" />
 			</genericcontrol>
 			
 			<label name="availablelevel_label">
@@ -231,7 +231,7 @@
 					<top parent="detailanchor" anchor="bottom" relation="relative" />
 					<left offset="5" />
 				</anchored>
-				<frame name="groupbox3" />
+				<frame name="groupbox" />
 			</genericcontrol>
 			
 			<label name="dc_label">
@@ -271,7 +271,7 @@
 					<top />
 					<left anchor="right" offset="-5" />
 				</anchored>
-				<frame name="groupbox3" />
+				<frame name="groupbox" />
 			</genericcontrol>
 			
 			<label name="ability_label">
@@ -302,7 +302,7 @@
 					<top parent="detailanchor" anchor="bottom" relation="relative" />
 					<left offset="5" />
 				</anchored>
-				<frame name="groupbox3" />
+				<frame name="groupbox" />
 			</genericcontrol>
 			
 			<label name="spmain_label">
@@ -327,7 +327,7 @@
 					<top />
 					<left anchor="right" offset="-5" />
 				</anchored>
-				<frame name="groupbox3" />
+				<frame name="groupbox" />
 			</genericcontrol>
 			
 			<label name="label_cc">
@@ -347,9 +347,9 @@
 					<top offset="6" />
 					<left offset="6" />
 					<right offset="-6" />
-					<bottom parent="detailanchor" relation="relative" anchor="bottom" offset="6" />
+					<bottom parent="detailanchor" relation="relative" anchor="bottom" />
 				</anchored>
-				<frame name="groupbox2" offset="6,6,6,6" />
+				<frame name="headersimple" offset="6,6,6,6" />
 				<disabled />
 			</genericcontrol>
 

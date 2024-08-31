@@ -354,11 +354,10 @@
 	<string name="char_message_missingskilldesc">Unable to find skill record with the correct name.</string>
 
 	<!-- Character - Abilities -->
-	<string name="char_abilities_label_feats">FEATS</string>
-	<string name="char_abilities_label_sa">CLASS ABILITIES</string>
-	<string name="char_abilities_label_proficiencies">PROFICIENCY</string>
-	<string name="char_abilities_label_traits">RACIAL TRAITS</string>
-	<string name="char_abilities_label_languages">LANGUAGES</string>
+	<string name="char_label_feats">Feats</string>
+	<string name="char_label_sa">Class Abilities</string>
+	<string name="char_label_proficiencies">Proficiency</string>
+	<string name="char_label_traits">Racial Traits</string>
 	
 	<!-- Character - Inventory -->
 	<string name="char_tooltip_itemshowmini">Show on mini sheet</string>
@@ -423,6 +422,7 @@
 	<string name="class_label_classtype_base">Base</string>
 	<string name="class_label_classtype_prestige">Prestige</string>
 	<string name="class_label_classtype_npc">NPC</string>
+	<string name="class_label_classtype_archetype">Archetype</string>
 	<string name="class_label_hitdie">Hit Die</string>
 	<string name="class_label_bab">Base Attack</string>
 	<string name="class_label_bab_fast">Fast</string>
@@ -827,6 +827,12 @@
 	<string name="char_tooltip_skilladdrwlanguage">Add Read/Write Language</string>
 
 	<!-- Character - Abilities -->
+	<string name="char_label_feats">FEATS</string>
+	<string name="char_label_sa">CLASS ABILITIES</string>
+	<string name="char_label_proficiencies">PROFICIENCY</string>
+	<string name="char_label_traits">RACIAL TRAITS</string>
+	<string name="char_label_languages">LANGUAGES</string>
+	
 	<!-- Character - Inventory -->
 	<string name="char_label_money">Credits</string>
 	
@@ -892,4 +898,16 @@
 	
 	<!-- Game System Specific Lighting/Vision Settings -->
 	<string name="lighting_sunrod">Glowrod</string>
+	
+	<!-- Custom Dice Rolls -->
+	<string name="drc_label_subtype_acid">Acid</string>
+	<string name="drc_label_subtype_cold">Cold</string>
+	<string name="drc_label_subtype_electricity">Electricity</string>
+	<string name="drc_label_subtype_energy">Energy</string>	
+	<string name="drc_label_subtype_fire">Fire</string>
+	<string name="drc_label_subtype_force">Force</string>
+	<string name="drc_label_subtype_ion">Ion</string>	
+	<string name="drc_label_subtype_sonic">Sonic</string>
+
+	<string name="drc_label_subtype_temp">Vitality</string>
 </root>

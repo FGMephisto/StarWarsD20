@@ -13,17 +13,6 @@
 		<topleft rect="0,0,40,44" />
 	</framedef>
 
-	<!-- Utility -->
-	<framedef name="groupbox2">
-		<bitmap file="graphics/frames/groupbox2.png" />
-		<offset>15,15,16,16</offset>
-	</framedef>
-
-	<framedef name="groupbox3">
-		<bitmap file="graphics/frames/groupbox3.png" />
-		<offset>18,18,17,17</offset>
-	</framedef>
-
 	<!-- Override CoreRPG ruleset graphics -->
 
 	<!-- Adjusted for Star Wars 3.5E -->

@@ -20,19 +20,19 @@
 
 	<windowclass name="ps_xp_battles" merge="join">
 		<sheetdata>
-			<label_list_content_number_right name="label_threat" insertbefore="label_name">
+			<label_list_content_number_right name="label_cr" insertbefore="label_name">
 				<anchored width="40" />
-				<static textres="threat" />
-				<tooltip textres="threat" />
+				<static textres="cr" />
+				<tooltip textres="cr" />
 				<center />
 			</label_list_content_number_right>
 		</sheetdata>
 	</windowclass>
 	<windowclass name="ps_xp_battleentry" merge="join">
 		<sheetdata>
-			<string_listitem_right name="threat" insertbefore="name">
+			<number_listitem_right name="cr" insertbefore="name">
 				<anchored width="40" />
-			</string_listitem_right>
+			</number_listitem_right>
 		</sheetdata>
 	</windowclass>
 

@@ -1,12 +1,8 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars 3.5E
 --
 
--- ===================================================================================================================
--- Adjusted
--- ===================================================================================================================
 function onInit()
 	registerMenuItem(Interface.getString("menu_addweapon"), "insert", 3);
 	registerMenuItem(Interface.getString("menu_addspellclass"), "insert", 5);
@@ -19,9 +15,6 @@ function onInit()
 	DB.addHandler(DB.getPath(node, "spellset"), "onChildUpdate", updateAbility);
 end
 
--- ===================================================================================================================
--- Adjusted
--- ===================================================================================================================
 function onClose()
 	local node = getDatabaseNode();
 	DB.removeHandler(DB.getPath(node, "abilities"), "onChildUpdate", updateAbility);
@@ -29,9 +22,6 @@ function onClose()
 	DB.removeHandler(DB.getPath(node, "spellset"), "onChildUpdate", updateAbility);
 end
 
--- ===================================================================================================================
--- Adjusted
--- ===================================================================================================================
 function onMenuSelection(selection)
 	if selection == 3 then
 		self.addWeapon();
@@ -57,23 +47,16 @@ function addWeapon()
 end
 
 local bUpdateLock = false;
-
--- ===================================================================================================================
--- Adjusted
--- ===================================================================================================================
 function updateAbility()
 	if bUpdateLock then
 		return;
 	end
-
 	bUpdateLock = true;
-
 	for _,v in pairs(weaponlist.getWindows()) do
 		v.onDataChanged();
 	end
 	for _,v in pairs(spellclasslist.getWindows()) do
 		v.onStatUpdate();
 	end
-
 	bUpdateLock = false;
 end

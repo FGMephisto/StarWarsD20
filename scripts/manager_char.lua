@@ -1113,18 +1113,6 @@ function addInfoDB(nodeChar, sClass, sRecord, nodeTargetList)
 	return true;
 end
 
-function resolveRefNode(sRecord)
-	local nodeSource = DB.findNode(sRecord);
-	if not nodeSource then
-		local sRecordSansModule = StringManager.split(sRecord, "@")[1];
-		nodeSource = DB.findNode(sRecordSansModule .. "@*");
-		if not nodeSource then
-			ChatManager.SystemMessage(Interface.getString("char_error_missingrecord"));
-		end
-	end
-	return nodeSource;
-end
-
 function getSkillNode(nodeChar, sSkill, sSpecialty)
 	if not sSkill then
 		return nil;
@@ -1175,8 +1163,9 @@ function getClassNode(nodeChar, sClassName)
 end
 
 function addRace(nodeChar, sClass, sRecord)
-	local nodeSource = resolveRefNode(sRecord);
+	local nodeSource = DB.findNode(sRecord);
 	if not nodeSource then
+		ChatManager.SystemMessage(Interface.getString("char_error_missingrecord"));
 		return;
 	end
 	
@@ -1225,9 +1214,10 @@ function addRace(nodeChar, sClass, sRecord)
 end
 
 function addRacialTrait(nodeChar, sClass, sRecord, nodeTargetList)
-	local nodeSource = resolveRefNode(sRecord);
+	local nodeSource = DB.findNode(sRecord);
 	if not nodeSource then
-		return false;
+		ChatManager.SystemMessage(Interface.getString("char_error_missingrecord"));
+		return;
 	end
 	
 	local sTraitName = DB.getValue(nodeSource, "name", "");
@@ -1604,8 +1594,9 @@ function addSaveBonus(nodeChar, sSave, sBonusType, nBonus)
 end
 
 function addClass(nodeChar, sClass, sRecord)
-	local nodeSource = resolveRefNode(sRecord);
+	local nodeSource = DB.findNode(sRecord);
 	if not nodeSource then
+		ChatManager.SystemMessage(Interface.getString("char_error_missingrecord"));
 		return;
 	end
 	
@@ -1616,7 +1607,6 @@ function addClass(nodeChar, sClass, sRecord)
 	
 	local sClassName = DB.getValue(nodeSource, "name", "");
 	local sClassNameLower = StringManager.trim(sClassName):lower();
-	
 	local sFormat = Interface.getString("char_message_classadd");
 	local sMsg = string.format(sFormat, sClassName, DB.getValue(nodeChar, "name", ""));
 	ChatManager.SystemMessage(sMsg);
@@ -1630,6 +1620,7 @@ function addClass(nodeChar, sClass, sRecord)
 			break;
 		end
 	end
+
 	local nLevel = 1;
 	local bExistingClass = false;
 	if nodeClass then
@@ -1678,7 +1669,7 @@ function addClass(nodeChar, sClass, sRecord)
 								bPrestige = DataCommon.classdata[sClassLookup].bPrestige;
 							end
 						end
-						if (sClassType or "") ~= "prestige" then
+						if not StringManager.contains({ "prestige", "archetype" }, sClassType) then
 							table.insert(aClasses, { text = DB.getValue(vClass, "name", ""), linkclass = "referenceclass", linkrecord = DB.getPath(vClass) });
 						end
 					end
@@ -1724,6 +1715,7 @@ function applyClassStats(nodeChar, nodeClass, nodeSource, nLevel, nTotalLevel)
 	local nSkillPoints = DB.getValue(nodeSource, "skillranks", 0);
 	local sClassSkills = DB.getValue(nodeSource, "classskills", "");
 	
+	local bPrestige = ((sClassType or "") == "prestige");
 	if DataCommon.classdata[sClassLookup] then
 		if not sClassType then
 			bPrestige = DataCommon.classdata[sClassLookup].bPrestige;
@@ -1750,7 +1742,6 @@ function applyClassStats(nodeChar, nodeClass, nodeSource, nLevel, nTotalLevel)
 			sClassSkills = DataCommon.classdata[sClassLookup].skills;
 		end
 	end
-	local bPrestige = (sClassType == "prestige");
 	
 	-- Hit points
 	local sHDMult, sHDSides = sHD:match("^(%d?)d(%d+)");
@@ -1987,9 +1978,10 @@ function addClassSkill(nodeChar, sSkill, sParens)
 end
 
 function addClassFeature(nodeChar, sClass, sRecord, nodeTargetList)
-	local nodeSource = resolveRefNode(sRecord);
+	local nodeSource = DB.findNode(sRecord);
 	if not nodeSource then
-		return false;
+		ChatManager.SystemMessage(Interface.getString("char_error_missingrecord"));
+		return;
 	end
 	
 	local sClassName = StringManager.strip(DB.getValue(nodeSource, "...name", ""));
@@ -3020,8 +3012,9 @@ function onFavoredClassBonusSelect(aSelection, rFavoredClassBonusSelect)
 end
 
 function addFeat(nodeChar, sClass, sRecord, nodeTargetList)
-	local nodeSource = resolveRefNode(sRecord);
+	local nodeSource = DB.findNode(sRecord);
 	if not nodeSource then
+		ChatManager.SystemMessage(Interface.getString("char_error_missingrecord"));
 		return;
 	end
 	

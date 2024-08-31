@@ -4,48 +4,10 @@
 -- File adjusted for Star Wars 3.5E
 --
 
+-- Adjusted
 function onInit()
-	registerDiceRolls();
 	registerOptions();
 	DecalManager.setDefault("images/decals/stw_decal.jpg@Star Wars D20 Assets");
-end
-
--- ===================================================================================================================
--- Adjusted
--- ToDo: Review die connections to damage
--- ===================================================================================================================
-function registerDiceRolls()
-	DiceRollManager.registerDamageTypeMode("critical");
-	DiceRollManager.registerDamageTypeMode("precision");
-	
-	DiceRollManager.registerDamageKey();
-	DiceRollManager.registerDamageTypeKey("acid", "life");
-	DiceRollManager.registerDamageTypeKey("cold", "frost");
-	DiceRollManager.registerDamageTypeKey("electricity", "lightning");
-	
-	DiceRollManager.registerDamageTypeKey("fire", "fire");
-	DiceRollManager.registerDamageTypeKey("force", "arcane");
-	DiceRollManager.registerDamageTypeKey("negative", "shadow");
-	DiceRollManager.registerDamageTypeKey("positive", "light");
-	DiceRollManager.registerDamageTypeKey("sonic", "storm");
-
-	DiceRollManager.registerDamageTypeKey("bludgeoning");
-	DiceRollManager.registerDamageTypeKey("piercing");
-	DiceRollManager.registerDamageTypeKey("slashing");
-
-	-- DiceRollManager.registerDamageTypeKey("adamantine");
-	-- DiceRollManager.registerDamageTypeKey("cold iron");
-	-- DiceRollManager.registerDamageTypeKey("silver");
-
-	-- DiceRollManager.registerDamageTypeKey("epic");
-	-- DiceRollManager.registerDamageTypeKey("magic");
-
-	DiceRollManager.registerDamageTypeKey("energy", "fire");
-	DiceRollManager.registerDamageTypeKey("ion", "lightning");
-	
-	DiceRollManager.registerHealKey();
-	DiceRollManager.registerHealTypeKey("health", "light");
-	DiceRollManager.registerHealTypeKey("temp", "water");
 end
 
 function registerOptions()

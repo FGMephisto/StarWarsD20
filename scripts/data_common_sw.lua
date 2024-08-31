@@ -110,7 +110,7 @@ creaturehalftypesubrace = "human";
 -- NOTE: Multi-word types must come before single word types
 creaturetype = {
 	-- "magical beast",
-	"monstrous humanoid",
+	-- "monstrous humanoid",
 	-- "aberration",
 	"animal",
 	-- "construct",
@@ -148,7 +148,7 @@ creaturesubtype = {
 	-- "psionic",
 	"shapechanger",
 	"swarm",
-	-- "water",
+	"water",
 	"aquatic", -- Humanoid subtypes
 	-- "dwarf",
 	-- "elf", 
@@ -169,7 +169,7 @@ conditionaltags = {
 -- Conditions supported in effect conditionals and for token widgets
 -- NOTE: From rules, missing dying, staggered and disabled
 conditions = {
-	"blinded",
+	"blinded", 
 	"climbing",
 	"confused",
 	"cowering",
@@ -319,34 +319,35 @@ energytypes = {
 	"acid",  		-- ENERGY DAMAGE TYPES
 	"cold",
 	"electricity",
-	"energy",
 	"fire",
-	"ion",
 	"sonic",
 	"force",  		-- OTHER SPELL DAMAGE TYPES
-	"positive",
-	"negative"
+	-- "positive",
+	-- "negative",
+	"energy",
+	"ion",
 };
 
 immunetypes = {
 	"acid",  		-- ENERGY DAMAGE TYPES
 	"cold",
 	"electricity",
-	"energy",
 	"fire",
-	"ion",
 	"sonic",
-	"nonlethal",	-- SPECIAL DAMAGE TYPES
+	-- "nonlethal",	-- SPECIAL DAMAGE TYPES
 	"critical",
 	"poison",		-- OTHER IMMUNITY TYPES
-	"sleep",
-	"paralysis",
-	"petrification",
-	"charm",
-	"sleep",
-	"fear",
-	"disease",
-	"mind-affecting",
+	-- "sleep",
+	-- "paralysis",
+	-- "petrification",
+	-- "charm",
+	-- "sleep",
+	-- "fear",
+	-- "disease",
+	-- "mind-affecting",
+	"force",
+	"energy",
+	"ion",
 };
 
 dmgtypes = {
@@ -356,14 +357,12 @@ dmgtypes = {
 	"fire",
 	"sonic",
 	"force",  		-- OTHER SPELL DAMAGE TYPES
-	"positive",
-	"negative",
-	"adamantine", 	-- WEAPON PROPERTY DAMAGE TYPES
+	-- "positive",
+	-- "negative",
+	-- "adamantine", 	-- WEAPON PROPERTY DAMAGE TYPES
 	"bludgeoning",
 	-- "cold iron",
-	"energy",
 	-- "epic",
-	"ion",
 	-- "magic",
 	"piercing",
 	-- "silver",
@@ -372,11 +371,12 @@ dmgtypes = {
 	-- "evil",
 	-- "good",
 	-- "lawful",
-	"nonlethal",	-- SPECIAL DAMAGE TYPES
+	-- "nonlethal",	-- SPECIAL DAMAGE TYPES
 	-- "spell",
 	"critical",
-	"precision",
-
+	-- "precision",
+	"energy",
+	"ion",
 };
 
 basicdmgtypes = {
@@ -385,7 +385,6 @@ basicdmgtypes = {
 	"electricity",
 	"energy",
 	"fire",
-	"ion",
 	"sonic",
 	"force",  		-- OTHER SPELL DAMAGE TYPES
 	"positive",
@@ -393,13 +392,14 @@ basicdmgtypes = {
 	"bludgeoning", 	-- WEAPON PROPERTY DAMAGE TYPES
 	"piercing",
 	"slashing",
+	"ion",
 };
 
 specialdmgtypes = {
-	"nonlethal",
+	-- "nonlethal",
 	-- "spell",
 	"critical",
-	"precision",
+	-- "precision",
 };
 
 -- Bonus types supported in power descriptions
@@ -442,6 +442,39 @@ actypes = {
 };
 
 acarmormatch = {
+	-- "padded",
+	-- "padded armor",
+	-- "padded barding",
+	-- "leather",
+	-- "leather armor",
+	-- "leather barding",
+	-- "studded leather",
+	-- "studded leather armor",
+	-- "studded leather barding",
+	-- "chain shirt",
+	-- "chain shirt barding",
+	-- "hide",
+	-- "hide armor",
+	-- "hide barding",
+	-- "scale mail",
+	-- "scale mail barding",
+	-- "chainmail",
+	-- "chainmail barding",
+	-- "breastplate",
+	-- "breastplate barding",
+	-- "splint mail",
+	-- "splint mail barding",
+	-- "banded mail",
+	-- "banded mail barding",
+	-- "half-plate",
+	-- "half-plate armor",
+	-- "half-plate barding",
+	-- "full plate",
+	-- "full plate armor",
+	-- "full plate barding",
+	-- "plate barding",
+	-- "bracers of armor",
+	-- "mithral chain shirt",
 	"Blast helmet, vest",
 	"Combat jumpsuit",
 	"Padded flight suit",
@@ -495,6 +528,55 @@ spelleffects = {
 
 -- NPC damage properties
 weapondmgtypes = {
+	-- ["axe"] = "slashing",
+	-- ["battleaxe"] = "slashing",
+	-- ["bolas"] = "bludgeoning,nonlethal",
+	-- ["chain"] = "piercing",
+	-- ["club"] = "bludgeoning",
+	-- ["crossbow"] = "piercing",
+	-- ["dagger"] = "piercing,slashing",
+	-- ["dart"] = "piercing",
+	-- ["falchion"] = "slashing",
+	-- ["flail"] = "bludgeoning",
+	-- ["glaive"] = "slashing",
+	-- ["greataxe"] = "slashing",
+	-- ["greatclub"] = "bludgeoning",
+	-- ["greatsword"] = "slashing",
+	-- ["guisarme"] = "slashing",
+	-- ["halberd"] = "piercing,slashing",
+	-- ["hammer"] = "bludgeoning",
+	-- ["handaxe"] = "slashing",
+	-- ["javelin"] = "piercing",
+	-- ["kama"] = "slashing",
+	-- ["kukri"] = "slashing",
+	-- ["lance"] = "piercing",
+	-- ["longbow"] = "piercing",
+	-- ["longspear"] = "piercing",
+	-- ["longsword"] = "slashing",
+	-- ["mace"] = "bludgeoning",
+	-- ["morningstar"] = "bludgeoning,piercing",
+	-- ["nunchaku"] = "bludgeoning",
+	-- ["pick"] = "piercing",
+	-- ["quarterstaff"] = "bludgeoning",
+	-- ["ranseur"] = "piercing",
+	-- ["rapier"] = "piercing",
+	-- ["sai"] = "bludgeoning",
+	-- ["sap"] = "bludgeoning,nonlethal",
+	-- ["scimitar"] = "slashing",
+	-- ["scythe"] = "piercing,slashing",
+	-- ["shortbow"] = "piercing",
+	-- ["shortspear"] = "piercing",
+	-- ["shuriken"] = "piercing",
+	-- ["siangham"] = "piercing",
+	-- ["sickle"] = "slashing",
+	-- ["sling"] = "bludgeoning",
+	-- ["spear"] = "piercing",
+	-- ["sword"] = {["short"] = "piercing", ["*"] = "slashing"},
+	-- ["trident"] = "piercing",
+	-- ["urgrosh"] = "piercing,slashing",
+	-- ["waraxe"] = "slashing",
+	-- ["warhammer"] = "bludgeoning",
+	-- ["whip"] = "slashing",
 	["Unarmed"] = "bludgeoning",
 	["Unarmed (Small)"] = "bludgeoning",
 	["Atlatl"] = "bludgeoning",
@@ -504,7 +586,7 @@ weapondmgtypes = {
 	["Baton"] = "bludgeoning",
 	["Combat gloves"] = "bludgeoning",
 	["Force pike"] = "slashing",
-	["Gaderffii"] = "slashing,piercing",
+	["Gaderffii"] = "slashing, piercing",
 	["Knife"] = "piercing",
 	["Lightsaber"] = "energy",
 	["Lightsaber, double"] = "energy",
@@ -761,6 +843,17 @@ psskilldata = {
 -- PC/NPC Class properties
 
 class_stol = {
+	-- ["brb"] = "barbarian",
+	-- ["brd"] = "bard",
+	-- ["clr"] = "cleric",
+	-- ["drd"] = "druid",
+	-- ["ftr"] = "fighter",
+	-- ["mnk"] = "monk",
+	-- ["pal"] = "paladin",
+	-- ["rgr"] = "ranger",
+	-- ["rog"] = "rogue",
+	-- ["sor"] = "sorcerer",
+	-- ["wiz"] = "wizard",
 	["sol"] = "soldier",
 };
 

@@ -44,9 +44,7 @@ targetactions = {
 	"spellsave"
 };
 
--- ===================================================================================================================
 -- Adjusted
--- ===================================================================================================================
 currencies = { 
 	{ name = "Credits", weight = 0.0, value = 1 },
 };
@@ -126,6 +124,26 @@ function onInit()
 
 	-- Languages
 	languages = {
+		-- [Interface.getString("language_value_abyssal")] = "Infernal",
+		-- [Interface.getString("language_value_aquan")] = "Elven",
+		-- [Interface.getString("language_value_auran")] = "Draconic",
+		-- [Interface.getString("language_value_celestial")] = "Celestial",
+		-- [Interface.getString("language_value_common")] = "",
+		-- [Interface.getString("language_value_draconic")] = "Draconic",
+		-- [Interface.getString("language_value_druidic")] = "Elven",
+		-- [Interface.getString("language_value_dwarven")] = "Dwarven",
+		-- [Interface.getString("language_value_elven")] = "Elven",
+		-- [Interface.getString("language_value_giant")] = "Dwarven",
+		-- [Interface.getString("language_value_gnoll")] = "",
+		-- [Interface.getString("language_value_gnome")] = "Dwarven",
+		-- [Interface.getString("language_value_goblin")] = "Dwarven",
+		-- [Interface.getString("language_value_halfling")] = "",
+		-- [Interface.getString("language_value_ignan")] = "Draconic",
+		-- [Interface.getString("language_value_infernal")] = "Infernal",
+		-- [Interface.getString("language_value_orc")] = "Dwarven",
+		-- [Interface.getString("language_value_sylvan")] = "Elven",
+		-- [Interface.getString("language_value_terran")] = "Dwarven",
+		-- [Interface.getString("language_value_undercommon")] = "Elven",
 		[Interface.getString("language_value_Basic")] = "Basic",
 		[Interface.getString("language_value_Binary")] = "Binary",
 		[Interface.getString("language_value_Bothese")] = "Bothese",
@@ -164,6 +182,11 @@ function onInit()
 		-- languages[Interface.getString("language_value_wayang")] = "";
 	end
 	languagefonts = {
+		-- [Interface.getString("language_value_celestial")] = "Celestial",
+		-- [Interface.getString("language_value_draconic")] = "Draconic",
+		-- [Interface.getString("language_value_dwarven")] = "Dwarven",
+		-- [Interface.getString("language_value_elven")] = "Elven",
+		-- [Interface.getString("language_value_infernal")] = "Infernal",
 		[Interface.getString("language_value_Binary")] = "Infernal",
 		[Interface.getString("language_value_Bothese")] = "Infernal",
 		[Interface.getString("language_value_Cerean")] = "Infernal",
@@ -238,7 +261,7 @@ function getStabilizationRoll(rActor)
 	local rRoll = { sType = "stabilization", sDesc = "[STABILIZATION]" };
 	
 	if DataCommon.isPFRPG() then
-		rRoll.aDice = { "d20" };
+		rRoll.aDice = DiceRollManager.getActorDice({ "d20" }, rActor);
 		rRoll.nMod = ActorManager35E.getAbilityBonus(rActor, "constitution");
 		
 		local nHP = 0;
@@ -259,7 +282,7 @@ function getStabilizationRoll(rActor)
 		end
 	
 	else
-		rRoll.aDice = { "d100" };
+		rRoll.aDice = DiceRollManager.getActorDice({ "d100" }, rActor);
 		rRoll.nMod = 0;
 	end
 	
@@ -297,7 +320,11 @@ end
 
 function performConcentrationCheck(draginfo, rActor, nodeSpellClass)
 	if DataCommon.isPFRPG() then
-		local rRoll = { sType = "concentration", sDesc = "[CONCENTRATION]", aDice = { "d20" } };
+		local rRoll = {
+			sType = "concentration",
+			sDesc = "[CONCENTRATION]",
+		};
+		rRoll.aDice = DiceRollManager.getActorDice({ "d20" }, rActor);
 	
 		local sAbility = DB.getValue(nodeSpellClass, "dc.ability", "");
 		local sAbilityEffect = DataCommon.ability_ltos[sAbility];

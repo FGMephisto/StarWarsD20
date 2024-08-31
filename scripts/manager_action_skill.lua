@@ -46,7 +46,7 @@ end
 function getRoll(rActor, sSkillName, nSkillMod, sSkillStat, sExtra)
 	local rRoll = {};
 	rRoll.sType = "skill";
-	rRoll.aDice = { "d20" };
+	rRoll.aDice = DiceRollManager.getActorDice({ "d20" }, rActor);
 	rRoll.nMod = nSkillMod or 0;
 	rRoll.sDesc = "[SKILL] " .. StringManager.capitalizeAll(sSkillName);
 	if sExtra then

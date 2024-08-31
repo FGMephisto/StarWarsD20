@@ -7,9 +7,7 @@
 -->
 
 <root>
-	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
-	<!-- =================================================================================================================== -->
 	<windowclass name="charsheet_skills">
 		<sheetdata>
 			<frame_char name="skillpointframe">
@@ -104,7 +102,7 @@
 				<invisible />
 			</genericcontrol>
 			<genericcontrol>
-				<anchored to="skillframe" position="insidetopleft" offset="33,15" width="10" height="10" />
+				<anchored to="skillframe" position="insidetopleft" offset="17,15" width="10" height="10" />
 				<icon>char_encumbrance</icon>
 				<tooltip textres="char_tooltip_skillclass" />
 			</genericcontrol>
@@ -140,17 +138,17 @@
 				<center />
 			</label>
 			<label>
-				<anchored to="rightanchor" width="40">
+				<anchored to="rightanchor" width="77">
 					<top />
-					<right anchor="left" relation="relative" offset="-15" />
+					<right anchor="left" relation="relative" offset="-5" />
 				</anchored>
 				<center />
 				<static textres="char_label_skillability" />
 			</label>
 			<label>
-				<anchored to="rightanchor" width="36">
+				<anchored to="rightanchor" width="42">
 					<top />
-					<right anchor="left" relation="relative" offset="-12" />
+					<right anchor="left" relation="relative" offset="0" />
 				</anchored>
 				<center />
 				<static textres="char_label_skillranks" />
@@ -171,9 +169,7 @@
 		</sheetdata>
 	</windowclass>
 
-	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
-	<!-- =================================================================================================================== -->
 	<windowclass name="char_skill">
 		<margins control="0,0,0,2" />
 		<script file="campaign/scripts/char_skill.lua" />
@@ -192,7 +188,7 @@
 				<invisible />
 			</button_checkbox>
 			<button_checkbox name="state">
-				<bounds>22,8,12,12</bounds>
+				<bounds>6,6,12,12</bounds>
 				<script>
 					function onValueChanged()
 						CharManager.updateSkillPoints(DB.getChild(window.getDatabaseNode(), "..."));
@@ -256,7 +252,7 @@
 			<cycler_charskillability name="statname">
 				<anchored width="40" height="20">
 					<top offset="2" />
-					<right parent="rightanchor" anchor="left" relation="relative" offset="-15" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
 				</anchored>
 				<script>
 					function onValueChanged()
@@ -267,7 +263,7 @@
 			<number_charskillranks name="ranks">
 				<anchored width="32" height="20">
 					<top offset="2" />
-					<right parent="rightanchor" anchor="left" relation="relative" offset="-15" />
+					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
 				</anchored>
 				<tabtarget next="misc" prev="sublabel" />
 			</number_charskillranks>
@@ -281,7 +277,7 @@
 			<stringu name="label">
 				<anchored height="20">
 					<top offset="2" />
-					<left offset="40" />
+					<left offset="30" />
 					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
 				</anchored>
 				<tabtarget next="sublabel" />

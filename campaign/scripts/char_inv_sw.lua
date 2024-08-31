@@ -27,9 +27,7 @@ function onSizeChanged()
 	onEncumbranceLimitChanged();
 end
 
--- ===================================================================================================================
 -- Adjusted
--- ===================================================================================================================
 function onEncumbranceLimitChanged()
 	local nodeChar = getDatabaseNode();
 

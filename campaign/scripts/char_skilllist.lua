@@ -35,17 +35,14 @@ function onStatUpdate()
 end
 
 function addEntry(bFocus)
-	local w = createWindow();
+	local w = createWindow(nil, true);
 	w.setCustom(true);
-	if bFocus and w then
-		w.label.setFocus();
-	end
 	return w;
 end
 
 function onMenuSelection(item)
 	if item == 5 then
-		addEntry(true);
+		self.addEntry(true);
 	end
 end
 

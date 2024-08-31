@@ -7,15 +7,13 @@
 -->
 
 <root>
-	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
-	<!-- =================================================================================================================== -->
 	<windowclass name="charsheet_main">
 		<script file="campaign/scripts/char_main.lua" />
 		<sheetdata>
 			<!-- Race -->
 			<frame_char name="raceframe">
-				<bounds>0,0,145,45</bounds>
+				<bounds>0,0,145,50</bounds>
 			</frame_char>
 			<linkfield name="racelink">
 				<anchored to="raceframe" position="insidetopright" offset="10,10" width="20" height="20" />
@@ -44,7 +42,7 @@
 
 			<!-- Class / Level -->
 			<frame_char name="classframe">
-				<bounds>145,0,335,45</bounds>
+				<bounds>145,0,335,50</bounds>
 			</frame_char>
 			<stringc_charclasslevel name="classlevel">
 				<anchored to="classframe" position="insidetopleft" offset="15,10">
@@ -58,7 +56,7 @@
 
 			<!-- Abilities -->
 			<frame_char name="abilityframe">
-				<bounds>0,45,290,225</bounds>
+				<bounds>0,50,290,225</bounds>
 			</frame_char>
 
 			<number_charabilityscore name="strength" source="abilities.strength.score">
@@ -196,7 +194,7 @@
 
 			<!-- Speed -->
 			<frame_char name="speedframe">
-				<bounds>0,270,385,50</bounds>
+				<bounds>0,275,385,55</bounds>
 			</frame_char>
 			<number_charspeed name="speedfinal" source="speed.final">
 				<anchored to="speedframe" position="insidetopleft" offset="80,15" width="45" height="20" />
@@ -213,7 +211,7 @@
 
 			<!-- Senses -->
 			<frame_char name="sensesframe">
-				<bounds>0,320,385,60</bounds>
+				<bounds>0,330,385,65</bounds>
 			</frame_char>
 			<genericcontrol name="anchor_charmainskill">
 				<anchored to="sensesframe" position="insidetopleft" offset="5,24" width="0" height="20" />
@@ -260,7 +258,7 @@
 
 			<!-- Health -->
 			<frame_char name="hpframe">
-				<bounds>0,380,385,100</bounds>
+				<bounds>0,395,385,100</bounds>
 			</frame_char>
 			<number_dropadd name="hp" source="hp.total">
 				<anchored to="hpframe" position="insidetopleft" offset="60,27" width="40" height="28" />
@@ -277,10 +275,15 @@
 			</label_fieldtop>
 			<number_dropadd name="hptemp" source="hp.temporary">
 				<anchored to="hp" position="right" offset="20,0" width="40" />
-				<color>0000AA</color>
 				<hideonvalue>0</hideonvalue>
 				<description textres="char_tooltip_hptemp" />
 				<script>
+					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
+						setColor(ColorManager.getUIColor("health_shield"));
+					end
 					function onValueChanged()
 						window.onHealthChanged();
 					end
@@ -322,7 +325,7 @@
 
 			<!-- Attacks -->
 			<frame_char name="combatframe">
-				<bounds>290,45,95,225</bounds>
+				<bounds>290,50,95,225</bounds>
 			</frame_char>
 			<number_charinit name="initiative" source="initiative.total">
 				<anchored to="combatframe" position="insidetop" offset="-25,30" height="28" />
@@ -355,7 +358,7 @@
 
 			<!-- Defenses -->
 			<frame_char name="acframe">
-				<bounds>385,45,95,225</bounds>
+				<bounds>385,50,95,225</bounds>
 			</frame_char>
 			<number_chartotalac name="ac" source="ac.totals.general">
 				<anchored to="acframe" position="insidetopleft" offset="31,30" width="30" height="30" />
@@ -388,7 +391,7 @@
 			</label_fieldtop>
 			
 			<frame_char name="saveframe">
-				<bounds>385,270,95,210</bounds>
+				<bounds>385,270,95,225</bounds>
 			</frame_char>
 			<number_charsr name="spellresistance" source="defenses.sr.total">
 				<anchored to="saveframe" position="insidetop" offset="-25,27" height="28" />
@@ -739,5 +742,5 @@
 				<multilinespacing>20</multilinespacing>
 			</string_textlistitem>
 		</sheetdata>
-	</windowclass>
+	</windowclass>	
 </root>

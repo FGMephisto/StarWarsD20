@@ -101,7 +101,7 @@ function getRoll(rActor, rAction)
 	else
 		rRoll.sType = "attack";
 	end
-	rRoll.aDice = { "d20" };
+	rRoll.aDice = DiceRollManager.getActorDice({ "d20" }, rActor);
 	rRoll.nMod = rAction.modifier or 0;
 	
 	if rAction.cm then
@@ -151,7 +151,7 @@ end
 function getGrappleRoll(rActor, rAction)
 	local rRoll = {};
 	rRoll.sType = "grapple";
-	rRoll.aDice = { "d20" };
+	rRoll.aDice = DiceRollManager.getActorDice({ "d20" }, rActor);
 	rRoll.nMod = rAction.modifier or 0;
 	
 	if DataCommon.isPFRPG() then
@@ -176,9 +176,7 @@ function getGrappleRoll(rActor, rAction)
 	return rRoll;
 end
 
--- ===================================================================================================================
 -- Adjusted
--- ===================================================================================================================
 function modAttack(rSource, rTarget, rRoll)
 	ActionAttack.clearCritState(rSource);
 	
@@ -617,7 +615,12 @@ function onAttackResolve(rSource, rTarget, rRoll, rMessage)
 		bRollMissChance = true;
 	else
 		if rRoll.bCritThreat then
-			local rCritConfirmRoll = { sType = "critconfirm", aDice = {"d20"}, bTower = rRoll.bTower, bSecret = rRoll.bSecret };
+			local rCritConfirmRoll = {
+				sType = "critconfirm",
+				aDice = DiceRollManager.getActorDice({ "d20" }, rActor),
+				bTower = rRoll.bTower,
+				bSecret = rRoll.bSecret,
+			};
 				
 			local tCCDice, nCCMod, nCCEffects = EffectManager35E.getEffectsBonus(rSource, {"CC"}, false, nil, rTarget);
 			if (nCCEffects > 0) then
@@ -652,9 +655,14 @@ function onAttackResolve(rSource, rTarget, rRoll, rMessage)
 		end
 	end
 	if bRollMissChance and (rRoll.nMissChance > 0) then
-		local aMissChanceDice = { "d100" };
+		local aMissChanceDice = {};
 		local sMissChanceText = rMessage.text:gsub(" %[CRIT %d+%]", ""):gsub(" %[CONFIRM%]", "");
-		local rMissChanceRoll = { sType = "misschance", sDesc = sMissChanceText .. " [MISS CHANCE " .. rRoll.nMissChance .. "%]", aDice = aMissChanceDice, nMod = 0 };
+		local rMissChanceRoll = { 
+			sType = "misschance", 
+			sDesc = sMissChanceText .. " [MISS CHANCE " .. rRoll.nMissChance .. "%]", 
+			aDice = DiceRollManager.getActorDice({ "d100" }, rSource), 
+			nMod = 0
+		};
 		ActionsManager.roll(rSource, rTarget, rMissChanceRoll);
 	end
 

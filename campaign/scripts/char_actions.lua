@@ -1,12 +1,8 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars 3.5E
 --
 
--- ===================================================================================================================
--- Adjusted
--- ===================================================================================================================
 function onDisplayChanged()
 	if not minisheet then
 		for _,v in pairs(actions.subwindow.spellclasslist.getWindows()) do
@@ -15,9 +11,6 @@ function onDisplayChanged()
 	end
 end
 
--- ===================================================================================================================
--- Adjusted
--- ===================================================================================================================
 function onModeChanged()
 	if minisheet then
 		weaponlist.onModeChanged();
@@ -27,10 +20,7 @@ function onModeChanged()
 	
 	self.updateSpellCounters();
 end
-
--- ===================================================================================================================
--- Adjusted
--- ===================================================================================================================
+					
 function onEditModeChanged()
 	local bEditMode = WindowManager.getEditMode(self, "actions_iedit");
 	
@@ -43,9 +33,6 @@ function onEditModeChanged()
 	end
 end
 
--- ===================================================================================================================
--- Adjusted
--- ===================================================================================================================
 function updateSpellCounters()
 	if minisheet then
 		for _,v in pairs(spellclasslist.getWindows()) do
@@ -57,3 +44,4 @@ function updateSpellCounters()
 		end
 	end
 end
+

@@ -33,7 +33,7 @@ end
 function getRoll(rActor, sAbilityStat)
 	local rRoll = {};
 	rRoll.sType = "ability";
-	rRoll.aDice = { "d20" };
+	rRoll.aDice = DiceRollManager.getActorDice({ "d20" }, rActor);
 	rRoll.nMod = ActorManager35E.getAbilityBonus(rActor, sAbilityStat);
 	
 	rRoll.sDesc = "[ABILITY]";

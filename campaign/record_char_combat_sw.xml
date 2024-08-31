@@ -7,9 +7,7 @@
 -->
 
 <root>
-	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
-	<!-- =================================================================================================================== -->
 	<windowclass name="charsheet_combat">
 		<script file="campaign/scripts/char_combat_sw.lua" />
 		<sheetdata>
@@ -356,11 +354,9 @@
 			<number_charcombatmod name="fortitudemisc" source="saves.fortitude.misc">
 				<anchored to="fortitudestatmod" />
 			</number_charcombatmod>
-			
 			<number_charcombatmod name="reflexmisc" source="saves.reflex.misc">
 				<anchored to="reflexstatmod" />
 			</number_charcombatmod>
-			
 			<number_charcombatmod name="willmisc" source="saves.will.misc">
 				<anchored to="willstatmod" />
 			</number_charcombatmod>
@@ -369,7 +365,6 @@
 				<anchored to="fortitudemisc" />
 				<static textres="char_label_combatmisc" />
 			</label_fieldtop>
-			
 			<!-- Attacks -->
 			<frame_char name="attackframe">
 				<bounds>0,260,350,150</bounds>
@@ -379,41 +374,33 @@
 				<anchored to="attackframe" position="insidetopleft" offset="20,20" />
 				<static textres="char_label_combatatkbase" />
 			</label>
-			
 			<basicnumber name="baseattackbonus" source="attackbonus.base">
 				<anchored to="attackframe" position="insidetopleft" offset="152,16" width="32" height="20" />
 				<displaysign />
 				<description textres="char_tooltip_combatatkbase" />
 			</basicnumber>
-			
 			<!-- "Total" column -->
 			<number_charmeleetotal name="meleeattackbonus" source="attackbonus.melee.total">
 				<anchored to="attackframe" position="insidetopleft" offset="105,56" width="32" height="20" />
 			</number_charmeleetotal>
-			
 			<label name="meleeattackbonus_label">
 				<anchored to="attackframe" position="insidetopleft" offset="20,56" width="80" />
 				<static textres="char_label_combatatkmelee" />
 			</label>
-			
 			<number_charrangedtotal name="rangedattackbonus" source="attackbonus.ranged.total">
 				<anchored to="meleeattackbonus" position="belowleft" offset="0,8" width="32" height="20" />
 			</number_charrangedtotal>
-			
 			<label name="rangedattackbonus_label">
 				<anchored to="meleeattackbonus_label" position="belowleft" offset="0,8" width="80" />
 				<static textres="char_label_combatatkranged" />
 			</label>
-			
 			<number_chargrappletotal name="grappleattackbonus" source="attackbonus.grapple.total">
 				<anchored to="rangedattackbonus" position="belowleft" offset="0,8" width="32" height="20" />
 			</number_chargrappletotal>
-			
 			<label name="label_grapple">
 				<anchored to="rangedattackbonus_label" position="belowleft" offset="0,8" width="80" />
 				<static textres="grapple" />
 			</label>
-			
 			<label_fieldtop name="atktotal_label">
 				<anchored to="meleeattackbonus" />
 				<static textres="char_label_combattotal" />
@@ -423,7 +410,6 @@
 			<number_charcombatmod_static name="meleebaseattackbonus" source="attackbonus.base">
 				<anchored to="baseattackbonus" offset="0,20" />
 			</number_charcombatmod_static>
-			
 			<!-- "Stat" column -->
 			<cycler_charcombatability name="meleestat">
 				<anchored to="meleebaseattackbonus" />

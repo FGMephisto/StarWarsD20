@@ -408,9 +408,7 @@
 		</number_chartotalwithability>
 	</template>
 
-	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
-	<!-- =================================================================================================================== -->
 	<template name="number_chartotalac">
 		<number_chartotalwithability>
 			<description textres="ac" />
@@ -442,9 +440,7 @@
 		</number_chartotalwithability>
 	</template>
 
-	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
-	<!-- =================================================================================================================== -->
 	<template name="number_charflatfootedac">
 		<number_chartotalwithabilitynomod>
 			<description textres="armorclassff" />
@@ -471,9 +467,7 @@
 		</number_chartotalwithabilitynomod>
 	</template>
 
-	<!-- =================================================================================================================== -->
 	<!-- Adjusted -->
-	<!-- =================================================================================================================== -->
 	<template name="number_chartouchac">
 		<number_chartotalwithabilitynomod>
 			<description textres="armorclasstouch" />
@@ -986,14 +980,6 @@
 					if listheader and listheader[1] and not isVisible() then
 						window[listheader[1]].expand();
 					end
-				end
-
-				function addEntry(bFocus)
-					local w = createWindow();
-					if bFocus then
-						w.name.setFocus();
-					end
-					return w;
 				end
 			</script>
 		</list_text>

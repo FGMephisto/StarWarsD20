@@ -45,16 +45,14 @@
 		</sheetdata>
 	</windowclass>
 
-	<!-- =================================================================================================================== -->
 	<!-- Windowclass Abilities - Modified in 5E style -->
-	<!-- =================================================================================================================== -->
 	<windowclass name="charsheet_abilities_contents">
 		<margins control="0,0,0,2" />
 		<script file="campaign/scripts/char_abilities_sw.lua" />
 		<sheetdata>
 			<label_charframetop name="featstitle">
 				<bounds>15,10,-10,20</bounds>
-				<static textres="char_abilities_label_feats" />
+				<static textres="char_label_feats" />
 				<!-- <icons>char_abilities_green</icons> -->
 				<target>feats</target>
 			</label_charframetop>
@@ -79,7 +77,7 @@
 					<left />
 					<right />
 				</anchored>
-				<static textres="char_abilities_label_sa" />
+				<static textres="char_label_sa" />
 				<!-- <icons>char_abilities_red</icons> -->
 				<target>specialabilities</target>
 			</label_charframetop>
@@ -91,7 +89,6 @@
 				</anchored>
 				<datasource>.specialabilitylist</datasource>
 				<class>char_ability_class</class>
-				<!-- <class>char_ability_class</class> -->
 				<listheader>specialabilitiestitle</listheader>
 			</list_abilities>
 			<button_iadd name="specialabilities_iadd">
@@ -105,7 +102,7 @@
 					<left />
 					<right />
 				</anchored>
-				<static textres="char_abilities_label_traits" />
+				<static textres="char_label_traits" />
 				<!-- <icons>char_abilities</icons> -->
 				<target>traits</target>
 			</label_charframetop>
@@ -117,7 +114,6 @@
 				</anchored>
 				<datasource>.traitlist</datasource>
 				<class>char_ability_race</class>
-				<!-- <class>char_ability_race</class> -->
 				<listheader>traitstitle</listheader>
 			</list_abilities>
 			<button_iadd name="traits_iadd">
@@ -131,10 +127,14 @@
 					<left />
 					<right />
 				</anchored>
-				<static textres="char_abilities_label_proficiencies" />
+				<static textres="char_label_proficiencies" />
 				<!-- <icons>char_abilities_purple</icons> -->
 				<target>proficiencies</target>
 			</label_charframetop>
+			<button_iadd name="proficiencies_iadd">
+				<anchored to="proficienciestitle" position="insidetopright" offset="5,0" />
+				<target>proficiencies</target>
+			</button_iadd>
 			<list_abilities name="proficiencies">
 				<anchored to="proficienciestitle">
 					<top anchor="bottom" relation="relative" offset="5" />
@@ -146,10 +146,6 @@
 				<!-- <class>char_ability_proficiency</class> -->
 				<listheader>proficienciestitle</listheader>
 			</list_abilities>
-			<button_iadd name="proficiencies_iadd">
-				<anchored to="proficienciestitle" position="insidetopright" offset="5,0" />
-				<target>proficiencies</target>
-			</button_iadd>
 
 			<label_charframetop name="languagestitle">
 				<anchored to="proficienciestitle" height="20">
@@ -157,7 +153,7 @@
 					<left />
 					<right />
 				</anchored>
-				<static textres="char_abilities_label_languages" />
+				<static textres="char_label_languages" />
 				<!-- <icons>char_abilities_blue</icons> -->
 				<target>languages</target>
 			</label_charframetop>
@@ -190,10 +186,7 @@
 		<margins control="0,0,0,2" />
 		<sheetdata>
 			<genericcontrol name="rightanchor">
-				<anchored height="0" width="0">
-					<top />
-					<right />
-				</anchored>
+				<anchored position="insidetopright" height="0" width="0" />
 			</genericcontrol>
 			<linkcontrol name="shortcut">
 				<anchored to="rightanchor" width="20" height="20">
@@ -282,6 +275,7 @@
 				</anchored>
 				<editmode>actions_iedit</editmode>
 			</button_idelete>
+			
 			<string_textlistitem name="name">
 				<anchored to="rightanchor">
 					<top />
@@ -318,6 +312,7 @@
 				</anchored>
 				<editmode>actions_iedit</editmode>
 			</button_idelete>
+	
 			<string_textlistitem name="name">
 				<anchored to="rightanchor">
 					<top />
