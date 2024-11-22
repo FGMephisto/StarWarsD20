@@ -54,10 +54,11 @@ CLASS_FEATURE_DOMAINS = "^domains$";
 CLASS_FEATURE_DOMAIN_SPELLS = "Domain Spells";
 
 function onInit()
+	WindowMenuManager.initCharMinisheetSupport();
+
+	CharManager.initWeaponIDTracking();
 	ItemManager.setCustomCharAdd(onCharItemAdd);
 	ItemManager.setCustomCharRemove(onCharItemDelete);
-
-	initWeaponIDTracking();
 
 	if Session.IsHost then
 		CharInventoryManager.enableInventoryUpdates();
@@ -91,6 +92,10 @@ end
 --
 --	CALLBACK REGISTRATIONS
 --
+
+function initWeaponIDTracking()
+	DB.addHandler("charsheet.*.inventorylist.*.isidentified", "onUpdate", onItemIDChanged);
+end
 
 function onCharItemAdd(nodeItem)
 	DB.setValue(nodeItem, "carried", "number", 1);
@@ -648,10 +653,6 @@ function addToWeaponDB(nodeItem)
 	end
 end
 
-function initWeaponIDTracking()
-	DB.addHandler("charsheet.*.inventorylist.*.isidentified", "onUpdate", onItemIDChanged);
-end
-
 function onItemIDChanged(nodeItemID)
 	local nodeItem = DB.getChild(nodeItemID, "..");
 	local nodeChar = DB.getChild(nodeItemID, "....");
@@ -844,7 +845,7 @@ function onActionDrop(draginfo, nodeChar)
 		if sClass == "spelldesc" or sClass == "spelldesc2" then
 			ChatManager.Message(Interface.getString("spell_error_dropclasslevelmissing"));
 			return true;
-		elseif LibraryData.isRecordDisplayClass("item", sClass) and ItemManager.isWeapon(nodeSource) then
+		elseif RecordDataManager.isRecordTypeDisplayClass("item", sClass) and ItemManager.isWeapon(nodeSource) then
 			return ItemManager.handleAnyDrop(nodeChar, draginfo);
 		end
 	end

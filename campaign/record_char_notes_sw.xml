@@ -11,7 +11,7 @@
 	<windowclass name="charsheet_notes">
 		<sheetdata>
 			<frame_char name="detailframe">
-				<bounds>0,0,-1,45</bounds>
+				<anchored position="insidetop" height="50" />
 			</frame_char>
 			<string_labeled name="gender">
 				<anchored to="detailframe" position="insidetopleft" offset="15,10" width="50" height="20" />
@@ -43,7 +43,9 @@
 			</string_labeled>
 
 			<frame_char name="appearanceframe">
-				<bounds>0,45,-1,190</bounds>
+				<anchored position="insidetopleft" offset="0,50" height="190">
+					<right offset="0" />
+				</anchored>
 			</frame_char>
 			<label_frametop>
 				<anchored to="appearanceframe" />
@@ -92,7 +94,9 @@
 			<!-- </button_iadd> -->
 
 			<frame_char name="notesframe">
-				<bounds>0,235,-1,-2</bounds>
+				<anchored position="insidetop" offset="0,240">
+					<bottom />
+				</anchored>
 			</frame_char>
 			<label_frametop>
 				<anchored to="notesframe" />

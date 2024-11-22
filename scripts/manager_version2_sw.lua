@@ -1,6 +1,7 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
+-- File adjusted for Star Wars 3.5E
 --
 
 local rsname = "Star.Wars.D20";

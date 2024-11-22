@@ -18,8 +18,9 @@
 		<preset key="lamp" nameres="lighting_lamp" color="FFFFF3E1" bright="3" dim="6" animtype="flicker" animspeed="25" />
 		<preset key="torch" nameres="lighting_torch" color="FFFFF3E1" bright="4" dim="8" animtype="flicker" animspeed="25" />
 		<preset key="lantern" nameres="lighting_lantern" color="FFF9FEFF" bright="6" dim="12" />
-		<preset key="sunrod" nameres="lighting_sunrod" color="FFFFF7E6" bright="6" dim="12" />
+		<preset key="sunrod" merge="delete" />
 		<preset key="spell_darkness" merge="delete" />
+		<preset key="spell_daylight" merge="delete" />
 		<preset key="spell_light" merge="delete" />
 	</lightingsettings>
 

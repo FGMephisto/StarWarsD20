@@ -12,7 +12,7 @@
 		<script file="campaign/scripts/char_actions.lua" />
 		<sheetdata>
 			<frame_char name="actionframe">
-				<bounds>0,0,-1,-2</bounds>
+				<anchored position="over" />
 			</frame_char>
 			
 			<subwindow name="actions">
@@ -342,37 +342,17 @@
 		</sheetdata>
 	</windowclass>
 	
-	<windowclass name="char_weapon_editor">
-		<frame>charsheethelper</frame>
+	<windowclass name="char_weapon_editor" copy="charsheethelper_base">
 		<sizelimits>
 			<minimum width="400" height="350" />
-			<dynamic />
 		</sizelimits>
 		<sheetdata>
 			<windowtitlebar_charsheethelper name="title">
 				<resource>weapon_title</resource>
 			</windowtitlebar_charsheethelper>
-			<anchor_title_charsheethelper name="contentanchor" />
-			
-			<genericcontrol name="contentframe">
-				<anchored to="contentanchor">
-					<top anchor="bottom" offset="0" />
-					<left />
-					<right />
-					<bottom parent="" offset="-30" />
-				</anchored>
-			</genericcontrol>
-
-			<subwindow_record name="main">
+			<sub_content_framed_groupbox name="content">
 				<class>char_weapon_editor_main</class>
-				<activate />
-			</subwindow_record>
-			<scrollbar_record>
-				<target>main</target>
-			</scrollbar_record>
-
-			<resize_charsheethelper />
-			<close_charsheethelper />
+			</sub_content_framed_groupbox>
 		</sheetdata>
 	</windowclass>
 	
@@ -525,7 +505,7 @@
 				<static textres="weapon_label_dmgstat" />
 			</label_fieldtop>
 			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="207,1" width="35" />
+				<anchored to="list" position="aboveleft" offset="207,1" width="30" />
 				<static textres="weapon_label_dmgbonus" />
 			</label_fieldtop>
 			<label_fieldtop>
@@ -598,7 +578,7 @@
 				<static>+</static>
 			</label>
 			<basicnumber name="bonus">
-				<anchored to="label_plus2" position="righthigh" offset="2,0" width="35" height="20" />
+				<anchored to="label_plus2" position="righthigh" offset="2,0" width="30" height="20" />
 				<hideonvalue>0</hideonvalue>
 			</basicnumber>
 			

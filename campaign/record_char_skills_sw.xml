@@ -11,7 +11,7 @@
 	<windowclass name="charsheet_skills">
 		<sheetdata>
 			<frame_char name="skillpointframe">
-				<bounds>0,0,-1,50</bounds>
+				<anchored position="insidetop" height="50" />
 			</frame_char>
 			<label name="spent_label">
 				<anchored to="skillpointframe" position="insidetopleft" offset="15,15" />
@@ -92,7 +92,9 @@
 			</button_iadd>
 
 			<frame_char name="skillframe">
-				<bounds>0,50,-1,-3</bounds>
+				<anchored position="insidetop" offset="0,50">
+					<bottom />
+				</anchored>
 			</frame_char>
 
 			<genericcontrol>
@@ -140,7 +142,7 @@
 			<label>
 				<anchored to="rightanchor" width="77">
 					<top />
-					<right anchor="left" relation="relative" offset="-5" />
+					<right anchor="left" relation="relative" offset="-23" />
 				</anchored>
 				<center />
 				<static textres="char_label_skillability" />
@@ -148,7 +150,7 @@
 			<label>
 				<anchored to="rightanchor" width="42">
 					<top />
-					<right anchor="left" relation="relative" offset="0" />
+					<right anchor="left" relation="relative" offset="18" />
 				</anchored>
 				<center />
 				<static textres="char_label_skillranks" />

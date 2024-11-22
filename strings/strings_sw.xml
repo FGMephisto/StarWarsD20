@@ -51,11 +51,6 @@
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	
-	<string name="menu_rest">Rest</string>
-	<string name="menu_restshort">Short Rest</string>
-	<string name="menu_restovernight">Overnight Rest</string>
-	<string name="message_restshort">Taking short rest.</string>
-	<string name="message_restovernight">Taking overnight rest.</string>
 	<string name="menu_init">Initiative</string>
 	<string name="menu_initall">Roll All Initiatives</string>
 	<string name="menu_initnpc">Roll NPC Initiatives</string>
@@ -112,9 +107,6 @@
 
 	<string name="ct_tooltip_immediateon">Immediate/Swift Action Used</string>
 	<string name="ct_tooltip_immediateoff">Immediate/Swift Action Not Used</string>
-	
-	<string name="ct_message_rest">Party taking short rest.</string>
-	<string name="ct_message_restovernight">Party taking overnight rest.</string>
 	
 	<!-- Party Sheet -->
 	<string name="ps_empty_skill">&#171; Skill &#187;</string>
@@ -206,8 +198,6 @@
 	<string name="skill_value_spot">Spot</string>
 
 	<!-- Character - Mini -->
-	<string name="char_label_fullsheet">Full Sheet</string>
-	<string name="char_label_minisheet">Mini Sheet</string>
 	<string name="charmini_label_wounds">Wnd</string>
 	<string name="charmini_label_hptemp">Temp</string>
 	<string name="charmini_label_nonlethal">Subd</string>
@@ -423,6 +413,9 @@
 	<string name="class_label_classtype_prestige">Prestige</string>
 	<string name="class_label_classtype_npc">NPC</string>
 	<string name="class_label_classtype_archetype">Archetype</string>
+	<string name="class_label_classtype_animalcompanion">Animal Companion</string>
+	<string name="class_label_classtype_eidolon">Eidolon</string>
+	<string name="class_label_classtype_phantom">Phantom</string>
 	<string name="class_label_hitdie">Hit Die</string>
 	<string name="class_label_bab">Base Attack</string>
 	<string name="class_label_bab_fast">Fast</string>
@@ -827,18 +820,18 @@
 	<string name="char_tooltip_skilladdrwlanguage">Add Read/Write Language</string>
 
 	<!-- Character - Abilities -->
-	<string name="char_label_feats">FEATS</string>
-	<string name="char_label_sa">CLASS ABILITIES</string>
-	<string name="char_label_proficiencies">PROFICIENCY</string>
-	<string name="char_label_traits">RACIAL TRAITS</string>
-	<string name="char_label_languages">LANGUAGES</string>
+	<string name="char_abilities_label_feats">FEATS</string>
+	<string name="char_abilities_label_sa">CLASS ABILITIES</string>
+	<string name="char_abilities_label_proficiencies">PROFICIENCIES</string>
+	<string name="char_abilities_label_traits">RACIAL TRAITS</string>
+	<string name="char_abilities_label_languages">LANGUAGES</string>
 	
 	<!-- Character - Inventory -->
 	<string name="char_label_money">Credits</string>
 	
 	<!-- Character - Notes -->
 	<string name="char_label_forcepoints">Force Points</string>
-	<string name="char_label_darksidepoints">Dark Side Points</string>
+	<string name="char_label_darksidepoints">Dark Side Pts</string>
 	
 	<!-- Character - Actions -->
 	<string name="char_label_spells">Force</string>

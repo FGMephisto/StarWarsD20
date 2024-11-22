@@ -8,8 +8,28 @@ function getItemIsIdentified(vRecord, vDefault)
 	return LibraryData.getIDState("item", vRecord, true);
 end
 
+function getNPCCRValue(vNode)
+	return getCRGroup(DB.getValue(vNode, "cr", 0));
+end
+function getCRGroup(v)
+	local nOutput = tonumber(v) or 0;
+	if nOutput > 0 then
+		if nOutput < 0.14 then
+			nOutput = 0.125;
+		elseif nOutput < 0.2 then
+			nOutput = 0.166;
+		elseif nOutput < 0.3 then
+			nOutput = 0.25;
+		elseif nOutput < 0.4 then
+			nOutput = 0.33;
+		elseif nOutput < 1 then
+			nOutput = 0.5;
+		end
+	end
+	return tostring(nOutput);
+end
 function getCRGroupedList(v)
-	local nOutput = v or 0;
+	local nOutput = tonumber(v) or 0;
 	if nOutput > 0 then
 		if nOutput < 0.14 then
 			nOutput = "1/8";
@@ -26,32 +46,13 @@ function getCRGroupedList(v)
 	return tostring(nOutput);
 end
 
-function getCRGroup(v)
-	local nOutput = v or 0;
-	if nOutput > 0 then
-		if nOutput < 0.14 then
-			nOutput = 0.125;
-		elseif nOutput < 0.2 then
-			nOutput = 0.166;
-		elseif nOutput < 0.3 then
-			nOutput = 0.25;
-		elseif nOutput < 0.4 then
-			nOutput = 0.33;
-		elseif nOutput < 1 then
-			nOutput = 0.5;
-		end
-	end
-	return tostring(nOutput);
+function getNPCTypeValue(vNode)
+	return getTypeGroup(DB.getValue(vNode, "type", ""));
 end
-
-function getNPCCRValue(vNode)
-	return getCRGroup(DB.getValue(vNode, "cr", 0));
-end
-
 function getTypeGroup(v)
 	local sOutput = "";
 	if v then
-		local sCreatureType = StringManager.trim(v):lower();
+		local sCreatureType = StringManager.trim(tostring(v)):lower();
 		for _,sListCreatureType in ipairs(DataCommon.creaturetype) do
 			if sCreatureType:match(sListCreatureType) then
 				sOutput = StringManager.capitalize(sListCreatureType);
@@ -62,27 +63,22 @@ function getTypeGroup(v)
 	return sOutput;
 end
 
-function getNPCTypeValue(vNode)
-	return getTypeGroup(DB.getValue(vNode, "type", ""));
-end
-
 function isItemIdentifiable(vNode)
 	local sBasePath = UtilityManager.getDataBaseNodePathSplit(vNode)
 	return (sBasePath ~= "reference");
 end
 
 function getSpellSchoolValue(vNode)
-	local v = StringManager.trim(DB.getValue(vNode, "school", ""));
-	local sType = v:match("^%w+");
+	local s = StringManager.trim(tostring(DB.getValue(vNode, "school", "")));
+	local sType = s:match("^%w+");
 	if sType then
-		v = StringManager.trim(sType);
+		s = StringManager.trim(sType);
 	end
-	v = StringManager.capitalize(v);
-	return v;
+	return StringManager.capitalize(s);
 end
 
 function getSpellSourceValue(vNode)
-	return StringManager.split(DB.getValue(vNode, "level", ""), ",", true);
+	return StringManager.split(tostring(DB.getValue(vNode, "level", "")), ",", true);
 end
 
 function getClassTypeValue(vNode)
@@ -91,6 +87,14 @@ function getClassTypeValue(vNode)
 		return Interface.getString("class_label_classtype_prestige");
 	elseif sClassType == "npc" then
 		return Interface.getString("class_label_classtype_npc");
+	elseif sClassType == "archetype" then
+		return Interface.getString("class_label_classtype_archetype");
+	elseif sClassType == "animalcompanion" then
+		return Interface.getString("class_label_classtype_animalcompanion");
+	elseif sClassType == "eidolon" then
+		return Interface.getString("class_label_classtype_eidolon");
+	elseif sClassType == "phantom" then
+		return Interface.getString("class_label_classtype_phantom");
 	end
 	return Interface.getString("class_label_classtype_base");
 end

@@ -80,7 +80,7 @@ _tModifierExclusionSets =
 	{ "DEF_MCOVER", "DEF_PCOVER", "DEF_COVER", "DEF_SCOVER" },
 	{ "DEF_KNEELING", "DEF_PRONE", "DEF_RUN", "DEF_PINNED" },
 	{ "DEF_DODGE", "DEF_KNEELING", "DEF_PRONE" },
-	{ "DEF_MCONC", "DEF_PCONC", "DEF_CONC", "DEF_SCONC", "DEF_TCONC" },
+	{ "DEF_CONC", "DEF_TCONC", "DEF_MCONC", "DEF_PCONC", "DEF_SCONC" },
 };
 
 -- Shown in Campaign Setup window

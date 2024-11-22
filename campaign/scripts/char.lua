@@ -9,6 +9,8 @@ function onInit()
 		registerMenuItem(Interface.getString("menu_restshort"), "pointer_cone", 7, 8);
 		registerMenuItem(Interface.getString("menu_restovernight"), "pointer_circle", 7, 6);
 	end
+
+	WindowTabManager.populate(self);
 end
 
 function onMenuSelection(selection, subselection)

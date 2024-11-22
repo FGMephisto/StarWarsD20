@@ -159,7 +159,7 @@ creaturesubtype = {
 	-- "halfling",
 	"human",
 	-- "orc",
-	-- "reptilian",
+	"reptilian",
 };
 
 -- Values supported in effect conditionals

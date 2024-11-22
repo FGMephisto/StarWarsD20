@@ -4,6 +4,9 @@
 --
 
 function onInit()
+	if super and super.onInit then
+		super.onInit();
+	end
 	DB.addHandler(DB.getPath(window.getDatabaseNode(), "classes"), "onChildUpdate", updateValue);
 	updateValue();
 end

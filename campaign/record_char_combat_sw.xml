@@ -13,7 +13,7 @@
 		<sheetdata>
 			<!-- Defenses - Armor -->
 			<frame_char name="acframe">
-				<bounds>0,0,480,140</bounds>
+				<anchored position="insidetopleft" width="480" height="210" />
 			</frame_char>
 			
 			<!-- "Total" column with labels aligned left -->
@@ -58,22 +58,21 @@
 				<anchored to="ac" />
 				<static textres="char_label_combattotal" />
 			</label_fieldtop>
-			
-			<!-- "Class" column -->
-			<number_charcombatmod name="acclass" source="ac.sources.class">
-				<anchored to="ac" offset="15,0" />
-			</number_charcombatmod>
-			<number_charcombatmod_static name="ffacclass" source="ac.sources.class">
-				<anchored to="acclass" position="below" offset="0, 30" />
-			</number_charcombatmod_static>
-			<string_charcombatmod_blank name="touchacarmor">
-				<anchored to="ffacclass" />
-			</string_charcombatmod_blank>
+
+			<!-- <number_charcombatmod name="acarmor" source="ac.sources.armor"> -->
+				<!-- <anchored to="ac" offset="15,0" /> -->
+			<!-- </number_charcombatmod> -->
+			<!-- <number_charcombatmod_static name="ffacarmor" source="ac.sources.armor"> -->
+				<!-- <anchored to="acarmor" offset="0,28" /> -->
+			<!-- </number_charcombatmod_static> -->
+			<!-- <string_charcombatmod_blank name="touchacarmor"> -->
+				<!-- <anchored to="ffacarmor" /> -->
+			<!-- </string_charcombatmod_blank> -->
 			<!-- <string_charcombatmod_blank name="cmdacarmor"> -->
 				<!-- <anchored to="touchacarmor" offset="0,20" /> -->
 			<!-- </string_charcombatmod_blank> -->
 			<!-- <label_fieldtop name="acarmor_label"> -->
-				<!-- <anchored to="acclass" /> -->
+				<!-- <anchored to="acarmor" /> -->
 				<!-- <static textres="char_label_combatarmor" /> -->
 			<!-- </label_fieldtop> -->
 			
@@ -90,6 +89,24 @@
 			<!-- <string_charcombatmod_blank name="cmdacshield"> -->
 				<!-- <anchored to="touchacshield" offset="0,20" /> -->
 			<!-- </string_charcombatmod_blank> -->
+			<!-- <label_fieldtop name="acshield_label"> -->
+				<!-- <anchored to="acshield" /> -->
+			<!-- <static textres="char_label_combatacshield" /> -->
+
+			<!-- "Class" column -->
+			<number_charcombatmod name="acclass" source="ac.sources.class">
+				<anchored to="ac" offset="15,0" />
+			</number_charcombatmod>
+			<number_charcombatmod_static name="ffacclass" source="ac.sources.class">
+				<anchored to="acclass" position="below" offset="0, 30" />
+			</number_charcombatmod_static>
+			<string_charcombatmod_blank name="touchacarmor">
+				<anchored to="ffacclass" />
+								
+												 
+												
+			</string_charcombatmod_blank>
+
 			<label_fieldtop name="acclass_label">
 				<anchored to="acclass" />
 				<static textres="char_label_combatsaveclass" />
@@ -128,6 +145,7 @@
 				<!-- </parameters> -->
 				<!-- <tooltip textres="char_tooltip_cmdbasemod" /> -->
 			<!-- </cycler_charcombatability> -->
+
 			<number_charcombatabilitymod name="acstatmod" source="ac.sources.abilitymod">
 				<anchored to="acstat" />
 			</number_charcombatabilitymod>
@@ -242,6 +260,7 @@
 				<anchored to="acdodge" />
 				<static textres="char_label_combatacdodge" />
 			</label_fieldtop>
+
 			<number_charcombatmod name="acmisc" source="ac.sources.misc">
 				<anchored to="acdodge" />
 			</number_charcombatmod>
@@ -263,10 +282,10 @@
 				<anchored to="acmisc" />
 				<static textres="char_label_combatmisc" />
 			</label_fieldtop>
-			
+
 			<!-- Defenses - Saves -->
 			<frame_char name="saveframe">
-				<bounds>0,140,350,120</bounds>
+				<anchored position="insidetopleft" offset="0,210" width="350" height="120" />
 			</frame_char>
 			
 			<!-- "Total" column -->
@@ -365,9 +384,10 @@
 				<anchored to="fortitudemisc" />
 				<static textres="char_label_combatmisc" />
 			</label_fieldtop>
+
 			<!-- Attacks -->
 			<frame_char name="attackframe">
-				<bounds>0,260,350,150</bounds>
+				<anchored position="insidetopleft" offset="0,330" width="350" height="150" />
 			</frame_char>
 
 			<label name="baseattackbonus_label">
@@ -518,7 +538,7 @@
 
 			<!-- Speed -->
 			<frame_char name="speedframe">
-				<bounds>350,140,130,120</bounds>
+				<anchored position="insidetopleft" offset="350,210" width="130" height="120" />
 			</frame_char>
 			
 			<number_charspeed name="speedfinal" source="speed.total">
@@ -558,7 +578,7 @@
 
 			<!-- INITIATIVE -->
 			<frame_char name="initiativeframe">
-				<bounds>350,260,130,150</bounds>
+				<anchored position="insidetopleft" offset="350,330" width="130" height="150" />
 			</frame_char>
 			<number_charinit name="initiative" source="initiative.total">
 				<anchored to="initiativeframe" position="insidetopleft" offset="78,16" width="32" height="20" />

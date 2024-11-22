@@ -52,10 +52,10 @@ function onMenuSelection(selection, subselection)
 		end
 		if selection == 8 then
 			if subselection == 8 then
-				ChatManager.Message(Interface.getString("ct_message_rest"), true);
+				ChatManager.Message(Interface.getString("message_restallshort"), true);
 				CombatManager2.rest(true);
 			elseif subselection == 6 then
-				ChatManager.Message(Interface.getString("ct_message_restovernight"), true);
+				ChatManager.Message(Interface.getString("message_restallovernight"), true);
 				CombatManager2.rest();
 			end
 		end

@@ -3,11 +3,9 @@
 <!-- 
   Please see the license.html file included with this distribution for 
   attribution and copyright information.
-  File adjusted for Star Wars 3.5E
 -->
 
 <root>
-	<!-- Adjusted -->
 	<windowclass name="charsheet" copy="charsheet_base">
 		<sizelimits>
 			<minimum width="515" height="610" />
@@ -75,7 +73,6 @@
 			<resource>tab_actions</resource>
 			<class>charsheetmini_actions</class>
 		</tab>
-		<minisheet />
 		<script file="campaign/scripts/char.lua" />
 		<sheetdata>
 			<sub_content_top name="overview">

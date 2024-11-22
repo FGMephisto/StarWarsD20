@@ -49,10 +49,10 @@
 				<static textres="class_label_classtype" />
 			</label_column>
 			<cycler_column_classstat name="classtype">
-				<anchored width="80" />
+				<anchored width="150" />
 				<parameters>
-					<labelsres>class_label_classtype_base|class_label_classtype_prestige|class_label_classtype_npc|class_label_classtype_archetype</labelsres>
-					<values>base|prestige|npc|archetype</values>
+					<labelsres>class_label_classtype_base|class_label_classtype_prestige|class_label_classtype_npc|class_label_classtype_archetype|class_label_classtype_animalcompanion|class_label_classtype_eidolon|class_label_classtype_phantom</labelsres>
+					<values>base|prestige|npc|archetype|animalcompanion|eidolon|phantom</values>
 				</parameters>
 			</cycler_column_classstat>
 			
