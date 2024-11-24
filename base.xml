@@ -7,7 +7,7 @@
 -->
 
 <root version="3.0" release="18" logo="logo.png">
-	<announcement text="Star Wars D20 ruleset (v2024-09-01) for Fantasy Grounds.\nThe ruleset uses icons made by Lorc are available on game-icons.net." font="emotefont" icon="rulesetlogo_CoreRPG" />
+	<announcement text="Star Wars D20 ruleset (v2024-12-01) for Fantasy Grounds.\nThe ruleset uses icons made by Lorc are available on game-icons.net." font="emotefont" icon="rulesetlogo_CoreRPG" />
 
 	<!-- Attributes -->
 	<description>
