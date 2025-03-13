@@ -3,10 +3,31 @@
 -- attribution and copyright information.
 --
 
+function onInit()
+	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+end
+
+function onLockModeChanged(bReadOnly)
+	local tFields = { "spellclass_iadd", "weapon_iadd", };
+	WindowManager.callSafeControlsSetVisible(self, tFields, not bReadOnly);
+
+	if UtilityManager.getTopWindow(self).getClass() == "charsheetmini" then
+		return;
+	end
+
+	local tFieldsPlay = { "label_mode", "spellmode", "label_display", "spelldisplaymode", };
+	WindowManager.callSafeControlsSetVisible(self, tFieldsPlay, bReadOnly);
+	if not bReadOnly then
+		DB.setValue(getDatabaseNode(), "spellmode", "string", "standard");
+	end
+end
+
 function onDisplayChanged()
 	if not minisheet then
-		for _,v in pairs(actions.subwindow.spellclasslist.getWindows()) do
-			v.onDisplayChanged();
+		if actions and actions.subwindow then
+			for _,v in pairs(actions.subwindow.spellclasslist.getWindows()) do
+				v.onDisplayChanged();
+			end
 		end
 	end
 end
@@ -15,32 +36,24 @@ function onModeChanged()
 	if minisheet then
 		weaponlist.onModeChanged();
 	else
-		actions.subwindow.weaponlist.onModeChanged();
+		if actions and actions.subwindow then
+			actions.subwindow.weaponlist.onModeChanged();
+		end
 	end
 	
 	self.updateSpellCounters();
 end
 					
-function onEditModeChanged()
-	local bEditMode = WindowManager.getEditMode(self, "actions_iedit");
-	
-	label_mode.setVisible(not bEditMode);
-	spellmode.setVisible(not bEditMode);
-	label_display.setVisible(not bEditMode);
-	spelldisplaymode.setVisible(not bEditMode);
-	if bEditMode then
-		DB.setValue(getDatabaseNode(), "spellmode", "string", "standard");
-	end
-end
-
 function updateSpellCounters()
 	if minisheet then
 		for _,v in pairs(spellclasslist.getWindows()) do
 			v.onSpellCounterUpdate();
 		end
 	else
-		for _,v in pairs(actions.subwindow.spellclasslist.getWindows()) do
-			v.onSpellCounterUpdate();
+		if actions and actions.subwindow then
+			for _,v in pairs(actions.subwindow.spellclasslist.getWindows()) do
+				v.onSpellCounterUpdate();
+			end
 		end
 	end
 end

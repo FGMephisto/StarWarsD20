@@ -5,26 +5,39 @@
 --
 
 function onInit()
-	onEncumbranceLimitChanged();
-	DB.addHandler(DB.getPath(getDatabaseNode(), "abilities.strength.score"), "onUpdate", onStrengthChanged);
-	DB.addHandler(DB.getPath(getDatabaseNode(), "size"), "onUpdate", onSizeChanged);
-	DB.addHandler(DB.getPath(getDatabaseNode(), "encumbrance.stradj"), "onUpdate", onEncumbranceLimitChanged);
-	DB.addHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", onEncumbranceLimitChanged);
+	if super and super.onInit then
+		super.onInit();
+	end
+
+	self.onEncumbranceLimitChanged();
+	DB.addHandler(DB.getPath(getDatabaseNode(), "abilities.strength.score"), "onUpdate", self.onStrengthChanged);
+	DB.addHandler(DB.getPath(getDatabaseNode(), "size"), "onUpdate", self.onSizeChanged);
+	DB.addHandler(DB.getPath(getDatabaseNode(), "encumbrance.stradj"), "onUpdate", self.onEncumbranceLimitChanged);
+	DB.addHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", self.onEncumbranceLimitChanged);
+end
+function onClose()
+	DB.removeHandler(DB.getPath(getDatabaseNode(), "abilities.strength.score"), "onUpdate", self.onStrengthChanged);
+	DB.removeHandler(DB.getPath(getDatabaseNode(), "size"), "onUpdate", self.onSizeChanged);
+	DB.removeHandler(DB.getPath(getDatabaseNode(), "encumbrance.stradj"), "onUpdate", self.onEncumbranceLimitChanged);
+	DB.removeHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", self.onEncumbranceLimitChanged);
 end
 
-function onClose()
-	DB.removeHandler(DB.getPath(getDatabaseNode(), "abilities.strength.score"), "onUpdate", onStrengthChanged);
-	DB.removeHandler(DB.getPath(getDatabaseNode(), "size"), "onUpdate", onSizeChanged);
-	DB.removeHandler(DB.getPath(getDatabaseNode(), "encumbrance.stradj"), "onUpdate", onEncumbranceLimitChanged);
-	DB.removeHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", onEncumbranceLimitChanged);
+function onLockModeChanged(bReadOnly)
+	if super and super.onLockModeChanged then
+		super.onLockModeChanged(bReadOnly);
+	end
+
+	if UtilityManager.getTopWindow(self).getClass() ~= "charsheetmini" then
+		local tFields = { "usearmormaxstatbonus", "armormaxstatbonus", "armorcheckpenalty", "spellfailure", };
+		WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
+	end
 end
 
 function onStrengthChanged()
-	onEncumbranceLimitChanged();
+	self.onEncumbranceLimitChanged();
 end
-
 function onSizeChanged()
-	onEncumbranceLimitChanged();
+	self.onEncumbranceLimitChanged();
 end
 
 -- Adjusted

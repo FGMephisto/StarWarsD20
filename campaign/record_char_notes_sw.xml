@@ -9,6 +9,15 @@
 <root>
 	<!-- Adjusted -->
 	<windowclass name="charsheet_notes">
+		<script>
+			function onInit()
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+			end
+			function onLockModeChanged(bReadOnly)
+				local tFields = { "gender", "age", "height", "weight", "size", "alignment", "deity", "appearance", "notes", "languages_iadd", };
+				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
+			end
+		</script>
 		<sheetdata>
 			<frame_char name="detailframe">
 				<anchored position="insidetop" height="50" />
@@ -66,7 +75,7 @@
 			</scrollbar>
 
 			<!-- <frame_char name="languageframe"> -->
-				<!-- <bounds>-159,45,160,190</bounds> -->
+				<!-- <anchored position="insidetopright" offset="0,50" width="180" height="190" /> -->
 			<!-- </frame_char> -->
 			<!-- <label_frametop> -->
 				<!-- <anchored to="languageframe" /> -->
@@ -84,12 +93,8 @@
 				<!-- <anchored to="languages" /> -->
 				<!-- <target>languages</target> -->
 			<!-- </scrollbar> -->
-			<!-- <button_iedit name="languages_iedit"> -->
-				<!-- <anchored to="languages" position="aboveright" offset="5,5" /> -->
-				<!-- <target>languages</target> -->
-			<!-- </button_iedit> -->
 			<!-- <button_iadd name="languages_iadd"> -->
-				<!-- <anchored to="languages" position="aboveleft" offset="10,5" /> -->
+				<!-- <anchored to="languages" position="aboveright" offset="5,5" /> -->
 				<!-- <target>languages</target> -->
 			<!-- </button_iadd> -->
 

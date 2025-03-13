@@ -13,10 +13,12 @@ function onInit()
 	DB.setValue(node, "level", "number", nLevel);
 
 	self.updateLabel();
-	
-	if not windowlist.isReadOnly() then
-		registerMenuItem(Interface.getString("menu_addspell"), "insert", 5);
-	end
+
+	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+end
+
+function onLockModeChanged(bReadOnly)
+	WindowManager.callSafeControlsSetLockMode(self, { "spells_iadd", }, bReadOnly);
 end
 
 local _bShow = true;
@@ -29,7 +31,6 @@ end
 
 function updateLabel()
 	local sLabel = "Level " .. DB.getValue(getDatabaseNode(), "level", 0);
-	
 	label.setValue(sLabel);
 end
 	
@@ -37,16 +38,9 @@ function onSpellCounterUpdate()
 	windowlist.window.onSpellCounterUpdate();
 end
 
-function onMenuSelection(selection, subselection)
-	if selection == 5 then
-		spells.addEntry(true);
-	end
-end
-
 function onClickDown(button, x, y)
 	return true;
 end
-
 function onClickRelease(button, x, y)
 	if DB.getChildCount(spells.getDatabaseNode(), "") == 0 then
 		spells.addEntry(true);

@@ -69,6 +69,42 @@ local _tActorDiceSystemRules = {
 		-- sName = "Celestial|Angel, Astral Deva|Angel, Planetar|Angel, Solar|Archon, Hound|Archon, Hound, Hero, 11th-Level Paladin|Archon, Lantern|Archon, Trumpet",
 		-- sDefaultKey = "celestial", 
 	-- },
+	-- ["undead_vampire"] = { 
+		-- sName = "Vampire Spawn", 
+		-- sDefaultKey = "undead_vampire", 
+	-- },
+	-- ["undead_mummy"] = { 
+		-- sName = "Mummy|Mummy Lord, 10th-Level Cleric", 
+		-- sDefaultKey = "undead_mummy", 
+	-- },
+	-- ["undead_zombie"] = { 
+		-- sName = "Zombie, Bugbear|Zombie, Gray Render|Zombie, Human Commoner|Zombie, Kobold|Zombie, Minotaur|Zombie, Ogre|Zombie, Troglodyte|Zombie, Wyvern|Ghoul|Ghoul, Ghast", 
+		-- sDefaultKey = "undead_zombie", 
+	-- },
+	-- ["undead_skeleton"] = { 
+		-- sName = "Ettin Skeleton|Skeleton, Cloud Giant|Skeleton, Ettin|Skeleton, Human Warrior", 
+		-- sDefaultKey = "undead_skeleton", 
+	-- },
+	-- ["humanoid_were"] = { 
+		-- sName = "Lycanthrope, Hill Giant Dire Wereboar, Dire Boar Form|Lycanthrope, Hill Giant Dire Wereboar, Giant Form|Lycanthrope, Hill Giant Dire Wereboar, Hybrid Boar Form|Lycanthrope, Werebear, Bear Form|Lycanthrope, Werebear, Human Form|Lycanthrope, Werebear, Hybrid Form|Lycanthrope, Wereboar, Boar Form|Lycanthrope, Wereboar, Human Form|Lycanthrope, Wereboar, Hybrid Form|Lycanthrope, Wererat, Dire Rat Form|Lycanthrope, Wererat, Human Form|Lycanthrope, Wererat, Hybrid Form|Lycanthrope, Weretiger, Human Form|Lycanthrope, Weretiger, Hybrid Form|Lycanthrope, Weretiger, Tiger Form|Lycanthrope, Werewolf, Human Form|Lycanthrope, Werewolf, Hybrid Form|Lycanthrope, Werewolf Lord, Dire Wolf Form|Lycanthrope, Werewolf Lord, Human Form|Lycanthrope, Werewolf Lord, Hybrid Form|Lycanthrope, Werewolf, Wolf Form", 
+		-- sDefaultKey = "humanoid_were", 
+	-- },
+	-- ["beast_insect"] = { 
+		-- sName = "Giant Ant, Queen|Giant Ant, Soldier|Giant Ant, Worker|Giant Bee|Giant Bombardier Beetle|Giant Praying Mantis|Giant Stag Beetle|Giant Wasp|Monstrous Centipede, Colossal|Monstrous Centipede, Gargantuan|Monstrous Centipede, Huge|Monstrous Centipede, Large|Monstrous Centipede, Medium|Monstrous Centipede, Small|Monstrous Centipede, Tiny|Monstrous Scorpion, Colossal|Monstrous Scorpion, Gargantuan|Monstrous Scorpion, Huge|Monstrous Scorpion, Large|Monstrous Scorpion, Medium|Monstrous Scorpion, Small|Monstrous Scorpion, Tiny|Swarm, Centipede|Swarm, Hellwasp|Swarm, Locust", 
+		-- sDefaultKey = "beast_insect", 
+	-- },
+	-- ["beast_reptile"] = { 
+		-- sName = "Lizard|Lizardfolk|Lizard, Monitor|Deinonychus|Dinosaur, Deinonychus|Dinosaur, Elasmosaurus|Dinosaur, Megaraptor|Dinosaur, Triceratops|Dinosaur, Tyrannosaurus|Crocodile|Crocodile, Giant", 
+		-- sDefaultKey = "beast_reptile", 
+	-- },
+	-- ["beast_aquatic"] = { 
+		-- sName = "Aboleth|Aboleth Mage, 10th-Level Wizard|Dragon Turtle|Octopus|Octopus, Giant|Sea Cat|Shark, Huge|Shark, Large|Shark, Medium|Whale, Baleen|Whale, Cachalot|Whale, Orca", 
+		-- sDefaultKey = "beast_aquatic", 
+	-- },
+	-- ["beast_avian"] = { 
+		-- sName = "Roc|Raven|Owl|Owlbear|Owl, Giant|Hawk|Eagle|Eagle, Giant|Cockatrice|Arrowhawk, Adult|Arrowhawk, Elder|Arrowhawk, Juvenile", 
+		-- sDefaultKey = "beast_avian", 
+	-- },
 };
 local _tActorSystemDefaults = {
 	-- ["dragon_red"] = {
@@ -119,7 +155,34 @@ local _tActorSystemDefaults = {
 	-- },
 	-- ["celestial"] = {
 		-- { diceskin = 262 }
-	-- },		
+	-- },
+	-- ["undead_vampire"] = {
+		-- { diceskin = 302 }
+	-- },
+	-- ["undead_mummy"] = {
+		-- { diceskin = 303 }
+	-- },
+	-- ["undead_zombie"] = {
+		-- { diceskin = 304 }
+	-- },
+	-- ["undead_skeleton"] = {
+		-- { diceskin = 305 }
+	-- },
+	-- ["humanoid_were"] = {
+		-- { diceskin = 306 }
+	-- },
+	-- ["beast_insect"] = {
+		-- { diceskin = 307 }
+	-- },
+	-- ["beast_reptile"] = {
+		-- { diceskin = 308 }
+	-- },
+	-- ["beast_aquatic"] = {
+		-- { diceskin = 310 }
+	-- },
+	-- ["beast_avian"] = {
+		-- { diceskin = 311 }
+	-- },	
 };
 local _tActorTypeDefaults = {
 	-- ["aberration"] = {

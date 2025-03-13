@@ -10,6 +10,17 @@ function onInit()
 	self.onCasterTypeChanged();
 	self.toggleDetail();
 	self.onDisplayChanged();
+
+	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+end
+
+function onLockModeChanged(bReadOnly)
+	local tFields = { "castertype", "label", "cl", "points", "pointsused", "idelete", };
+	WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
+	local tFieldsSlots = { "availablelevel0", "availablelevel1", "availablelevel2", "availablelevel3", "availablelevel4", "availablelevel5", "availablelevel6", "availablelevel7", "availablelevel8", "availablelevel9", };
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsSlots, bReadOnly);
+	local tFieldsOther = { "dcmisc", "dcstat", "sp", "ccmisc", };
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsOther, bReadOnly);
 end
 
 local _bShow = true;
@@ -243,7 +254,6 @@ function updateSpellView()
 					vSpell.header.subwindow.usespacer.setVisible(false);
 				end
 				vSpell.header.subwindow.cost.setVisible(false);
-				vSpell.header.subwindow.cost_spacer.setVisible(false);
 			end
 			
 			if sSheetMode == "combat" then
@@ -269,7 +279,6 @@ function updateSpellView()
 
 				vSpell.header.subwindow.usepower.setVisible(true);
 				vSpell.header.subwindow.cost.setVisible(true);
-				vSpell.header.subwindow.cost_spacer.setVisible(true);
 				vSpell.header.subwindow.counter.setVisible(false);
 				vSpell.header.subwindow.usespacer.setVisible(false);
 			end
@@ -298,7 +307,6 @@ function updateSpellView()
 
 				vSpell.header.subwindow.usepower.setVisible(false);
 				vSpell.header.subwindow.cost.setVisible(false);
-				vSpell.header.subwindow.cost_spacer.setVisible(false);
 				vSpell.header.subwindow.counter.setVisible(true);
 				vSpell.header.subwindow.counter.update(sSheetMode, (sCasterType == "spontaneous"), nAvailable, nTotalCast, nTotalPrepared, nMaxPrepared);
 				if (sSheetMode == "preparation" or sCasterType == "spontaneous") then

@@ -111,14 +111,7 @@ function getRoll(rActor, rAction)
 		end
 		rRoll.sDesc = rRoll.sDesc .. "] " .. StringManager.capitalizeAll(rAction.label);
 	else
-		rRoll.sDesc = "[ATTACK";
-		if rAction.order and rAction.order > 1 then
-			rRoll.sDesc = rRoll.sDesc .. " #" .. rAction.order;
-		end
-		if rAction.range then
-			rRoll.sDesc = rRoll.sDesc .. " (" .. rAction.range .. ")";
-		end
-		rRoll.sDesc = rRoll.sDesc .. "] " .. StringManager.capitalizeAll(rAction.label);
+		rRoll.sDesc = ActionAttackCore.encodeActionText(rAction);
 	end
 	
 	-- Add ability modifiers
@@ -318,10 +311,7 @@ function modAttack(rSource, rTarget, rRoll)
 		-- Determine attack type
 		local sAttackType = nil;
 		if rRoll.sType == "attack" then
-			sAttackType = string.match(rRoll.sDesc, "%[ATTACK.*%((%w+)%)%]");
-			if not sAttackType then
-				sAttackType = "M";
-			end
+			sAttackType = ActionAttackCore.decodeRangeText(rRoll.sDesc);
 		elseif rRoll.sType == "grapple" then
 			sAttackType = "M";
 		end
@@ -474,7 +464,7 @@ function modAttack(rSource, rTarget, rRoll)
 end
 
 function onAttack(rSource, rTarget, rRoll)
-	ActionAttack.decodeAttackRoll(rRoll);
+	ActionAttackCore.decodeRollData(rRoll);
 	
 	local rMessage = ActionsManager.createActionMessage(rSource, rRoll);
 
@@ -696,7 +686,7 @@ function onPostAttackResolve(rSource, rTarget, rRoll, rMessage)
 end
 
 function onGrapple(rSource, rTarget, rRoll)
-	ActionAttack.decodeAttackRoll(rRoll);
+	ActionAttackCore.decodeAttackRoll(rRoll);
 
 	if DataCommon.isPFRPG() then
 		ActionAttack.onAttack(rSource, rTarget, rRoll);

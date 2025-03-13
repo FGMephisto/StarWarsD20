@@ -8,7 +8,7 @@
 <root>
 	<windowclass name="charsheet" copy="charsheet_base">
 		<sizelimits>
-			<minimum width="515" height="610" />
+			<minimum width="515" height="625" />
 		</sizelimits>
 		<tab>
 			<name>main</name>
@@ -47,11 +47,11 @@
 		</tab>
 		<script file="campaign/scripts/char.lua" />
 	</windowclass>
-	<windowclass name="charsheet_overview" copy="charsheet_overview_base" />
+	<windowclass name="charsheet_overview" copy="charsheet_overview_base_v2" />
 
 	<windowclass name="charsheetmini" copy="charsheet_base">
 		<sizelimits>
-			<minimum width="450" height="495" />
+			<minimum width="450" height="520" />
 		</sizelimits>
 		<tab>
 			<name>main</name>
@@ -80,5 +80,5 @@
 			</sub_content_top>
 		</sheetdata>
 	</windowclass>
-	<windowclass name="charsheetmini_overview" copy="charsheet_overview_base" />
+	<windowclass name="charsheetmini_overview" copy="charsheet_overview" />
 </root>

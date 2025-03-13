@@ -7,8 +7,30 @@
 -->
 
 <root>
+	<template name="charsheet_button_skill_iadd">
+		<buttoncontrol>
+			<script>
+				function setLockMode(bReadOnly)
+					setVisible(not bReadOnly);
+				end
+				function getLockMode()
+					return not isVisible();
+				end
+			</script>
+		</buttoncontrol>
+	</template>
+	
 	<!-- Adjusted -->
 	<windowclass name="charsheet_skills">
+		<script>
+			function onInit()
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+			end
+			function onLockModeChanged(bReadOnly)
+				local tFields = { "skills_iadd_profession", "skills_iadd_perform", "skills_iadd_knowledge", "skills_iadd_craft", "skills_iadd_rwlanguage", "skills_iadd_language", "skills_iadd", };
+				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
+			end
+		</script>
 		<sheetdata>
 			<frame_char name="skillpointframe">
 				<anchored position="insidetop" height="50" />
@@ -21,11 +43,8 @@
 				<anchored to="spent_label" position="righthigh" offset="10,0" width="32" height="20" />
 				<nodrag />
 			</number_static>
-			<button_iedit name="skills_iedit">
+			<charsheet_button_skill_iadd name="skills_iadd_profession">
 				<anchored to="skillpointframe" position="insidetopright" offset="25,15" />
-			</button_iedit>
-			<buttoncontrol name="skills_iadd_profession">
-				<anchored to="skills_iedit" position="lefthigh" offset="5,0" width="20" height="20" />
 				<icon normal="button_skillpr" pressed="button_skillpr_down" />
 				<tooltip textres="char_tooltip_skilladdprofession" />
 				<script>
@@ -33,8 +52,8 @@
 						window.skills.addNewInstance(Interface.getString("skill_value_profession"));
 					end
 				</script>
-			</buttoncontrol>
-			<buttoncontrol name="skills_iadd_perform">
+			</charsheet_button_skill_iadd>
+			<charsheet_button_skill_iadd name="skills_iadd_perform">
 				<anchored to="skills_iadd_profession" position="lefthigh" offset="5,0" width="20" height="20" />
 				<icon normal="button_skillpe" pressed="button_skillpe_down" />
 				<tooltip textres="char_tooltip_skilladdperform" />
@@ -44,8 +63,8 @@
 					end
 				</script>
 				<invisible />
-			</buttoncontrol>
-			<buttoncontrol name="skills_iadd_knowledge">
+			</charsheet_button_skill_iadd>
+			<charsheet_button_skill_iadd name="skills_iadd_knowledge">
 				<anchored to="skills_iadd_perform" position="lefthigh" offset="5,0" width="20" height="20" />
 				<icon normal="button_skillkn" pressed="button_skillkn_down" />
 				<tooltip textres="char_tooltip_skilladdknowledge" />
@@ -54,8 +73,8 @@
 						window.skills.addNewInstance(Interface.getString("skill_value_knowledge"));
 					end
 				</script>
-			</buttoncontrol>
-			<buttoncontrol name="skills_iadd_craft">
+			</charsheet_button_skill_iadd>
+			<charsheet_button_skill_iadd name="skills_iadd_craft">
 				<anchored to="skills_iadd_knowledge" position="lefthigh" offset="5,0" width="20" height="20" />
 				<icon normal="button_skillcr" pressed="button_skillcr_down" />
 				<tooltip textres="char_tooltip_skilladdcraft" />
@@ -64,8 +83,8 @@
 						window.skills.addNewInstance(Interface.getString("skill_value_craft"));
 					end
 				</script>
-			</buttoncontrol>
-			<buttoncontrol name="skills_iadd_rwlanguage">
+			</charsheet_button_skill_iadd>
+			<charsheet_button_skill_iadd name="skills_iadd_rwlanguage">
 				<anchored to="skills_iadd_craft" position="lefthigh" offset="5,0" width="20" height="20" />
 				<icon normal="button_skillrw" pressed="button_skillrw_down" />
 				<tooltip textres="char_tooltip_skilladdrwlanguage" />
@@ -74,8 +93,8 @@
 						window.skills.addNewInstance(Interface.getString("skill_value_rwlanguage"));
 					end
 				</script>
-			</buttoncontrol>
-			<buttoncontrol name="skills_iadd_language">
+			</charsheet_button_skill_iadd>
+			<charsheet_button_skill_iadd name="skills_iadd_language">
 				<anchored to="skills_iadd_rwlanguage" position="lefthigh" offset="5,0" width="20" height="20" />
 				<icon normal="button_skillsl" pressed="button_skillsl_down" />
 				<tooltip textres="char_tooltip_skilladdlanguage" />
@@ -84,9 +103,9 @@
 						window.skills.addNewInstance(Interface.getString("skill_value_language"));
 					end
 				</script>
-			</buttoncontrol>
+			</charsheet_button_skill_iadd>
 			<button_iadd name="skills_iadd">
-				<anchored to="skills_iadd_craft" position="lefthigh" offset="5,0" width="20" height="20" />
+				<anchored to="skills_iadd_language" position="lefthigh" offset="5,0" width="20" height="20" />
 				<target>skills</target>
 				<tooltip textres="char_tooltip_skilladd" />
 			</button_iadd>
@@ -120,9 +139,7 @@
 				</anchored>
 				<invisible />
 			</genericcontrol>
-			<spacer_header_idelete name="idelete_header">
-				<editmode>skills_iedit</editmode>
-			</spacer_header_idelete>
+			<spacer_header_idelete name="idelete_header" />
 			<label>
 				<anchored to="rightanchor" width="44">
 					<top />
@@ -283,12 +300,6 @@
 					<right parent="rightanchor" anchor="left" relation="relative" offset="-5" />
 				</anchored>
 				<tabtarget next="sublabel" />
-				<script>
-					function onEnter()
-						window.windowlist.addEntry(true);
-						return true;
-					end
-				</script>
 			</stringu>
 			<stringu name="sublabel">
 				<anchored to="label" height="20">
@@ -298,12 +309,6 @@
 				</anchored>
 				<invisible />
 				<tabtarget next="ranks" prev="label" />
-				<script>
-					function onEnter()
-						window.windowlist.addNewInstance(window.label.getValue());
-						return true;
-					end
-				</script>
 			</stringu>
 		</sheetdata>
 	</windowclass>

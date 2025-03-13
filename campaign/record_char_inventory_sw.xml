@@ -16,13 +16,13 @@
 					<top offset="5" />
 					<right anchor="left" relation="relative" offset="-5" />
 				</anchored>
-				<!-- <icon>char_quicklist</icon> -->
-				<!-- <tooltip textres="char_tooltip_itemshowmini" /> -->
+				<icon>char_quicklist</icon>
+				<tooltip textres="char_tooltip_itemshowmini" />
 				<invisible />
 			</genericcontrol>
 			
 			<frame_char name="armorpenaltyframe" insertbefore="encumbranceframe">
-				<anchored position="insidebottomleft" offset="0,147" width="240" height="58" />
+				<anchored position="insidebottomleft" offset="0,142" width="240" height="58" />
 			</frame_char>
 			<label insertbefore="encumbranceframe">
 				<anchored to="armorpenaltyframe" position="insidetopleft" offset="15,24" />
@@ -76,11 +76,8 @@
 				</script>
 			</buttonfield>
 
-			<!-- <frame_char name="encumbranceframe"> -->
-				<!-- <anchored position="insidebottomleft" width="240" height="142" /> -->
-			<!-- </frame_char> -->
 			<frame_char name="encumbranceframe">
-				<bounds>0,-147,240,142</bounds>
+				<anchored position="insidebottomleft" width="240" height="142" />
 			</frame_char>
 			<simplenumber name="encumbranceload" source="encumbrance.load">
 				<anchored offset="160,16" />

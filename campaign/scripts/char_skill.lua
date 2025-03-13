@@ -4,16 +4,18 @@
 --
 
 function onInit()
-	self.updateMenu();
-	
 	self.onCheckPenaltyChange();
 	self.onStatUpdate();
 
-	self.onEditModeChanged();
+	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 end
 
-function onEditModeChanged()
-	local bEditMode = WindowManager.getEditMode(windowlist, "skills_iedit");
+function onLockModeChanged(bReadOnly)
+	local tFields = { "state", "sublabel", "ranks", "statname", "misc", };
+	WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
+	if self.isCustom() then
+		label.setReadOnly(bReadOnly);
+	end
 
 	local bAllowDelete = self.isCustom();
 	if not bAllowDelete then
@@ -26,9 +28,9 @@ function onEditModeChanged()
 	
 	if bAllowDelete then
 		idelete_spacer.setVisible(false);
-		idelete.setVisible(bEditMode);
+		idelete.setVisible(not bReadOnly);
 	else
-		idelete_spacer.setVisible(bEditMode);
+		idelete_spacer.setVisible(not bReadOnly);
 		idelete.setVisible(false);
 	end
 end
@@ -88,25 +90,7 @@ function setCustom(state)
 		label.setEnabled(false);
 		label.setLine(false);
 	end
-	
-	self.updateMenu();
 end
 function isCustom()
 	return _bCustom;
-end
-
-function updateMenu()
-	resetMenuItems();
-	
-	if self.isCustom() then
-		registerMenuItem(Interface.getString("list_menu_deleteitem"), "delete", 6);
-		registerMenuItem(Interface.getString("list_menu_deleteconfirm"), "delete", 6, 7);
-	else
-		local sLabel = label.getValue();
-		local rSkill = DataCommon.skilldata[sLabel];
-		if rSkill and rSkill.sublabeling then
-			registerMenuItem(Interface.getString("list_menu_deleteitem"), "delete", 6);
-			registerMenuItem(Interface.getString("list_menu_deleteconfirm"), "delete", 6, 7);
-		end
-	end
 end

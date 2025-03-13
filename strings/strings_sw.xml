@@ -396,7 +396,6 @@
 	<string name="char_label_weaponrangedthrown">Ranged Thrown</string>
 	<string name="char_label_weaponrangedthrownoh">Ranged Thrown OH</string>
 	
-	<string name="char_tooltip_actionedit">Edit Weapon and Spell Lists</string>
 	<string name="char_tooltip_actionaddspellclass">Add Spell Class</string>
 	<string name="char_tooltip_actionaddweapon">Add Weapon</string>
 	<string name="char_tooltip_weaponmaxability"></string>
@@ -487,17 +486,14 @@
 	<string name="npc_label_typetrap">Trap/Haunt</string>
 	<string name="npc_label_typevehicle">Vehicle</string>
 
-	<string name="npc_label_type">Type</string>
 	<string name="npc_label_alignment">Alignment</string>
 	<string name="npc_label_cr">CR</string>
-	<string name="npc_label_senses">Senses</string>
 	<string name="npc_label_aura">Aura</string>
 	<string name="npc_header_defense">DEFENSE</string>
 	<string name="npc_label_hd">HD</string>
 	<string name="npc_label_saves">Saves</string>
 	<string name="npc_label_sq">SQ</string>
 	<string name="npc_header_offense">OFFENSE</string>
-	<string name="npc_label_speed">Speed</string>
 	<string name="npc_label_atk">Attack</string>
 	<string name="npc_label_fullatk">Full Attack</string>
 	<string name="npc_label_spacereach">Space/Reach</string>
@@ -508,14 +504,11 @@
 	<string name="npc_label_babcm">BAB/CM</string>
 	<string name="npc_label_cm">CM</string>
 	<string name="npc_label_feats">Feats</string>
-	<string name="npc_label_skills">Skills</string>
-	<string name="npc_label_languages">Languages</string>
 	<string name="npc_label_advancement">Adv.</string>
 	<string name="npc_label_leveladj">Level Adj.</string>
 	<string name="npc_header_ecology">ECOLOGY</string>
 	<string name="npc_label_environment">Environment</string>
 	<string name="npc_label_organization">Organization</string>
-	<string name="npc_label_treasure">Treasure</string>
 	
 	<string name="npc_header_effects">EFFECTS</string>
 	<string name="npc_label_trigger">Trigger</string>
@@ -700,9 +693,9 @@
 	<string name="record_label_racialtrait">Racial Trait</string>
 	<string name="record_label_proficiency">Proficiency</string>
 
-	<!-- =================================================================================================================== -->
+	<!-- =================================== -->
 	<!-- Added -->
-	<!-- =================================================================================================================== -->
+	<!-- =================================== -->
 	<!-- Common -->
 	<string name="armorclassff">Flat-F. DEF</string>
 	<string name="armorclasstouch">Touch DEF</string>

@@ -101,6 +101,11 @@ end
 
 aRecordOverrides = {
 	-- CoreRPG overrides
+	["charsheet"] = {
+		tOptions = {
+			bNoLock = false,
+		},
+	},
 	["image"] = { 
 		aDataMap = { "image", "reference.imagedata" }, 
 	},

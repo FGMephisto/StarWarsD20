@@ -410,6 +410,25 @@
 		</sheetdata>
 	</windowclass>
 
+	<windowclass name="power_item" merge="join">
+		<script>
+			function onInit()
+				if super and super.onInit then
+					super.onInit();
+				end
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+			end
+			function onLockModeChanged(bReadOnly)
+				WindowManager.callSafeControlsSetLockMode(self, { "idelete", }, bReadOnly);
+			end
+		</script>
+		<sheetdata>
+			<linkc_poweritem name="shortcut">
+				<class>spelldesc2</class>
+			</linkc_poweritem>
+		</sheetdata>
+	</windowclass>
+
 	<windowclass name="power_action_cast">
 		<margins control="0,0,0,2" />
 		<script>

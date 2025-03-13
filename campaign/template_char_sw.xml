@@ -704,6 +704,9 @@
 			<min>0</min>
 			<script>
 				function onWheel(notches)
+					if isReadOnly() then
+						return false;
+					end
 					if not Input.isControlPressed() then
 						return false;
 					end

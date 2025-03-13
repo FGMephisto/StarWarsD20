@@ -4,20 +4,18 @@
 --
 
 function onInit()
-	registerMenuItem(Interface.getString("menu_deleteweapon"), "delete", 4);
-	registerMenuItem(Interface.getString("list_menu_deleteconfirm"), "delete", 4, 3);
-	
 	self.onDataChanged();
+	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+
 	DB.addHandler(getDatabaseNode(), "onChildUpdate", onDataChanged);
 end
 function onClose()
 	DB.removeHandler(getDatabaseNode(), "onChildUpdate", onDataChanged);
 end
 
-function onMenuSelection(selection, subselection)
-	if selection == 4 and subselection == 3 then
-		UtilityManager.safeDeleteWindow(self);
-	end
+function onLockModeChanged(bReadOnly)
+	local tFields = { "type", "name", "attack1", "attack2", "attack3", "attack4", "attacks", "rangeincrement", "maxammo", "idelete", };
+	WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 end
 
 local m_sClass = "";

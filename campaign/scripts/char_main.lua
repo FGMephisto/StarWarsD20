@@ -1,54 +1,86 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
+-- File adjusted for Star Wars 3.5E
 --
 
 function onInit()
-	onLevelChanged();
-	DB.addHandler(DB.getPath(getDatabaseNode(), "classes"), "onChildUpdate", onLevelChanged);
+	self.onLevelChanged();
+	self.onSystemChanged();
+	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 
-	onSystemChanged();
+	DB.addHandler(DB.getPath(getDatabaseNode(), "classes"), "onChildUpdate", self.onLevelChanged);
+end
+function onClose()
+	DB.removeHandler(DB.getPath(getDatabaseNode(), "classes"), "onChildUpdate", self.onLevelChanged);
 end
 
-function onClose()
-	DB.removeHandler(DB.getPath(getDatabaseNode(), "classes"), "onChildUpdate", onLevelChanged);
+-- Adjusted
+function onLockModeChanged(bReadOnly)
+	local tFieldsAbility = { "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma", };
+	local tFieldsAbilityBonus = { "strengthbonus", "dexteritybonus", "constitutionbonus", "intelligencebonus", "wisdombonus", "charismabonus", };
+	local tFieldsAbilityDamage = { "strengthdamage", "dexteritydamage", "constitutiondamage", "intelligencedamage", "wisdomdamage", "charismadamage", };
+	local tFieldsHealth = { "hp", "wounds", "hptemp", };
+	local tFieldsOther = { "speedfinal", "speedspecial", "senses", };
+
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsAbility, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsAbilityBonus, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsAbilityDamage, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsHealth, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsOther, bReadOnly);
+
+	if UtilityManager.getTopWindow(self).getClass() == "charsheetmini" then
+		local tFieldsCombat = { "initiative", "melee", "ranged", "grapple", };
+		local tFieldsDefense = { "ac", "srfinal", "fortitude", "reflex", "will", };
+		WindowManager.callSafeControlsSetLockMode(self, tFieldsCombat, bReadOnly);
+		WindowManager.callSafeControlsSetLockMode(self, tFieldsDefense, bReadOnly);
+	else
+		local tFieldsTop = { "race", };
+		local tFieldsCombat = { "initiative", "meleemainattackbonus", "rangedmainattackbonus", "grappleattackbonus", }
+		local tFieldsDefense = { "dr", "ac", "fortitude", "reflex", "will", };
+		WindowManager.callSafeControlsSetLockMode(self, tFieldsTop, bReadOnly);
+		WindowManager.callSafeControlsSetLockMode(self, tFieldsCombat, bReadOnly);
+		WindowManager.callSafeControlsSetLockMode(self, tFieldsDefense, bReadOnly);
+	end
 end
 
 function onLevelChanged()
 	CharManager.calcLevel(getDatabaseNode());
 end
 
+-- Adjusted
 function onSystemChanged()
-	local bPFMode = DataCommon.isPFRPG();
+	-- local bPFMode = DataCommon.isPFRPG();
 	
-	cmd.setVisible(bPFMode);
-	label_cmd.setVisible(bPFMode);
+	-- cmd.setVisible(bPFMode);
+	-- label_cmd.setVisible(bPFMode);
 	
-	if label_grapple then
-		if bPFMode then
-			label_grapple.setValue(Interface.getString("cmb"));
-		elseif minisheet then
-			label_grapple.setValue(Interface.getString("grp"));
-		else
-			label_grapple.setValue(Interface.getString("grapple"));
-		end
-	end
+	-- if label_grapple then
+		-- if bPFMode then
+			-- label_grapple.setValue(Interface.getString("cmb"));
+		-- elseif minisheet then
+			-- label_grapple.setValue(Interface.getString("grp"));
+		-- else
+			-- label_grapple.setValue(Interface.getString("grapple"));
+		-- end
+	-- end
 	
-	spot.setVisible(not bPFMode);
-	label_spot.setVisible(not bPFMode);
-	listen.setVisible(not bPFMode);
-	label_listen.setVisible(not bPFMode);
-	search.setVisible(not bPFMode);
-	label_search.setVisible(not bPFMode);
+	-- spot.setVisible(not bPFMode);
+	-- label_spot.setVisible(not bPFMode);
+	-- listen.setVisible(not bPFMode);
+	-- label_listen.setVisible(not bPFMode);
+	-- search.setVisible(not bPFMode);
+	-- label_search.setVisible(not bPFMode);
 
-	perception.setVisible(bPFMode);
-	label_perception.setVisible(bPFMode);
+	-- perception.setVisible(bPFMode);
+	-- label_perception.setVisible(bPFMode);
 end
 
+-- Adjusted
 function onHealthChanged()
 	local sColor = ActorManager35E.getPCSheetWoundColor(getDatabaseNode());
 	wounds.setColor(sColor);
-	nonlethal.setColor(sColor);
+	-- nonlethal.setColor(sColor);
 end
 
 function onDrop(x, y, draginfo)

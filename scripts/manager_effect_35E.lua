@@ -262,7 +262,7 @@ function applyOngoingDamageAdjustment(nodeActor, nodeEffect, rEffectComp)
 		table.insert(aResults, "[REGEN] Regeneration");
 
 	else
-		table.insert(aResults, "[DAMAGE] Ongoing Damage");
+		table.insert(aResults, string.format("[%s] Ongoing Damage", Interface.getString("action_damage_tag")));
 		if #(rEffectComp.remainder) > 0 then
 			table.insert(aResults, "[TYPE: " .. table.concat(rEffectComp.remainder, ","):lower() .. "]");
 		end
@@ -710,8 +710,8 @@ function getEffectsBonus(rActor, aEffectType, bModOnly, aFilter, rFilterActor, b
 	return aTotalDice, nTotalMod, nEffectCount;
 end
 
-function hasEffectCondition(rActor, sEffect)
-	return hasEffect(rActor, sEffect, nil, false, true);
+function hasEffectCondition(rActor, sEffect, rTarget)
+	return hasEffect(rActor, sEffect, rTarget, false, true);
 end
 
 function hasEffect(rActor, sEffect, rTarget, bTargetedOnly, bIgnoreEffectTargets)

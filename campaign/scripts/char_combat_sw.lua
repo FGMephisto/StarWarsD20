@@ -4,15 +4,9 @@
 -- File adjusted for Star Wars 3.5E
 --
 
-local bInitialized = false;
-
-function isInitialized()
-	return bInitialized;
-end
-
 -- Adjusted
 function onInit()
-	bInitialized = true;
+	self.setInitialized();
 	
 	acstat.onValueChanged();
 	acstat2.onValueChanged();
@@ -26,7 +20,43 @@ function onInit()
 	rangedstat.onValueChanged();
 	grapplestat.onValueChanged();
 
-	onSystemChanged();
+	self.onSystemChanged();
+	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+end
+
+local _bInitialized = false;
+function isInitialized()
+	return _bInitialized;
+end
+function setInitialized()
+	_bInitialized = true;
+end
+
+-- Adjusted
+function onLockModeChanged(bReadOnly)
+	local tFieldsAC = { "ac", "acclass", "acstat", "acstat2", "acsize", "acnatural", "acdeflection", "acdodge", "acmisc", };
+	local tFieldsACSpecial = { "ffacmisc", "touchacmisc", };
+	local tFieldsSaveFort = { "fortitude", "fortitudebase", "fortitudestat", "fortitudemisc", };
+	local tFieldsSaveRef = { "reflex", "reflexbase", "reflexstat", "reflexmisc", };
+	local tFieldsSaveWill = { "will", "willbase", "willstat", "willmisc", };
+	local tFieldsAttack = { "baseattackbonus", };
+	local tFieldsAttackMelee = { "meleeattackbonus", "meleestat", "meleesize", "meleemisc", };
+	local tFieldsAttackRanged = { "rangedattackbonus", "rangedstat", "rangedsize", "rangedmisc", };
+	local tFieldsAttackGrapple = { "grappleattackbonus", "grapplestat", "grapplesize", "grapplemisc", };
+	local tFieldsInit = { "initiative", "initiativestat", "initiativemiscbonus", };
+	local tFieldsOther = { "speedfinal", "speedbase", "speedarmor", "speedmisc", };
+
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsAC, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsACSpecial, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsSaveFort, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsSaveRef, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsSaveWill, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsAttack, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsAttackMelee, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsAttackRanged, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsAttackGrapple, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsInit, bReadOnly);
+	WindowManager.callSafeControlsSetLockMode(self, tFieldsOther, bReadOnly);
 end
 
 -- Adjusted
