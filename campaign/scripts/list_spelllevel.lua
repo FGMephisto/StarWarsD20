@@ -42,7 +42,7 @@ function onDrop(x, y, draginfo)
 			if nodeNew then
 				DB.deleteNode(nodeSource);
 				winLevel.spells.setVisible(true);
-				DB.setValue(DB.getChild(window.getDatabaseNode(), "..."), "spellmode", "string", "standard");
+				DB.setValue(DB.getChild(window.getDatabaseNode(), "..."), "spellmode", "string", "");
 			end
 		end
 		
@@ -56,7 +56,7 @@ function onDrop(x, y, draginfo)
 			local nodeNew = SpellManager.addSpell(nodeSource, DB.getChild(node, "..."), DB.getValue(node, "level"));
 			if nodeNew then
 				winLevel.spells.setVisible(true);
-				DB.setValue(DB.getChild(window.getDatabaseNode(), "..."), "spellmode", "string", "standard");
+				DB.setValue(DB.getChild(window.getDatabaseNode(), "..."), "spellmode", "string", "");
 			end
 		end
 		
@@ -73,7 +73,7 @@ function onDrop(x, y, draginfo)
 				local nodeNew = SpellManager.addSpell(nodeSource, DB.getChild(node, "..."), DB.getValue(node, "level"));
 				if nodeNew then
 					winLevel.spells.setVisible(true);
-					DB.setValue(DB.getChild(window.getDatabaseNode(), "..."), "spellmode", "string", "standard");
+					DB.setValue(DB.getChild(window.getDatabaseNode(), "..."), "spellmode", "string", "");
 				end
 				
 				return true;

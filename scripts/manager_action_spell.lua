@@ -33,7 +33,7 @@ function handleApplySave(msgOOB)
 	if sSaveShort then
 		local sSave = DataCommon.save_stol[sSaveShort];
 		if sSave then
-			ActionSave.performVsRoll(nil, rTarget, sSave, msgOOB.nDC, (tonumber(msgOOB.nSecret) == 1), rSource, msgOOB.bRemoveOnMiss, msgOOB.sDesc);
+			ActionSave.performVsRoll(nil, rTarget, sSave, msgOOB.nDC, (tonumber(msgOOB.nSecret) == 1), rSource, (tonumber(msgOOB.nRemoveOnMiss) == 1), msgOOB.sDesc);
 		end
 	end
 end
@@ -57,9 +57,7 @@ function notifyApplySave(rSource, rTarget, bSecret, sDesc, nDC, bRemoveOnMiss)
 	msgOOB.sSourceNode = ActorManager.getCreatureNodeName(rSource);
 	msgOOB.sTargetNode = ActorManager.getCreatureNodeName(rTarget);
 
-	if bRemoveOnMiss then
-		msgOOB.bRemoveOnMiss = 1;
-	end
+	msgOOB.nRemoveOnMiss = bRemoveOnMiss and 1 or 0;
 
 	local sTargetNodeType, nodeTarget = ActorManager.getTypeAndNode(rTarget);
 	if nodeTarget and (sTargetNodeType == "pc") then
@@ -105,7 +103,7 @@ function onSpellTargeting(rSource, aTargeting, rRolls)
 	
 	if bRemoveOnMiss then
 		for _,vRoll in ipairs(rRolls) do
-			vRoll.bRemoveOnMiss = "true";
+			vRoll.bRemoveOnMiss = true;
 		end
 	end
 

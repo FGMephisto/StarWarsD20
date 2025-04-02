@@ -141,7 +141,7 @@ function getSheetMode()
 		return "combat";
 	end
 	
-	return DB.getValue(getDatabaseNode(), "...spellmode", "standard");
+	return DB.getValue(getDatabaseNode(), "...spellmode", "");
 end
 
 function onCasterTypeChanged()
@@ -185,6 +185,7 @@ function updateSpellView()
 
 	local bClassShow = false;
 	local sSheetMode = self.getSheetMode();
+	local bCombatMode = (sSheetMode == "combat");
 	local sCasterType = DB.getValue(nodeSpellClass, "castertype", "");
 
 	local bLevelShow, nodeLevel, nAvailable, nTotalCast, nTotalPrepared, nMaxPrepared, nSpells;
@@ -217,7 +218,7 @@ function updateSpellView()
 				bSpellShow = true;
 				nPrepared = DB.getValue(nodeSpell, "prepared", 0);
 				
-				if sCasterType == "" and sSheetMode == "combat" then
+				if (sCasterType == "") and bCombatMode then
 					if nPrepared == 0 then
 						bSpellShow = false;
 					end
@@ -256,7 +257,7 @@ function updateSpellView()
 				vSpell.header.subwindow.cost.setVisible(false);
 			end
 			
-			if sSheetMode == "combat" then
+			if bCombatMode then
 				bLevelShow = bLevelShow and (nAvailable > 0) and (nSpells > 0);
 			else
 				bLevelShow = (nAvailable > 0);
@@ -269,10 +270,10 @@ function updateSpellView()
 				
 				nPointCost = DB.getValue(nodeSpell, "cost", 0);
 				
-				if sSheetMode ~= "combat" then
-					bSpellShow = true;
-				else
+				if bCombatMode then
 					bSpellShow = (nPointCost <= (nPP - nPPUsed));
+				else
+					bSpellShow = true;
 				end
 				vSpell.setFilter(bSpellShow);
 				bLevelShow = bLevelShow or bSpellShow;
@@ -283,7 +284,7 @@ function updateSpellView()
 				vSpell.header.subwindow.usespacer.setVisible(false);
 			end
 		
-			if sSheetMode == "combat" then
+			if bCombatMode then
 				bLevelShow = bLevelShow and (nAvailable > 0) and (nSpells > 0);
 			else
 				bLevelShow = (nAvailable > 0);
@@ -297,7 +298,7 @@ function updateSpellView()
 				nCast = DB.getValue(nodeSpell, "cast", 0);
 				nPrepared = DB.getValue(nodeSpell, "prepared", 0);
 				
-				if sCasterType == "spontaneous" or sSheetMode ~= "combat" then
+				if sCasterType == "spontaneous" or not bCombatMode then
 					bSpellShow = true;
 				else
 					bSpellShow = (nCast < nPrepared);
@@ -317,7 +318,7 @@ function updateSpellView()
 			end
 			
 			-- Determine level visibility
-			if sSheetMode == "combat" then
+			if bCombatMode then
 				bLevelShow = bLevelShow and (nTotalCast < nAvailable) and (nAvailable > 0) and (nSpells > 0);
 			else
 				bLevelShow = (nAvailable > 0);
@@ -347,7 +348,7 @@ function updateSpellView()
 		end
 	end
 	
-	if sSheetMode == "combat" then
+	if bCombatMode then
 		self.setFilter(bClassShow);
 	else
 		self.setFilter(true);

@@ -4,18 +4,43 @@
 --
 
 function onInit()
-	self.onDataChanged();
+	self.onLinkChanged();
 	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 
-	DB.addHandler(getDatabaseNode(), "onChildUpdate", onDataChanged);
+	if minisheet then
+		carried.setVisible(false);
+		activatedetail.setVisible(false);
+	end
+
+	local nodeWeapon = getDatabaseNode();
+	local nodeChar = DB.getChild(nodeWeapon, "...");
+	DB.addHandler(DB.getPath(nodeWeapon, "shortcut"), "onUpdate", self.onLinkChanged);
+	DB.addHandler(DB.getPath(nodeWeapon, "type"), "onUpdate", self.onTypeChanged);
+	DB.addHandler(nodeWeapon, "onChildUpdate", self.onDataChanged);
+	DB.addHandler(DB.getPath(nodeChar, "abilities.*.bonus"), "onUpdate", self.onDataChanged);
+	DB.addHandler(DB.getPath(nodeChar, "attackbonus.base"), "onUpdate", self.onDataChanged);
+	DB.addHandler(DB.getPath(nodeChar, "attackbonus.*"), "onChildUpdate", self.onDataChanged);
 end
 function onClose()
-	DB.removeHandler(getDatabaseNode(), "onChildUpdate", onDataChanged);
+	local nodeWeapon = getDatabaseNode();
+	local nodeChar = DB.getChild(nodeWeapon, "...");
+	DB.removeHandler(DB.getPath(nodeWeapon, "shortcut"), "onUpdate", self.onLinkChanged);
+	DB.removeHandler(DB.getPath(nodeWeapon, "type"), "onUpdate", self.onTypeChanged);
+	DB.removeHandler(nodeWeapon, "onChildUpdate", self.onDataChanged);
+	DB.removeHandler(DB.getPath(nodeChar, "abilities.*.bonus"), "onUpdate", self.onDataChanged);
+	DB.removeHandler(DB.getPath(nodeChar, "attackbonus.base"), "onUpdate", self.onDataChanged);
+	DB.removeHandler(DB.getPath(nodeChar, "attackbonus.*"), "onChildUpdate", self.onDataChanged);
 end
 
 function onLockModeChanged(bReadOnly)
-	local tFields = { "type", "name", "attack1", "attack2", "attack3", "attack4", "attacks", "rangeincrement", "maxammo", "idelete", };
+	if minisheet then
+		bReadOnly = true;
+	end
+	local tFields = { "type", "name", "idelete", };
 	WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
+	
+	self.onTypeChanged();
+	self.onDataChanged();
 end
 
 local m_sClass = "";
@@ -33,27 +58,82 @@ function onLinkChanged()
 		end
 	end
 end
+function onTypeChanged()
+	local node = getDatabaseNode();
 
-function onDataChanged()
-	onLinkChanged();
-	onDamageChanged();
-	
-	local bRanged = (type.getValue() == 1);
-	label_range.setVisible(bRanged);
-	rangeincrement.setVisible(bRanged);
-	label_ammo.setVisible(bRanged);
-	maxammo.setVisible(bRanged);
-	ammocounter.setVisible(bRanged);
+	local bRangedType = (DB.getValue(node, "type", 0) ~= 0);
+	local bReadOnly;
+	if minisheet then
+		bReadOnly = true;
+	else
+		bReadOnly = WindowManager.getWindowReadOnlyState(self);
+	end
+	local bHasRange = (DB.getValue(node, "rangeincrement", 0) ~= 0);
+	local bHasAmmo = (DB.getValue(node, "maxammo", 0) ~= 0);
+	local bRanged = (bRangedType and (bHasRange or bHasAmmo or not bReadOnly));
+	if bRanged then
+		sub_ranged.setValue("char_weapon_ranged", node);
+	else
+		sub_ranged.setValue("", "");
+	end
 end
 
+function onDataChanged()
+	self.onAttackChanged();
+	self.onDamageChanged();
+end
+
+function onAttackChanged()
+	local nodeWeapon = getDatabaseNode();
+	local nodeChar = DB.getChild(nodeWeapon, "...")
+	local rActor = ActorManager.resolveActor(nodeChar);
+
+	local nAttacks = DB.getValue(nodeWeapon, "attacks", 1);
+	local tAttack = {};
+
+	local nViewOffset = 1;
+	local nViewSpacing = 2;
+	local nViewFieldWidth = 30;
+	attackview.setAnchoredWidth(nViewOffset + ((nViewFieldWidth + nViewSpacing) * (nAttacks)));
+	attackview2.setVisible(nAttacks > 1);
+	attackview3.setVisible(nAttacks > 2);
+	attackview4.setVisible(nAttacks > 3);
+	
+	local nAttack1 = self.calcAttackBonus(1);
+	attackview1.setValue(nAttack1);
+	local sAttack1 = string.format("%s: %+d", Interface.getString("action_attack_tag"), nAttack1);
+	table.insert(tAttack, sAttack1);
+
+	local nAttack2 = self.calcAttackBonus(2);
+	attackview2.setValue(nAttack2);
+	if nAttacks > 1 then
+		local sAttack2 = string.format("%s #2: %+d", Interface.getString("action_attack_tag"), nAttack2);
+		table.insert(tAttack, sAttack2);
+	end
+
+	local nAttack3 = self.calcAttackBonus(3);
+	attackview3.setValue(nAttack3);
+	if nAttacks > 2 then
+		local sAttack3 = string.format("%s #3: %+d", Interface.getString("action_attack_tag"), self.calcAttackBonus(3));
+		table.insert(tAttack, sAttack3);
+	end
+
+	local nAttack4 = self.calcAttackBonus(4);
+	attackview4.setValue(nAttack4);
+	if nAttacks > 3 then
+		local sAttack4 = string.format("%s #4: %+d", Interface.getString("action_attack_tag"), self.calcAttackBonus(4));
+		table.insert(tAttack, sAttack4);
+	end
+
+	button_attack.setTooltipText(table.concat(tAttack, "\r"));
+end
 function onDamageChanged()
 	local nodeWeapon = getDatabaseNode();
 	local nodeChar = DB.getChild(nodeWeapon, "...")
 	local rActor = ActorManager.resolveActor(nodeChar);
 	
-	local aDamage = {};
-	local aDamageNodes = UtilityManager.getNodeSortedChildren(nodeWeapon, "damagelist");
-	for _,v in ipairs(aDamageNodes) do
+	local tDamage = {};
+	for _,v in ipairs(UtilityManager.getNodeSortedChildren(nodeWeapon, "damagelist")) do
 		local aDice = DB.getValue(v, "dice", {});
 		local nMod = DB.getValue(v, "bonus", 0);
 
@@ -77,16 +157,59 @@ function onDamageChanged()
 			if sType ~= "" then
 				sDamage = sDamage .. " " .. sType;
 			end
-			table.insert(aDamage, sDamage);
+			table.insert(tDamage, sDamage);
 		end
 	end
 
-	damageview.setValue(table.concat(aDamage, "\n+ "));
+	local sDamage = table.concat(tDamage, " + ");
+	button_damage.setTooltipText(string.format("%s: %s", Interface.getString("action_damage_tag"), sDamage));
+	damageview.setValue(sDamage);
 end
 
+function onFullAttackAction(draginfo)
+	local nodeWeapon = getDatabaseNode();
+	local rActor, rAttack = CharManager.getWeaponAttackRollStructures(nodeWeapon);
+	
+	local rRolls = {};
+	for i = 1, DB.getValue(nodeWeapon, "attacks", 1) do
+		rAttack.modifier = self.calcAttackBonus(i);
+		rAttack.order = i;
+		table.insert(rRolls, ActionAttack.getRoll(rActor, rAttack));
+	end
+	if not OptionsManager.isOption("RMMT", "off") and (#rRolls > 1) then
+		for _,v in ipairs(rRolls) do
+			v.sDesc = v.sDesc .. " [FULL]";
+		end
+	end
+	
+	ActionsManager.performMultiAction(draginfo, rActor, "attack", rRolls);
+	return true;
+end
+function onSingleAttackAction(n, draginfo)
+	local nodeWeapon = getDatabaseNode();
+	local rActor, rAttack = CharManager.getWeaponAttackRollStructures(nodeWeapon);
+	rAttack.order = n or 1;
+	rAttack.modifier = self.calcAttackBonus(n or 1);
+	
+	ActionAttack.performRoll(draginfo, rActor, rAttack);
+	return true;
+end
 function onDamageAction(draginfo)
-	local rActor, rDamage = CharManager.getWeaponDamageRollStructures(getDatabaseNode());
+	local nodeWeapon = getDatabaseNode();
+	local rActor, rDamage = CharManager.getWeaponDamageRollStructures(nodeWeapon);
 	
 	ActionDamage.performRoll(draginfo, rActor, rDamage);
 	return true;
+end
+
+function calcAttackBonus(n)
+	local nodeWeapon = getDatabaseNode();
+	local nodeChar = DB.getChild(nodeWeapon, "...")
+	local rActor, rAttack = CharManager.getWeaponAttackRollStructures(nodeWeapon);
+	local nBonus = DB.getValue(nodeChar, "attackbonus.base", 0);
+	nBonus = nBonus + ActorManager35E.getAbilityBonus(rActor, rAttack.stat);
+	nBonus = nBonus + DB.getValue(nodeWeapon, "bonus", 0);
+	nBonus = nBonus + DB.getValue(nodeWeapon, "attack" .. (n or 1) .. "modifier", 0);
+	nBonus = nBonus + (((n or 1) - 1) * -5);
+	return nBonus
 end

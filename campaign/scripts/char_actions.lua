@@ -11,14 +11,8 @@ function onLockModeChanged(bReadOnly)
 	local tFields = { "spellclass_iadd", "weapon_iadd", };
 	WindowManager.callSafeControlsSetVisible(self, tFields, not bReadOnly);
 
-	if UtilityManager.getTopWindow(self).getClass() == "charsheetmini" then
-		return;
-	end
-
-	local tFieldsPlay = { "label_mode", "spellmode", "label_display", "spelldisplaymode", };
-	WindowManager.callSafeControlsSetVisible(self, tFieldsPlay, bReadOnly);
-	if not bReadOnly then
-		DB.setValue(getDatabaseNode(), "spellmode", "string", "standard");
+	if not minisheet then
+		self.onModeChanged();
 	end
 end
 

@@ -10,8 +10,15 @@
 		<margins control="0,0,0,5" />
 		<script file="campaign/scripts/spell_class.lua" />
 		<sheetdata>
-			<button_iconcycler name="castertype">
-				<bounds>10,10,20,20</bounds>
+			<anchor_listitem_left>
+				<anchored offset="0,10" />
+			</anchor_listitem_left>
+			<anchor_listitem_right>
+				<anchored offset="0,10" />
+			</anchor_listitem_right>
+
+			<button_listitem_idelete_left name="idelete" />
+			<iconcycler_listitem_left name="castertype">
 				<parameters>
 					<defaulticon>caster_prep</defaulticon>
 					<defaulttooltipres>spell_tooltip_casterprep</defaulttooltipres>
@@ -24,90 +31,46 @@
 						window.onCasterTypeChanged();
 					end
 				</script>
-			</button_iconcycler>
+			</iconcycler_listitem_left>
 
-			<genericcontrol name="hanchor">
-				<anchored width="0" height="0">
-					<top />
-					<right offset="-3" />
-				</anchored>
-				<invisible />
-			</genericcontrol>
-			<button_idelete name="idelete">
-				<anchored>
-					<top offset="12" />
-					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
-				</anchored>
-			</button_idelete>
-			<button_toggledetail name="activatedetail">
-				<anchored>
-					<top offset="12" />
-					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
-				</anchored>
-				<anchored position="insidetopright" offset="8,12" />
-			</button_toggledetail>
-			<basicnumber name="pointsused">
-				<anchored width="20" height="20">
-					<top offset="12" />
-					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
-				</anchored>
+			<button_listitem_toggledetail_right name="activatedetail" />
+			<number_listitem_right name="pointsused">
+				<anchored width="20" />
 				<min>0</min>
 				<tooltip textres="spell_tooltip_ppused" />
 				<tabtarget next="availablelevel0" prev="points"/>
 				<script>
 					function onValueChanged()
-						window.onSpellCounterUpdate();
+						WindowManager.callOuterWindowFunction(window, "onSpellCounterUpdate");
 					end
 				</script>
-			</basicnumber>
-			<label name="label_pointsused">
-				<anchored>
-					<top offset="12" />
-					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
-				</anchored>
+			</number_listitem_right>
+			<label_listitem_right name="label_pointsused">
 				<static>/</static>
-			</label>
-			<basicnumber name="points">
-				<anchored width="20" height="20">
-					<top offset="12" />
-					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
-				</anchored>
+			</label_listitem_right>
+			<number_listitem_right name="points">
+				<anchored width="20" />
 				<min>0</min>
 				<tooltip textres="spell_tooltip_ppmax" />
 				<tabtarget next="pointsused" prev="cl"/>
 				<script>
 					function onValueChanged()
-						window.onSpellCounterUpdate();
+						WindowManager.callOuterWindowFunction(window, "onSpellCounterUpdate");
 					end
 				</script>
-			</basicnumber>
-			<label name="label_points">
-				<anchored>
-					<top offset="12" />
-					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
-				</anchored>
+			</number_listitem_right>
+			<label_listitem_right name="label_points">
 				<static textres="spell_label_pp" />
-			</label>
+			</label_listitem_right>
 			<button_cc name="button_cc">
-				<anchored width="20" height="20">
-					<top offset="12" />
-					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
-				</anchored>
 				<tooltip textres="spell_tooltip_cc" />
 			</button_cc>
-			<label name="label_cc">
-				<anchored>
-					<top offset="12" />
-					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
-				</anchored>
+			<label_listitem_right name="label_cc">
 				<static textres="spell_label_cc" />
 				<tooltip textres="spell_tooltip_cc" />
-			</label>
-			<basicnumber name="cl">
-				<anchored width="20" height="20">
-					<top offset="12" />
-					<right parent="hanchor" anchor="left" relation="relative" offset="-10" />
-				</anchored>
+			</label_listitem_right>
+			<number_listitem_right name="cl">
+				<anchored width="20" />
 				<min>0</min>
 				<tooltip textres="casterlevel" />
 				<tabtarget next="points" prev="label"/>
@@ -116,25 +79,17 @@
 						window.onStatUpdate();
 					end
 				</script>
-			</basicnumber>
-			<label name="label_cl">
-				<anchored>
-					<top offset="12" />
-					<right parent="hanchor" anchor="left" relation="relative" offset="-10" />
-				</anchored>
+			</number_listitem_right>
+			<label_listitem_right name="label_cl">
 				<static textres="cl" />
 				<tooltip textres="casterlevel" />
-			</label>
-			<stringu name="label">
-				<anchored height="20">
-					<top offset="12" />
-					<left parent="castertype" anchor="right" offset="5" />
-					<right parent="hanchor" anchor="left" relation="relative" offset="-5" />
-				</anchored>
+			</label_listitem_right>
+
+			<string_listitem_center_underline name="label">
 				<font>sheetlabel</font>
 				<empty textres="spellclass_emptyname" />
 				<tabtarget next="cl" />
-			</stringu>
+			</string_listitem_center_underline>
 
 			<genericcontrol name="detailanchor">
 				<bounds>0,35,0,0</bounds>
@@ -344,12 +299,12 @@
 			
 			<genericcontrol name="classframe">
 				<anchored>
-					<top offset="6" />
-					<left offset="6" />
-					<right offset="-6" />
+					<top offset="5" />
+					<left offset="5" />
+					<right offset="-5" />
 					<bottom parent="detailanchor" relation="relative" anchor="bottom" />
 				</anchored>
-				<frame name="headersimple" offset="6,6,6,6" />
+				<frame name="headersimple" offset="5,5,5,5" />
 				<disabled />
 			</genericcontrol>
 
@@ -411,21 +366,17 @@
 	</windowclass>
 
 	<windowclass name="power_item" merge="join">
-		<script>
-			function onInit()
-				if super and super.onInit then
-					super.onInit();
-				end
-				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
-			end
-			function onLockModeChanged(bReadOnly)
-				WindowManager.callSafeControlsSetLockMode(self, { "idelete", }, bReadOnly);
-			end
-		</script>
 		<sheetdata>
-			<linkc_poweritem name="shortcut">
+			<linkc_listitem_left name="shortcut">
 				<class>spelldesc2</class>
-			</linkc_poweritem>
+			</linkc_listitem_left>
+		</sheetdata>
+	</windowclass>
+	<windowclass name="power_item_mini" merge="join">
+		<sheetdata>
+			<linkc_listitem_left name="shortcut">
+				<class>spelldesc2</class>
+			</linkc_listitem_left>
 		</sheetdata>
 	</windowclass>
 

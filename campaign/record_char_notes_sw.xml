@@ -3,7 +3,7 @@
 <!-- 
   Please see the license.html file included with this distribution for 
   attribution and copyright information.
-  File adjusted for Star Wars 3.5E
+  File adjusted for Star Wars D20
 -->
 
 <root>
@@ -53,7 +53,7 @@
 
 			<frame_char name="appearanceframe">
 				<anchored position="insidetopleft" offset="0,50" height="190">
-					<right offset="0" />
+					<right offset="-180" />
 				</anchored>
 			</frame_char>
 			<label_frametop>
@@ -74,29 +74,29 @@
 				<target>appearance</target>
 			</scrollbar>
 
-			<!-- <frame_char name="languageframe"> -->
-				<!-- <anchored position="insidetopright" offset="0,50" width="180" height="190" /> -->
-			<!-- </frame_char> -->
-			<!-- <label_frametop> -->
-				<!-- <anchored to="languageframe" /> -->
-				<!-- <static textres="char_label_languages" /> -->
-			<!-- </label_frametop> -->
-			<!-- <list_language name="languages"> -->
-				<!-- <anchored to="languageframe"> -->
-					<!-- <top offset="35" /> -->
-					<!-- <left offset="15" /> -->
-					<!-- <right offset="-20" /> -->
-					<!-- <bottom offset="-15" /> -->
-				<!-- </anchored> -->
-			<!-- </list_language> -->
-			<!-- <scrollbar> -->
-				<!-- <anchored to="languages" /> -->
-				<!-- <target>languages</target> -->
-			<!-- </scrollbar> -->
-			<!-- <button_iadd name="languages_iadd"> -->
-				<!-- <anchored to="languages" position="aboveright" offset="5,5" /> -->
-				<!-- <target>languages</target> -->
-			<!-- </button_iadd> -->
+			<frame_char name="languageframe">
+				<anchored position="insidetopright" offset="0,50" width="180" height="190" />
+			</frame_char>
+			<label_frametop>
+				<anchored to="languageframe" />
+				<static textres="char_label_languages" />
+			</label_frametop>
+			<list_language name="languages">
+				<anchored to="languageframe">
+					<top offset="35" />
+					<left offset="15" />
+					<right offset="-20" />
+					<bottom offset="-15" />
+				</anchored>
+			</list_language>
+			<scrollbar>
+				<anchored to="languages" />
+				<target>languages</target>
+			</scrollbar>
+			<button_iadd name="languages_iadd">
+				<anchored to="languages" position="aboveright" offset="5,5" />
+				<target>languages</target>
+			</button_iadd>
 
 			<frame_char name="notesframe">
 				<anchored position="insidetop" offset="0,240">

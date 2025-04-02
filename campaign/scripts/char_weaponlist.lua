@@ -12,11 +12,11 @@ function onChildAdded()
 end
 
 function onModeChanged()
-	if not minisheet then
+	if not minisheet then	
 		local bPrepMode = (DB.getValue(window.getDatabaseNode(), "spellmode", "") == "preparation");
-		for _,w in ipairs(getWindows()) do
+		for _,w in ipairs(getWindows()) do			
 			w.carried.setVisible(bPrepMode);
-		end
+		end				
 	end
 	
 	applyFilter();

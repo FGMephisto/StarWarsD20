@@ -98,6 +98,16 @@
 			</parameters>
 		</button_stringcycler>
 	</template>
+	<template name="cycler_listitem_ability_left">
+		<stringcycler_listitem_left>
+			<anchored width="30" />
+			<parameters>
+				<defaultlabelres mergerule="replace">base</defaultlabelres>
+				<labelsres mergerule="replace">str|dex|con|int|wis|cha</labelsres>
+				<values mergerule="replace">strength|dexterity|constitution|intelligence|wisdom|charisma</values>
+			</parameters>
+		</stringcycler_listitem_left>
+	</template>
 
 	<template name="list_editor">
 		<windowlist name="list">

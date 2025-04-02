@@ -3,7 +3,7 @@
 <!-- 
   Please see the license.html file included with this distribution for 
   attribution and copyright information.
-  File adjusted for Star Wars 3.5E
+  File adjusted for Star Wars D20
 -->
 
 <root version="3.0" release="18" logo="logo.png">
@@ -64,6 +64,7 @@
 	<includefile source="campaign/record_char_inventory_sw.xml" />
 	<includefile source="campaign/record_char_notes_sw.xml" />
 	<includefile source="campaign/record_char_actions_sw.xml" />
+	<includefile source="campaign/record_char_weapon.xml" />
 	<!-- <includefile source="campaign/record_charmini_main.xml" /> -->
 	<!-- <includefile source="campaign/record_charmini_abilities.xml" /> -->
 	<!-- <includefile source="campaign/record_charmini_inventory.xml" /> -->

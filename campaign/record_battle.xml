@@ -9,8 +9,9 @@
 	<windowclass name="battle_header" merge="join">
 		<script>
 			function onInit()
-				super.onInit();
-				
+				if super and super.onInit then
+					super.onInit();
+				end
 				if DataCommon.isPFRPG() then
 					if cr.getValue() == 0 and exp.getValue() == 0 then
 						if DB.getChildCount(getDatabaseNode(), "npclist") &gt; 0 then
@@ -19,17 +20,13 @@
 					end
 				end
 			end
-			
-			function update()
-				super.update();
-
-				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
-				cr.setReadOnly(bReadOnly);
-				exp.setReadOnly(bReadOnly);
-				
-				local bPFMode = DataCommon.isPFRPG();
-				button_refreshcr.setVisible(bPFMode and not bReadOnly);
-				button_refreshxp.setVisible(bPFMode and not bReadOnly);
+			function onLockModeChanged(bReadOnly)
+				if super and super.onLockModeChanged then
+					super.onLockModeChanged(bReadOnly);
+				end
+				WindowManager.callSafeControlsSetLockMode(self, { "cr", "exp", }, bReadOnly);
+				local tButtons = { "button_refreshcr", "button_refreshxp", };
+				WindowManager.callSafeControlsSetVisible(self, tButtons, DataCommon.isPFRPG() and not bReadOnly);
 			end
 		</script>
 		<sheetdata>

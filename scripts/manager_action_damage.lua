@@ -73,6 +73,7 @@ function getRoll(rActor, rAction)
 	rRoll.nMod = 0;
 	
 	rRoll.sDesc = ActionDamageCore.encodeActionText(rAction);
+	rRoll.sRange = rAction.range;
 	
 	-- Save the damage clauses in the roll structure
 	rRoll.clauses = rAction.clauses;
@@ -95,6 +96,9 @@ function getRoll(rActor, rAction)
 		end
 	end
 	
+	-- Legacy
+	rRoll.range = rAction.range;
+
 	return rRoll;
 end
 
@@ -120,6 +124,8 @@ function modDamage(rSource, rTarget, rRoll)
 	end
 	
 	if rSource then
+		ActionDamage.applyDmgBaseTypeEffectsToModRoll(rRoll, rSource, rTarget);
+
 		ActionDamage.applyDmgEffectsToModRoll(rRoll, rSource, rTarget);
 		ActionDamage.applyConditionsToModRoll(rRoll, rSource, rTarget);
 		ActionDamage.applyEffectModNotificationToModRoll(rRoll);
@@ -243,6 +249,8 @@ end
 --
 
 function setupModRoll(rRoll, rSource, rTarget)
+	ActionDamageCore.decodeRollData(rRoll);
+
 	ActionDamage.decodeDamageTypes(rRoll);
 	CombatManager2.addRightClickDiceToClauses(rRoll);
 
@@ -252,10 +260,11 @@ function setupModRoll(rRoll, rSource, rTarget)
 	if ActionAttack.isCrit(rSource, rTarget) then
 		rRoll.bCritical = true;
 	end
+
 	rRoll.tAttackFilter = {};
-	if rRoll.range == "R" then
+	if rRoll.sRange == "R" then
 		table.insert(rRoll.tAttackFilter, "ranged");
-	elseif rRoll.range == "M" then
+	elseif rRoll.sRange == "M" then
 		table.insert(rRoll.tAttackFilter, "melee");
 	end
 
@@ -452,7 +461,7 @@ function applyConditionsToModRoll(rRoll, rSource, rTarget)
 			rRoll.nEffectMod = rRoll.nEffectMod - 2;
 			rRoll.bEffects = true;
 		end
-		if EffectManager35E.hasEffect(rSource, "Incorporeal") and (rRoll.range == "M") 
+		if EffectManager35E.hasEffect(rSource, "Incorporeal") and (rRoll.sRange == "M") 
 				and not rRoll.sDesc:lower():match("incorporeal touch") then
 			rRoll.bEffects = true;
 			table.insert(rRoll.tNotifications, "[INCORPOREAL]");
@@ -464,6 +473,22 @@ function applyEffectModNotificationToModRoll(rRoll)
 	if rRoll.bEffects then
 		local sMod = StringManager.convertDiceToString(rRoll.tEffectDice, rRoll.nEffectMod, true);
 		table.insert(rRoll.tNotifications, EffectManager.buildEffectOutput(sMod));
+	end
+end
+
+function applyDmgBaseTypeEffectsToModRoll(rRoll, rSource, rTarget)
+	if rRoll.clauses[1] then
+		local tDmgBaseTypeEffects = EffectManager35E.getEffectsByType(rSource, "DMGBASETYPE", nil, rTarget);
+		if #tDmgBaseTypeEffects > 0 then
+			local sNewDmgType = tDmgBaseTypeEffects[1].remainder[1];
+			if StringManager.contains(DataCommon.dmgtypes, sNewDmgType) then
+				if (rRoll.clauses[1].dmgtype or "") == "" then
+					rRoll.clauses[1].dmgtype = sNewDmgType;
+				else
+					rRoll.clauses[1].dmgtype = rRoll.clauses[1].dmgtype:gsub("^%w*", sNewDmgType);
+				end
+			end
+		end
 	end
 end
 

@@ -12,77 +12,60 @@
 	<windowclass name="referencefeat_main">
 		<script>
 			function onInit()
-				self.update();
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 			end
-			function update()
-				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
-				if bReadOnly then
-					type_biglabel.setValue(string.format("[%s]", type.getValue()));
-					type_biglabel.setVisible(true);
-					
-					type.update(bReadOnly, true);
-				else
-					type_biglabel.setVisible(false);
-					type.update(bReadOnly);
-				end
-				prerequisites.update(bReadOnly);
-				flavor.update(bReadOnly);
-				summary.update(bReadOnly);
-				benefit.update(bReadOnly);
-				normal.update(bReadOnly);
-				special.update(bReadOnly);
+			function onLockModeChanged(bReadOnly)
+				local tFields = { "prerequisites", "flavor", "summary", "benefit", "normal", "special", "type", };
+				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
+
+				type_biglabel.setValue(string.format("[%s]", type.getValue()));
+				WindowManager.callSafeControlsSetVisible(self, { "type_biglabel", }, bReadOnly);
+				WindowManager.callSafeControlsSetVisible(self, { "type", }, not bReadOnly);
 			end
 		</script>
 		<sheetdata>
-			<anchor_column name="columnanchor" />
+			<anchor_content_top />
 			
-			<label_column name="type_biglabel">
-				<anchored>
-					<top relation="relative" offset="7" />
-				</anchored>
+			<stringc_content_noframe_noscroll_static_top name="type_biglabel">
 				<font>reference-b-large</font>
-			</label_column>
+			</stringc_content_noframe_noscroll_static_top>
 
-			<label_column name="type_label">
+			<label_content_column name="type_label">
 				<static textres="feat_label_type" />
-			</label_column>
-			<string_columnh name="type">
+			</label_content_column>
+			<string_content_columnh name="type">
 				<delaykeyupdate />
-			</string_columnh>
+			</string_content_columnh>
 			
-			<string_columnh_full name="flavor">
+			<string_content_columnh_full name="flavor">
 				<font>reference-i</font>
 				<empty textres="empty_flavor" />
-			</string_columnh_full>
+			</string_content_columnh_full>
 			
-			<label_column name="prerequisites_label">
+			<label_content_column name="prerequisites_label">
 				<static textres="feat_label_prereq" />
-			</label_column>
-			<string_columnh name="prerequisites" />
+			</label_content_column>
+			<string_content_columnh name="prerequisites" />
 			
-			<header_column name="summary_label">
+			<header_content_framed_headersimple name="summary_label">
 				<static textres="feat_label_summary"/>
-				<center />
-			</header_column>
-			<string_columnh_full name="summary" />
+			</header_content_framed_headersimple>
+			<string_content_columnh_full name="summary" />
 
-			<header_column name="benefit_label">
+			<header_content_framed_headersimple name="benefit_label">
 				<static textres="feat_label_benefit"/>
-				<center />
-			</header_column>
-			<ft_columnh name="benefit" />
+			</header_content_framed_headersimple>
+			<ft_content_columnh_full name="benefit" />
 
-			<header_column name="normal_label">
+			<header_content_framed_headersimple name="normal_label">
 				<static textres="feat_label_normal"/>
-				<center />
-			</header_column>
-			<ft_columnh name="normal" />
+			</header_content_framed_headersimple>
+			<ft_content_columnh_full name="normal" />
 
-			<header_column name="special_label">
+			<header_content_framed_headersimple name="special_label">
 				<static textres="feat_label_special"/>
-				<center />
-			</header_column>
-			<ft_columnh name="special" />
+			</header_content_framed_headersimple>
+			<ft_content_columnh_full name="special" />
 		</sheetdata>
 	</windowclass>
 </root>

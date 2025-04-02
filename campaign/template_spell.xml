@@ -29,7 +29,7 @@
 	</template>
 
 	<template name="button_cc">
-		<button_roll>
+		<button_listitem_roll_right>
 			<tooltip textres="spell_tooltip_cc" />
 			<script>
 				function action(draginfo)
@@ -47,7 +47,7 @@
 					return true;
 				end
 			</script>
-		</button_roll>
+		</button_listitem_roll_right>
 	</template>
 	
 	<template name="number_spelldc">
@@ -75,7 +75,7 @@
 			</anchored>
 			<script>
 				function onValueChanged()
-					window.onSpellCounterUpdate();
+					WindowManager.callOuterWindowFunction(window, "onSpellCounterUpdate");
 				end
 			</script>
 		</number_spell>
@@ -86,7 +86,7 @@
 			<invisible />
 			<script>
 				function onValueChanged()
-					window.onSpellCounterUpdate();
+					WindowManager.callOuterWindowFunction(window, "onSpellCounterUpdate");
 				end
 			</script>
 		</numberfield>

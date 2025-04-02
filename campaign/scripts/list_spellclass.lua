@@ -30,7 +30,7 @@ function onDrop(x, y, draginfo)
 					if nodeNew then
 						DB.deleteNode(nodeSource);
 						winClass.showSpellsForLevel(nTargetLevel);
-						DB.setValue(window.getDatabaseNode(), "spellmode", "string", "standard");
+						DB.setValue(window.getDatabaseNode(), "spellmode", "string", "");
 					end
 				end
 			end
@@ -50,7 +50,7 @@ function onDrop(x, y, draginfo)
 				local nodeNew = SpellManager.addSpell(nodeSource, nodeWin, nSourceLevel);
 				if nodeNew then
 					winClass.showSpellsForLevel(nSourceLevel);
-					DB.setValue(window.getDatabaseNode(), "spellmode", "string", "standard");
+					DB.setValue(window.getDatabaseNode(), "spellmode", "string", "");
 				end
 			end
 			
@@ -120,6 +120,6 @@ function onSpellAddToLevel(aSelection, vCustom)
 				break;
 			end
 		end
-		DB.setValue(DB.getChild(window.getDatabaseNode(), "..."), "spellmode", "string", "standard");
+		DB.setValue(DB.getChild(window.getDatabaseNode(), "..."), "spellmode", "string", "");
 	end
 end

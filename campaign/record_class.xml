@@ -23,31 +23,28 @@
 	<windowclass name="referenceclass_header" copy="record_header" />
 
 	<template name="cycler_column_classstat">
-		<button_stringcycler name="spellmode">
-			<anchored height="20" width="50">
-				<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
-				<left offset="97" />
-			</anchored>
+		<button_stringcycler_content_column>
+			<anchored width="50" />
 			<alignleft>25</alignleft>
-		</button_stringcycler>
+		</button_stringcycler_content_column>
 	</template>
 	<windowclass name="referenceclass_main">
 		<margins control="0,0,0,7" />
 		<script>
 			function onInit()
-				update();
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 			end
-			function update()
-				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
-				features.update(bReadOnly);
+			function onLockModeChanged(bReadOnly)
+				local tFields = { "classtype", "hitdie", "bab", "fort", "ref", "will", "skillranks", "classskills", "features_iadd", };
+				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 			end
 		</script>
 		<sheetdata>
-			<anchor_column name="columnanchor" />
-			
-			<label_column name="classtype_label">
+			<anchor_content_top />
+
+			<label_content_column name="classtype_label">
 				<static textres="class_label_classtype" />
-			</label_column>
+			</label_content_column>
 			<cycler_column_classstat name="classtype">
 				<anchored width="150" />
 				<parameters>
@@ -56,16 +53,16 @@
 				</parameters>
 			</cycler_column_classstat>
 			
-			<label_column name="hitdie_label">
+			<label_content_column name="hitdie_label">
 				<static textres="class_label_hitdie" />
-			</label_column>
-			<string_column name="hitdie">
+			</label_content_column>
+			<string_content_column name="hitdie">
 				<anchored width="30"><right merge="delete" /></anchored>
-			</string_column>
+			</string_content_column>
 			
-			<label_column name="bab_label">
+			<label_content_column name="bab_label">
 				<static textres="class_label_bab" />
-			</label_column>
+			</label_content_column>
 			<cycler_column_classstat name="bab">
 				<parameters>
 					<labelsres>class_label_bab_fast|class_label_bab_medium|class_label_bab_slow</labelsres>
@@ -73,9 +70,9 @@
 				</parameters>
 			</cycler_column_classstat>
 			
-			<label_column name="fort_label">
+			<label_content_column name="fort_label">
 				<static textres="class_label_fort" />
-			</label_column>
+			</label_content_column>
 			<cycler_column_classstat name="fort">
 				<parameters>
 					<labelsres>class_label_save_good|class_label_save_bad</labelsres>
@@ -83,9 +80,9 @@
 				</parameters>
 			</cycler_column_classstat>
 			
-			<label_column name="ref_label">
+			<label_content_column name="ref_label">
 				<static textres="class_label_ref" />
-			</label_column>
+			</label_content_column>
 			<cycler_column_classstat name="ref">
 				<parameters>
 					<labelsres>class_label_save_good|class_label_save_bad</labelsres>
@@ -93,9 +90,9 @@
 				</parameters>
 			</cycler_column_classstat>
 			
-			<label_column name="will_label">
+			<label_content_column name="will_label">
 				<static textres="class_label_will" />
-			</label_column>
+			</label_content_column>
 			<cycler_column_classstat name="will">
 				<parameters>
 					<labelsres>class_label_save_good|class_label_save_bad</labelsres>
@@ -103,64 +100,62 @@
 				</parameters>
 			</cycler_column_classstat>
 			
-			<label_column name="skillranks_label">
+			<label_content_column name="skillranks_label">
 				<static textres="class_label_skillranks" />
-			</label_column>
-			<number_column name="skillranks">
+			</label_content_column>
+			<number_content_column name="skillranks">
 				<hideonvalue>0</hideonvalue>
-			</number_column>
+			</number_content_column>
 			<label name="skillranks_suffix">
 				<anchored to="skillranks" position="righthigh" offset="10,0" />
 				<static textres="class_label_skillrankssuffix" />
 			</label>
 			
-			<header_column name="classskills_header">
+			<header_content_framed_headersimple name="classskills_header">
 				<static textres="class_header_classskills"/>
-				<center />
-			</header_column>
-			<string_column_full name="classskills" />
+			</header_content_framed_headersimple>
+			<string_content_column_full name="classskills" />
 			
-			<header_column name="features_header">
+			<header_content_framed_headersimple name="features_header">
 				<static textres="class_header_features"/>
-				<center />
-			</header_column>
-			<button_iedit name="features_iedit">
+			</header_content_framed_headersimple>
+			<button_iadd name="features_iadd">
 				<anchored to="features_header" position="righthigh" offset="-20,0" />
 				<target>features</target>
-			</button_iedit>
-			<button_iadd name="features_iadd">
-				<anchored to="features_iedit" position="lefthigh" offset="5,0" />
-				<target>features</target>
 			</button_iadd>
-			<list_column name="features">
+			<list_content_top name="features">
 				<datasource>.classfeatures</datasource>
 				<sortby><control>level</control><control>name</control></sortby>
 				<class>ref_class_feature</class>
-			</list_column>
+			</list_content_top>
 		</sheetdata>
 	</windowclass>
 	<windowclass name="ref_class_feature">
 		<margins control="0,0,0,2" />
 		<script>
-			function update(bReadOnly)
-				level.setReadOnly(bReadOnly);
-				name.setReadOnly(bReadOnly);
+			function onInit()
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+			end
+			function onLockModeChanged(bReadOnly)
+				WindowManager.callSafeControlsSetLockMode(self, { "level", "name", "idelete" }, bReadOnly);
 			end
 		</script>
 		<sheetdata>
-			<anchor_listitem_column_right name="rightanchor" />
-			<link_listitem_column name="shortcut">
-				<class>referenceclassability</class>
-			</link_listitem_column>
-			<button_listitem_column_delete name="idelete" />
+			<anchor_listitem_left_sm />
+			<anchor_listitem_right_sm />
 
-			<basicnumber name="level">
-				<anchored position="insidetopleft" offset="5,2" height="20" width="20" />
-			</basicnumber>
-			<string_listitem_column_name name="name">
-				<anchored offset="35,2" />
+			<button_listitem_idelete_left name="idelete" />
+			<link_listitem_left name="link">
+				<class>referenceclassability</class>
+			</link_listitem_left>
+			<number_listitem_left name="level">
+				<anchored width="20" />
+			</number_listitem_left>
+
+			<string_listitem_center name="name">
 				<empty textres="library_recordtype_empty_classfeature" />
-			</string_listitem_column_name>
+				<font>sheetlabel</font>
+			</string_listitem_center>
 		</sheetdata>
 	</windowclass>
 
@@ -172,27 +167,25 @@
 	<windowclass name="referenceclassability_main">
 		<script>
 			function onInit()
-				update();
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 			end
-			function update()
-				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
-				type.update(bReadOnly);
-				text.update(bReadOnly);
+			function onLockModeChanged(bReadOnly)
+				WindowManager.callSafeControlsSetLockMode(self, { "type", "text", }, bReadOnly);
 			end
 		</script>
 		<sheetdata>
-			<anchor_column name="columnanchor" />
+			<anchor_content_top />
 			
-			<label_column name="type_label">
+			<label_content_column name="type_label">
 				<static textres="specialability_label_type" />
-			</label_column>
-			<string_columnh name="type">
+			</label_content_column>
+			<string_content_columnh name="type">
 				<empty textres="specialability_empty_type" />
 				<nohide />
 				<delaykeyupdate />
-			</string_columnh>
+			</string_content_columnh>
 			
-			<ft_columnh name="text" />
+			<ft_content_columnh_full name="text" />
 		</sheetdata>
 	</windowclass>
 </root>

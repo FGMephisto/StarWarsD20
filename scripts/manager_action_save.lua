@@ -18,6 +18,7 @@ function handleApplySave(msgOOB)
 	
 	local rAction = {};
 	rAction.bSecret = (tonumber(msgOOB.nSecret) == 1);
+	rAction.bTower = (tonumber(msgOOB.nTower) == 1);
 	rAction.sDesc = msgOOB.sDesc;
 	rAction.nTotal = tonumber(msgOOB.nTotal) or 0;
 	rAction.sSaveDesc = msgOOB.sSaveDesc;
@@ -32,17 +33,14 @@ function notifyApplySave(rSource, rRoll)
 	local msgOOB = {};
 	msgOOB.type = OOB_MSGTYPE_APPLYSAVE;
 	
-	if rRoll.bTower then
-		msgOOB.nSecret = 1;
-	else
-		msgOOB.nSecret = 0;
-	end
+	msgOOB.nSecret = rRoll.bSecret and 1 or 0;
+	msgOOB.nTower = rRoll.bTower and 1 or 0;
 	msgOOB.sDesc = rRoll.sDesc;
 	msgOOB.nTotal = ActionsManager.total(rRoll);
 	msgOOB.sSaveDesc = rRoll.sSaveDesc;
 	msgOOB.nTarget = rRoll.nTarget;
 	msgOOB.sSaveResult = rRoll.sSaveResult;
-	if rRoll.bRemoveOnMiss then msgOOB.nRemoveOnMiss = 1; end
+	msgOOB.nRemoveOnMiss = rRoll.bRemoveOnMiss and 1 or 0;
 
 	msgOOB.sSourceNode = ActorManager.getCreatureNodeName(rSource);
 	if rRoll.sSource ~= "" then
@@ -75,9 +73,7 @@ function performVsRoll(draginfo, rActor, sSave, nTargetDC, bSecretRoll, rSource,
 		rRoll.bSecret = true;
 	end
 	rRoll.nTarget = nTargetDC;
-	if bRemoveOnMiss then
-		rRoll.bRemoveOnMiss = "true";
-	end
+	rRoll.bRemoveOnMiss = bRemoveOnMiss;
 	if sSaveDesc then
 		rRoll.sSaveDesc = sSaveDesc;
 	end
@@ -399,7 +395,7 @@ function applySave(rSource, rOrigin, rAction, sUser)
 		end
 	end
 	
-	ActionsManager.outputResult(rAction.bSecret, rSource, rOrigin, msgLong, msgShort);
+	ActionsManager.outputResult(rAction.bTower, rSource, rOrigin, msgLong, msgShort);
 	
 	if rSource and rOrigin then
 		ActionDamage.setDamageState(rOrigin, rSource, StringManager.trim(sAttack), rAction.sResult);

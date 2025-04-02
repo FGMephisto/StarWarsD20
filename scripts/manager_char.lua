@@ -2394,7 +2394,7 @@ function handleClassFeatureSpells(nodeChar, nodeFeature)
 		DB.setValue(nodeNewSpellClass, "castertype", "string", "spontaneous");
 	end
 		
-	DB.setValue(nodeChar, "spellmode", "string", "standard");
+	DB.setValue(nodeChar, "spellmode", "string", "");
 	return true;
 end
 

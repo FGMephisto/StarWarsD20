@@ -34,7 +34,6 @@ function notifyApplyAttack(rSource, rTarget, rRoll)
 		return;
 	end
 
-	rRoll.bSecret = rRoll.bTower;
 	rRoll.sResults = table.concat(rRoll.aMessages, " ");
 	
 	local msgOOB = UtilityManager.encodeRollToOOB(rRoll);
@@ -69,7 +68,7 @@ function onTargeting(rSource, aTargeting, rRolls)
 		if #aTargets > 1 then
 			for _,vRoll in ipairs(rRolls) do
 				if not string.match(vRoll.sDesc, "%[FULL%]") then
-					vRoll.bRemoveOnMiss = "true";
+					vRoll.bRemoveOnMiss = true;
 				end
 			end
 		end
@@ -113,6 +112,7 @@ function getRoll(rActor, rAction)
 	else
 		rRoll.sDesc = ActionAttackCore.encodeActionText(rAction);
 	end
+	rRoll.sRange = rAction.range;
 	
 	-- Add ability modifiers
 	if rAction.stat then
@@ -132,6 +132,9 @@ function getRoll(rActor, rAction)
 		rRoll.sDesc = rRoll.sDesc .. " [TOUCH]";
 	end
 	
+	-- Legacy
+	rRoll.range = rAction.range;
+
 	return rRoll;
 end
 
@@ -173,6 +176,7 @@ end
 function modAttack(rSource, rTarget, rRoll)
 	ActionAttack.clearCritState(rSource);
 	
+	ActionAttackCore.decodeRollData(rRoll);
 	local aAddDesc = {};
 	local aAddDice = {};
 	local nAddMod = 0;
@@ -308,14 +312,6 @@ function modAttack(rSource, rTarget, rRoll)
 	end
 
 	if rSource then
-		-- Determine attack type
-		local sAttackType = nil;
-		if rRoll.sType == "attack" then
-			sAttackType = ActionAttackCore.decodeRangeText(rRoll.sDesc);
-		elseif rRoll.sType == "grapple" then
-			sAttackType = "M";
-		end
-
 		-- Determine ability used
 		local sActionStat = nil;
 		local sModStat = string.match(rRoll.sDesc, "%[MOD:(%w+)%]");
@@ -323,18 +319,18 @@ function modAttack(rSource, rTarget, rRoll)
 			sActionStat = DataCommon.ability_stol[sModStat];
 		end
 		if not sActionStat then
-			if sAttackType == "M" then
+			if rRoll.sRange == "M" then
 				sActionStat = "strength";
-			elseif sAttackType == "R" then
+			elseif rRoll.sRange == "R" then
 				sActionStat = "dexterity";
 			end
 		end
 
 		-- Build attack filter
 		local aAttackFilter = {};
-		if sAttackType == "M" then
+		if rRoll.sRange == "M" then
 			table.insert(aAttackFilter, "melee");
-		elseif sAttackType == "R" then
+		elseif rRoll.sRange == "R" then
 			table.insert(aAttackFilter, "ranged");
 		end
 		if bOpportunity then
@@ -373,7 +369,7 @@ function modAttack(rSource, rTarget, rRoll)
 			table.insert(aAddDesc, "[BLINDED]");
 		end
 		if not DataCommon.isPFRPG() then
-			if EffectManager35E.hasEffect(rSource, "Incorporeal") and sAttackType == "M" and not string.match(string.lower(rRoll.sDesc), "incorporeal touch") then
+			if EffectManager35E.hasEffect(rSource, "Incorporeal") and (rRoll.sRange == "M") and not string.match(string.lower(rRoll.sDesc), "incorporeal touch") then
 				bEffects = true;
 				table.insert(aAddDesc, "[INCORPOREAL]");
 			end
@@ -413,7 +409,7 @@ function modAttack(rSource, rTarget, rRoll)
 			nAddMod = nAddMod - 4;
 		end
 		if EffectManager.hasCondition(rSource, "Prone") then
-			if sAttackType == "M" then
+			if rRoll.sRange == "M" then
 				bEffects = true;
 				nAddMod = nAddMod - 4;
 			end
@@ -686,7 +682,7 @@ function onPostAttackResolve(rSource, rTarget, rRoll, rMessage)
 end
 
 function onGrapple(rSource, rTarget, rRoll)
-	ActionAttackCore.decodeAttackRoll(rRoll);
+	ActionAttackCore.decodeRollData(rRoll);
 
 	if DataCommon.isPFRPG() then
 		ActionAttack.onAttack(rSource, rTarget, rRoll);
@@ -727,19 +723,6 @@ function onMissChance(rSource, rTarget, rRoll)
 	end
 	
 	Comm.deliverChatMessage(rMessage);
-end
-
-function decodeAttackRoll(rRoll)
-	-- Rebuild detail fields if dragging from chat window
-	if not rRoll.nOrder then
-		rRoll.nOrder = tonumber(rRoll.sDesc:match("%[ATTACK.-#(%d+)")) or nil;
-	end
-	if not rRoll.sRange then
-		rRoll.sRange = rRoll.sDesc:match("%[ATTACK.-%((%w+)%)%]");
-	end
-	if not rRoll.sLabel then
-		rRoll.sLabel = StringManager.trim(rRoll.sDesc:match("%[ATTACK.-%]([^%[]+)"));
-	end
 end
 
 function applyAttack(rSource, rTarget, rRoll)
@@ -793,7 +776,7 @@ function applyAttack(rSource, rTarget, rRoll)
 		msgLong.icon = "roll_attack";
 	end
 
-	ActionsManager.outputResult(rRoll.bSecret, rSource, rTarget, msgLong, msgShort);
+	ActionsManager.outputResult(rRoll.bTower, rSource, rTarget, msgLong, msgShort);
 end
 
 aCritState = {};

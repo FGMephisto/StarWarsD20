@@ -3,7 +3,7 @@
 <!-- 
   Please see the license.html file included with this distribution for 
   attribution and copyright information.
-  File adjusted for Star Wars 3.5E
+  File adjusted for Star Wars D20
 -->
 
 <root>
@@ -14,22 +14,18 @@
 			<script>
 				function onInit()
 					super.onInit();
-					update();
-					DB.addHandler(DB.getPath(window.getDatabaseNode(), "classes"), "onChildUpdate", update);
+					self.update();
+					DB.addHandler(DB.getPath(window.getDatabaseNode(), "classes"), "onChildUpdate", self.update);
 				end
-				
 				function onClose()
-					DB.removeHandler(DB.getPath(window.getDatabaseNode(), "classes"), "onChildUpdate", update);
+					DB.removeHandler(DB.getPath(window.getDatabaseNode(), "classes"), "onChildUpdate", self.update);
 				end
-				
 				function update()
 					setValue(CharManager.getClassLevelSummary(window.getDatabaseNode(), true));
 				end
-
 				function onClickDown(button, x, y)
 					return true;
 				end
-
 				function onClickRelease(button, x, y)
 					Interface.openWindow("charsheet_classes", window.getDatabaseNode());
 				end
@@ -116,7 +112,6 @@
 			<hideonvalue value="0" />
 			<rollable />
 			<displaysign />
-			<modifiersize>mini</modifiersize>
 			<script>
 				function onInit()
 					addSource("abilities." .. target[1] .. ".score");
@@ -176,26 +171,21 @@
 					if super.onInit then
 						super.onInit();
 					end
-
-					OptionsManager.registerCallback("WNDC", onValueChanged);
-					onValueChanged();
+					OptionsManager.registerCallback("WNDC", self.onValueChanged);
+					self.onValueChanged();
 				end
-
 				function onClose()
-					OptionsManager.unregisterCallback("WNDC", onValueChanged);
+					OptionsManager.unregisterCallback("WNDC", self.onValueChanged);
 				end
-
-				function onDrop(x, y, draginfo)
+				function onValueChanged()
+					window.onHealthChanged();
+				end
+				function onDrop(_, _, draginfo)
 					if draginfo.getType() == "number" then
 						local rActor = ActorManager.resolveActor(window.getDatabaseNode());
 						ActionDamage.applyDamage(nil, rActor, false, "number", draginfo.getDescription(), draginfo.getNumberData());
 					end
-
 					return true;
-				end
-
-				function onValueChanged()
-					window.onHealthChanged();
 				end
 			</script>
 		</number_dropadd>
@@ -250,7 +240,6 @@
 		<number_chartotalwithability>
 			<rollable />
 			<displaysign />
-			<modifiersize>mini</modifiersize>
 			<modifierfield>initiative.temporary</modifierfield>
 			<source><name>initiative.misc</name><op>+</op></source>
 			<ability><source>initiative.ability</source><default>dexterity</default></ability>
@@ -275,7 +264,6 @@
 		<number_chartotalwithability>
 			<rollable />
 			<displaysign />
-			<modifiersize>mini</modifiersize>
 			<script>
 				function action(draginfo)
 					local sText = Interface.getString(self.description[1].textres[1]);
@@ -319,7 +307,6 @@
 		<number_chartotalwithability>
 			<rollable />
 			<displaysign />
-			<modifiersize>mini</modifiersize>
 			<description><text>Grapple</text></description>
 			<modifierfield>attackbonus.grapple.temporary</modifierfield>
 			<source><name>attackbonus.base</name><op>+</op></source>
@@ -349,7 +336,6 @@
 	<template name="number_chartotalac">
 		<number_chartotalwithability>
 			<description textres="ac" />
-			<modifiersize>mini</modifiersize>
 			<modifierfield>ac.sources.temporary</modifierfield>
 			<!-- Added "Class" as a contributor -->
 			<source><name>ac.sources.class</name><op>+</op></source>		
@@ -453,7 +439,6 @@
 	
 	<template name="number_charsr">
 		<number_chartotal>
-			<modifiersize>mini</modifiersize>
 			<description textres="spellresistance" />
 			<modifierfield>defenses.sr.temporary</modifierfield>
 			<source><name>defenses.sr.base</name><op>+</op></source>
@@ -464,7 +449,6 @@
 	<template name="number_charspeed">
 		<number_chartotal>
 			<modifierfield>speed.temporary</modifierfield>
-			<modifiersize>mini</modifiersize>
 			<description textres="char_tooltip_speed" />
 			<source><name>speed.base</name><op>+</op></source>
 			<source><name>speed.armor</name><op>+</op></source>
@@ -628,7 +612,6 @@
 		<number_chartotalwithability>
 			<rollable />
 			<displaysign />
-			<modifiersize>mini</modifiersize>
 			<script>
 				function onInit()
 					addSourceWithOp("saves." .. target[1] .. ".base", "+");
@@ -689,15 +672,15 @@
 		</windowlist>
 	</template>
 	<template name="number_charskillfield">
-		<basicnumber>
+		<number_listitem_right>
 			<delaykeyupdate />
 			<hideonvalue>0</hideonvalue>
 			<nodrag />
 			<displaysign />
-		</basicnumber>
+		</number_listitem_right>
 	</template>
 	<template name="number_charskillranks">
-		<basicnumber>
+		<number_listitem_right>
 			<delaykeyupdate />
 			<hideonvalue>0</hideonvalue>
 			<nodrag />
@@ -724,26 +707,25 @@
 					CharManager.updateSkillPoints(DB.getChild(window.getDatabaseNode(), "..."));
 				end
 			</script>
-		</basicnumber>
+		</number_listitem_right>
 	</template>
 	<template name="cycler_charskillability">
-		<button_stringcycler>
+		<stringcycler_listitem_right>
 			<parameters>
 				<labelsres>str|dex|con|int|wis|cha</labelsres>
 				<values>strength|dexterity|constitution|intelligence|wisdom|charisma</values>
 			</parameters>
-		</button_stringcycler>
+		</stringcycler_listitem_right>
 	</template>
 	<template name="number_charskillfield_static">
-		<simplenumber>
+		<number_listitem_right_static>
 			<hideonvalue>0</hideonvalue>
 			<nodrag />
 			<displaysign />
-			<disabled />
-		</simplenumber>
+		</number_listitem_right_static>
 	</template>
 	<template name="number_charskilltotal">
-		<number_linked_framed>
+		<number_listitem_linked_right>
 			<displaysign />
 			<rollable />
 			<hideonvalue>0</hideonvalue>
@@ -796,7 +778,7 @@
 					return action();
 				end
 			</script>
-		</number_linked_framed>
+		</number_listitem_linked_right>
 	</template>
 
 	<template name="list_charabilities">
@@ -819,7 +801,9 @@
 	<template name="list_charweapon">
 		<windowlist>
 			<datasource>.weaponlist</datasource>
+			<class>char_weapon</class>
 			<sortby><control>name</control></sortby>
+			<noscroll />
 			<script file="campaign/scripts/char_weaponlist.lua" />
 		</windowlist>
 	</template>
@@ -838,53 +822,7 @@
 			</script>
 		</buttonfield>
 	</template>
-	<template name="number_charweaponattacktotal">
-		<number_linked>
-			<displaysign />
-			<source><name>type</name></source>
-			<source><string /><name>attackstat</name></source>
-			<source><name>bonus</name><op>+</op></source>
-			<source><name>...attackbonus.base</name></source>
-			<source><name>...attackbonus.melee.ability</name></source>
-			<source><name>...attackbonus.melee.size</name></source>
-			<source><name>...attackbonus.melee.misc</name></source>
-			<source><name>...attackbonus.melee.temporary</name></source>
-			<source><name>...attackbonus.ranged.ability</name></source>
-			<source><name>...attackbonus.ranged.size</name></source>
-			<source><name>...attackbonus.ranged.misc</name></source>
-			<source><name>...attackbonus.ranged.temporary</name></source>
-			<source><name>...abilities.strength.bonus</name></source>
-			<source><name>...abilities.dexterity.bonus</name></source>
-			<source><name>...abilities.constitution.bonus</name></source>
-			<source><name>...abilities.intelligence.bonus</name></source>
-			<source><name>...abilities.wisdom.bonus</name></source>
-			<source><name>...abilities.charisma.bonus</name></source>
-			<script file="campaign/scripts/char_weaponattack.lua" />
-		</number_linked>
-	</template>
 
-	<template name="number_charweaponfullattack">
-		<basicnumber>
-			<frame merge="delete" />
-			<icons>
-				<container>attackicons</container>
-				<icon>field_rollable</icon>
-				<offsetx>0</offsetx>
-				<offsety>0</offsety>
-			</icons>
-			<attackfields>
-				<attack1>attack1</attack1>
-				<attack2>attack2</attack2>
-				<attack3>attack3</attack3>
-				<attack4>attack4</attack4>
-			</attackfields>
-			<namefield>name</namefield>
-			<default>1</default>
-			<min>1</min>
-			<max>4</max>
-			<script file="campaign/scripts/char_weaponfullattack.lua" />
-		</basicnumber>
-	</template>
 	<template name="number_charweaponattackmod">
 		<simplenumber>
 			<stateframe>

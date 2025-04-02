@@ -3,7 +3,7 @@
 <!-- 
   Please see the license.html file included with this distribution for 
   attribution and copyright information.
-  File adjusted for Star Wars 3.5E
+  File adjusted for Star Wars D20
 -->
 
 <root>
@@ -11,8 +11,8 @@
 	<windowclass name="charsheet_inventory" merge="join">
 		<script file="campaign/scripts/char_inv_sw.lua" />
 		<sheetdata>
-			<genericcontrol name="showonminisheet_header" insertbefore="carried_header">
-				<anchored to="rightanchor" width="12" height="10">
+			<genericcontrol name="showonminisheet_header" insertbefore="label_carried">
+				<anchored to="labelrightanchor" width="12" height="10">
 					<top offset="5" />
 					<right anchor="left" relation="relative" offset="-5" />
 				</anchored>

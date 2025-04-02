@@ -19,13 +19,9 @@ local bCounting = false;
 function onListChanged()
 	if not bCounting then
 		bCounting = true;
-		self.onSpellCounterUpdate();
+		WindowManager.callOuterWindowFunction(window, "onSpellCounterUpdate");
 		bCounting = false;
 	end
-end
-
-function onSpellCounterUpdate()
-	window.onSpellCounterUpdate();
 end
 
 function addEntry(bFocus)

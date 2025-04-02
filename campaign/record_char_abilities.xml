@@ -141,8 +141,8 @@
 			<anchor_listitem_left_sm />
 			<anchor_listitem_right_sm />
 
-			<button_listitem_idelete name="idelete" />
-			<linkc_listitem_right name="shortcut" />
+			<button_listitem_idelete_left name="idelete" />
+			<linkc_listitem_left name="shortcut" />
 
 			<string_listitem_center_underline name="name">
 				<delaykeyupdate />
@@ -151,30 +151,30 @@
 	</windowclass>
 	<windowclass name="char_ability_feat" copy="char_ability_entry">
 		<sheetdata>
-			<linkc_listitem_right name="shortcut">
+			<linkc_listitem_left name="shortcut">
 				<class>referencefeat</class>
-			</linkc_listitem_right>
+			</linkc_listitem_left>
 		</sheetdata>
 	</windowclass>
 	<windowclass name="char_ability_class" copy="char_ability_entry">
 		<sheetdata>
-			<linkc_listitem_right name="shortcut">
+			<linkc_listitem_left name="shortcut">
 				<class>referenceclassability</class>
-			</linkc_listitem_right>
+			</linkc_listitem_left>
 		</sheetdata>
 	</windowclass>
 	<windowclass name="char_ability_race" copy="char_ability_entry">
 		<sheetdata>
-			<linkc_listitem_right name="shortcut">
+			<linkc_listitem_left name="shortcut">
 				<class>referenceracialtrait</class>
-			</linkc_listitem_right>
+			</linkc_listitem_left>
 		</sheetdata>
 	</windowclass>
 	<windowclass name="char_ability_proficiency" copy="char_ability_entry">
 		<sheetdata>
-			<linkc_listitem_right name="shortcut">
+			<linkc_listitem_left name="shortcut">
 				<class>referenceproficiency</class>
-			</linkc_listitem_right>
+			</linkc_listitem_left>
 		</sheetdata>
 	</windowclass>
 

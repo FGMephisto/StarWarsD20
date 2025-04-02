@@ -3,7 +3,7 @@
 <!-- 
   Please see the license.html file included with this distribution for 
   attribution and copyright information.
-  File adjusted for Star Wars 3.5E
+  File adjusted for Star Wars D20
 -->
 
 <root>
@@ -89,16 +89,13 @@
 	<windowclass name="item_main_armor">
 		<margins control="0,0,0,2" />
 		<script>
-			function update(bReadOnly)
-				-- bonus.update(bReadOnly);
-				-- ac.update(bReadOnly);
-				maxstatbonus.update(bReadOnly);
-				checkpenalty.update(bReadOnly);
-				-- spellfailure.update(bReadOnly);
-				speed30.update(bReadOnly);
-				speed20.update(bReadOnly);
-				properties.update(bReadOnly);
-				dr.update(bReadOnly);
+			function onInit()
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+			end
+			function onLockModeChanged(bReadOnly)
+				-- local tFields = { "bonus", "ac", "maxstatbonus", "checkpenalty", "spellfailure", "speed30", "speed20", "properties", };
+				local tFields = { "maxstatbonus", "checkpenalty", "speed30", "speed20", "properties", "dr", };
+				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 			end
 		</script>
 		<sheetdata>
@@ -111,7 +108,7 @@
 				<delaykeyupdate />
 				<displaysign />
 			</number_content_columnh>
-			
+
 			<label_content_column name="bonus_label">
 				<static textres="item_label_bonus" />
 			</label_content_column>
@@ -170,16 +167,12 @@
 	<windowclass name="item_main_weapon">
 		<margins control="0,0,0,2" />
 		<script>
-			function update(bReadOnly)
-				bonus.update(bReadOnly);
-				damage.update(bReadOnly);
-				damagetype.update(bReadOnly);
-				critical.update(bReadOnly);
-				range.update(bReadOnly);
-				properties.update(bReadOnly);
-				stundc.update(bReadOnly);
-				firingmodes.update(bReadOnly);
-				size.update(bReadOnly);
+			function onInit()
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+			end
+			function onLockModeChanged(bReadOnly)
+				local tFields = { "bonus", "damage", "damagetype", "critical", "range", "properties", "stundc", "firingmodes", "size", };
+				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 			end
 		</script>
 		<sheetdata>

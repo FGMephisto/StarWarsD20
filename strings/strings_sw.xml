@@ -3,7 +3,7 @@
 <!-- 
   Please see the license.html file included with this distribution for
   attribution and copyright information.
-  File adjusted for Star Wars 3.5E
+  File adjusted for Star Wars D20
 -->
 
 <root>
@@ -622,6 +622,7 @@
 	<string name="weapon_label_name">Name</string>
 	<string name="weapon_label_properties">Properties</string>
 	<string name="weapon_header_attack">ATTACK</string>
+	<string name="weapon_label_attacks"># Attacks</string>
 	<string name="weapon_label_atkstat">Stat</string>
 	<string name="weapon_label_atkbonus">Bonus</string>
 	<string name="weapon_label_atkbonusper">Per Atk Bonus</string>

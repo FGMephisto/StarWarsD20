@@ -26,46 +26,51 @@
 		<margins control="0,0,0,7" />
 		<script>
 			function onInit()
-				self.update();
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 			end
-			function update()
-				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
-				traits.update(bReadOnly);
+			function onLockModeChanged(bReadOnly)
+				WindowManager.callSafeControlsSetLockMode(self, { "traits_iadd", }, bReadOnly);
 			end
 		</script>
 		<sheetdata>
-			<anchor_column name="columnanchor" />
+			<anchor_content_top />
 			
-			<header_column name="traits_header">
+			<header_content_framed_headersimple name="traits_header">
 				<static textres="race_header_traits"/>
-				<center />
-			</header_column>
-			<button_iedit name="traits_iedit">
+			</header_content_framed_headersimple>
+			<button_iadd name="traits_iadd">
 				<anchored to="traits_header" position="righthigh" offset="-20,0" />
 				<target>traits</target>
-			</button_iedit>
-			<button_iadd name="traits_iadd">
-				<anchored to="traits_iedit" position="lefthigh" offset="5,0" />
-				<target>traits</target>
 			</button_iadd>
-			<list_column name="traits">
+			<list_content_top name="traits">
 				<datasource>.racialtraits</datasource>
 				<class>ref_racial_trait</class>
-			</list_column>
+			</list_content_top>
 		</sheetdata>
 	</windowclass>
 	<windowclass name="ref_racial_trait">
 		<margins control="0,0,0,2" />
+		<script>
+			function onInit()
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+			end
+			function onLockModeChanged(bReadOnly)
+				WindowManager.callSafeControlsSetLockMode(self, { "name", "idelete" }, bReadOnly);
+			end
+		</script>
 		<sheetdata>
-			<anchor_listitem_column_right name="rightanchor" />
-			<link_listitem_column name="shortcut">
-				<class>referenceracialtrait</class>
-			</link_listitem_column>
-			<button_listitem_column_delete name="idelete" />
+			<anchor_listitem_left_sm />
+			<anchor_listitem_right_sm />
 
-			<string_listitem_column_name name="name">
+			<button_listitem_idelete_left name="idelete" />
+			<link_listitem_left name="link">
+				<class>referenceracialtrait</class>
+			</link_listitem_left>
+
+			<string_listitem_center name="name">
 				<empty textres="library_recordtype_empty_racialtrait" />
-			</string_listitem_column_name>
+				<font>sheetlabel</font>
+			</string_listitem_center>
 		</sheetdata>
 	</windowclass>
 	

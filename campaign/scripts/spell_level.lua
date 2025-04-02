@@ -34,10 +34,6 @@ function updateLabel()
 	label.setValue(sLabel);
 end
 	
-function onSpellCounterUpdate()
-	windowlist.window.onSpellCounterUpdate();
-end
-
 function onClickDown(button, x, y)
 	return true;
 end

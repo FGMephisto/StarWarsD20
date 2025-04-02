@@ -13,20 +13,11 @@
 		<margins control="0,0,0,15" />
 		<script>
 			function onInit()
-				update();
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 			end
-			function update()
-				local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
-				school.update(bReadOnly);
-				level.update(bReadOnly);
-				components.update(bReadOnly);
-				castingtime.update(bReadOnly);
-				range.update(bReadOnly);
-				effect.update(bReadOnly);
-				duration.update(bReadOnly);
-				save.update(bReadOnly);
-				sr.update(bReadOnly);
-				description.update(bReadOnly);
+			function onLockModeChanged(bReadOnly)
+				local tFields = { "school", "level", "components", "castingtime", "range", "effect", "duration", "save", "sr", "description",  };
+				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 			end
 		</script>
 		<sheetdata>
