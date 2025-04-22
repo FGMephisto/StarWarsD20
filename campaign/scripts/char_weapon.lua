@@ -206,10 +206,25 @@ function calcAttackBonus(n)
 	local nodeWeapon = getDatabaseNode();
 	local nodeChar = DB.getChild(nodeWeapon, "...")
 	local rActor, rAttack = CharManager.getWeaponAttackRollStructures(nodeWeapon);
+
 	local nBonus = DB.getValue(nodeChar, "attackbonus.base", 0);
 	nBonus = nBonus + ActorManager35E.getAbilityBonus(rActor, rAttack.stat);
+	if rAttack.cm then
+		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.grapple.size", 0);
+		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.grapple.misc", 0);
+		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.grapple.temporary", 0);
+	elseif rAttack.range == "R" then
+		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.ranged.size", 0);
+		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.ranged.misc", 0);
+		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.ranged.temporary", 0);
+	else
+		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.melee.size", 0);
+		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.melee.misc", 0);
+		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.melee.temporary", 0);
+	end
 	nBonus = nBonus + DB.getValue(nodeWeapon, "bonus", 0);
 	nBonus = nBonus + DB.getValue(nodeWeapon, "attack" .. (n or 1) .. "modifier", 0);
 	nBonus = nBonus + (((n or 1) - 1) * -5);
-	return nBonus
+
+	return nBonus;
 end
