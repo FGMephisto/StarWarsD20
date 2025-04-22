@@ -14,7 +14,8 @@
 				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 			end
 			function onLockModeChanged(bReadOnly)
-				local tFields = { "gender", "age", "height", "weight", "size", "alignment", "deity", "appearance", "notes", "languages_iadd", };
+				-- local tFields = { "gender", "age", "height", "weight", "size", "alignment", "deity", "appearance", "notes", "languages_iadd", };
+				local tFields = { "gender", "age", "height", "weight", "size", "forcepoints", "darksidepoints", "appearance", "notes", "languages_iadd", };
 				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 			end
 		</script>

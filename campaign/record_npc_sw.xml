@@ -161,7 +161,7 @@
 			<number_column name="hp" />
 
 			<label_column name="hptemp_label">
-				<static textres="vp" />
+				<static textres="hptemp" />
 			</label_column>
 			<number_column name="hptemp" />
 

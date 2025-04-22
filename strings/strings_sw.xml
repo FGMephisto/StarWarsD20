@@ -18,7 +18,6 @@
 	<string name="woundpoints">Wound Points</string>
 	<string name="hp">WP</string>
 	<string name="hptemp">VP</string>
-	<string name="wp">WP</string>
 
 	<string name="menu_resetspells">Reset Force</string>
 	<string name="menu_addspellclass">Add Force Class</string>
