@@ -190,10 +190,7 @@
 			<anchor_listitem_right_sm />
 
 			<button_listitem_idelete_left name="idelete" />
-			<spacer_listitem_left name="idelete_spacer">
-				<anchored width="24" />
-				<invisible />
-			</spacer_listitem_left>
+			<spacer_listitem_idelete_left name="idelete_spacer" />
 			<buttonc_listitem_left name="shortcut">
 				<icon normal="button_link" pressed="button_link_down" />
 				<script file="campaign/scripts/char_skilllink.lua" />
@@ -246,9 +243,9 @@
 				</anchored>
 			</genericcontrol>
 
-			<string_listitem_center_text name="label">
+			<string_listitem_center_underline name="label">
 				<tabtarget next="sublabel" />
-			</string_listitem_center_text>
+			</string_listitem_center_underline>
 			<stringu name="sublabel">
 				<anchored to="label" position="below" height="20" />
 				<invisible />

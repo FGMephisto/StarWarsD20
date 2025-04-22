@@ -48,7 +48,7 @@ function getRoll(rActor, sSkillName, nSkillMod, sSkillStat, sExtra)
 	rRoll.sType = "skill";
 	rRoll.aDice = DiceRollManager.getActorDice({ "d20" }, rActor);
 	rRoll.nMod = nSkillMod or 0;
-	rRoll.sDesc = "[SKILL] " .. StringManager.capitalizeAll(sSkillName);
+	rRoll.sDesc = ActionCore.encodeActionText({ label = sSkillName, }, "action_skill_tag");
 	if sExtra then
 		rRoll.sDesc = rRoll.sDesc .. " " .. sExtra;
 	end
@@ -86,11 +86,7 @@ function modSkill(rSource, rTarget, rRoll)
 		local bEffects = false;
 
 		-- Determine skill used
-		local sSkillLower = "";
-		local sSkill = string.match(rRoll.sDesc, "%[SKILL%] ([^[]+)");
-		if sSkill then
-			sSkillLower = string.lower(StringManager.trim(sSkill));
-		end
+		local sSkillLower = ActionCore.decodeLabelText(rRoll.sDesc, "action_skill_tag"):lower();
 
 		-- Determine ability used with this skill
 		local sActionStat = nil;

@@ -59,12 +59,6 @@ function onSystemChanged(bPFMode)
 	total.onSourceUpdate();
 end
 
-function onMenuSelection(selection, subselection)
-	if selection == 6 and subselection == 7 then
-		UtilityManager.safeDeleteWindow(self);
-	end
-end
-
 function onCheckPenaltyChange()
 	if armorcheckmultiplier.getValue() ~= 0 then
 		armorwidget.setIcon("char_armorcheck");

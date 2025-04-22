@@ -108,19 +108,4 @@
 			</parameters>
 		</stringcycler_listitem_left>
 	</template>
-
-	<template name="list_editor">
-		<windowlist name="list">
-			<anchored>
-				<top parent="columnanchor" anchor="bottom" relation="relative" offset="22" />
-				<left />
-				<right />
-			</anchored>
-			<allowcreate />
-			<allowdelete />
-			<child></child>
-			<child><backcolor>1A40301E</backcolor></child>
-			<noscroll />
-		</windowlist>
-	</template>
 </root>

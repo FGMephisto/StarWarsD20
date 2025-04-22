@@ -225,6 +225,7 @@
 				<static textres="npc_label_atk" />
 			</label_column>
 			<string_columnh name="atk">
+				<nodragselect />
 				<actorpath>..</actorpath>
 				<script file="common/scripts/string_attackline.lua" />
 			</string_columnh>
@@ -233,6 +234,7 @@
 				<static textres="npc_label_fullatk" />
 			</label_column>
 			<string_columnh name="fullatk">
+				<nodragselect />
 				<actorpath>..</actorpath>
 				<script file="common/scripts/string_attackline.lua" />
 			</string_columnh>
@@ -328,6 +330,7 @@
 				<static textres="npc_label_babgrp" />
 			</label_column>
 			<string_columnh name="babgrp">
+				<nodragselect />
 				<script file="campaign/scripts/npc_babgrp.lua" />
 			</string_columnh>
 			
@@ -425,6 +428,7 @@
 				<static textres="npc_label_effect" />
 			</label_column>
 			<string_columnh name="atk">
+				<nodragselect />
 				<actorpath>..</actorpath>
 				<script file="common/scripts/string_attackline.lua" />
 			</string_columnh>
@@ -433,6 +437,7 @@
 				<static textres="npc_label_effect2" />
 			</label_column>
 			<string_columnh name="fullatk">
+				<nodragselect />
 				<actorpath>..</actorpath>
 				<script file="common/scripts/string_attackline.lua" />
 			</string_columnh>
@@ -499,6 +504,7 @@
 				<static textres="npc_label_cm" />
 			</label_column>
 			<string_columnh name="babgrp">
+				<nodragselect />
 				<script file="campaign/scripts/npc_babgrp.lua" />
 			</string_columnh>
 			
@@ -506,6 +512,7 @@
 				<static textres="npc_label_atk" />
 			</label_column>
 			<string_columnh name="atk">
+				<nodragselect />
 				<actorpath>..</actorpath>
 				<script file="common/scripts/string_attackline.lua" />
 			</string_columnh>

@@ -104,11 +104,7 @@ function getRoll(rActor, rAction)
 	rRoll.nMod = rAction.modifier or 0;
 	
 	if rAction.cm then
-		rRoll.sDesc = "[CMB";
-		if rAction.order and rAction.order > 1 then
-			rRoll.sDesc = rRoll.sDesc .. " #" .. rAction.order;
-		end
-		rRoll.sDesc = rRoll.sDesc .. "] " .. StringManager.capitalizeAll(rAction.label);
+		rRoll.sDesc = ActionCore.encodeActionText(rAction, "action_cm_tag");
 	else
 		rRoll.sDesc = ActionAttackCore.encodeActionText(rAction);
 	end
@@ -151,12 +147,9 @@ function getGrappleRoll(rActor, rAction)
 	rRoll.nMod = rAction.modifier or 0;
 	
 	if DataCommon.isPFRPG() then
-		rRoll.sDesc = "[CMB]";
+		rRoll.sDesc = ActionCore.encodeActionText(rAction, "action_cm_tag");
 	else
-		rRoll.sDesc = "[GRAPPLE]";
-	end
-	if rAction.label and rAction.label ~= "" then
-		rRoll.sDesc = rRoll.sDesc .. " " .. StringManager.capitalizeAll(rAction.label);
+		rRoll.sDesc = ActionCore.encodeActionText(rAction, "action_grapple_tag");
 	end
 	
 	-- Add ability modifiers
@@ -177,6 +170,7 @@ function modAttack(rSource, rTarget, rRoll)
 	ActionAttack.clearCritState(rSource);
 	
 	ActionAttackCore.decodeRollData(rRoll);
+
 	local aAddDesc = {};
 	local aAddDice = {};
 	local nAddMod = 0;
@@ -467,7 +461,7 @@ function onAttack(rSource, rTarget, rRoll)
 	local bIsSourcePC = ActorManager.isPC(rSource);
 	local bAllowCC = OptionsManager.isOption("HRCC", "on") or (not bIsSourcePC and OptionsManager.isOption("HRCC", "npc"));
 	
-	if rRoll.sDesc:match("%[CMB") then
+	if ActionCore.isActionText(rRoll.sDesc, "action_cm_tag") then
 		rRoll.sType = "grapple";
 	end
 	

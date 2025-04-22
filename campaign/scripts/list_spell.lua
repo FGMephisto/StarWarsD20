@@ -3,18 +3,6 @@
 -- attribution and copyright information.
 --
 
-function onInit()
-	if not isReadOnly() then
-		registerMenuItem(Interface.getString("menu_addspell"), "insert", 6);
-	end
-end
-
-function onMenuSelection(selection)
-	if selection == 6 then
-		self.addEntry(true);
-	end
-end
-
 local bCounting = false;
 function onListChanged()
 	if not bCounting then

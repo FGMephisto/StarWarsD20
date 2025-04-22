@@ -32,6 +32,7 @@
 	<includefile source="graphics/graphics_sidebar_sw.xml" />
 	
 	<!-- Strings -->
+	<includefile source="strings/strings_35e.xml" />
 	<includefile source="strings/strings_sw.xml" />
 
 	<!-- Desktop -->

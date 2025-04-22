@@ -36,9 +36,7 @@ function getRoll(rActor, sAbilityStat)
 	rRoll.aDice = DiceRollManager.getActorDice({ "d20" }, rActor);
 	rRoll.nMod = ActorManager35E.getAbilityBonus(rActor, sAbilityStat);
 	
-	rRoll.sDesc = "[ABILITY]";
-	rRoll.sDesc = rRoll.sDesc .. " " .. StringManager.capitalizeAll(sAbilityStat);
-	rRoll.sDesc = rRoll.sDesc .. " check";
+	rRoll.sDesc = ActionCore.encodeActionText({ label = sAbilityStat, }, "action_ability_tag");
 
 	return rRoll;
 end
@@ -51,11 +49,8 @@ function modRoll(rSource, rTarget, rRoll)
 	if rSource then
 		local bEffects = false;
 
-		local sActionStat = nil;
-		local sAbility = string.match(rRoll.sDesc, "%[ABILITY%] (%w+) check");
-		if sAbility then
-			sAbility = string.lower(sAbility);
-		else
+		local sAbility = ActionCore.decodeLabelText(rRoll.sDesc, "action_ability_tag"):lower();
+		if sAbility == "" then 
 			if string.match(rRoll.sDesc, "%[STABILIZATION%]") then
 				sAbility = "constitution";
 			end

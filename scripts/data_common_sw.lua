@@ -108,7 +108,7 @@ creaturedefaulttype = "humanoid";
 creaturehalftype = "half-";
 creaturehalftypesubrace = "human";
 -- NOTE: Multi-word types must come before single word types
-creaturetype = {
+creaturetype = { 
 	-- "magical beast",
 	-- "monstrous humanoid",
 	-- "aberration",

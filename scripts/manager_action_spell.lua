@@ -59,8 +59,8 @@ function notifyApplySave(rSource, rTarget, bSecret, sDesc, nDC, bRemoveOnMiss)
 
 	msgOOB.nRemoveOnMiss = bRemoveOnMiss and 1 or 0;
 
-	local sTargetNodeType, nodeTarget = ActorManager.getTypeAndNode(rTarget);
-	if nodeTarget and (sTargetNodeType == "pc") then
+	if ActorManager.isPC(rTarget) then
+		local nodeTarget = ActorManager.getCreatureNode(rTarget);
 		if Session.IsHost then
 			local sOwner = DB.getOwner(nodeTarget);
 			if (sOwner or "") ~= "" then
@@ -116,11 +116,7 @@ function getSpellCastRoll(rActor, rAction)
 	rRoll.aDice = {};
 	rRoll.nMod = 0;
 	
-	rRoll.sDesc = "[CAST";
-	if rAction.order and rAction.order > 1 then
-		rRoll.sDesc = rRoll.sDesc .. " #" .. rAction.order;
-	end
-	rRoll.sDesc = rRoll.sDesc .. "] " .. StringManager.capitalizeAll(rAction.label);
+	rRoll.sDesc = ActionCore.encodeActionText(rAction, "action_cast_tag");
 	
 	return rRoll;
 end
@@ -149,11 +145,8 @@ function getSaveVsRoll(rActor, rAction)
 	rRoll.aDice = {};
 	rRoll.nMod = rAction.savemod or 0;
 	
-	rRoll.sDesc = "[SAVE VS";
-	if rAction.order and rAction.order > 1 then
-		rRoll.sDesc = rRoll.sDesc .. " #" .. rAction.order;
-	end
-	rRoll.sDesc = rRoll.sDesc .. "] " .. StringManager.capitalizeAll(rAction.label);
+	rRoll.sDesc = ActionCore.encodeActionText(rAction, "action_savevs_tag");
+
 	if rAction.save == "fortitude" then
 		rRoll.sDesc = rRoll.sDesc .. " [FORT DC " .. rAction.savemod .. "]";
 	elseif rAction.save == "reflex" then

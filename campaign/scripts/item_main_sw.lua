@@ -5,65 +5,50 @@
 --
 
 function onInit()
-	self.update();
-end
-function VisDataCleared()
-	self.update();
-end
-function InvisDataAdded()
-	self.update();
+	self.onStateChanged();
 end
 
-function update()
+function onLockModeChanged()
+	self.onStateChanged();
+end
+function onIDModeChanged()
+	self.onStateChanged();
+end
+
+function onStateChanged()
 	local nodeRecord = getDatabaseNode();
 	local bReadOnly = WindowManager.getReadOnlyState(nodeRecord);
-	local bID = LibraryData.getIDState("item", nodeRecord);
-	
+	local bID = RecordDataManager.getIDState("item", nodeRecord);
+
 	local sType = type.getValue();
 	local bWeapon = (sType == "Weapon");
 	local bArmor = (sType == "Armor");
 	
-	sub_nonid.update(bReadOnly, bID);
+	local tTypeFields = { "type", "subtype", };
+	WindowManager.callSafeControlsUpdate(self, tTypeFields, bReadOnly, not bID);
+	divider2.setVisible(WindowManager.getAnyControlVisible(self, tTypeFields));
 
-	local bSection2 = false;
-	if WindowManager.callSafeControlUpdate(self, "type", bReadOnly, not bID) then bSection2 = true; end
-	if WindowManager.callSafeControlUpdate(self, "subtype", bReadOnly, not bID) then bSection2 = true; end
+	local tBasicFields = { "cost", "weight", };
+	WindowManager.callSafeControlsUpdate(self, tBasicFields, bReadOnly, not bID);
+	divider3.setVisible(WindowManager.getAnyControlVisible(self, tBasicFields));
 	
-	local bSection3 = false;
-	if WindowManager.callSafeControlUpdate(self, "cost", bReadOnly, not bID) then bSection3 = true; end
-	if WindowManager.callSafeControlUpdate(self, "weight", bReadOnly, not bID) then bSection3 = true; end
-	
-	local bSection4 = true;
-	if Session.IsHost or bID then 
-		if bWeapon then
-			type_stats.setValue("item_main_weapon", nodeRecord);
-		elseif bArmor then
-			type_stats.setValue("item_main_armor", nodeRecord);
-		else
-			type_stats.setValue("", "");
-			bSection4 = false;
-		end
+	if bID and bWeapon then
+		type_stats.setValue("item_main_weapon", nodeRecord);
+	elseif bID and bArmor then
+		type_stats.setValue("item_main_armor", nodeRecord);
 	else
 		type_stats.setValue("", "");
-		bSection4 = false;
 	end
-	type_stats.update(bReadOnly, bID);
+	type_stats.setVisible(not type_stats.isEmpty());
+	divider4.setVisible(WindowManager.getAnyControlVisible(self, { "type_stats", }));
 
-	local bSection5 = false;
-	-- if WindowManager.callSafeControlUpdate(self, "aura", bReadOnly, not bID) then bSection5 = true; end
-	-- if WindowManager.callSafeControlUpdate(self, "cl", bReadOnly, not bID) then bSection5 = true; end
-	if WindowManager.callSafeControlUpdate(self, "prerequisites", bReadOnly, not bID) then bSection5 = true; end
+	local tMagicFields = { "aura", "cl", "prerequisites", };
+	WindowManager.callSafeControlsUpdate(self, tMagicFields, bReadOnly, not bID);
+	divider5.setVisible(WindowManager.getAnyControlVisible(self, tMagicFields));
 	
-	local bSection6 = bID;
-	description.setVisible(bID);
-	description.setReadOnly(bReadOnly);
-	
-	divider2.setVisible(bSection2 and bSection3);
-	divider3.setVisible((bSection2 or bSection3) and bSection4);
-	divider4.setVisible((bSection2 or bSection3 or bSection4) and bSection5);
-	divider5.setVisible((bSection2 or bSection3 or bSection4 or bSection5) and bSection6);
+	WindowManager.callSafeControlsUpdate(self, { "description", }, bReadOnly, not bID);
 
-	sub_pack.update(bReadOnly, bID);
+	WindowManager.callSafeControlUpdate(self, "sub_pack", bReadOnly, bID);
 end
 
 -- Added

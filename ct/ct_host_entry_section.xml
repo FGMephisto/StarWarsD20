@@ -163,18 +163,14 @@
 	<windowclass name="ct_attack">
 		<margins control="0,0,0,2" />
 		<sheetdata>
-			<string_textlistitem name="value">
-				<anchored>
-					<top />
-					<left />
-					<right />
-				</anchored>
-				<multilinespacing>20</multilinespacing>
-				<nohighlight />
+			<anchor_listitem_left_flat />
+			<anchor_listitem_right_flat />
+
+			<string_listitem_center_underline_multiline name="value">
+				<nodragselect />
 				<actorpath>....</actorpath>
-				<delaykeyupdate merge="delete" />
 				<script file="common/scripts/string_attackline.lua" />
-			</string_textlistitem>
+			</string_listitem_center_underline_multiline>
 		</sheetdata>
 	</windowclass>
 

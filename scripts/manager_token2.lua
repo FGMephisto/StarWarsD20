@@ -19,8 +19,7 @@ function onInit()
 end
 
 function getHealthInfo(nodeCT)
-	local rActor = ActorManager.resolveActor(nodeCT);
-	return ActorHealthManager.getTokenHealthInfo(rActor);
+	return ActorHealthManager.getTokenHealthInfo(ActorManager.resolveActor(nodeCT));
 end
 
 function handleIFEffectTag(rActor, nodeEffect, vComp)

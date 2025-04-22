@@ -1277,31 +1277,34 @@ function decodeDamageText(nDamage, sDamageDesc)
 end
 
 function applyDamage(rSource, rTarget, bSecret, sRollType, sDamage, nTotal)
+	local nodeTarget;
+	if ActorManager.isPC(rTarget) then
+		nodeTarget = ActorManager.getCreatureNode(rTarget);
+	else
+		nodeTarget = ActorManager.getCTNode(rTarget);
+	end
+	if not nodeTarget then
+		return;
+	end
+
+	local bPFMode = DataCommon.isPFRPG();
+	local bRemoveTarget = false;
+	
+	-- Get health fields
 	local nTotalHP = 0;
 	local nTempHP = 0;
 	local nNonlethal = 0;
 	local nWounds = 0;
-	local bPFMode = DataCommon.isPFRPG();
-
-	local bRemoveTarget = false;
-	
-	-- Get health fields
-	local sTargetNodeType, nodeTarget = ActorManager.getTypeAndNode(rTarget);
-	if not nodeTarget then
-		return;
-	end
-	if sTargetNodeType == "pc" then
+	if ActorManager.isPC(rTarget) then
 		nTotalHP = DB.getValue(nodeTarget, "hp.total", 0);
 		nTempHP = DB.getValue(nodeTarget, "hp.temporary", 0);
 		nNonlethal = DB.getValue(nodeTarget, "hp.nonlethal", 0);
 		nWounds = DB.getValue(nodeTarget, "hp.wounds", 0);
-	elseif sTargetNodeType == "ct" then
+	else
 		nTotalHP = DB.getValue(nodeTarget, "hp", 0);
 		nTempHP = DB.getValue(nodeTarget, "hptemp", 0);
 		nNonlethal = DB.getValue(nodeTarget, "nonlethal", 0);
 		nWounds = DB.getValue(nodeTarget, "wounds", 0);
-	else
-		return;
 	end
 	
 	-- Remember current health status
@@ -1515,7 +1518,7 @@ function applyDamage(rSource, rTarget, bSecret, sRollType, sDamage, nTotal)
 	end
 
 	-- Set health fields
-	if sTargetNodeType == "pc" then
+	if ActorManager.isPC(rTarget) then
 		DB.setValue(nodeTarget, "hp.temporary", "number", nTempHP);
 		DB.setValue(nodeTarget, "hp.wounds", "number", nWounds);
 		DB.setValue(nodeTarget, "hp.nonlethal", "number", nNonlethal);
@@ -1607,6 +1610,17 @@ function messageDamage(rSource, rTarget, bSecret, sDamageType, sDamageDesc, sTot
 end
 
 function applyFailedStabilization(rActor)
+	local nodeActor;
+	if ActorManager.isPC(rActor) then
+		nodeActor = ActorManager.getCreatureNode(rActor);
+	else
+		nodeActor = ActorManager.getCTNode(rActor);
+	end
+	if not nodeActor then
+		return;
+	end
+
+	-- Get health fields
 	local sDamageTypeOutput = "Damage";
 	local sDamage = string.format("[%s] Dying", Interface.getString("action_damage_tag"));
 	local nTotal = 1;
@@ -1617,21 +1631,14 @@ function applyFailedStabilization(rActor)
 
 	local aNotifications = {};
 	
-	-- Get health fields
-	local sNodeType, nodeActor = ActorManager.getTypeAndNode(rActor);
-	if not nodeActor then
-		return;
-	end
-	if sNodeType == "pc" then
+	if ActorManager.isPC(rActor) then
 		nTotalHP = DB.getValue(nodeActor, "hp.total", 0);
 		nTempHP = DB.getValue(nodeActor, "hp.temporary", 0);
 		nWounds = DB.getValue(nodeActor, "hp.wounds", 0);
-	elseif sNodeType == "ct" then
+	else
 		nTotalHP = DB.getValue(nodeActor, "hp", 0);
 		nTempHP = DB.getValue(nodeActor, "hptemp", 0);
 		nWounds = DB.getValue(nodeActor, "wounds", 0);
-	else
-		return;
 	end
 	
 	-- Remember current health status
@@ -1659,7 +1666,7 @@ function applyFailedStabilization(rActor)
 	end
 	
 	-- Set health fields
-	if sNodeType == "pc" then
+	if ActorManager.isPC(rActor) then
 		DB.setValue(nodeActor, "hp.temporary", "number", nTempHP);
 		DB.setValue(nodeActor, "hp.wounds", "number", nWounds);
 	else

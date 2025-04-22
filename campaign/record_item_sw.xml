@@ -144,9 +144,9 @@
 			<!-- <label_content_column name="spellfailure_label"> -->
 				<!-- <static textres="item_label_spellfail" /> -->
 			<!-- </label_content_column> -->
-			<!-- <number_columnh name="spellfailure"> -->
+			<!-- <number_content_columnh name="spellfailure"> -->
 				<!-- <delaykeyupdate /> -->
-			<!-- </number_columnh> -->
+			<!-- </number_content_columnh> -->
 
 			<label_content_column name="speed30_label">
 				<static textres="item_label_speed30" />

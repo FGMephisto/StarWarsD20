@@ -62,7 +62,6 @@
 					<right offset="-5" postoffset="-5" />
 				</anchored>
 				<frame name="slottedmodifier" offset="5,5,5,5" width="138" />
-				<center />
 			</spacer_listitem_right>
 			<simplenumber name="attackview1">
 				<anchored to="attackview" position="insidetopleft" offset="1,0" width="30" height="20" />
@@ -330,17 +329,6 @@
 			<label_fieldtop>
 				<anchored to="critatkrange" />
 				<static textres="weapon_label_critrange" />
-			</label_fieldtop>
-
-			<basicnumber name="stunatkrange">
-				<anchored to="critatkrange" position="left" offset="15,0" width="25" />
-				<default>20</default>
-				<min>2</min>
-				<max>20</max>
-			</basicnumber>
-			<label_fieldtop>
-				<anchored to="stunatkrange" />
-				<static textres="weapon_label_stunrange" />
 			</label_fieldtop>
 
 			<!-- Damage -->

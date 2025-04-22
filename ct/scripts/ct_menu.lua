@@ -32,7 +32,7 @@ end
 
 function onClickRelease(button, x, y)
 	if button == 1 then
-		Interface.openRadialMenu();
+		Interface.openContextMenu();
 		return true;
 	end
 end

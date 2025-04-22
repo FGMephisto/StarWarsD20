@@ -41,11 +41,6 @@ end
 function registerMenuItems()
 	resetMenuItems();
 	
-	if not windowlist.isReadOnly() then
-		registerMenuItem(Interface.getString("menu_deletespellclass"), "delete", 6);
-		registerMenuItem(Interface.getString("list_menu_deleteconfirm"), "delete", 6, 7);
-	end
-	
 	if DB.getValue(getDatabaseNode(), "castertype", "") == "" then
 		registerMenuItem(Interface.getString("menu_resetspells"), "pointer_circle", 3);
 	end
@@ -92,8 +87,6 @@ function onMenuSelection(selection, subselection)
 	if selection == 3 then
 		local nodeCaster = DB.getChild(getDatabaseNode(), "...");
 		SpellManager.resetPrepared(nodeCaster);
-	elseif selection == 6 and subselection == 7 then
-		UtilityManager.safeDeleteWindow(self);
 	end
 end
 

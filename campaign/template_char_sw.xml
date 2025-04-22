@@ -679,6 +679,13 @@
 			<displaysign />
 		</number_listitem_right>
 	</template>
+	<template name="number_charskillfield_static">
+		<number_listitem_right_static>
+			<hideonvalue>0</hideonvalue>
+			<nodrag />
+			<displaysign />
+		</number_listitem_right_static>
+	</template>
 	<template name="number_charskillranks">
 		<number_listitem_right>
 			<delaykeyupdate />
@@ -717,13 +724,6 @@
 			</parameters>
 		</stringcycler_listitem_right>
 	</template>
-	<template name="number_charskillfield_static">
-		<number_listitem_right_static>
-			<hideonvalue>0</hideonvalue>
-			<nodrag />
-			<displaysign />
-		</number_listitem_right_static>
-	</template>
 	<template name="number_charskilltotal">
 		<number_listitem_linked_right>
 			<displaysign />
@@ -738,7 +738,7 @@
 			<script>
 				function onSourceValue(source, sourcename)
 					if sourcename == "ranks" then
-						return math.floor(source.getValue());
+						return math.floor(self.getSourceValue("ranks"));
 					elseif sourcename == "...encumbrance.armorcheckpenalty" then
 						local nMaxActive = self.getSourceValue("...encumbrance.armormaxstatbonusactive");
 						if nMaxActive &gt; 0 then
@@ -769,13 +769,11 @@
 					end
 					return true;
 				end
-				
 				function onDragStart(button, x, y, draginfo)
-					return action(draginfo);
+					return self.action(draginfo);
 				end
-
 				function onDoubleClick(x,y)	
-					return action();
+					return self.action();
 				end
 			</script>
 		</number_listitem_linked_right>

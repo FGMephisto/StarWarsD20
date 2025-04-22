@@ -4,8 +4,6 @@
 --
 
 function onInit()
-	registerMenuItem(Interface.getString("list_menu_createitem"), "insert", 5);
-	
 	self.constructDefaultSkills();
 	CharManager.updateSkillPoints(window.getDatabaseNode());
 
@@ -15,7 +13,6 @@ function onInit()
 	DB.addHandler(DB.getPath(nodeChar, "skilllist"), "onChildAdded", onSkillDataUpdate);
 	DB.addHandler(DB.getPath(nodeChar, "skilllist"), "onChildDeleted", onSkillDataUpdate);
 end
-
 function onClose()
 	local nodeChar = DB.getParent(getDatabaseNode());
 	DB.removeHandler(DB.getPath(nodeChar, "abilities"), "onChildUpdate", onStatUpdate);
@@ -38,12 +35,6 @@ function addEntry(bFocus)
 	local w = createWindow(nil, true);
 	w.setCustom(true);
 	return w;
-end
-
-function onMenuSelection(item)
-	if item == 5 then
-		self.addEntry(true);
-	end
 end
 
 -- Create default skill selection

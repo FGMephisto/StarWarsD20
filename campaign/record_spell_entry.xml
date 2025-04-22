@@ -10,12 +10,8 @@
 		<margins control="0,0,0,5" />
 		<script file="campaign/scripts/spell_class.lua" />
 		<sheetdata>
-			<anchor_listitem_left>
-				<anchored offset="0,10" />
-			</anchor_listitem_left>
-			<anchor_listitem_right>
-				<anchored offset="0,10" />
-			</anchor_listitem_right>
+			<anchor_listitem_left_lg />
+			<anchor_listitem_right_lg />
 
 			<button_listitem_idelete_left name="idelete" />
 			<iconcycler_listitem_left name="castertype">
