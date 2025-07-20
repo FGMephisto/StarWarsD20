@@ -212,7 +212,7 @@
 	
 	<windowclass name="char_weapon_editor" copy="charsheethelper_base">
 		<sizelimits>
-			<minimum width="400" height="350" />
+			<minimum width="400" height="450" />
 		</sizelimits>
 		<sheetdata>
 			<windowtitlebar_charsheethelper name="title">
@@ -252,8 +252,17 @@
 			<label_column>
 				<static textres="weapon_label_properties" />
 			</label_column>
-			<string_column name="properties" />
+			<string_column name="properties">
+				<delaykeyupdate />
+			</string_column>
 			
+			<label_column name="label_rangeincrement">
+				<static textres="char_label_weaponrange" />
+			</label_column>
+			<number_column name="rangeincrement">
+				<min>0</min>
+			</number_column>
+
 			<!-- Attack -->
 			<header_column name="header_attack">
 				<static textres="weapon_header_attack" />
@@ -264,6 +273,7 @@
 				<static textres="weapon_label_attacks" />
 			</label_column>
 			<number_column name="attacks">
+				<default>1</default>
 				<min>1</min>
 				<max>4</max>
 			</number_column>
@@ -352,7 +362,7 @@
 					function onChildWindowCreated(w)
 						if getWindowCount() == 1 then
 							if DB.getValue(window.getDatabaseNode(), "type", 0) ~= 1 then
-								w.stat.setStringValue("strength");
+								w.stat.setValue("strength");
 							end
 							w.critmult.setValue(2);
 						end

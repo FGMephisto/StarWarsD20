@@ -27,7 +27,7 @@ function onLockModeChanged(bReadOnly)
 		super.onLockModeChanged(bReadOnly);
 	end
 
-	if UtilityManager.getTopWindow(self).getClass() ~= "charsheetmini" then
+	if WindowManager.getTopWindow(self).getClass() ~= "charsheetmini" then
 		local tFields = { "usearmormaxstatbonus", "armormaxstatbonus", "armorcheckpenalty", "spellfailure", };
 		WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 	end

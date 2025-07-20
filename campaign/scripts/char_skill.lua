@@ -68,7 +68,7 @@ function onCheckPenaltyChange()
 end
 
 function onStatUpdate()
-	stat.update(statname.getStringValue());
+	stat.update(statname.getValue());
 end
 
 -- This function is called to set the entry to non-custom or custom.
@@ -84,6 +84,7 @@ function setCustom(state)
 		label.setEnabled(false);
 		label.setLine(false);
 	end
+	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 end
 function isCustom()
 	return _bCustom;

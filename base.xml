@@ -7,7 +7,7 @@
 -->
 
 <root version="3.0" release="18" logo="logo.png">
-	<announcement text="Star Wars D20 ruleset (v2025-02-12) for Fantasy Grounds.\nThe ruleset uses icons made by Lorc available on game-icons.net." font="emotefont" icon="rulesetlogo_CoreRPG" />
+	<announcement text="Star Wars D20 ruleset (v2025-07-14) for Fantasy Grounds.\nThe ruleset uses icons made by Lorc available on game-icons.net." font="emotefont" icon="rulesetlogo_CoreRPG" />
 
 	<!-- Attributes -->
 	<description>
@@ -101,7 +101,7 @@
 	<script name="CampaignDataManager2" file="scripts/manager_campaigndata2.lua" />
 
 	<script name="ActorManager35E" file="scripts/manager_actor_35E.lua" />
-	<script name="CharManager" file="scripts/manager_char.lua" />
+	<script name="CharManager" file="scripts/manager_char_sw.lua" />
 	<script name="CombatManager2" file="scripts/manager_combat2.lua" />
 	<script name="DiceManager35E" file="scripts/manager_dice_sw.lua" />
 	<script name="EffectManager35E" file="scripts/manager_effect_35E.lua" />

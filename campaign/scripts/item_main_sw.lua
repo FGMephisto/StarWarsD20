@@ -53,7 +53,7 @@ end
 
 -- Added
 function onClose()
-	self.update()
+	self.onStateChanged()
 
 	local nodeRecord = getDatabaseNode()
 	local bWeapon = ItemManager.isWeapon(nodeRecord)

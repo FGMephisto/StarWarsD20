@@ -66,9 +66,9 @@ function constructDefaultSkills()
 				if w then
 					w.label.setValue(k);
 					if t.stat then
-						w.statname.setStringValue(t.stat);
+						w.statname.setValue(t.stat);
 					else
-						w.statname.setStringValue("");
+						w.statname.setValue("");
 					end
 					if t.trainedonly then
 						w.showonminisheet.setValue(0);
@@ -90,7 +90,7 @@ function addNewInstance(sLabel)
 	if rSkill and rSkill.sublabeling then
 		local w = createWindow();
 		w.label.setValue(sLabel);
-		w.statname.setStringValue(rSkill.stat);
+		w.statname.setValue(rSkill.stat);
 		w.updateWindow();
 		w.sublabel.setFocus();
 	end

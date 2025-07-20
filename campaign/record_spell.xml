@@ -8,155 +8,116 @@
 <root>
 	<windowclass name="spelldesc" copy="record_window" />
 	<windowclass name="spelldesc_header" copy="record_header" />
-
 	<windowclass name="spelldesc_main">
-		<margins control="0,0,0,15" />
+		<margins control="0,0,0,5" />
 		<script>
 			function onInit()
 				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 			end
 			function onLockModeChanged(bReadOnly)
-				local tFields = { "school", "level", "components", "castingtime", "range", "effect", "duration", "save", "sr", "description",  };
+				local tFields = {
+					"school", "level", "components", "castingtime",
+					"range", "effect", "duration", "save", "sr",
+					"description",
+				};
 				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 			end
 		</script>
 		<sheetdata>
-			<anchor_column name="columnanchor" />
+			<anchor_content_top />
 
-			<label_column name="school_label">
+			<label_content_column name="school_label">
 				<static textres="spell_label_school" />
-			</label_column>
-			<string_columnh name="school">
+			</label_content_column>
+			<string_content_columnh name="school">
 				<delaykeyupdate />
-			</string_columnh>
+			</string_content_columnh>
 			
-			<label_column name="level_label">
+			<label_content_column name="level_label">
 				<static textres="level" />
-			</label_column>
-			<string_columnh name="level">
+			</label_content_column>
+			<string_content_columnh name="level">
 				<delaykeyupdate />
-			</string_columnh>
+			</string_content_columnh>
 			
-			<label_column name="components_label">
+			<label_content_column name="components_label">
 				<static textres="spell_label_components" />
-			</label_column>
-			<string_columnh name="components" />
+			</label_content_column>
+			<string_content_columnh name="components" />
 
-			<label_column name="castingtime_label">
+			<label_content_column name="castingtime_label">
 				<static textres="spell_label_casttime" />
-			</label_column>
-			<string_columnh name="castingtime" />
+			</label_content_column>
+			<string_content_columnh name="castingtime" />
 
-			<label_column name="range_label">
+			<label_content_column name="range_label">
 				<static textres="spell_label_range" />
-			</label_column>
-			<string_columnh name="range" />
+			</label_content_column>
+			<string_content_columnh name="range" />
 
-			<label_column name="effect_label">
+			<label_content_column name="effect_label">
 				<static textres="spell_label_effecttarget" />
-			</label_column>
-			<string_columnh name="effect" />
+			</label_content_column>
+			<string_content_columnh name="effect" />
 
-			<label_column name="duration_label">
+			<label_content_column name="duration_label">
 				<static textres="spell_label_duration" />
-			</label_column>
-			<string_columnh name="duration" />
+			</label_content_column>
+			<string_content_columnh name="duration" />
 
-			<label_column name="save_label">
+			<label_content_column name="save_label">
 				<static textres="spell_label_save" />
-			</label_column>
-			<string_columnh name="save" />
+			</label_content_column>
+			<string_content_columnh name="save" />
 
-			<label_column name="sr_label">
+			<label_content_column name="sr_label">
 				<static textres="spell_label_sr" />
-			</label_column>
-			<string_columnh name="sr" />
+			</label_content_column>
+			<string_content_columnh name="sr" />
 
-			<ft_columnh name="description" />
+			<ft_content_columnh_full name="description" />
 		</sheetdata>
 	</windowclass>
 
-	<windowclass name="linkedspell">
-		<sheetdata>
-			<linkfield name="link">
-				<bounds>0,0,20,20</bounds>
-			</linkfield>
-
-			<string_list_link name="linkedname">
-				<anchored>
-					<top parent="link" />
-					<left parent="link" anchor="right" offset="8" />
-					<right offset="-7" />
-				</anchored>
-			</string_list_link>
-		</sheetdata>
-	</windowclass>
-	
 	<windowclass name="spelldesc2" copy="record_window" />
 	<windowclass name="spelldesc2_header" copy="record_header" />
-
-	<windowclass name="spelldesc2_main">
-		<margins control="0,0,0,15" />
+	<windowclass name="spelldesc2_main" copy="spelldesc_main">
+		<script>
+			function onInit()
+				self.handleVariableDataTypes();
+				if super and super.onInit then
+					super.onInit();
+				end
+			end
+			function handleVariableDataTypes()
+				local nodeDesc = DB.getChild(getDatabaseNode(), "description");
+				if DB.getType(nodeDesc) == "formattedtext" then
+					createControl("ft_content_columnh_full", "description");
+				else
+					createControl("string_content_columnh_full", "description");
+					createControl("list_spelldesc2_linkedspells", "linkedspells");
+				end
+			end
+		</script>
 		<sheetdata>
-			<anchor_column name="columnanchor" />
+			<ft_content_columnh_full name="description" merge="delete" />
+		</sheetdata>
+	</windowclass>
+	<template name="list_spelldesc2_linkedspells">
+		<list_content_noscroll_top>
+			<datasource>.linkedspells</datasource>
+			<class>linkedspell</class>
+		</list_content_noscroll_top>
+	</template>
+	<windowclass name="linkedspell">
+		<margins control="0,0,0,2" />
+		<sheetdata>
+			<anchor_listitem_left_sm />
+			<anchor_listitem_right_sm />
 
-			<label_column>
-				<static textres="spell_label_school" />
-			</label_column>
-			<string_column name="school" />
+			<link_listitem_left name="link" />
 
-			<label_column>
-				<static textres="level" />
-			</label_column>
-			<string_column name="level" />
-			
-			<label_column>
-				<static textres="spell_label_components" />
-			</label_column>
-			<string_column name="components" />
-
-			<label_column>
-				<static textres="spell_label_casttime" />
-			</label_column>
-			<string_column name="castingtime" />
-
-			<label_column>
-				<static textres="spell_label_range" />
-			</label_column>
-			<string_column name="range" />
-
-			<label_column>
-				<static textres="spell_label_effecttarget" />
-			</label_column>
-			<string_column name="effect" />
-
-			<label_column>
-				<static textres="spell_label_duration" />
-			</label_column>
-			<string_column name="duration" />
-
-			<label_column>
-				<static textres="spell_label_save" />
-			</label_column>
-			<string_column name="save" />
-
-			<label_column>
-				<static textres="spell_label_sr" />
-			</label_column>
-			<string_column name="sr" />
-
-			<string_column_full name="description" />
-			
-			<windowlist name="linkedspells">
-				<anchored>
-					<top parent="columnanchor" anchor="bottom" relation="relative" offset="15" />
-					<left offset="5" />
-					<right offset="-5" />
-				</anchored>
-				<datasource>.linkedspells</datasource>
-				<class>linkedspell</class>
-				<noscroll />
-			</windowlist>
+			<string_listitem_center_noframe_static_linked name="linkedname" />
 		</sheetdata>
 	</windowclass>
 </root>

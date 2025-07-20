@@ -32,7 +32,7 @@
 				<delaykeyupdate />
 				<script>
 					function onValueChanged()
-						window.update();
+						window.onStateChanged();
 					end
 				</script>
 			</string_content_columnh>
@@ -104,10 +104,10 @@
 			<label_content_column name="dr_label">
 				<static textres="item_label_dr" />
 			</label_content_column>
-			<number_content_columnh name="dr">
+			<number_content_column name="dr">
 				<delaykeyupdate />
 				<displaysign />
-			</number_content_columnh>
+			</number_content_column>
 
 			<label_content_column name="bonus_label">
 				<static textres="item_label_bonus" />

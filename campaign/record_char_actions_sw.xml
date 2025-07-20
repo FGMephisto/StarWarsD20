@@ -160,14 +160,10 @@
 	</windowclass>
 
 	<template name="buttongroup_counter_power">
-		<genericcontrol>
-			<anchored width="10" height="20" />
-			<stateicons>
-				<on>button_checkon</on>
-				<off>button_checkoff</off>
-			</stateicons>
+		<buttongroup_counter>
+			<anchored height="20" />
 			<script file="campaign/scripts/buttongroup_counter_power_35E.lua" />
-		</genericcontrol>
+		</buttongroup_counter>
 	</template>
 
 	<windowclass name="power_item_header">

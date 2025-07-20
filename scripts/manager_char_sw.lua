@@ -242,7 +242,7 @@ function calcItemArmorClass(nodeChar)
 					end
 					
 					local nItemSpeed30 = DB.getValue(vNode, "speed30", 0);
-					if (nItemSpeed30 > 0) and (nItemSpeed30 < 30) then
+					if (nItemSpeed30 > 0) and (nItemSpeed30 < 10) then
 						if nMainSpeed30 > 0 then
 							nMainSpeed30 = math.min(nMainSpeed30, nItemSpeed30);
 						else
@@ -250,7 +250,7 @@ function calcItemArmorClass(nodeChar)
 						end
 					end
 					local nItemSpeed20 = DB.getValue(vNode, "speed20", 0);
-					if (nItemSpeed20 > 0) and (nItemSpeed20 < 30) then
+					if (nItemSpeed20 > 0) and (nItemSpeed20 < 10) then
 						if nMainSpeed20 > 0 then
 							nMainSpeed20 = math.min(nMainSpeed20, nItemSpeed20);
 						else
@@ -299,10 +299,10 @@ function calcItemArmorClass(nodeChar)
 	local nSpeedBase = DB.getValue(nodeChar, "speed.base", 0);
 	local nSpeedArmor = 0;
 	if bApplySpeedPenalty then
-		if (nSpeedBase >= 30) and (nMainSpeed30 > 0) then
-			nSpeedArmor = nMainSpeed30 - 30;
-		elseif (nSpeedBase < 30) and (nMainSpeed20 > 0) then
-			nSpeedArmor = nMainSpeed20 - 20;
+		if (nSpeedBase >= 10) and (nMainSpeed30 > 0) then
+			nSpeedArmor = nMainSpeed30 - 10;
+		elseif (nSpeedBase < 10) and (nMainSpeed20 > 0) then
+			nSpeedArmor = nMainSpeed20 - 6;
 		end
 	end
 	DB.setValue(nodeChar, "speed.armor", "number", nSpeedArmor);
@@ -1432,9 +1432,9 @@ end
 function handleRacialSpeed(nodeChar, nodeTrait, sTraitType, nodeTargetList)
 	local nBaseSpeed = 0;
 	if sTraitType:match(RACIAL_TRAIT_SPEED_SRD_NORMAL) then
-		nBaseSpeed = 30;
+		nBaseSpeed = 10;
 	elseif sTraitType:match(RACIAL_TRAIT_SPEED_SRD_SLOW) or sTraitType:match(RACIAL_TRAIT_SLOW_AND_STEADY) then
-		nBaseSpeed = 20;
+		nBaseSpeed = 6;
 	else
 		local sSpeed = DB.getText(nodeTrait, "text");
 		local sBaseSpeed = sSpeed:match("base speed of (%d+) feet");

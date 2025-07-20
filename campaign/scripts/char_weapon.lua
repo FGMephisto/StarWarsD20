@@ -88,7 +88,7 @@ function onAttackChanged()
 	local nodeChar = DB.getChild(nodeWeapon, "...")
 	local rActor = ActorManager.resolveActor(nodeChar);
 
-	local nAttacks = DB.getValue(nodeWeapon, "attacks", 1);
+	local nAttacks = math.max(DB.getValue(nodeWeapon, "attacks", 1), 1);
 	local tAttack = {};
 
 	local nViewOffset = 1;
@@ -171,7 +171,8 @@ function onFullAttackAction(draginfo)
 	local rActor, rAttack = CharManager.getWeaponAttackRollStructures(nodeWeapon);
 	
 	local rRolls = {};
-	for i = 1, DB.getValue(nodeWeapon, "attacks", 1) do
+	local nAttacks = math.max(DB.getValue(nodeWeapon, "attacks", 1), 1);
+	for i = 1, nAttacks do
 		rAttack.modifier = self.calcAttackBonus(i);
 		rAttack.order = i;
 		table.insert(rRolls, ActionAttack.getRoll(rActor, rAttack));

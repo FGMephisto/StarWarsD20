@@ -461,7 +461,7 @@
 			<script>
 				function onValueChanged()
 					if window.isInitialized() then
-						local sValue = getStringValue();
+						local sValue = getValue();
 						if sValue == "" and baseability then
 							sValue = baseability[1];
 						end

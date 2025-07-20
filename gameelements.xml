@@ -23,11 +23,5 @@
 		<preset key="spell_daylight" merge="delete" />
 		<preset key="spell_light" merge="delete" />
 	</lightingsettings>
-
-	<!-- Dice -->
-	<die name="dF" merge="delete" />
-	<die name="rF" merge="delete" />
-	<die name="gF" merge="delete" />
-	<die name="bF" merge="delete" />
-	<die name="pF" merge="delete" />
+	<!-- d20 low-light vision not supported; plus limited to 3 special vision types -->
 </root>

@@ -25,7 +25,7 @@
 	<template name="cycler_column_classstat">
 		<button_stringcycler_content_column>
 			<anchored width="50" />
-			<alignleft>25</alignleft>
+			<alignleft />
 		</button_stringcycler_content_column>
 	</template>
 	<windowclass name="referenceclass_main">
