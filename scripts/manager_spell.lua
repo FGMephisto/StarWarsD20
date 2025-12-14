@@ -668,7 +668,7 @@ function getSpellAction(rActor, nodeAction, sSubRoll)
 	rAction.type = sType;
 	rAction.label = DB.getValue(nodeAction, "...name", "");
 	rAction.order = getSpellActionOutputOrder(nodeAction);
-	
+
 	if sType == "cast" then
 		rAction.subtype = sSubRoll;
 		rAction.onmissdamage = DB.getValue(nodeAction, "onmissdamage", "");

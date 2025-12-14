@@ -282,7 +282,7 @@ function evalAbilityHelper(rActor, sEffectAbility, nodeSpellClass)
 	end
 
 	local sAbility = DataCommon.ability_stol[sTag] or sTag;
-	local nAbility = ActorManager35E.getAbilityBonus(rActor, sAbility) + ActorManager35E.getAbilityEffectsBonus(rActor, sAbility);
+	local nAbility = ActorManager35E.getAbilityBonus(rActor, sAbility, nodeSpellClass) + ActorManager35E.getAbilityEffectsBonus(rActor, sAbility);
 	if nAbility then
 		if sSign == "-" then
 			nAbility = 0 - nAbility;
