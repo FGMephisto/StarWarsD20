@@ -4,7 +4,7 @@
 --
 
 local rsname = "3.5E";
-local rsmajorversion = 17;
+local rsmajorversion = 18;
 
 function onInit()
 	if Session.IsHost then
@@ -111,6 +111,9 @@ function updateCampaign()
 		if major < 17 then
 			convertChar17();
 		end
+		if major < 18 then
+			convertRegistry18();
+		end
 	end
 end
 
@@ -135,6 +138,10 @@ function updateModule(sModule, nVersion)
 			convertModuleEncounters16(nodeRoot);
 		end
 	end
+end
+
+function convertRegistry18()
+	CampaignSetupManager.disableAutoLoad();
 end
 
 function migrateCharFeat17(nodeAbility)

@@ -230,8 +230,10 @@ function onStabilization(rSource, rTarget, rRoll)
 
 	local bSuccess = GameSystem.getStabilizationResult(rRoll);
 	if bSuccess then
+		rRoll.sResult = "success";
 		rMessage.text = rMessage.text .. " [SUCCESS]";
 	else
+		rRoll.sResult = "failure";
 		rMessage.text = rMessage.text .. " [FAILURE]";
 	end
 	
@@ -242,6 +244,8 @@ function onStabilization(rSource, rTarget, rRoll)
 	else
 		ActionDamage.applyFailedStabilization(rSource);
 	end
+
+	GameManager.callEventFunctions("onSavePostResolve", rSource, nil, rRoll);
 end
 
 --
@@ -881,6 +885,8 @@ function matchAndOrClauses(aClausesOR, aMatchWords)
 end
 
 function getDamageAdjust(rSource, rTarget, nDamage, rDamageOutput)
+	rDamageOutput.tResults = {};
+
 	-- SETUP
 	local nDamageAdjust = 0;
 	local nNonlethal = 0;
@@ -910,6 +916,9 @@ function getDamageAdjust(rSource, rTarget, nDamage, rDamageOutput)
 	
 	-- IF IMMUNE ALL, THEN JUST HANDLE IT NOW
 	if aImmune["all"] then
+		for kType,nType in pairs(rDamageOutput.aDamageTypes or {}) do
+			rDamageOutput.tResults[kType] = { nTotal = 0, nBase = nType, nResist = nType, };
+		end
 		return (0 - nDamage), 0, false, true;
 	end
 	
@@ -985,6 +994,7 @@ function getDamageAdjust(rSource, rTarget, nDamage, rDamageOutput)
 		end
 
 		-- HANDLE IMMUNITY, VULNERABILITY AND RESISTANCE
+		local bImmune = false;
 		local nLocalDamageAdjust = 0;
 		if #aSrcDmgClauseTypes > 0 then
 			-- CHECK FOR IMMUNITY (Must be immune to all damage types in damage source)
@@ -999,7 +1009,6 @@ function getDamageAdjust(rSource, rTarget, nDamage, rDamageOutput)
 					if aImmune[sDmgType] then nSpecialDmgTypeMatches = nSpecialDmgTypeMatches + 1; end
 				end
 			end
-			local bImmune = false;
 			if (nSpecialDmgTypeMatches > 0) then
 				bImmune = true;
 			elseif (nBasicDmgTypeMatches > 0) and (nBasicDmgTypeMatches + nSpecialDmgTypes) == #aSrcDmgClauseTypes then
@@ -1126,6 +1135,14 @@ function getDamageAdjust(rSource, rTarget, nDamage, rDamageOutput)
 		-- APPLY DAMAGE ADJUSTMENT FROM THIS DAMAGE CLAUSE TO OVERALL DAMAGE ADJUSTMENT
 		nDamageAdjust = nDamageAdjust + nLocalDamageAdjust - nNonlethalAdjust;
 		nNonlethal = nNonlethal + nNonlethalAdjust;
+
+		if bImmune then
+			rDamageOutput.tResults[k] = { nTotal = 0, nBase = v, nResist = v, };
+		elseif nLocalDamageAdjust > 0 then
+			rDamageOutput.tResults[k] = { nTotal = (v + nLocalDamageAdjust), nBase = v, nVulnerable = nLocalDamageAdjust, };
+		else
+			rDamageOutput.tResults[k] = { nTotal = (v + nLocalDamageAdjust), nBase = v, nResist = -nLocalDamageAdjust, };
+		end
 	end
 
 	-- RESULTS
@@ -1576,6 +1593,15 @@ function applyDamage(rSource, rTarget, bSecret, sRollType, sDamage, nTotal)
 	-- Remove target after applying damage
 	if bRemoveTarget and rSource and rTarget then
 		TargetingManager.removeTarget(ActorManager.getCTNodeName(rSource), ActorManager.getCTNodeName(rTarget));
+	end
+
+	if rDamageOutput.sType == "damage" then
+		local tNotifyData = {
+			sType = "damage",
+			nTotal = nTotal,
+			tResults = rDamageOutput.tResults,
+		};
+		GameManager.callEventFunctions("onDamagePostResolve", rSource, rTarget, tNotifyData);
 	end
 end
 

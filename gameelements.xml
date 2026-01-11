@@ -12,6 +12,10 @@
 		<suffix>'</suffix>
 	</distance>
 	
+	<linksettings>
+		<class key="referenceclassability" copy="power" />
+	</linksettings>
+
 	<!-- Add sunrod and daylight spell -->
 	<lightingsettings>
 		<preset key="candle" nameres="lighting_candle" color="FFFFFCC3" bright="0" dim="1" animtype="flicker" animspeed="100" />

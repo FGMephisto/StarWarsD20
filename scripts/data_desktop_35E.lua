@@ -4,15 +4,45 @@
 --
 
 function onInit()
+	CampaignSetupManager.addAutoLoadRules(_tAutoLoadRules);
+	CampaignSetupManager.addModuleSetsByMode(_tDataModuleSets);
+
 	ModifierManager.addModWindowPresets(_tModifierWindowPresets);
 	ModifierManager.addKeyExclusionSets(_tModifierExclusionSets);
-
-	for k,v in pairs(_tDataModuleSets) do
-		for _,v2 in ipairs(v) do
-			Desktop.addDataModuleSet(k, v2);
-		end
-	end
 end
+
+_tAutoLoadRules = {
+	{ key = "PHB", load = { "3.5E Basic Rules", "3.5E Spells", }, playerload = { "3.5E Basic Rules", "3.5E Spells", }, },
+	{ key = "DMG", load = { "3.5E Magic Items", "3.5E Magic Items", }, },
+	{ key = "MM", load = { "3.5E Monsters", }, },
+};
+_tDataModuleSets = 
+{
+	["client"] =
+	{
+		{
+			name = "3.5E - SRD",
+			modules =
+			{
+				{ name = "3.5E Basic Rules" },
+				{ name = "3.5E Spells" },
+			},
+		},
+	},
+	["host"] =
+	{
+		{
+			name = "3.5E - SRD",
+			modules =
+			{
+				{ name = "3.5E Basic Rules" },
+				{ name = "3.5E Magic Items" },
+				{ name = "3.5E Monsters" },
+				{ name = "3.5E Spells" },
+			},
+		},
+	},
+};
 
 -- Shown in Modifiers window
 -- NOTE: Set strings for "modifier_category_*" and "modifier_label_*"
@@ -46,33 +76,4 @@ _tModifierExclusionSets =
 {
 	{ "DEF_PCOVER", "DEF_COVER", "DEF_SCOVER" },
 	{ "DEF_CONC", "DEF_TCONC" },
-};
-
--- Shown in Campaign Setup window
-_tDataModuleSets = 
-{
-	["client"] =
-	{
-		{
-			name = "3.5E - SRD",
-			modules =
-			{
-				{ name = "3.5E Basic Rules" },
-				{ name = "3.5E Spells" },
-			},
-		},
-	},
-	["host"] =
-	{
-		{
-			name = "3.5E - SRD",
-			modules =
-			{
-				{ name = "3.5E Basic Rules" },
-				{ name = "3.5E Magic Items" },
-				{ name = "3.5E Monsters" },
-				{ name = "3.5E Spells" },
-			},
-		},
-	},
 };
