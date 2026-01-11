@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for
+  attribution and copyright information.
+  File adjusted for Star Wars D20
+-->
+
+<root>
+	<!-- Character sheet -->
+	<framedef name="acicon">
+		<bitmap file="graphics/frames/acicon.png" />
+		<topleft rect="0,0,40,44" />
+	</framedef>
+
+	<!-- Override CoreRPG ruleset graphics -->
+
+	<!-- Adjusted for Star Wars 3.5E -->
+	<!-- Desktop -->
+	<framedef name="desktop">
+		<bitmap file="graphics/frames_sw/desktop.jpg" />
+		<offset>0,5,0,5</offset>
+	</framedef>
+	<framedef name="hotkeybox">
+		<bitmap file="graphics/frames_sw/hotkeybox.png" />
+		<offset>5,10,5,5</offset>
+	</framedef>
+	<framedef name="hotkeytitlebox">
+		<bitmap file="graphics/frames_sw/hotkeytitlebox.png" />
+		<offset>5,5,5,5</offset>
+	</framedef>
+
+	<!-- Windows -->
+	<framedef name="windowtitle">
+		<bitmap file="graphics/frames_sw/windowtitle.png" />
+		<offset>40,45,40,0</offset>
+	</framedef>
+
+	<!-- Headers -->
+	<framedef name="headerref">
+		<bitmap file="graphics/frames_sw/headerref.png" />
+		<middle rect="0,0,128,128" />
+	</framedef>
+	<framedef name="metalplate">
+		<bitmap file="graphics/frames_sw/headerplate.png" />
+		<offset>12,12,12,12</offset>
+	</framedef>
+	
+	<!-- Control frames -->
+	<framedef name="groupbox">
+		<bitmap file="graphics/frames_sw/groupbox.png" />
+		<offset>10,10,10,10</offset>
+	</framedef>
+	
+	<!-- Chat window -->
+	<framedef name="chatbox">
+		<bitmap file="graphics/frames_sw/chatbox.png" />
+		<offset>80,150,80,150</offset>
+	</framedef>
+
+	<!-- Utility -->
+	<framedef name="utilitybox">
+		<bitmap file="graphics/frames_sw/utilitybox.png" />
+		<offset>40,40,40,40</offset>
+		<insideoffset>0,0,0,0</insideoffset>
+	</framedef>
+	<framedef name="referencelist">
+		<bitmap file="graphics/frames_sw/referencelist.png" />
+		<offset>60,140,60,90</offset>
+		<insideoffset>0,0,3,3</insideoffset>
+	</framedef>
+
+	<!-- Character selection -->	
+	<framedef name="charselect">
+		<bitmap file="graphics/frames_sw/charselect.png" />
+		<offset>60,60,60,60</offset>
+		<insideoffset>0,0,1,1</insideoffset>
+	</framedef>
+
+	<!-- Token Bag -->
+	<framedef name="tokenbag">
+		<bitmap file="graphics/frames_sw/tokenbag.png" />
+		<offset>60,120,60,60</offset>
+		<insideoffset>0,0,0,0</insideoffset>
+	</framedef>
+	<framedef name="tokenbagasset">
+		<bitmap file="graphics/frames_sw/tokenbagasset.png" />
+		<offset>22,22,22,22</offset>
+	</framedef>
+
+	<!-- Combat tracker -->
+	<framedef name="ctbox">
+		<bitmap file="graphics/frames_sw/ctbox.png" />
+		<offset>60,60,60,60</offset>
+		<insideoffset>0,0,0,1</insideoffset>
+	</framedef>
+
+	<!-- Party Sheet -->
+	<framedef name="partysheet">
+		<bitmap file="graphics/frames_sw/partysheet.png" />
+		<offset>60,60,60,60</offset>
+		<insideoffset>0,0,2,2</insideoffset>
+	</framedef>
+
+	<!-- Characters -->
+	<framedef name="charsheet">
+		<bitmap file="graphics/frames_sw/charsheet.png" />
+		<offset>50,50,50,50</offset>
+		<insideoffset>0,0,0,0</insideoffset>
+	</framedef>
+	<framedef name="charsheethelper">
+		<bitmap file="graphics/frames_sw/charsheet.png" />
+		<offset>50,50,50,50</offset>
+		<insideoffset>0,0,0,0</insideoffset>
+	</framedef>
+
+	<framedef name="acicon">
+		<bitmap file="graphics/frames_sw/acicon.png" />
+		<topleft rect="0,0,40,44" />
+	</framedef>
+
+	<!-- Images -->
+	<framedef name="imagebox">
+		<bitmap file="graphics/frames_sw/imagebox.png" />
+		<offset>80,60,80,60</offset>
+		<insideoffset>0,0,2,0</insideoffset>
+	</framedef>
+
+	<!-- Story and Notes -->
+	<framedef name="storybox">
+		<bitmap file="graphics/frames_sw/storybox.png" />
+		<offset>10,8,10,10</offset>
+		<insideoffset>0,0,2,5</insideoffset>
+	</framedef>
+
+	<!-- Other Campaign Records -->
+	<framedef name="recordsheet">
+		<bitmap file="graphics/frames_sw/charsheet.png" />
+		<offset>50,50,50,50</offset>
+		<insideoffset>0,0,0,0</insideoffset>
+	</framedef>
+</root>

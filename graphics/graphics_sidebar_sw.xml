@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<!-- Frames -->
+	<!-- <framedef name="sidebar_dock_category"> -->
+		<!-- <bitmap file="graphics/sidebar_sw/sidebar_dock_category.png" /> -->
+		<!-- <offset>12,24,12,24</offset> -->
+	<!-- </framedef> -->
+	<!-- <framedef name="sidebar_dock_category_down"> -->
+		<!-- <bitmap file="graphics/sidebar_sw/sidebar_dock_category_down.png" /> -->
+		<!-- <offset>12,24,12,24</offset> -->
+	<!-- </framedef> -->
+	<!-- <framedef name="sidebar_dock_entry_icon"> -->
+		<!-- <bitmap file="graphics/sidebar_sw/sidebar_dock_icon.png" /> -->
+		<!-- <offset>12,24,12,24</offset> -->
+	<!-- </framedef> -->
+ 	<!-- <framedef name="sidebar_dock_entry"> -->
+		<!-- <bitmap file="graphics/sidebar_sw/sidebar_dock_entry.png" /> -->
+		<!-- <offset>12,24,12,24</offset> -->
+	<!-- </framedef> -->
+	<!-- <framedef name="sidebar_dock_entry_down"> -->
+		<!-- <bitmap file="graphics/sidebar_sw/sidebar_dock_entry_down.png" /> -->
+		<!-- <offset>12,24,12,24</offset> -->
+	<!-- </framedef> -->
+	
+	<icon name="sidebar_icon_recordtype_race" file="graphics/sidebar/sidebar_icon_race_3.png" />
+</root>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for
+  attribution and copyright information.
+  File adjusted for Star Wars D20
+-->
+
+<root>
+	<!-- Common -->
+	<string name="armorclassff">Flat-F. DEF</string>
+	<string name="armorclasstouch">Touch DEF</string>
+	<string name="spellresistance">Force Resistance</string>
+	<string name="ac">DEF</string>
+	<string name="armorclass">Defense</string>
+	<string name="dr">DR</string>
+	<string name="hitpoints">Wound Points</string>
+	<string name="woundpoints">Wound Points</string>
+	<string name="hp">WP</string>
+	<string name="hptemp">VP</string>
+
+	<string name="menu_resetspells">Reset Force</string>
+	<string name="menu_addspellclass">Add Force Class</string>
+	<string name="menu_deletespellclass">Delete Force Class</string>
+	<string name="menu_addspell">Add Force</string>
+	
+	<!-- Options -->
+	<!-- Languages -->
+	<string name="language_value_Basic">Basic</string>
+	<string name="language_value_Binary">Binary</string>
+	<string name="language_value_Bothese">Bothese</string>
+	<string name="language_value_Cerean">Cerean</string>
+	<string name="language_value_Dosh">Dosh</string>
+	<string name="language_value_Dug">Dug</string>
+	<string name="language_value_Durese">Durese</string>
+	<string name="language_value_Ewokese">Ewokese</string>
+	<string name="language_value_Gamorrean">Gamorrean</string>
+	<string name="language_value_Geonosian">Geonosian</string>
+	<string name="language_value_Gungan">Gungan</string>
+	<string name="language_value_Huttese">Huttese</string>
+	<string name="language_value_Ithorese">Ithorese</string>
+	<string name="language_value_Jawa_Trade">Jawa Trade Language</string>
+	<string name="language_value_Kaminoan">Kaminoan</string>
+	<string name="language_value_Kel_Dor">Kel Dor</string>
+	<string name="language_value_Mon_Calamarian">Mon Calamarian</string>
+	<string name="language_value_Neimoidian">Neimoidian</string>
+	<string name="language_value_Quarrenese">Quarrenese</string>
+	<string name="language_value_Rodese">Rodese</string>
+	<string name="language_value_Ryl">Ryl</string>
+	<string name="language_value_Sith">Sith</string>
+	<string name="language_value_Sullustese">Sullustese</string>
+	<string name="language_value_Yuuzhan_Vong">Yuuzhan Vong</string>
+	<string name="language_value_Zabrak">Zabrak</string>
+	
+	<!-- Combat Tracker -->
+	<string name="ct_label_hptemp">VP</string>
+	<string name="ct_tooltip_hptemp">Vitality Points</string>
+	
+	<!-- Party Sheet -->
+	<string name="ps_label_knowalienspecies">ASp</string>
+	<string name="ps_label_knowhistory">His</string>
+	<string name="ps_label_knowjedilore">Jed</string>
+	<string name="ps_label_knowstreetwise">Str</string>
+	<string name="ps_label_knowtactics">Tac</string>
+	<string name="ps_label_knowworldlore">Wor</string>
+	
+	<!-- Modifiers -->
+	<string name="modifier_label_ATT_MULTIFIRE">Multifire</string>
+	<string name="modifier_label_ATT_MULTISHOT">Multishot</string>
+	<string name="modifier_label_ATT_RAPIDSHOT">Rapid Shot</string>
+	<string name="modifier_label_ATT_AUTOFIRE">Autofire</string>
+	<string name="modifier_label_ATT_PBLANK">Point Blank</string>	
+	<string name="modifier_label_ATT_ITMELEE">Fire into M.</string>
+	<string name="modifier_label_ATT_CHARGE">Charge</string>
+	<string name="modifier_label_ATT_HGROUND">Higher Gr.</string>
+	<string name="modifier_label_ATT_FLANK">Flanking</string>
+	<string name="modifier_label_ATT_PRONE">Prone/Melee</string>
+	<string name="modifier_label_ATT_CONC">Concealed</string>
+
+	<string name="modifier_category_defense">DEFENSE</string>
+	<string name="modifier_label_DEF_MCOVER">1/4 Cover</string>
+	<string name="modifier_label_DEF_PCOVER">2/4 Cover</string>
+	<string name="modifier_label_DEF_COVER">3/4 Cover</string>
+	<string name="modifier_label_DEF_SCOVER">9/10 Cover</string>
+	<string name="modifier_label_DEF_DODGE">Dodging</string>
+	<string name="modifier_label_DEF_KNEELING">Kneeling</string>
+	<string name="modifier_label_DEF_PRONE">Prone</string>
+	<string name="modifier_label_DEF_RUN">Running</string>
+	<string name="modifier_label_DEF_PINNED">Pinned</string>
+	<string name="modifier_label_DEF_MCONC">1/4 Conc.</string>
+	<string name="modifier_label_DEF_PCONC">2/4 Conc.</string>
+	<string name="modifier_label_DEF_CONC">3/4 Conc.</string>
+	<string name="modifier_label_DEF_SCONC">9/10 Conc.</string>
+	<string name="modifier_label_DMG_CRIT">Critical</string>
+	<string name="modifier_label_DMG_HALF">Half</string>
+	
+	<!-- Skills -->
+	<string name="skill_value_knowalienspecies">AS</string>
+	<string name="skill_value_knowhistory">His</string>
+	<string name="skill_value_knowjedilore">Jed</string>
+	<string name="skill_value_knowstreetwise">Str</string>
+	<string name="skill_value_knowtactics">Tac</string>
+	<string name="skill_value_knowworldlore">Wor</string>
+	<string name="skill_value_perform">Entertain</string>
+	<string name="skill_value_language">Speak Language</string>
+	<string name="skill_value_rwlanguage">Read/Write Language</string>
+	
+	<!-- Character - Main -->
+	<string name="char_label_hptemp">VP</string>
+	<string name="char_label_wounds">DMG</string>
+	<string name="char_tooltip_hptemp">Vitality Points</string>
+	<string name="char_tooltip_hp">Wound Points</string>
+	<string name="char_tooltip_wounds">Damage</string>
+	<string name="char_title_selectspellclassincrease">Select Force Class Increase</string>
+	<string name="char_message_selectspellclassincrease">Choose %d Force class(es) from the list below to increase.</string>
+	
+	<!-- Character - Combat -->
+	<string name="char_label_combatac">Defense</string>
+	
+	<!-- Character - Skills -->
+	<string name="char_tooltip_skilladdperform">Add Entertain Skill</string>
+	<string name="char_tooltip_skilladdlanguage">Add Speak Language</string>
+	<string name="char_tooltip_skilladdrwlanguage">Add Read/Write Language</string>
+
+	<!-- Character - Abilities -->
+	<string name="char_abilities_label_feats">FEATS</string>
+	<string name="char_abilities_label_sa">CLASS ABILITIES</string>
+	<string name="char_abilities_label_proficiencies">PROFICIENCIES</string>
+	<string name="char_abilities_label_traits">RACIAL TRAITS</string>
+	<string name="char_abilities_label_languages">LANGUAGES</string>
+	
+	<!-- Character - Inventory -->
+	<string name="char_label_money">Credits</string>
+	
+	<!-- Character - Notes -->
+	<string name="char_label_forcepoints">Force Points</string>
+	<string name="char_label_darksidepoints">Dark Side Pts</string>
+	
+	<!-- Character - Actions -->
+	<string name="char_label_spells">Force</string>
+	<string name="char_tooltip_actionedit">Edit Weapon and Force Lists</string>
+	<string name="char_tooltip_actionaddspellclass">Add Force Class</string>
+	<string name="char_spell_message_selectlevel">Select level for Force (%s) in class (%s).</string>
+	
+	<!-- Classes -->
+	<!-- Encounters -->
+	<!-- Items -->
+	<string name="item_grouped_tooltip_ac">Base Defense</string>
+	<string name="item_grouped_label_dr">DR</string>
+	<string name="item_grouped_tooltip_dr">Damage Reduction</string>
+	<string name="item_grouped_label_speed30">Spd 10</string>
+	<string name="item_grouped_tooltip_speed30">Speed Adjustment for Base 10</string>
+	<string name="item_grouped_label_speed20">Spd 6</string>
+	<string name="item_grouped_tooltip_speed20">Speed Adjustment for Base 6</string>
+	<string name="item_grouped_label_stundc">Stun DC</string>
+	<string name="item_grouped_label_firingmodes">Modes</string>
+	<string name="item_grouped_tooltip_firingmodes">Firing Modes</string>
+	<string name="item_grouped_label_size">Size</string>
+	<string name="item_label_speed30">Speed (10m)</string>
+	<string name="item_label_speed20">Speed (6m)</string>
+	<string name="item_label_stundc">Stun DC</string>
+	<string name="item_label_firingmodes">Firing modes</string>
+	<string name="item_label_size">Size</string>
+	<string name="item_label_dr">DR</string>
+	
+	<!-- NPCs -->
+	<!-- Encounters -->
+	<string name="npc_tooltip_spelledit">Edit Force List</string>
+	<string name="npc_tooltip_spelladdclass">Add Force Class</string>
+	
+	<!-- Quests -->
+	<!-- Spells -->
+	<!-- Feats -->
+	<!-- Races -->
+	<!-- Skills -->
+	
+	<!-- Spells -->
+	<string name="spell_tooltip_basedc">Base Force DC</string>
+	<string name="spell_label_sp">Force Penetration</string>
+	<string name="spell_tooltip_casterprep">Prepared Force caster</string>
+	<string name="spell_tooltip_casterspontaneous">Spontaneous Force caster</string>
+	<string name="spell_tooltip_casterpoints">Points Force caster</string>
+	<string name="spell_tooltip_castspell">Use Force</string>
+	<string name="spell_error_dropclassmissing">Unable to determine class for moved Force, please drop within a class.</string>
+	<string name="spell_error_dropclasslevelmissing">Unable to determine class or level for new Force, please drop within a class level.</string>
+	<string name="spell_label_sr">Force Resist.</string>
+	
+	<!-- Special Abilities -->
+	<!-- Editors -->
+	<string name="weapon_label_stunrange">Stun</string>
+	<string name="power_label_spelldmg">Force Dmg?</string>
+	<string name="power_title_heal">Force/Ability Heal</string>
+	<string name="power_title_effect">Force/Ability Effect</string>
+	
+	<!-- Game System Specific Lighting/Vision Settings -->
+	<string name="lighting_sunrod">Glowrod</string>
+	
+	<!-- Custom Dice Rolls -->
+	<string name="drc_label_subtype_acid">Acid</string>
+	<string name="drc_label_subtype_cold">Cold</string>
+	<string name="drc_label_subtype_electricity">Electricity</string>
+	<string name="drc_label_subtype_energy">Energy</string>	
+	<string name="drc_label_subtype_fire">Fire</string>
+	<string name="drc_label_subtype_force">Force</string>
+	<string name="drc_label_subtype_ion">Ion</string>	
+	<string name="drc_label_subtype_sonic">Sonic</string>
+
+	<string name="drc_label_subtype_temp">Vitality</string>
+</root>

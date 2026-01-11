@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+  File adjusted for Star Wars D20
+-->
+
+<root>
+	<distance>
+		<base>2</base>
+		<diagmult>1.5</diagmult>
+		<suffix> m</suffix>
+	</distance>
+
+	<linksettings>
+		<class key="referenceclassability" copy="power" />
+	</linksettings>
+
+	<lightingsettings>
+		<preset key="candle" nameres="lighting_candle" color="FFFFFCC3" bright="0" dim="1" animtype="flicker" animspeed="100" />
+		<preset key="lamp" nameres="lighting_lamp" color="FFFFF3E1" bright="3" dim="6" animtype="flicker" animspeed="25" />
+		<preset key="torch" nameres="lighting_torch" color="FFFFF3E1" bright="4" dim="8" animtype="flicker" animspeed="25" />
+		<preset key="lantern" nameres="lighting_lantern" color="FFF9FEFF" bright="6" dim="12" />
+		<preset key="sunrod" merge="delete" />
+		<preset key="spell_darkness" merge="delete" />
+		<preset key="spell_daylight" merge="delete" />
+		<preset key="spell_light" merge="delete" />
+	</lightingsettings>
+	<!-- d20 low-light vision not supported; plus limited to 3 special vision types -->
+</root>
