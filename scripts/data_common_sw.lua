@@ -49,11 +49,6 @@ save_stol = {
 	["WILL"] = "will"
 };
 
--- Values for wound comparison
-healthstatusfull = "healthy";
-healthstatushalf = "bloodied";
-healthstatuswounded = "wounded";
-
 -- Values for alignment comparison
 alignment_lawchaos = {
 	["lawful"] = 1,
@@ -104,9 +99,7 @@ creaturesize = {
 };
 
 -- Values for creature type comparison
-creaturedefaulttype = "humanoid";
 creaturehalftype = "half-";
-creaturehalftypesubrace = "human";
 -- NOTE: Multi-word types must come before single word types
 creaturetype = { 
 	-- "magical beast",
@@ -162,10 +155,6 @@ creaturesubtype = {
 	"reptilian",
 };
 
--- Values supported in effect conditionals
-conditionaltags = {
-};
-
 -- Conditions supported in effect conditionals and for token widgets
 -- NOTE: From rules, missing dying, staggered and disabled
 conditions = {
@@ -215,7 +204,6 @@ bonuscomps = {
 	"CMB",
 	"CMD",
 	"DMG",
-	"DMGS",
 	"HEAL",
 	"SAVE",
 	"SKILL",
@@ -286,26 +274,10 @@ othercomps = {
 	["DMGO"] = "cond_bleed",
 };
 
--- Effect components which can be targeted
-targetableeffectcomps = {
-	"CONC",
-	"TCONC",
-	"COVER",
-	"SCOVER",
-	"AC",
-	"CMD",
-	"SAVE",
-	"ATK",
-	"CMB",
-	"DMG",
-	"IMMUNE",
-	"VULN",
-	"RESIST"
-};
-
-connectors = {
-	"and",
-	"or"
+-- Attack types supported
+atktypes = {
+	"spell",
+	"weapon"
 };
 
 -- Range types supported
@@ -423,7 +395,6 @@ bonustypes = {
 	"size",
 	"trait",
 };
-
 stackablebonustypes = {
 	"circumstance",
 	"dodge"

@@ -58,19 +58,19 @@ function modRoll(rSource, rTarget, rRoll)
 
 		-- GET ACTION MODIFIERS
 		local nEffectCount;
-		aAddDice, nAddMod, nEffectCount = EffectManager35E.getEffectsBonus(rSource, {"ABIL"}, false, {sAbility});
+		aAddDice, nAddMod, nEffectCount = EffectManager.getBonusDiceMod(rSource, "ABIL", { tFilter = { sAbility }, });
 		if (nEffectCount > 0) then
 			bEffects = true;
 		end
 		
 		-- GET CONDITION MODIFIERS
-		if EffectManager35E.hasEffectCondition(rSource, "Frightened") or 
-				EffectManager35E.hasEffectCondition(rSource, "Panicked") or
-				EffectManager35E.hasEffectCondition(rSource, "Shaken") then
+		if EffectManager.hasText(rSource, "Frightened") or 
+				EffectManager.hasText(rSource, "Panicked") or
+				EffectManager.hasText(rSource, "Shaken") then
 			nAddMod = nAddMod - 2;
 			bEffects = true;
 		end
-		if EffectManager35E.hasEffectCondition(rSource, "Sickened") then
+		if EffectManager.hasText(rSource, "Sickened") then
 			nAddMod = nAddMod - 2;
 			bEffects = true;
 		end
@@ -83,7 +83,7 @@ function modRoll(rSource, rTarget, rRoll)
 		end
 		
 		-- HANDLE NEGATIVE LEVELS
-		local nNegLevelMod, nNegLevelCount = EffectManager35E.getEffectsBonus(rSource, {"NLVL"}, true);
+		local nNegLevelMod, nNegLevelCount = EffectManager.getBonusMod(rSource, "NLVL");
 		if nNegLevelCount > 0 then
 			nAddMod = nAddMod - nNegLevelMod;
 			bEffects = true;
@@ -97,7 +97,7 @@ function modRoll(rSource, rTarget, rRoll)
 	end
 	
 	if #aAddDesc > 0 then
-		rRoll.sDesc = rRoll.sDesc .. " " .. table.concat(aAddDesc, " ");
+		rRoll.sDesc = rRoll.sDesc .. "\r" .. table.concat(aAddDesc, "\r");
 	end
 	for _,vDie in ipairs(aAddDice) do
 		if vDie:sub(1,1) == "-" then

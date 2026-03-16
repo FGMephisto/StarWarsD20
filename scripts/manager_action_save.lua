@@ -4,50 +4,30 @@
 --
 
 OOB_MSGTYPE_APPLYSAVE = "applysave";
+OOB_MSGTYPE_FAILEDSAVEEFF = "failedsaveeff";
 
 function onInit()
-	OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_APPLYSAVE, handleApplySave);
+	OOBManager.registerOOBMsgHandler(ActionSave.OOB_MSGTYPE_APPLYSAVE, ActionSave.handleApplySave);
+	OOBManager.registerOOBMsgHandler(ActionSave.OOB_MSGTYPE_FAILEDSAVEEFF, ActionSave.handleFailedEffectSave);
 
 	ActionsManager.registerModHandler("save", modSave);
 	ActionsManager.registerResultHandler("save", onSave);
 end
 
-function handleApplySave(msgOOB)
-	local rSource = ActorManager.resolveActor(msgOOB.sSourceNode);
-	local rOrigin = ActorManager.resolveActor(msgOOB.sTargetNode);
-	
-	local rAction = {};
-	rAction.bSecret = (tonumber(msgOOB.nSecret) == 1);
-	rAction.bTower = (tonumber(msgOOB.nTower) == 1);
-	rAction.sDesc = msgOOB.sDesc;
-	rAction.nTotal = tonumber(msgOOB.nTotal) or 0;
-	rAction.sSaveDesc = msgOOB.sSaveDesc;
-	rAction.nTarget = tonumber(msgOOB.nTarget) or 0;
-	rAction.bRemoveOnMiss = (tonumber(msgOOB.nRemoveOnMiss) == 1);
-	rAction.sResult = msgOOB.sResult;
-	
-	applySave(rSource, rOrigin, rAction);
-end
-
 function notifyApplySave(rSource, rRoll)
-	local msgOOB = {};
-	msgOOB.type = OOB_MSGTYPE_APPLYSAVE;
-	
-	msgOOB.nSecret = rRoll.bSecret and 1 or 0;
-	msgOOB.nTower = rRoll.bTower and 1 or 0;
-	msgOOB.sDesc = rRoll.sDesc;
-	msgOOB.nTotal = ActionsManager.total(rRoll);
-	msgOOB.sSaveDesc = rRoll.sSaveDesc;
-	msgOOB.nTarget = rRoll.nTarget;
-	msgOOB.sResult = rRoll.sResult;
-	msgOOB.nRemoveOnMiss = rRoll.bRemoveOnMiss and 1 or 0;
-
+	local msgOOB = UtilityManager.encodeRollToOOB(rRoll);
+	msgOOB.type = ActionSave.OOB_MSGTYPE_APPLYSAVE;
 	msgOOB.sSourceNode = ActorManager.getCreatureNodeName(rSource);
 	if rRoll.sSource ~= "" then
 		msgOOB.sTargetNode = rRoll.sSource;
 	end
-	
 	Comm.deliverOOBMessage(msgOOB, "");
+end
+function handleApplySave(msgOOB)
+	local rSource = ActorManager.resolveActor(msgOOB.sSourceNode);
+	local rOrigin = ActorManager.resolveActor(msgOOB.sTargetNode);
+	local rRoll = UtilityManager.decodeRollFromOOB(msgOOB);
+	ActionSave.applySave(rSource, rOrigin, rRoll);
 end
 
 function performPartySheetRoll(draginfo, rActor, sSave)
@@ -162,7 +142,7 @@ function modSave(rSource, rTarget, rRoll)
 		local bFlatfooted = false;
 		if not rRoll.bVsSave and ModifierManager.getKey("ATT_FF") then
 			bFlatfooted = true;
-		elseif EffectManager35E.hasEffect(rSource, "Flat-footed") or EffectManager35E.hasEffect(rSource, "Flatfooted") then
+		elseif EffectManager.hasText(rSource, "Flat-footed") or EffectManager.hasText(rSource, "Flatfooted") then
 			bFlatfooted = true;
 		end
 
@@ -172,7 +152,7 @@ function modSave(rSource, rTarget, rRoll)
 			rSaveSource = ActorManager.resolveActor(rRoll.sSource);
 		end
 		local aExistingBonusByType = {};
-		local aSaveEffects = EffectManager35E.getEffectsByType(rSource, "SAVE", aSaveFilter, rSaveSource, false);
+		local aSaveEffects = EffectManager.getCompsDataByTag(rSource, "SAVE", { rTarget = rSaveSource, tFilter = aSaveFilter });
 		for _,v in pairs(aSaveEffects) do
 			-- Determine bonus type if any
 			local sBonusType = nil;
@@ -212,18 +192,18 @@ function modSave(rSource, rTarget, rRoll)
 		end
 
 		-- Get condition modifiers
-		if EffectManager35E.hasEffectCondition(rSource, "Frightened") or 
-				EffectManager35E.hasEffectCondition(rSource, "Panicked") or
-				EffectManager35E.hasEffectCondition(rSource, "Shaken") then
+		if EffectManager.hasText(rSource, "Frightened") or 
+				EffectManager.hasText(rSource, "Panicked") or
+				EffectManager.hasText(rSource, "Shaken") then
 			nAddMod = nAddMod - 2;
 			bEffects = true;
 		end
-		if EffectManager35E.hasEffectCondition(rSource, "Sickened") then
+		if EffectManager.hasText(rSource, "Sickened") then
 			nAddMod = nAddMod - 2;
 			bEffects = true;
 		end
 		if sSave == "reflex" then
-			if EffectManager35E.hasEffectCondition(rSource, "Slowed") then
+			if EffectManager.hasText(rSource, "Slowed") then
 				nAddMod = nAddMod - 1;
 				bEffects = true;
 			end
@@ -237,7 +217,7 @@ function modSave(rSource, rTarget, rRoll)
 		end
 		
 		-- Get negative levels
-		local nNegLevelMod, nNegLevelCount = EffectManager35E.getEffectsBonus(rSource, {"NLVL"}, true);
+		local nNegLevelMod, nNegLevelCount = EffectManager.getBonusMod(rSource, "NLVL");
 		if nNegLevelCount > 0 then
 			bEffects = true;
 			nAddMod = nAddMod - nNegLevelMod;
@@ -256,7 +236,7 @@ function modSave(rSource, rTarget, rRoll)
 	end
 	
 	if #aAddDesc > 0 then
-		rRoll.sDesc = rRoll.sDesc .. " " .. table.concat(aAddDesc, " ");
+		rRoll.sDesc = rRoll.sDesc .. "\r" .. table.concat(aAddDesc, "\r");
 	end
 	for _,vDie in ipairs(aAddDice) do
 		if vDie:sub(1,1) == "-" then
@@ -277,9 +257,9 @@ function onSave(rSource, rTarget, rRoll)
 		if #(rRoll.aDice) > 0 then
 			local nFirstDie = rRoll.aDice[1].result or 0;
 			if nFirstDie == 20 then
-				rRoll.sResult = "autosuccess";
+				rRoll.sResult = "critsuccess";
 			elseif nFirstDie == 1 then
-				rRoll.sResult = "autofailure";
+				rRoll.sResult = "critfailure";
 			end
 		end
 		if (rRoll.sResult or "") == "" then
@@ -293,16 +273,15 @@ function onSave(rSource, rTarget, rRoll)
 		notifyApplySave(rSource, rRoll);
 	end
 end
-
 	
-function applySave(rSource, rOrigin, rAction, sUser)
+function applySave(rSource, rOrigin, rRoll)
 	local msgShort = {font = "msgfont"};
 	local msgLong = {font = "msgfont"};
 	
 	msgShort.text = "Save";
-	msgLong.text = "Save [" .. rAction.nTotal ..  "]";
-	if rAction.nTarget then
-		msgLong.text = msgLong.text .. "[vs. DC " .. rAction.nTarget .. "]";
+	msgLong.text = "Save [" .. rRoll.nTotal ..  "]";
+	if rRoll.nTarget then
+		msgLong.text = msgLong.text .. "[vs. DC " .. rRoll.nTarget .. "]";
 	end
 	msgShort.text = msgShort.text .. " ->";
 	msgLong.text = msgLong.text .. " ->";
@@ -315,17 +294,17 @@ function applySave(rSource, rOrigin, rAction, sUser)
 		msgLong.text = msgLong.text .. " [vs " .. ActorManager.getDisplayName(rOrigin) .. "]";
 	end
 	
-	msgShort.icon = "roll_cast";
+	msgShort.icon = "action_cast";
 		
 	local sAttack = "";
 	local bHalfMatch = false;
-	if rAction.sSaveDesc then
-		sAttack = ActionCore.decodeLabelText(rAction.sSaveDesc, "action_savevs_tag");
-		bHalfMatch = (rAction.sSaveDesc:match("%[HALF ON SAVE%]") ~= nil);
+	if rRoll.sSaveDesc then
+		sAttack = ActionCore.decodeLabelText(rRoll.sSaveDesc, "action_savevs_tag");
+		bHalfMatch = (rRoll.sSaveDesc:match("%[HALF ON SAVE%]") ~= nil);
 	end
 	
-	if rAction.sResult == "autosuccess" or rAction.sResult == "success" then
-		if rAction.sResult == "autosuccess" then
+	if rRoll.sResult == "critsuccess" or rRoll.sResult == "success" then
+		if rRoll.sResult == "critsuccess" then
 			msgLong.text = msgLong.text .. " [AUTOMATIC SUCCESS]";
 		else
 			msgLong.text = msgLong.text .. " [SUCCESS]";
@@ -335,12 +314,12 @@ function applySave(rSource, rOrigin, rAction, sUser)
 			local bHalfDamage = bHalfMatch;
 			local bAvoidDamage = false;
 			if bHalfDamage then
-				local sSave = ActionCore.decodeLabelText(rAction.sDesc, "action_save_tag"):lower();
+				local sSave = ActionCore.decodeLabelText(rRoll.sDesc, "action_save_tag"):lower();
 				if sSave == "reflex" then
-					if EffectManager35E.hasEffectCondition(rSource, "Improved Evasion") then 
+					if EffectManager.hasText(rSource, "Improved Evasion") then 
 						bAvoidDamage = true;
 						msgLong.text = msgLong.text .. " [IMPROVED EVASION]";
-					elseif EffectManager35E.hasEffectCondition(rSource, "Evasion") then
+					elseif EffectManager.hasText(rSource, "Evasion") then
 						bAvoidDamage = true;
 						msgLong.text = msgLong.text .. " [EVASION]";
 					end
@@ -348,19 +327,23 @@ function applySave(rSource, rOrigin, rAction, sUser)
 			end
 			
 			if bAvoidDamage then
-				rAction.sResult = "none";
-				rAction.bRemoveOnMiss = false;
+				rRoll.sResult = "none";
+				rRoll.bRemoveOnMiss = false;
 			elseif bHalfDamage then
-				rAction.sResult = "half_success";
-				rAction.bRemoveOnMiss = false;
+				rRoll.sResult = "half_success";
+				rRoll.bRemoveOnMiss = false;
 			end
 			
-			if rOrigin and rAction.bRemoveOnMiss then
+			if rOrigin and rRoll.bRemoveOnMiss then
 				TargetingManager.removeTarget(ActorManager.getCTNodeName(rOrigin), ActorManager.getCTNodeName(rSource));
+			end
+
+			if (rRoll.sEffectRecord or "") ~= "" then
+				EffectManager.notifyExpire(rRoll.sEffectRecord, nil, true);
 			end
 		end
 	else
-		if rAction.sResult == "autofailure" then
+		if rRoll.sResult == "critfailure" then
 			msgLong.text = msgLong.text .. " [AUTOMATIC FAILURE]";
 		else
 			msgLong.text = msgLong.text .. " [FAILURE]";
@@ -369,9 +352,9 @@ function applySave(rSource, rOrigin, rAction, sUser)
 		if rSource then
 			local bHalfDamage = false;
 			if bHalfMatch then
-				local sSave = ActionCore.decodeLabelText(rAction.sDesc, "action_save_tag"):lower();
+				local sSave = ActionCore.decodeLabelText(rRoll.sDesc, "action_save_tag"):lower();
 				if sSave == "reflex" then
-					if EffectManager35E.hasEffectCondition(rSource, "Improved Evasion") then
+					if EffectManager.hasText(rSource, "Improved Evasion") then
 						bHalfDamage = true;
 						msgLong.text = msgLong.text .. " [IMPROVED EVASION]";
 					end
@@ -379,16 +362,38 @@ function applySave(rSource, rOrigin, rAction, sUser)
 			end
 			
 			if bHalfDamage then
-				rAction.sResult = "half_failure";
+				rRoll.sResult = "half_failure";
 			end
+		end
+
+		if (rRoll.sEffectRecord or "") ~= "" then
+			ActionSave.notifyFailedEffectSave(rSource, rRoll.sEffectRecord);
 		end
 	end
 	
-	ActionsManager.outputResult(rAction.bTower, rSource, rOrigin, msgLong, msgShort);
+	ActionsManager.outputResult(rRoll.bTower, rSource, rOrigin, msgLong, msgShort);
 	
 	if rSource and rOrigin then
-		ActionDamage.setDamageState(rOrigin, rSource, StringManager.trim(sAttack), rAction.sResult);
+		ActionDamageCore.setDamageState(rOrigin, rSource, StringManager.trim(sAttack), rRoll.sResult);
 	end
 
-	GameManager.callEventFunctions("onSavePostResolve", rSource, rOrigin, rAction);
+	GameManager.callEventFunctions("onSavePostResolve", rSource, rOrigin, rRoll);
+end
+
+function notifyFailedEffectSave(rActor, sEffectRecord)
+	local msgOOB = {
+		type = OOB_MSGTYPE_FAILEDSAVEEFF,
+		sActorNode = ActorManager.getCreatureNodeName(rActor),
+		sEffectNode = sEffectRecord,
+	};
+	Comm.deliverOOBMessage(msgOOB, "");
+end
+function handleFailedEffectSave(msgOOB)
+	local nodeEffect = DB.findNode(msgOOB.sEffectNode);
+	if not nodeEffect then
+		return;
+	end
+
+	local rActor = ActorManager.resolveActor(msgOOB.sActorNode);
+	EffectManager.handleEffectSaveFail(rActor, nodeEffect);
 end

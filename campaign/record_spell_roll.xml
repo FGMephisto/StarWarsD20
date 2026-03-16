@@ -355,17 +355,7 @@
 			<label_column name="healtargeting_label">
 				<static textres="power_label_targeting" />
 			</label_column>
-			<button_stringcycler name="healtargeting">
-				<anchored width="60" height="20">
-					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
-					<left offset="97" />
-				</anchored>
-				<parameters>
-					<defaultlabelres>power_label_targetnormal</defaultlabelres>
-					<labelsres>power_label_targetself</labelsres>
-					<values>self</values>
-				</parameters>
-			</button_stringcycler>
+			<stringcycler_column_poweraction_targeting name="healtargeting" />
 			
 			<label_column name="healtype_label">
 				<static textres="power_label_healtype" />
@@ -650,6 +640,7 @@
 					<values>minute|hour|day</values>
 				</parameters>
 			</cycler_ability>
+			<button_editor_poweraction_effect_expiration name="expiration" />
 
 			<header_column name="header_other">
 				<static textres="power_header_effect_other" />
@@ -659,32 +650,17 @@
 			<label_column name="targeting_label">
 				<static textres="power_label_targeting" />
 			</label_column>
-			<button_stringcycler name="targeting">
-				<anchored width="60" height="20">
-					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
-					<left offset="97" />
-				</anchored>
-				<parameters>
-					<defaultlabelres>power_label_targetnormal</defaultlabelres>
-					<labelsres>power_label_targetself</labelsres>
-					<values>self</values>
-				</parameters>
-			</button_stringcycler>
+			<stringcycler_column_poweraction_effect_targeting name="targeting" />
 			
 			<label_column name="apply_label">
 				<static textres="power_label_effect_apply" />
 			</label_column>
-			<button_stringcycler name="apply">
-				<anchored width="120" height="20">
-					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
-					<left offset="97" />
-				</anchored>
-				<parameters>
-					<defaultlabelres>power_label_effect_applyall</defaultlabelres>
-					<labelsres>power_label_effect_applyaction|power_label_effect_applyroll|power_label_effect_applysingle</labelsres>
-					<values>action|roll|single</values>
-				</parameters>
-			</button_stringcycler>
+			<stringcycler_column_poweraction_effect_apply name="apply" />
+			
+			<label_column name="initsource_label">
+				<static textres="power_label_effect_initsource" />
+			</label_column>
+			<stringcycler_column_poweraction_effect_initsource name="initsource" />
 		</sheetdata>
 	</windowclass>
 </root>

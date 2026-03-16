@@ -4,20 +4,17 @@
 --
 
 function onInit()
-	initActorHealth();
+	GameManager.setRecordFieldMap("", "hptotal", "hp");
+
+	GameManager.setFunction("onActorGetBonus", ActorManager35E.getBonus);
+	GameManager.setFunction("onActorGetEffectsBonus", ActorManager35E.getEffectsBonus);
+	GameManager.setFunction("onActorGetHealthStatus", ActorManager35E.getWoundPercent);
+	GameManager.setFunction("onActorRest", ActorManager35E.rest);
 end
 
 --
 --	HEALTH
 -- 
-
-function initActorHealth()
-	ActorHealthManager.registerStatusHealthColor(ActorHealthManager.STATUS_UNCONSCIOUS, ColorManager.getUIColor("health_dyingordead"));
-	ActorHealthManager.registerStatusHealthColor(ActorHealthManager.STATUS_DISABLED, ColorManager.getUIColor("health_simple_bloodied"));
-	ActorHealthManager.registerStatusHealthColor(ActorHealthManager.STATUS_STAGGERED, ColorManager.getUIColor("health_simple_bloodied"));
-
-	ActorHealthManager.getWoundPercent = getWoundPercent;
-end
 
 -- NOTE: Always default to using CT node as primary to make sure 
 --		that all bars and statuses are synchronized in combat tracker
@@ -25,30 +22,12 @@ end
 --		depending on where the scripts or end user updates.)
 -- NOTE 2: We can not use default effect checking in this function; 
 -- 		as it will cause endless loop with conditionals that check health
-function getWoundPercent(v)
-	local rActor = ActorManager.resolveActor(v);
+function getWoundPercent(rActor)
+	local nHP = GameManager.getRecordFieldValue(rActor, "hptotal", 0);
+	local nTemp = GameManager.getRecordFieldValue(rActor, "hptemp", 0);
+	local nWounds = GameManager.getRecordFieldValue(rActor, "wounds", 0);
+	local nNonlethal = GameManager.getRecordFieldValue(rActor, "nonlethal", 0);
 
-	local nHP = 0;
-	local nTemp = 0;
-	local nWounds = 0;
-	local nNonlethal = 0;
-
-	local nodeCT = ActorManager.getCTNode(rActor);
-	if nodeCT then
-		nHP = math.max(DB.getValue(nodeCT, "hp", 0), 0);
-		nTemp = math.max(DB.getValue(nodeCT, "hptemp", 0), 0);
-		nWounds = math.max(DB.getValue(nodeCT, "wounds", 0), 0);
-		nNonlethal = math.max(DB.getValue(nodeCT, "nonlethal", 0), 0);
-	elseif ActorManager.isPC(rActor) then
-		local nodePC = ActorManager.getCreatureNode(rActor);
-		if nodePC then
-			nHP = math.max(DB.getValue(nodePC, "hp.total", 0), 0);
-			nTemp = math.max(DB.getValue(nodePC, "hp.temporary", 0), 0);
-			nWounds = math.max(DB.getValue(nodePC, "hp.wounds", 0), 0);
-			nNonlethal = math.max(DB.getValue(nodePC, "hp.nonlethal", 0), 0);
-		end
-	end
-	
 	local nPercentLethal = 0;
 	local nPercentNonlethal = 0;
 	if nHP > 0 then
@@ -83,26 +62,9 @@ function getWoundPercent(v)
 	
 	return nPercentNonlethal, sStatus, nPercentLethal;
 end
-
 function getPCSheetWoundColor(nodePC)
-	local nHP = 0;
-	local nTemp = 0;
-	local nWounds = 0;
-	local nNonlethal = 0;
-	if nodePC then
-		nHP = math.max(DB.getValue(nodePC, "hp.total", 0), 0);
-		nTemp = math.max(DB.getValue(nodePC, "hp.temporary", 0), 0);
-		nWounds = math.max(DB.getValue(nodePC, "hp.wounds", 0), 0);
-		nNonlethal = math.max(DB.getValue(nodePC, "hp.nonlethal", 0), 0);
-	end
+	local nPercentNonlethal, sStatus, nPercentLethal = ActorManager35E.getWoundPercent(nodePC);
 
-	local nPercentLethal = 0;
-	local nPercentNonlethal = 0;
-	if nHP > 0 then
-		nPercentLethal = nWounds / nHP;
-		nPercentNonlethal = (nWounds + nNonlethal) / (nHP + nTemp);
-	end
-	
 	if nPercentLethal > 1 then
 		return ColorManager.getUIColor("health_dyingordead");
 	elseif nPercentNonlethal > 1 then
@@ -112,100 +74,12 @@ function getPCSheetWoundColor(nodePC)
 	elseif nPercentNonlethal == 1 then
 		return ColorManager.getUIColor("health_simple_bloodied");
 	end
-
-	local sColor = ColorManager.getHealthColor(nPercentNonlethal, false);
-	return sColor;
+	return ColorManager.getHealthColor(nPercentNonlethal, false);
 end
 
 --
 --	ABILITY SCORES
 --
-
-function getAbilityEffectsBonus(rActor, sAbility)
-	if not rActor or not sAbility then
-		return 0, 0;
-	end
-	
-	local sAbilityEffect = DataCommon.ability_ltos[sAbility];
-	if not sAbilityEffect then
-		return 0, 0;
-	end
-	
-	local nEffectMod, nAbilityEffects = EffectManager35E.getEffectsBonus(rActor, sAbilityEffect, true);
-	
-	if sAbility == "dexterity" then
-		if EffectManager35E.hasEffectCondition(rActor, "Entangled") then
-			nEffectMod = nEffectMod - 4;
-			nAbilityEffects = nAbilityEffects + 1;
-		end
-		if DataCommon.isPFRPG() and EffectManager35E.hasEffectCondition(rActor, "Grappled") then
-			nEffectMod = nEffectMod - 4;
-			nAbilityEffects = nAbilityEffects + 1;
-		end
-	end
-	if sAbility == "dexterity" or sAbility == "strength" then
-		if EffectManager35E.hasEffectCondition(rActor, "Exhausted") then
-			nEffectMod = nEffectMod - 6;
-			nAbilityEffects = nAbilityEffects + 1;
-		elseif EffectManager35E.hasEffectCondition(rActor, "Fatigued") then
-			nEffectMod = nEffectMod - 2;
-			nAbilityEffects = nAbilityEffects + 1;
-		end
-	end
-	
-	local nEffectBonusMod = 0;
-	if nEffectMod > 0 then
-		nEffectBonusMod = math.floor(nEffectMod / 2);
-	else
-		nEffectBonusMod = math.ceil(nEffectMod / 2);
-	end
-
-	local nAbilityMod = 0;
-	local nAbilityScore = getAbilityScore(rActor, sAbility);
-	if nAbilityScore > 0 and not DataCommon.isPFRPG() then
-		local nAbilityDamage = getAbilityDamage(rActor, sAbility);
-		
-		local nCurrentBonus = math.floor((nAbilityScore - nAbilityDamage - 10) / 2);
-		local nAffectedBonus = math.floor((nAbilityScore - nAbilityDamage + nEffectMod - 10) / 2);
-		
-		nAbilityMod = nAffectedBonus - nCurrentBonus;
-	else
-		nAbilityMod = nEffectBonusMod;
-	end
-
-	return nAbilityMod, nAbilityEffects;
-end
-
-function getAbilityDamage(rActor, sAbility)
-	if not sAbility then
-		return 0;
-	end
-	
-	if not ActorManager.isPC(rActor) then
-		return 0;
-	end
-	local nodeActor = ActorManager.getCreatureNode(rActor);
-	if not nodeActor then
-		return 0;
-	end
-
-	local sShort = sAbility:sub(1,3):lower();
-	if sShort == "str" then
-		return DB.getValue(nodeActor, "abilities.strength.damage", 0);
-	elseif sShort == "dex" then
-		return DB.getValue(nodeActor, "abilities.dexterity.damage", 0);
-	elseif sShort == "con" then
-		return DB.getValue(nodeActor, "abilities.constitution.damage", 0);
-	elseif sShort == "int" then
-		return DB.getValue(nodeActor, "abilities.intelligence.damage", 0);
-	elseif sShort == "wis" then
-		return DB.getValue(nodeActor, "abilities.wisdom.damage", 0);
-	elseif sShort == "cha" then
-		return DB.getValue(nodeActor, "abilities.charisma.damage", 0);
-	end
-	
-	return 0;
-end
 
 function getAbilityScore(rActor, sAbility, nodeSpellClass)
 	if not sAbility then
@@ -255,6 +129,8 @@ function getAbilityScore(rActor, sAbility, nodeSpellClass)
 				sBAB = sBABGrp:match("[+-]?%d+");
 			end
 			return tonumber(sBAB) or 0;
+		elseif sShort == "cl" and nodeSpellClass then
+			return DB.getValue(nodeSpellClass, "cl", 0);
 		elseif sShort == "str" then
 			return DB.getValue(nodeActor, "strength", 0);
 		elseif sShort == "dex" then
@@ -272,22 +148,44 @@ function getAbilityScore(rActor, sAbility, nodeSpellClass)
 	
 	return -1;
 end
-
-function getAbilityBonus(rActor, sAbility, nodeSpellClass)
+function getAbilityDamage(rActor, sAbility)
 	if not sAbility then
 		return 0;
 	end
-	if not rActor then
+	
+	if not ActorManager.isPC(rActor) then
+		return 0;
+	end
+	local nodeActor = ActorManager.getCreatureNode(rActor);
+	if not nodeActor then
+		return 0;
+	end
+
+	local sShort = sAbility:sub(1,3):lower();
+	if sShort == "str" then
+		return DB.getValue(nodeActor, "abilities.strength.damage", 0);
+	elseif sShort == "dex" then
+		return DB.getValue(nodeActor, "abilities.dexterity.damage", 0);
+	elseif sShort == "con" then
+		return DB.getValue(nodeActor, "abilities.constitution.damage", 0);
+	elseif sShort == "int" then
+		return DB.getValue(nodeActor, "abilities.intelligence.damage", 0);
+	elseif sShort == "wis" then
+		return DB.getValue(nodeActor, "abilities.wisdom.damage", 0);
+	elseif sShort == "cha" then
+		return DB.getValue(nodeActor, "abilities.charisma.damage", 0);
+	end
+	
+	return 0;
+end
+function getAbilityBonus(rActor, sStat, nodeSpellClass)
+	if not rActor or ((sStat or "") == "") then
 		return 0;
 	end
 	
-	-- SETUP
-	local sStat = sAbility;
+	-- CHECK HALF/DOUBLE MODIFIERS
 	local bHalf = false;
 	local bDouble = false;
-	local nStatVal = 0;
-	
-	-- HANDLE HALF/DOUBLE MODIFIERS
 	if string.match(sStat, "^half") then
 		bHalf = true;
 		sStat = string.sub(sStat, 5);
@@ -303,6 +201,7 @@ function getAbilityBonus(rActor, sAbility, nodeSpellClass)
 		return 0;
 	end
 	
+	local nStatVal = 0;
 	if StringManager.contains(DataCommon.abilities, sStat) then
 		if ActorManager.isPC(rActor) then
 			local nodeActor = ActorManager.getCreatureNode(rActor);
@@ -336,122 +235,94 @@ function getAbilityBonus(rActor, sAbility, nodeSpellClass)
 	-- RESULTS
 	return nStatVal;
 end
+function getAbilityEffectsBonus(rActor, sAbility)
+	if not rActor or not sAbility then
+		return 0, 0;
+	end
+	
+	local sAbilityEffect = DataCommon.ability_ltos[sAbility];
+	if not sAbilityEffect then
+		return 0, 0;
+	end
+	
+	local nEffectMod, nAbilityEffects = EffectManager.getBonusMod(rActor, sAbilityEffect);
+	
+	if sAbility == "dexterity" then
+		if EffectManager.hasText(rActor, "Entangled") then
+			nEffectMod = nEffectMod - 4;
+			nAbilityEffects = nAbilityEffects + 1;
+		end
+		if DataCommon.isPFRPG() and EffectManager.hasText(rActor, "Grappled") then
+			nEffectMod = nEffectMod - 4;
+			nAbilityEffects = nAbilityEffects + 1;
+		end
+	end
+	if sAbility == "dexterity" or sAbility == "strength" then
+		if EffectManager.hasText(rActor, "Exhausted") then
+			nEffectMod = nEffectMod - 6;
+			nAbilityEffects = nAbilityEffects + 1;
+		elseif EffectManager.hasText(rActor, "Fatigued") then
+			nEffectMod = nEffectMod - 2;
+			nAbilityEffects = nAbilityEffects + 1;
+		end
+	end
+	
+	local nEffectBonusMod = 0;
+	if nEffectMod > 0 then
+		nEffectBonusMod = math.floor(nEffectMod / 2);
+	else
+		nEffectBonusMod = math.ceil(nEffectMod / 2);
+	end
+
+	local nAbilityMod = 0;
+	local nAbilityScore = getAbilityScore(rActor, sAbility);
+	if nAbilityScore > 0 and not DataCommon.isPFRPG() then
+		local nAbilityDamage = getAbilityDamage(rActor, sAbility);
+		local nCurrentBonus = math.floor((nAbilityScore - nAbilityDamage - 10) / 2);
+		local nAffectedBonus = math.floor((nAbilityScore - nAbilityDamage + nEffectMod - 10) / 2);
+		
+		nAbilityMod = nAffectedBonus - nCurrentBonus;
+	else
+		nAbilityMod = nEffectBonusMod;
+	end
+
+	return nAbilityMod, nAbilityEffects;
+end
 
 --
 --	DEFENSES
 --
 
-function getSpellDefense(rActor)
-	if ActorManager.isPC(rActor) then
-		local nodeActor = ActorManager.getCreatureNode(rActor);
+function getSpellDefense(rAttacker, rDefender)
+	local nSR = 0;
+
+	if ActorManager.isPC(rDefender) then
+		local nodeActor = ActorManager.getCreatureNode(rDefender);
 		if nodeActor then
-			return DB.getValue(nodeActor, "defenses.sr.total", 0);
+			nSR = DB.getValue(nodeActor, "defenses.sr.total", 0);
 		end
-	elseif ActorManager.isRecordType(rActor, "npc") then
-		local nodeCT = ActorManager.getCTNode(rActor);
+	elseif ActorManager.isRecordType(rDefender, "npc") then
+		local nodeCT = ActorManager.getCTNode(rDefender);
 		if nodeCT then
-			return DB.getValue(nodeCT, "sr", 0);
-		end
-		local nodeActor = ActorManager.getCreatureNode(rActor);
-		if nodeActor then
-			local sSpecialQualities = DB.getValue(nodeActor, "specialqualities", ""):lower();
-			local sSpellResist = sSpecialQualities:match("spell resistance (%d+)");
-			if not sSpellResist then
-				sSpellResist = sSpecialQualities:match("sr (%d+)");
-			end
-			if sSpellResist then
-				return tonumber(sSpellResist) or 0;
-			end
-		end
-	end
-
-	return 0;
-end
-
-function getArmorComps(rActor)
-	local nodeActor = ActorManager.getCreatureNode(rActor);
-	if not nodeActor then
-		return {};
-	end
-
-	local tComps = {};
-	
-	if ActorManager.isPC(rActor) then
-		local nACBonusComp = DB.getValue(nodeActor, "ac.sources.armor", 0);
-		if nACBonusComp ~= 0 then
-			tComps["armor"] = nACBonusComp;
-		end
-		nACBonusComp = DB.getValue(nodeActor, "ac.sources.shield", 0);
-		if nACBonusComp ~= 0 then
-			tComps["shield"] = nACBonusComp;
-		end
-		local sAbility = DB.getValue(nodeActor, "ac.sources.ability", "");
-		if DataCommon.ability_ltos[sAbility] then
-			tComps[DataCommon.ability_ltos[sAbility]] = getAbilityBonus(rActor, sAbility);
-		end
-		local sAbility2 = DB.getValue(nodeActor, "ac.sources.ability2", "");
-		if DataCommon.ability_ltos[sAbility2] then
-			tComps[DataCommon.ability_ltos[sAbility2]] = getAbilityBonus(rActor, sAbility2);
-		end
-		nACBonusComp = DB.getValue(nodeActor, "ac.sources.size", 0);
-		if nACBonusComp ~= 0 then
-			tComps["size"] = nACBonusComp;
-		end
-		nACBonusComp = DB.getValue(nodeActor, "ac.sources.naturalarmor", 0);
-		if nACBonusComp ~= 0 then
-			tComps["natural"] = nACBonusComp;
-		end
-		nACBonusComp = DB.getValue(nodeActor, "ac.sources.deflection", 0);
-		if nACBonusComp ~= 0 then
-			tComps["deflection"] = nACBonusComp;
-		end
-		nACBonusComp = DB.getValue(nodeActor, "ac.sources.dodge", 0);
-		if nACBonusComp ~= 0 then
-			tComps["dodge"] = nACBonusComp;
-		end
-		nACBonusComp = DB.getValue(nodeActor, "ac.sources.misc", 0);
-		if nACBonusComp ~= 0 then
-			tComps["misc"] = nACBonusComp;
-		end
-	elseif ActorManager.isRecordType(rActor, "npc") then
-		local sAC = DB.getValue(nodeActor, "ac", ""):lower();
-		local nAC = tonumber(sAC:match("^(%d+)")) or 10;
-		local sACComps = sAC:match("%(([^)]+)%)");
-		local nCompTotal = 10;
-		if sACComps then
-			local aACSplit = StringManager.split(sACComps, ",", true);
-			for _,vACComp in ipairs(aACSplit) do
-				local sACCompBonus, sACCompType = vACComp:match("^([+-]%d+)%s+(.*)$");
-				if not sACCompType then
-					sACCompType, sACCompBonus = vACComp:match("^(.*)%s+([+-]%d+)$");
+			nSR = DB.getValue(nodeCT, "sr", 0);
+		else
+			local nodeActor = ActorManager.getCreatureNode(rDefender);
+			if nodeActor then
+				local sSpecialQualities = DB.getValue(nodeActor, "specialqualities", ""):lower();
+				local sSpellResist = sSpecialQualities:match("spell resistance (%d+)");
+				if not sSpellResist then
+					sSpellResist = sSpecialQualities:match("sr (%d+)");
 				end
-				local nACCompBonus = tonumber(sACCompBonus) or 0;
-				if sACCompType and nACCompBonus ~= 0 then
-					sACCompType = sACCompType:gsub("[+-]%d+", "");
-					sACCompType = StringManager.trim(sACCompType);
-					
-					if DataCommon.actypes[sACCompType] then
-						tComps[DataCommon.actypes[sACCompType]] = nACCompBonus;
-						nCompTotal = nCompTotal + nACCompBonus;
-					elseif StringManager.contains (DataCommon.acarmormatch, sACCompType) then
-						tComps["armor"] = nACCompBonus;
-						nCompTotal = nCompTotal + nACCompBonus;
-					elseif StringManager.contains (DataCommon.acshieldmatch, sACCompType) then
-						tComps["shield"] = nACCompBonus;
-						nCompTotal = nCompTotal + nACCompBonus;
-					elseif StringManager.contains (DataCommon.acdeflectionmatch, sACCompType) then
-						tComps["deflection"] = nACCompBonus;
-						nCompTotal = nCompTotal + nACCompBonus;
-					end
+				if sSpellResist then
+					nSR = tonumber(sSpellResist) or 0;
 				end
 			end
 		end
-		if nCompTotal ~= nAC then
-			tComps["misc"] = nAC - nCompTotal;
-		end
 	end
 
-	return tComps;
+	nSR = nSR + EffectManager.getBonusMod(rDefender, "SR", { rTarget = rAttacker, });
+
+	return nSR;
 end
 
 function getDefenseValue(rAttacker, rDefender, rRoll)
@@ -592,75 +463,70 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 		local bPFMode = DataCommon.isPFRPG();
 		
 		-- BUILD ATTACK FILTER 
-		local aAttackFilter = {};
-		if sAttackType == "M" then
-			table.insert(aAttackFilter, "melee");
-		elseif sAttackType == "R" then
-			table.insert(aAttackFilter, "ranged");
-		end
-		if bOpportunity then
-			table.insert(aAttackFilter, "opportunity");
-		end
+		local tAttackFilter = ActionCore.buildEffectFilter({ sRange = sAttackType, bOpportunity = bOpportunity, });
 
 		-- CHECK IF COMBAT ADVANTAGE ALREADY SET BY ATTACKER EFFECT
 		if sAttack:match("%[CA%]") then
 			bCombatAdvantage = true;
 		end
+
+		local tAttEffData = { rTarget = rDefender, bTargetedOnly = true, };
+		local tDefEffData = { rTarget = rAttacker, };
 		
 		-- GET DEFENDER SITUATIONAL MODIFIERS - GENERAL
-		if EffectManager35E.hasEffect(rAttacker, "CA", rDefender, true) then
+		if EffectManager.hasText(rAttacker, "CA", tAttEffData) then
 			bCombatAdvantage = true;
 		end
-		if EffectManager35E.hasEffect(rAttacker, "Invisible", rDefender, true) then
+		if EffectManager.hasText(rAttacker, "Invisible", tAttEffData) then
 			nBonusSituational = nBonusSituational - 2;
 			bCombatAdvantage = true;
 		end
-		if EffectManager35E.hasEffect(rDefender, "GRANTCA", rAttacker) then
+		if EffectManager.hasText(rDefender, "GRANTCA", tDefEffData) then
 			bCombatAdvantage = true;
 		end
-		if EffectManager35E.hasEffect(rDefender, "Blinded") then
+		if EffectManager.hasText(rDefender, "Blinded") then
 			nBonusSituational = nBonusSituational - 2;
 			bCombatAdvantage = true;
 		end
-		if EffectManager35E.hasEffect(rDefender, "Cowering") or
-				EffectManager35E.hasEffect(rDefender, "Rebuked") then
+		if EffectManager.hasText(rDefender, "Cowering") or
+				EffectManager.hasText(rDefender, "Rebuked") then
 			nBonusSituational = nBonusSituational - 2;
 			bCombatAdvantage = true;
 		end
-		if EffectManager35E.hasEffect(rDefender, "Slowed") then
+		if EffectManager.hasText(rDefender, "Slowed") then
 			nBonusSituational = nBonusSituational - 1;
 		end
-		if EffectManager35E.hasEffect(rDefender, "Flat-footed") or 
-				EffectManager35E.hasEffect(rDefender, "Flatfooted") or 
-				EffectManager35E.hasEffect(rDefender, "Climbing") or 
-				EffectManager35E.hasEffect(rDefender, "Running") then
+		if EffectManager.hasText(rDefender, "Flat-footed") or 
+				EffectManager.hasText(rDefender, "Flatfooted") or 
+				EffectManager.hasText(rDefender, "Climbing") or 
+				EffectManager.hasText(rDefender, "Running") then
 			bCombatAdvantage = true;
 		end
-		if EffectManager35E.hasEffect(rDefender, "Pinned") then
+		if EffectManager.hasText(rDefender, "Pinned") then
 			bCombatAdvantage = true;
 			if bPFMode then
 				nBonusSituational = nBonusSituational - 4;
 			else
-				if not EffectManager35E.hasEffect(rAttacker, "Grappled") then
+				if not EffectManager.hasText(rAttacker, "Grappled") then
 					nBonusSituational = nBonusSituational - 4;
 				end
 			end
-		elseif not bPFMode and EffectManager35E.hasEffect(rDefender, "Grappled") then
-			if not EffectManager35E.hasEffect(rAttacker, "Grappled") then
+		elseif not bPFMode and EffectManager.hasText(rDefender, "Grappled") then
+			if not EffectManager.hasText(rAttacker, "Grappled") then
 				bCombatAdvantage = true;
 			end
 		end
-		if EffectManager35E.hasEffect(rDefender, "Helpless") or 
-				EffectManager35E.hasEffect(rDefender, "Paralyzed") or 
-				EffectManager35E.hasEffect(rDefender, "Petrified") or
-				EffectManager35E.hasEffect(rDefender, "Unconscious") then
+		if EffectManager.hasText(rDefender, "Helpless") or 
+				EffectManager.hasText(rDefender, "Paralyzed") or 
+				EffectManager.hasText(rDefender, "Petrified") or
+				EffectManager.hasText(rDefender, "Unconscious") then
 			if sAttackType == "M" then
 				nBonusSituational = nBonusSituational - 4;
 			end
 			bZeroAbility = true;
 		end
-		if EffectManager35E.hasEffect(rDefender, "Kneeling") or 
-				EffectManager35E.hasEffect(rDefender, "Sitting") then
+		if EffectManager.hasText(rDefender, "Kneeling") or 
+				EffectManager.hasText(rDefender, "Sitting") then
 			if sAttackType == "M" then
 				nBonusSituational = nBonusSituational - 2;
 			elseif sAttackType == "R" then
@@ -673,23 +539,25 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 				nBonusSituational = nBonusSituational + 4;
 			end
 		end
-		if EffectManager35E.hasEffect(rDefender, "Squeezing") then
+		if EffectManager.hasText(rDefender, "Squeezing") then
 			nBonusSituational = nBonusSituational - 4;
 		end
-		if EffectManager35E.hasEffect(rDefender, "Stunned") then
+		if EffectManager.hasText(rDefender, "Stunned") then
 			nBonusSituational = nBonusSituational - 2;
 			if rRoll.sType == "grapple" then
 				nBonusSituational = nBonusSituational - 4;
 			end
 			bCombatAdvantage = true;
 		end
-		if EffectManager35E.hasEffect(rDefender, "Invisible", rAttacker) then
+		if EffectManager.hasText(rDefender, "Invisible", tDefEffData) then
 			bTotalConceal = true;
 		end
 		
 		-- DETERMINE EXISTING AC MODIFIER TYPES
-		local aExistingBonusByType = getArmorComps (rDefender);
+		local aExistingBonusByType = getArmorComps(rDefender);
 		
+		local tDefFilterEffData = { rTarget = rAttacker, tFilter = tAttackFilter, };
+
 		-- GET DEFENDER ALL DEFENSE MODIFIERS
 		local aIgnoreEffects = {};
 		if bTouch then
@@ -703,8 +571,8 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 		if rRoll.sType == "grapple" then
 			table.insert(aIgnoreEffects, "size");
 		end
-		local aACEffects = EffectManager35E.getEffectsBonusByType(rDefender, {"AC"}, true, aAttackFilter, rAttacker);
-		for k,v in pairs(aACEffects) do
+		local tACEffects = EffectManager.getBonusData(rDefender, "AC", tDefFilterEffData);
+		for k,v in pairs(tACEffects) do
 			if not StringManager.contains(aIgnoreEffects, k) then
 				local sBonusType = DataCommon.actypes[k];
 				if sBonusType then
@@ -729,7 +597,7 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 			end
 		end
 		if rRoll.sType == "grapple" then
-			local nPFMod, nPFCount = EffectManager35E.getEffectsBonus(rDefender, {"CMD"}, true, aAttackFilter, rAttacker);
+			local nPFMod, nPFCount = EffectManager.getBonusMod(rDefender, "CMD", { rTarget = rAttacker, tFilter = tAttackFilter, });
 			if nPFCount > 0 then
 				nBonusAC = nBonusAC + nPFMod;
 			end
@@ -781,7 +649,7 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 		
 		-- HANDLE NEGATIVE LEVELS
 		if rRoll.sType == "grapple" then
-			local nNegLevelMod, nNegLevelCount = EffectManager35E.getEffectsBonus(rDefender, {"NLVL"}, true);
+			local nNegLevelMod, nNegLevelCount = EffectManager.getBonusMod(rSource, "NLVL");
 			if nNegLevelCount > 0 then
 				nBonusSituational = nBonusSituational - nNegLevelMod;
 			end
@@ -800,16 +668,13 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 
 		-- GET DEFENDER SITUATIONAL MODIFIERS - COVER
 		if nCover < 8 then
-			local aCover = EffectManager35E.getEffectsByType(rDefender, "SCOVER", aAttackFilter, rAttacker);
-			if #aCover > 0 or EffectManager35E.hasEffect(rDefender, "SCOVER", rAttacker) then
+			if EffectManager.hasTextOrTag(rDefender, "SCOVER", tDefEffData) then
 				nBonusSituational = nBonusSituational + 8 - nCover;
 			elseif nCover < 4 then
-				aCover = EffectManager35E.getEffectsByType(rDefender, "COVER", aAttackFilter, rAttacker);
-				if #aCover > 0 or EffectManager35E.hasEffect(rDefender, "COVER", rAttacker) then
+				if EffectManager.hasTextOrTag(rDefender, "COVER", tDefEffData) then
 					nBonusSituational = nBonusSituational + 4 - nCover;
 				elseif nCover < 2 then
-					aCover = EffectManager35E.getEffectsByType(rDefender, "PCOVER", aAttackFilter, rAttacker);
-					if #aCover > 0 or EffectManager35E.hasEffect(rDefender, "PCOVER", rAttacker) then
+					if EffectManager.hasTextOrTag(rDefender, "PCOVER", tDefEffData) then
 						nBonusSituational = nBonusSituational + 2 - nCover;
 					end
 				end
@@ -817,12 +682,10 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 		end
 		
 		-- GET DEFENDER SITUATIONAL MODIFIERS - CONCEALMENT
-		local aConceal = EffectManager35E.getEffectsByType(rDefender, "TCONC", aAttackFilter, rAttacker);
-		if #aConceal > 0 or EffectManager35E.hasEffect(rDefender, "TCONC", rAttacker) or bTotalConceal or bAttackerBlinded then
+		if bTotalConceal or bAttackerBlinded or EffectManager.hasTextOrTag(rDefender, "TCONC", tDefEffData) then
 			nMissChance = 50;
 		else
-			aConceal = EffectManager35E.getEffectsByType(rDefender, "CONC", aAttackFilter, rAttacker);
-			if #aConceal > 0 or EffectManager35E.hasEffect(rDefender, "CONC", rAttacker) or bConceal then
+			if EffectManager.hasTextOrTag(rDefender, "CONC", tDefEffData) then
 				nMissChance = 20;
 			end
 		end
@@ -833,7 +696,7 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 			if sAttack:match("%[INCORPOREAL%]") then
 				bIncorporealAttack = true;
 			end
-			local bIncorporealDefender = EffectManager35E.hasEffect(rDefender, "Incorporeal", rAttacker);
+			local bIncorporealDefender = EffectManager.hasText(rDefender, "Incorporeal", tDefEffData);
 
 			if bIncorporealDefender and not bIncorporealAttack then
 				nMissChance = 50;
@@ -858,4 +721,130 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 	
 	-- Return the final defense value
 	return nDefense, 0, nDefenseEffectMod, nMissChance;
+end
+function getArmorComps(rActor)
+	local nodeActor = ActorManager.getCreatureNode(rActor);
+	if not nodeActor then
+		return {};
+	end
+
+	local tComps = {};
+	
+	if ActorManager.isPC(rActor) then
+		local nACBonusComp = DB.getValue(nodeActor, "ac.sources.armor", 0);
+		if nACBonusComp ~= 0 then
+			tComps["armor"] = nACBonusComp;
+		end
+		nACBonusComp = DB.getValue(nodeActor, "ac.sources.shield", 0);
+		if nACBonusComp ~= 0 then
+			tComps["shield"] = nACBonusComp;
+		end
+		local sAbility = DB.getValue(nodeActor, "ac.sources.ability", "");
+		if DataCommon.ability_ltos[sAbility] then
+			tComps[DataCommon.ability_ltos[sAbility]] = getAbilityBonus(rActor, sAbility);
+		end
+		local sAbility2 = DB.getValue(nodeActor, "ac.sources.ability2", "");
+		if DataCommon.ability_ltos[sAbility2] then
+			tComps[DataCommon.ability_ltos[sAbility2]] = getAbilityBonus(rActor, sAbility2);
+		end
+		nACBonusComp = DB.getValue(nodeActor, "ac.sources.size", 0);
+		if nACBonusComp ~= 0 then
+			tComps["size"] = nACBonusComp;
+		end
+		nACBonusComp = DB.getValue(nodeActor, "ac.sources.naturalarmor", 0);
+		if nACBonusComp ~= 0 then
+			tComps["natural"] = nACBonusComp;
+		end
+		nACBonusComp = DB.getValue(nodeActor, "ac.sources.deflection", 0);
+		if nACBonusComp ~= 0 then
+			tComps["deflection"] = nACBonusComp;
+		end
+		nACBonusComp = DB.getValue(nodeActor, "ac.sources.dodge", 0);
+		if nACBonusComp ~= 0 then
+			tComps["dodge"] = nACBonusComp;
+		end
+		nACBonusComp = DB.getValue(nodeActor, "ac.sources.misc", 0);
+		if nACBonusComp ~= 0 then
+			tComps["misc"] = nACBonusComp;
+		end
+	elseif ActorManager.isRecordType(rActor, "npc") then
+		local sAC = DB.getValue(nodeActor, "ac", ""):lower();
+		local nAC = tonumber(sAC:match("^(%d+)")) or 10;
+		local sACComps = sAC:match("%(([^)]+)%)");
+		local nCompTotal = 10;
+		if sACComps then
+			local aACSplit = StringManager.split(sACComps, ",", true);
+			for _,vACComp in ipairs(aACSplit) do
+				local sACCompBonus, sACCompType = vACComp:match("^([+-]%d+)%s+(.*)$");
+				if not sACCompType then
+					sACCompType, sACCompBonus = vACComp:match("^(.*)%s+([+-]%d+)$");
+				end
+				local nACCompBonus = tonumber(sACCompBonus) or 0;
+				if sACCompType and nACCompBonus ~= 0 then
+					sACCompType = sACCompType:gsub("[+-]%d+", "");
+					sACCompType = StringManager.trim(sACCompType);
+					
+					if DataCommon.actypes[sACCompType] then
+						tComps[DataCommon.actypes[sACCompType]] = nACCompBonus;
+						nCompTotal = nCompTotal + nACCompBonus;
+					elseif StringManager.contains (DataCommon.acarmormatch, sACCompType) then
+						tComps["armor"] = nACCompBonus;
+						nCompTotal = nCompTotal + nACCompBonus;
+					elseif StringManager.contains (DataCommon.acshieldmatch, sACCompType) then
+						tComps["shield"] = nACCompBonus;
+						nCompTotal = nCompTotal + nACCompBonus;
+					elseif StringManager.contains (DataCommon.acdeflectionmatch, sACCompType) then
+						tComps["deflection"] = nACCompBonus;
+						nCompTotal = nCompTotal + nACCompBonus;
+					end
+				end
+			end
+		end
+		if nCompTotal ~= nAC then
+			tComps["misc"] = nAC - nCompTotal;
+		end
+	end
+
+	return tComps;
+end
+
+--
+--	BONUS
+--
+
+function getBonus(rActor, sKey, ...)
+	if (sKey or "") ~= "" then
+		sKey = DataCommon.ability_stol[sKey:upper()] or sKey:lower();
+	end
+	if StringManager.contains(DataCommon.abilities, sKey) then
+		return ActorManager35E.getAbilityBonus(rActor, sKey, ...);
+	end
+	return ActorManager35E.getAbilityScore(rActor, sKey, ...);
+end
+function getEffectsBonus(rActor, sKey, ...)
+	if (sKey or "") ~= "" then
+		sKey = DataCommon.ability_stol[sKey:upper()] or sKey:lower();
+	end
+	if StringManager.contains(DataCommon.abilities, sKey) then
+		return ActorManager35E.getAbilityEffectsBonus(rActor, sKey, ...);
+	end
+	return 0, 0;
+end
+
+--
+--	REST
+--
+
+function rest(rActor, sRestType)
+	if not ActorCommonManager.restDefault(rActor, sRestType) then
+		return;
+	end
+
+	if ActorManager.isPC(rActor) then
+		ActorManager35E.restPC(rActor, sRestType);
+	end
+end
+function restPC(rActor, sRestType)
+	local nodeChar = ActorManager.getCreatureNode(rActor);
+	SpellManager.resetSpells(nodeChar);
 end

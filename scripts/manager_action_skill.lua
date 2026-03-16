@@ -120,23 +120,23 @@ function modSkill(rSource, rTarget, rRoll)
 		end
 		
 		-- Get effects
-		local aAddDice, nAddMod, nEffectCount = EffectManager35E.getEffectsBonus(rSource, {"SKILL"}, false, aSkillFilter);
+		local aAddDice, nAddMod, nEffectCount = EffectManager.getBonusDiceMod(rSource, "SKILL", { tFilter = aSkillFilter, });
 		if (nEffectCount > 0) then
 			bEffects = true;
 		end
 		
 		-- Get condition modifiers
-		if EffectManager35E.hasEffectCondition(rSource, "Frightened") or 
-				EffectManager35E.hasEffectCondition(rSource, "Panicked") or
-				EffectManager35E.hasEffectCondition(rSource, "Shaken") then
+		if EffectManager.hasText(rSource, "Frightened") or 
+				EffectManager.hasText(rSource, "Panicked") or
+				EffectManager.hasText(rSource, "Shaken") then
 			bEffects = true;
 			nAddMod = nAddMod - 2;
 		end
-		if EffectManager35E.hasEffectCondition(rSource, "Sickened") then
+		if EffectManager.hasText(rSource, "Sickened") then
 			bEffects = true;
 			nAddMod = nAddMod - 2;
 		end
-		if EffectManager35E.hasEffectCondition(rSource, "Blinded") then
+		if EffectManager.hasText(rSource, "Blinded") then
 			if sActionStat == "strength" or sActionStat == "dexterity" then
 				bEffects = true;
 				nAddMod = nAddMod - 4;
@@ -144,13 +144,13 @@ function modSkill(rSource, rTarget, rRoll)
 				bEffects = true;
 				nAddMod = nAddMod - 4;
 			end
-		elseif EffectManager35E.hasEffectCondition(rSource, "Dazzled") then
+		elseif EffectManager.hasText(rSource, "Dazzled") then
 			if sSkillLower == "spot" or sSkillLower == "search" or sSkillLower == "perception" then
 				bEffects = true;
 				nAddMod = nAddMod - 1;
 			end
 		end
-		if EffectManager35E.hasEffectCondition(rSource, "Fascinated") then
+		if EffectManager.hasText(rSource, "Fascinated") then
 			if sSkillLower == "spot" or sSkillLower == "listen" or sSkillLower == "perception" then
 				bEffects = true;
 				nAddMod = nAddMod - 4;
@@ -166,7 +166,7 @@ function modSkill(rSource, rTarget, rRoll)
 		end
 		
 		-- Get negative levels
-		local nNegLevelMod, nNegLevelCount = EffectManager35E.getEffectsBonus(rSource, {"NLVL"}, true);
+		local nNegLevelMod, nNegLevelCount = EffectManager.getBonusMod(rSource, "NLVL");
 		if nNegLevelCount > 0 then
 			bEffects = true;
 			nAddMod = nAddMod - nNegLevelMod;
@@ -184,7 +184,7 @@ function modSkill(rSource, rTarget, rRoll)
 			rRoll.nMod = rRoll.nMod + nAddMod;
 
 			local sMod = StringManager.convertDiceToString(aAddDice, nAddMod, true);
-			rRoll.sDesc = string.format("%s %s", rRoll.sDesc, EffectManager.buildEffectOutput(sMod));
+			rRoll.sDesc = string.format("%s\r%s", rRoll.sDesc, EffectManager.buildEffectOutput(sMod));
 		end
 	end
 end

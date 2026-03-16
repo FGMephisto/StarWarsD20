@@ -53,7 +53,7 @@ function getTypeGroup(v)
 	local sOutput = "";
 	if v then
 		local sCreatureType = StringManager.trim(tostring(v)):lower();
-		for _,sListCreatureType in ipairs(DataCommon.creaturetype) do
+		for _,sListCreatureType in ipairs(ActorCommonManager.getCreatureTypes()) do
 			if sCreatureType:match(sListCreatureType) then
 				sOutput = StringManager.capitalize(sListCreatureType);
 				break;
@@ -295,5 +295,5 @@ function onInit() -- Adjusted
 	LibraryData.overrideRecordTypes(aRecordOverrides);
 	LibraryData.setRecordViews(aListViews);
 	LibraryData.setRecordTypeInfo("vehicle", nil);
-	LibraryData.setRecordTypeInfo("spells", nil);
+	-- LibraryData.setRecordTypeInfo("spells", nil);
 end

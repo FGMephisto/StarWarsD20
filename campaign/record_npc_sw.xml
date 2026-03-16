@@ -13,10 +13,11 @@
 				<top offset="5" />
 				<left anchor="center" offset="-150" />
 			</anchored>
-			<parameters>
+			<parameters merge="replace">
 				<optionwidth>100</optionwidth>
-				<labelsres>npc_label_typecreature|npc_label_typetrap|npc_label_typevehicle</labelsres>
-				<values>Creature|Trap|Vehicle</values>
+				<labelsres>npc_label_typetrap|npc_label_typevehicle</labelsres>
+				<values>Trap|Vehicle</values>
+				<defaultlabelres>npc_label_typecreature</defaultlabelres>
 			</parameters>
 			<script>
 				function onValueChanged()
@@ -58,8 +59,12 @@
 			function onInit()
 				super.onInit();
 				self.TypeChanged();
+				self.onLockChanged();
 			end
 			function TypeChanged()
+				if not tabs then
+					return;
+				end
 				local sType = DB.getValue(getDatabaseNode(), "npctype", "");
 				if sType == "Trap" then
 					tabs.replaceTabClass(1, "npc_combat_trap");
@@ -346,18 +351,15 @@
 				<anchored position="insidetopleft" offset="5,2" />
 				<target>spellclasslist,levels,spells</target>
 				<togglelevel>2</togglelevel>
-				<invisible />
 			</button_expand>
 			<button_collapse name="collapse_full">
 				<anchored position="insidetopleft" offset="35,2" />
 				<target>spellclasslist,levels,spells</target>
 				<togglelevel>2</togglelevel>
-				<invisible />
 			</button_collapse>
 			<label name="label_mode">
 				<anchored position="insidetopleft" offset="75,2" height="20" />
 				<static textres="spell_label_mode" />
-				<invisible />
 			</label>
 			<button_stringcycler name="spellmode">
 				<anchored to="label_mode" position="righthigh" offset="10,0" width="80" />
@@ -366,7 +368,6 @@
 					<values>preparation|combat</values>
 					<defaultlabelres>spell_label_modestd</defaultlabelres>
 				</parameters>
-				<invisible />
 				<script>
 					function onValueChanged()
 						window.onModeChanged();
@@ -389,7 +390,6 @@
 				<anchored position="insidetop" offset="0,30" />
 				<class>spell_class</class>
 				<npc />
-				<invisible />
 				<script>
 					function onInit()
 						if super and super.onInit then

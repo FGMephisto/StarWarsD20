@@ -220,7 +220,7 @@ function parseSpell(nodeSpell)
 
 			-- Get damage type
 			local sDamageType = "";
-			if j > 0 and StringManager.isWord(aWords[j], DataCommon.dmgtypes) then
+			if j > 0 and ActionCore.isDamageType(aWords[j]) then
 				sDamageType = aWords[j];
 				j = j - 1;
 			end
@@ -761,11 +761,11 @@ function getSpellAction(rActor, nodeAction, sSubRoll)
 
 		rAction.bSpellDamage = (DB.getValue(nodeAction, "dmgnotspell", 0) == 0);
 		if rAction.bSpellDamage then
-			for _,vClause in ipairs(rAction.clauses) do
-				if not vClause.dmgtype or vClause.dmgtype == "" then
-					vClause.dmgtype = "spell";
+			for _,tClause in ipairs(rAction.clauses) do
+				if not tClause.dmgtype or tClause.dmgtype == "" then
+					tClause.dmgtype = "spell";
 				else
-					vClause.dmgtype = vClause.dmgtype .. ",spell";
+					tClause.dmgtype = tClause.dmgtype .. ",spell";
 				end
 			end
 		end
@@ -778,15 +778,11 @@ function getSpellAction(rActor, nodeAction, sSubRoll)
 		rAction.meta = DB.getValue(nodeAction, "meta", "");
 	
 	elseif sType == "effect" then
-		local nodeSpellClass = DB.getChild(nodeAction, ".......");
-		rAction.sName = EffectManager35E.evalEffect(rActor, DB.getValue(nodeAction, "label", ""), nodeSpellClass);
-
-		rAction.sApply = DB.getValue(nodeAction, "apply", "");
-		rAction.sTargeting = DB.getValue(nodeAction, "targeting", "");
-		
+		EffectManagerD20.getStandardEffectDataFromAction(nodeAction, rAction);
 		rAction.aDice, rAction.nDuration = getActionEffectDuration(rActor, nodeAction);
 
-		rAction.sUnits = DB.getValue(nodeAction, "durunit", "");
+		local nodeSpellClass = DB.getChild(nodeAction, ".......");
+		ActorEffectManager.evalEffectTags(rActor, rAction, nodeSpellClass);
 	end
 	
 	return rAction;
@@ -812,7 +808,9 @@ function onSpellAction(draginfo, nodeAction, sSubRoll)
 		
 		if not rAction.subtype or rAction.subtype == "atk" then
 			if rAction.range then
-				table.insert(rRolls, ActionAttack.getRoll(rActor, rAction));
+				local rRoll = ActionAttack.getRoll(rActor, rAction);
+				rRoll.bSpell = true;
+				table.insert(rRolls, rRoll);
 			end
 		end
 
@@ -836,17 +834,13 @@ function onSpellAction(draginfo, nodeAction, sSubRoll)
 		end
 		
 	elseif rAction.type == "damage" then
-		local rRoll = ActionDamage.getRoll(rActor, rAction);
-		if rAction.bSpellDamage then
-			rRoll.sType = "spdamage";
-		else
-			rRoll.sType = "damage";
-		end
+		local rRoll = ActionDamageD20.getRoll(rActor, rAction);
+		rRoll.bSpell = rAction.bSpellDamage;
 		
 		table.insert(rRolls, rRoll);
 		
 	elseif rAction.type == "heal" then
-		table.insert(rRolls, ActionHeal.getRoll(rActor, rAction));
+		table.insert(rRolls, ActionHealD20.getRoll(rActor, rAction));
 
 	elseif rAction.type == "effect" then
 		local rRoll;
@@ -963,7 +957,7 @@ function getActionDamage(rActor, nodeAction)
 			nDmgMod = nDmgMod + math.floor(nDmgStat * nDmgStatMult);
 		end
 
-		local aDamageTypes = ActionDamage.getDamageTypesFromString(DB.getValue(v, "type", ""));
+		local aDamageTypes = ActionDamageCore.getDamageTypeArray(DB.getValue(v, "type", ""));
 		local sDmgType = table.concat(aDamageTypes, ",");
 		
 		table.insert(clauses, { dice = aDmgDice, modifier = nDmgMod, mult = 2, stat = sDmgStat, statmax = nDmgStatMax, statmult = nDmgStatMult, dmgtype = sDmgType });
@@ -1118,8 +1112,7 @@ function getActionDamageText(nodeAction)
 	local clauses = SpellManager.getActionDamage(rActor, nodeAction);
 	
 	local aOutput = {};
-	local aDamage = ActionDamage.getDamageStrings(clauses);
-	for _,rDamage in ipairs(aDamage) do
+	for _,rDamage in ipairs(ActionCore.getCombinedClauses(clauses)) do
 		local sDice = StringManager.convertDiceToString(rDamage.aDice, rDamage.nMod);
 		if sDice ~= "" then
 			if rDamage.sType ~= "" then
@@ -1149,11 +1142,11 @@ function getActionHealText(nodeAction)
 	
 	local aHealDice = {};
 	local nHealMod = 0;
-	for _,vClause in ipairs(clauses) do
-		for _,vDie in ipairs(vClause.dice) do
+	for _,tClause in ipairs(clauses) do
+		for _,vDie in ipairs(tClause.dice) do
 			table.insert(aHealDice, vDie);
 		end
-		nHealMod = nHealMod + vClause.modifier;
+		nHealMod = nHealMod + tClause.modifier;
 	end
 
 	local sHeal = StringManager.convertDiceToString(aHealDice, nHealMod);

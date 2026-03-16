@@ -7,7 +7,7 @@
 -->
 
 <root version="3.0" release="18" logo="logo.png">
-	<announcement text="Star Wars D20 ruleset (v2025-01-20) for Fantasy Grounds.\nThe ruleset uses icons made by Lorc available on game-icons.net." font="emotefont" icon="rulesetlogo_CoreRPG" />
+	<announcement text="Star Wars D20 ruleset (v2026-03-17) for Fantasy Grounds.\nThe ruleset uses icons made by Lorc available on game-icons.net." font="emotefont" icon="rulesetlogo_CoreRPG" />
 
 	<!-- Attributes -->
 	<description>
@@ -40,9 +40,6 @@
 	<script name="LibraryData35E" file="scripts/data_library_sw.lua" />
 	<script name="Options35E" file="scripts/data_options_sw.lua" />
 	<includefile source="desktop/desktop_classes.xml" />
-
-	<!-- Utility -->
-	<includefile source="utility/utility_effects.xml" />
 
 	<!-- Reference -->
 	<includefile source="ref/ref_equipment_lists.xml" />
@@ -115,7 +112,6 @@
 	<script name="ActionAbility" file="scripts/manager_action_ability.lua" />
 	<script name="ActionAttack" file="scripts/manager_action_attack_sw.lua" />
 	<script name="ActionDamage" file="scripts/manager_action_damage.lua" />
-	<script name="ActionHeal" file="scripts/manager_action_heal.lua" />
 	<script name="ActionInit" file="scripts/manager_action_init.lua" />
 	<script name="ActionSkill" file="scripts/manager_action_skill.lua" />
 	<script name="ActionSave" file="scripts/manager_action_save.lua" />

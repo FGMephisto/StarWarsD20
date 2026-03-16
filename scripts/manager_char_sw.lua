@@ -214,7 +214,7 @@ function addToArmorDB(nodeItem)
 	end
 end
 
-function calcItemArmorClass(nodeChar)
+function calcItemArmorClass(nodeChar) -- Adjusted
 	local nMainArmorTotal = 0;
 	local nMainShieldTotal = 0;
 	local nMainMaxStatBonus = 0;
@@ -413,10 +413,10 @@ function addToWeaponDB(nodeItem)
 	if bDouble then
 		local aDoubleDamageTypes = StringManager.split(sDamageType, "/");
 		if #aDoubleDamageTypes > 1 then
-			sFinalDamageType1 = table.concat(ActionDamage.getDamageTypesFromString(aDoubleDamageTypes[1]:gsub(" and ", ","):gsub(" or ", ",")), ",");
-			sFinalDamageType2 = table.concat(ActionDamage.getDamageTypesFromString(aDoubleDamageTypes[2]:gsub(" and ", ","):gsub(" or ", ",")), ",");
+			sFinalDamageType1 = table.concat(ActionDamageCore.getDamageTypeArray(aDoubleDamageTypes[1]:gsub(" and ", ","):gsub(" or ", ",")), ",");
+			sFinalDamageType2 = table.concat(ActionDamageCore.getDamageTypeArray(aDoubleDamageTypes[2]:gsub(" and ", ","):gsub(" or ", ",")), ",");
 		else
-			local aTempDamageTypes = ActionDamage.getDamageTypesFromString(sDamageType:gsub(" and ", ","):gsub(" or ", ","));
+			local aTempDamageTypes = ActionDamageCore.getDamageTypeArray(sDamageType:gsub(" and ", ","):gsub(" or ", ","));
 			local aDamageTypes = {};
 			local aSharedDamageTypes = {};
 			for _,sSubDamageType in ipairs(aTempDamageTypes) do
@@ -436,7 +436,7 @@ function addToWeaponDB(nodeItem)
 			sFinalDamageType2 = table.concat(aCalcDamageType2, ",")
 		end
 	else
-		sFinalDamageType1 = table.concat(ActionDamage.getDamageTypesFromString(sDamageType:gsub(" and ", ","):gsub(" or ", ",")), ",");
+		sFinalDamageType1 = table.concat(ActionDamageCore.getDamageTypeArray(sDamageType:gsub(" and ", ","):gsub(" or ", ",")), ",");
 	end
 	
 	local aCritThreshold = { 20 };
@@ -848,53 +848,6 @@ function onActionDrop(draginfo, nodeChar)
 		elseif RecordDataManager.isRecordTypeDisplayClass("item", sClass) and ItemManager.isWeapon(nodeSource) then
 			return ItemManager.handleAnyDrop(nodeChar, draginfo);
 		end
-	end
-end
-
---
--- ACTIONS
---
-
-function rest(nodeChar)
-	SpellManager.resetSpells(nodeChar);
-	resetHealth(nodeChar);
-end
-
-function resetHealth(nodeChar)
-	-- Clear temporary hit points
-	DB.setValue(nodeChar, "hp.temporary", "number", 0);
-	
-	-- Heal hit points equal to character level
-	local nHP = DB.getValue(nodeChar, "hp.total", 0);
-	local nLevel = DB.getValue(nodeChar, "level", 0);
-	
-	local nWounds = DB.getValue(nodeChar, "hp.wounds", 0);
-	nWounds = nWounds - nLevel;
-	if nWounds < 0 then
-		nWounds = 0;
-	end
-	DB.setValue(nodeChar, "hp.wounds", "number", nWounds);
-	
-	local nNonlethal = DB.getValue(nodeChar, "hp.nonlethal", 0);
-	nNonlethal = nNonlethal - (nLevel * 8);
-	if nNonlethal < 0 then
-		nNonlethal = 0;
-	end
-	DB.setValue(nodeChar, "hp.nonlethal", "number", nNonlethal);
-	
-	-- Heal ability damage
-	local nAbilityDamage;
-	for kAbility, vAbility in pairs(DataCommon.abilities) do
-		nAbilityDamage = DB.getValue(nodeChar, "abilities." .. vAbility .. ".damage", 0);
-		if nAbilityDamage > 0 then
-			DB.setValue(nodeChar, "abilities." .. vAbility .. ".damage", "number", nAbilityDamage - 1);
-		end
-	end
-	
-	-- Remove Stable effect if not dead/dying
-	local rActor = ActorManager.resolveActor(nodeChar);
-	if not ActorHealthManager.isDyingOrDead(rActor) then
-		EffectManager.removeCondition(rActor, "Stable");
 	end
 end
 
@@ -1429,7 +1382,7 @@ function handleRacialSize(nodeChar, nodeTrait, sTraitType)
 	return true;
 end
 
-function handleRacialSpeed(nodeChar, nodeTrait, sTraitType, nodeTargetList)
+function handleRacialSpeed(nodeChar, nodeTrait, sTraitType, nodeTargetList) -- Adjusted
 	local nBaseSpeed = 0;
 	if sTraitType:match(RACIAL_TRAIT_SPEED_SRD_NORMAL) then
 		nBaseSpeed = 10;
