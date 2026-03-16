@@ -94,7 +94,7 @@ function modRoll(rSource, rTarget, rRoll)
 			rRoll.nMod = rRoll.nMod + nEffectMod;
 
 			local sMod = StringManager.convertDiceToString(aEffectDice, nEffectMod, true);
-			rRoll.sDesc = string.format("%s %s", rRoll.sDesc, EffectManager.buildEffectOutput(sMod));
+			rRoll.sDesc = string.format("%s\r%s", rRoll.sDesc, EffectManager.buildEffectOutput(sMod));
 		end
 	end
 end
@@ -124,7 +124,7 @@ function getEffectAdjustments(rActor, sActionStat)
 	local nEffectMod = 0;
 	
 	-- Determine general effect modifiers
-	local aInitDice, nInitMod, nInitCount = EffectManager35E.getEffectsBonus(rActor, {"INIT"});
+	local aInitDice, nInitMod, nInitCount = EffectManager.getBonusDiceMod(rActor, "INIT");
 	if nInitCount > 0 then
 		bEffects = true;
 		for _,vDie in ipairs(aInitDice) do
@@ -140,8 +140,8 @@ function getEffectAdjustments(rActor, sActionStat)
 		nEffectMod = nEffectMod + nAbilityMod;
 	end
 	
-	-- Check special conditions
-	if EffectManager35E.hasEffectCondition(rActor, "Deafened") then
+	-- Check effects
+	if EffectManager.hasText(rActor, "Deafened") then
 		bEffects = true;
 		nEffectMod = nEffectMod - 4;
 	end

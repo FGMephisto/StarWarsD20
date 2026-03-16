@@ -109,7 +109,7 @@ function getActor()
 end
 
 function actionDamage(draginfo, rDamage)
-	ActionDamage.performRoll(draginfo, getActor(), rDamage);
+	ActionDamageD20.performRoll(draginfo, getActor(), rDamage);
 	return true;
 end
 

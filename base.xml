@@ -6,7 +6,7 @@
 -->
 
 <root version="3.0" release="18" logo="logo.png">
-	<announcement text="Dungeons and Dragons (3.5E) ruleset (2026-01-20) for Fantasy Grounds\rCopyright 2025 Smiteworks USA, LLC" font="emotefont" icon="rulesetlogo_CoreRPG" />
+	<announcement text="Dungeons and Dragons (3.5E) ruleset (2026-04-21)\rCopyright 2026 Smiteworks USA, LLC" font="emotefont" icon="rulesetlogo_CoreRPG" />
 
 	<!-- Attributes -->
 	<description>
@@ -37,9 +37,6 @@
 	<script name="LibraryData35E" file="scripts/data_library_35E.lua" />
 	<script name="Options35E" file="scripts/data_options_35E.lua" />
 	<includefile source="desktop/desktop_classes.xml" />
-
-	<!-- Utility -->
-	<includefile source="utility/utility_effects.xml" />
 
 	<!-- Reference -->
 	<includefile source="ref/ref_equipment_lists.xml" />
@@ -112,7 +109,6 @@
 	<script name="ActionAbility" file="scripts/manager_action_ability.lua" />
 	<script name="ActionAttack" file="scripts/manager_action_attack.lua" />
 	<script name="ActionDamage" file="scripts/manager_action_damage.lua" />
-	<script name="ActionHeal" file="scripts/manager_action_heal.lua" />
 	<script name="ActionInit" file="scripts/manager_action_init.lua" />
 	<script name="ActionSkill" file="scripts/manager_action_skill.lua" />
 	<script name="ActionSave" file="scripts/manager_action_save.lua" />

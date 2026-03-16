@@ -207,7 +207,7 @@ function onDamageAction(draginfo)
 	local nodeWeapon = getDatabaseNode();
 	local rActor, rDamage = CharManager.getWeaponDamageRollStructures(nodeWeapon);
 	
-	ActionDamage.performRoll(draginfo, rActor, rDamage);
+	ActionDamageD20.performRoll(draginfo, rActor, rDamage);
 	return true;
 end
 

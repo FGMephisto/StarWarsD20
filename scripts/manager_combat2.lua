@@ -275,7 +275,7 @@ function onNPCPostAdd(tCustom)
 						elseif StringManager.isWord(aSQWords[i+1], "cold") and StringManager.isWord(aSQWords[i+2], "iron") then
 							table.insert(aRegenTypes, "cold iron");
 							i = i + 1;
-						elseif StringManager.isWord(aSQWords[i+1], DataCommon.dmgtypes) then
+						elseif ActionCore.isDamageType(aSQWords[i+1]) then
 							table.insert(aRegenTypes, aSQWords[i+1]);
 						else
 							break;
@@ -288,7 +288,7 @@ function onNPCPostAdd(tCustom)
 					local sRegenEffect = "REGEN: " .. sRegenAmount;
 					if #aRegenTypes > 0 then
 						sRegenEffect = sRegenEffect .. " " .. table.concat(aRegenTypes, " ");
-						EffectManager.addEffect("", "", tCustom.nodeCT, { sName = sRegenEffect, nDuration = 0, nGMOnly = 1 }, false);
+						EffectManager.addEffectByTable(tCustom.nodeCT, { sName = sRegenEffect, nGMOnly = 1 });
 					else
 						table.insert(aEffects, sRegenEffect);
 					end
@@ -310,9 +310,9 @@ function onNPCPostAdd(tCustom)
 			i = i + 1;
 			local sHardnessAmount = aSQWords[i];
 			if (tonumber(aSQWords[i+1]) or 0) <= 20 then
-				table.insert(aEffects, "DR: " .. sHardnessAmount .. " adamantine; RESIST: " .. sHardnessAmount .. " " .. table.concat(DataCommon.energytypes, "; RESIST: " .. sHardnessAmount .. " "));
+				table.insert(aEffects, "DR: " .. sHardnessAmount .. " adamantine; RESIST: " .. sHardnessAmount .. " " .. table.concat(ActionCore.getEnergyDamageTypes(), "; RESIST: " .. sHardnessAmount .. " "));
 			else
-				table.insert(aEffects, "DR: " .. sHardnessAmount .. " all; RESIST: " .. sHardnessAmount .. " " .. table.concat(DataCommon.energytypes, "; RESIST: " .. sHardnessAmount .. " "));
+				table.insert(aEffects, "DR: " .. sHardnessAmount .. " all; RESIST: " .. sHardnessAmount .. " " .. table.concat(ActionCore.getEnergyDamageTypes(), "; RESIST: " .. sHardnessAmount .. " "));
 			end
 
 		-- DAMAGE REDUCTION
@@ -335,7 +335,7 @@ function onNPCPostAdd(tCustom)
 					elseif StringManager.isWord(aSQWords[i+1], "cold") and StringManager.isWord(aSQWords[i+2], "iron") then
 						table.insert(aDRTypes, "cold iron");
 						i = i + 1;
-					elseif StringManager.isWord(aSQWords[i+1], DataCommon.dmgtypes) then
+					elseif ActionCore.isDamageType(aSQWords[i+1]) then
 						table.insert(aDRTypes, aSQWords[i+1]);
 					else
 						break;
@@ -384,7 +384,7 @@ function onNPCPostAdd(tCustom)
 					elseif StringManager.isWord(aSQWords[i+1], "cold") and StringManager.isWord(aSQWords[i+2], "iron") then
 						table.insert(aRegenTypes, "cold iron");
 						i = i + 1;
-					elseif StringManager.isWord(aSQWords[i+1], DataCommon.dmgtypes) then
+					elseif ActionCore.isDamageType(aSQWords[i+1]) then
 						table.insert(aRegenTypes, aSQWords[i+1]);
 					else
 						break;
@@ -397,7 +397,7 @@ function onNPCPostAdd(tCustom)
 				local sRegenEffect = "REGEN: " .. sRegenAmount;
 				if #aRegenTypes > 0 then
 					sRegenEffect = sRegenEffect .. " " .. table.concat(aRegenTypes, " ");
-					EffectManager.addEffect("", "", tCustom.nodeCT, { sName = sRegenEffect, nDuration = 0, nGMOnly = 1 }, false);
+					EffectManager.addEffectByTable(tCustom.nodeCT, { sName = sRegenEffect, nGMOnly = 1 });
 				else
 					table.insert(aEffects, sRegenEffect);
 				end
@@ -410,7 +410,7 @@ function onNPCPostAdd(tCustom)
 			while aSQWords[i+1] do
 				if StringManager.isWord(aSQWords[i+1], "and") then
 					-- SKIP
-				elseif StringManager.isWord(aSQWords[i+1], DataCommon.energytypes) and StringManager.isNumberString(aSQWords[i+2]) then
+				elseif ActionCore.isEnergyDamageType(aSQWords[i+1]) and StringManager.isNumberString(aSQWords[i+2]) then
 					i = i + 1;
 					table.insert(aEffects, "RESIST: " .. aSQWords[i+1] .. " " .. aSQWords[i]);
 				else
@@ -422,7 +422,7 @@ function onNPCPostAdd(tCustom)
 
 		elseif StringManager.isWord(aSQWords[i], "resist") then
 			while aSQWords[i+1] do
-				if StringManager.isWord(aSQWords[i+1], DataCommon.energytypes) and StringManager.isNumberString(aSQWords[i+2]) then
+				if ActionCore.isEnergyDamageType(aSQWords[i+1]) and StringManager.isNumberString(aSQWords[i+2]) then
 					i = i + 1;
 					table.insert(aEffects, "RESIST: " .. aSQWords[i+1] .. " " .. aSQWords[i]);
 				elseif not StringManager.isWord(aSQWords[i+1], "and") then
@@ -439,7 +439,7 @@ function onNPCPostAdd(tCustom)
 			while aSQWords[i+1] do
 				if StringManager.isWord(aSQWords[i+1], "and") then
 					-- SKIP
-				elseif StringManager.isWord(aSQWords[i+1], DataCommon.energytypes) then
+				elseif ActionCore.isEnergyDamageType(aSQWords[i+1]) then
 					table.insert(aEffects, "VULN: " .. aSQWords[i+1]);
 				else
 					break;
@@ -467,12 +467,12 @@ function onNPCPostAdd(tCustom)
 				elseif StringManager.isWord(aSQWords[i+1], "precision") and StringManager.isWord(aSQWords[i+2], "damage") then
 					table.insert(aEffects, "IMMUNE: precision");
 					i = i + 1;
-				elseif StringManager.isWord(aSQWords[i+1], DataCommon.immunetypes) then
+				elseif StringManager.isWord(aSQWords[i+1], ActionCore.getImmuneTypes()) then
 					table.insert(aEffects, "IMMUNE: " .. aSQWords[i+1]);
 					if StringManager.isWord(aSQWords[i+2], "effects") then
 						i = i + 1;
 					end
-				elseif StringManager.isWord(aSQWords[i+1], DataCommon.dmgtypes) and not StringManager.isWord(aSQWords[i+1], DataCommon.specialdmgtypes) then
+				elseif ActionCore.isDamageType(aSQWords[i+1]) and not ActionCore.isSpecialDamageType(aSQWords[i+1]) then
 					table.insert(aEffects, "IMMUNE: " .. aSQWords[i+1]);
 				else
 					break;
@@ -490,12 +490,12 @@ function onNPCPostAdd(tCustom)
 				-- Add exception for "magic immunity", which is also a damage type
 				elseif StringManager.isWord(aSQWords[i+1], "magic") then
 					table.insert(aEffects, "IMMUNE: spell");
-				elseif StringManager.isWord(aSQWords[i+1], DataCommon.immunetypes) then
+				elseif StringManager.isWord(aSQWords[i+1], ActionCore.getImmuneTypes()) then
 					table.insert(aEffects, "IMMUNE: " .. aSQWords[i+1]);
 					if StringManager.isWord(aSQWords[i+2], "effects") then
 						i = i + 1;
 					end
-				elseif StringManager.isWord(aSQWords[i+1], DataCommon.dmgtypes) then
+				elseif ActionCore.isDamageType(aSQWords[i+1]) then
 					table.insert(aEffects, "IMMUNE: " .. aSQWords[i+1]);
 				else
 					break;
@@ -540,7 +540,7 @@ function onNPCPostAdd(tCustom)
 	
 	-- ADD DECODED EFFECTS
 	if #aEffects > 0 then
-		EffectManager.addEffect("", "", tCustom.nodeCT, { sName = table.concat(aEffects, "; "), nDuration = 0, nGMOnly = 1 }, false);
+		EffectManager.addEffectByTable(tCustom.nodeCT, { sName = table.concat(aEffects, "; "), nGMOnly = 1 });
 	end
 
 	-- Roll initiative and sort
@@ -557,39 +557,6 @@ function resetInit()
 		DB.setValue(nodeCT, "immediate", "number", 0);
 	end
 	CombatManager.callForEachCombatant(resetCombatantInit);
-end
-
-function clearExpiringEffects(bShort)
-	function checkEffectExpire(nodeEffect, bShort)
-		local sLabel = DB.getValue(nodeEffect, "label", "");
-		local nDuration = DB.getValue(nodeEffect, "duration", 0);
-		
-		if nDuration ~= 0 or sLabel == "" then
-			if bShort and (nDuration > 50) then
-				DB.setValue(nodeEffect, "duration", "number", nDuration - 50);
-			else
-				DB.deleteNode(nodeEffect);
-			end
-		end
-	end
-	CombatManager.callForEachCombatantEffect(checkEffectExpire, bShort);
-end
-
-function rest(bShort)
-	CombatManager.resetInit();
-	clearExpiringEffects(bShort);
-	
-	if not bShort then
-		for _,v in pairs(CombatManager.getCombatantNodes()) do
-			local sClass, sRecord = DB.getValue(v, "link", "", "");
-			if sClass == "charsheet" and sRecord ~= "" then
-				local nodePC = DB.findNode(sRecord);
-				if nodePC then
-					CharManager.rest(nodePC);
-				end
-			end
-		end
-	end
 end
 
 function rollInit(sType)
@@ -633,7 +600,7 @@ function parseAttackLine(rActor, sLine)
 
 	-- PARSE 'OR'/'AND' PHRASES
 	sLine = sLine:gsub("–", "-");
-	local aPhrasesOR, aSkipOR = ActionDamage.decodeAndOrClauses(sLine);
+	local aPhrasesOR, aSkipOR = ActionCore.decodeAndOrClauses(sLine);
 
 	-- PARSE EACH ATTACK
 	local nAttackIndex = 1;
@@ -842,7 +809,7 @@ function parseAttackLine(rActor, sLine)
 								rDamageClause.stat = "strength";
 							end
 
-							local aDamageType = ActionDamage.getDamageTypesFromString(table.concat(aWordType, ","));
+							local aDamageType = ActionDamageCore.getDamageTypeArray(table.concat(aWordType, ","));
 							if #aDamageType == 0 then
 								for kType, sType in ipairs(aImplicitDamageType) do
 									table.insert(aDamageType, sType);
@@ -1112,28 +1079,5 @@ function calcBattleCR(nodeBattle)
 		local nXP = DB.getValue(nodeBattle, "exp", 0);
 		local nCR = getCRFromXP(nXP);
 		DB.setValue(nodeBattle, "level", "number", nCR);
-	end
-end
-
---
---	COMBAT ACTION FUNCTIONS
---
-
-function addRightClickDiceToClauses(rRoll)
-	if #rRoll.clauses > 0 then
-		local nOrigDamageDice = 0;
-		for _,vClause in ipairs(rRoll.clauses) do
-			nOrigDamageDice = nOrigDamageDice + #vClause.dice;
-		end
-		if #rRoll.aDice > nOrigDamageDice then
-			local v = rRoll.clauses[#rRoll.clauses].dice;
-			for i = nOrigDamageDice + 1,#rRoll.aDice do
-				if type(rRoll.aDice[i]) == "table" then
-					table.insert(rRoll.clauses[1].dice, rRoll.aDice[i].type);
-				else
-					table.insert(rRoll.clauses[1].dice, rRoll.aDice[i]);
-				end
-			end
-		end
 	end
 end

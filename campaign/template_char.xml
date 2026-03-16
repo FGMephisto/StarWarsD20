@@ -182,7 +182,13 @@
 				function onDrop(_, _, draginfo)
 					if draginfo.getType() == "number" then
 						local rActor = ActorManager.resolveActor(window.getDatabaseNode());
-						ActionDamage.applyDamage(nil, rActor, false, "number", draginfo.getDescription(), draginfo.getNumberData());
+						local rRoll = {
+							sType = "number",
+							sDesc = draginfo.getDescription(),
+							nTotal = draginfo.getNumberData(),
+							bSecret = false,
+						};
+						ActionDamageD20.notifyApplyDamage(nil, rActor, rRoll);
 					end
 					return true;
 				end

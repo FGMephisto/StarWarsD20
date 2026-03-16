@@ -178,7 +178,7 @@ function modCastSave(rSource, rTarget, rRoll)
 		if sActionStat then
 			local nBonusStat, nBonusEffects = ActorManager35E.getAbilityEffectsBonus(rSource, sActionStat);
 			if nBonusEffects > 0 then
-				rRoll.sDesc = string.format("%s %s", rRoll.sDesc, EffectManager.buildEffectOutput(nBonusStat));
+				rRoll.sDesc = string.format("%s\r%s", rRoll.sDesc, EffectManager.buildEffectOutput(nBonusStat));
 				rRoll.nMod = rRoll.nMod + nBonusStat;
 			end
 		end
@@ -191,7 +191,7 @@ function modCLC(rSource, rTarget, rRoll)
 		local nAddMod = 0;
 		
 		-- Get CLC modifier effects
-		local tCLCDice, nCLCMod, nCLCCount = EffectManager35E.getEffectsBonus(rSource, {"CLC"}, false, nil, rTarget);
+		local tCLCDice, nCLCMod, nCLCCount = EffectManager.getBonusDiceMod(rSource, "CLC", { rTarget = rTarget, });
 		if nCLCCount > 0 then
 			bEffects = true;
 			for _,v in ipairs(tCLCDice) do
@@ -201,7 +201,7 @@ function modCLC(rSource, rTarget, rRoll)
 		end
 		
 		-- Get negative levels
-		local nNegLevelMod, nNegLevelCount = EffectManager35E.getEffectsBonus(rSource, {"NLVL"}, true);
+		local nNegLevelMod, nNegLevelCount = EffectManager.getBonusMod(rSource, "NLVL");
 		if nNegLevelCount > 0 then
 			bEffects = true;
 			nAddMod = nAddMod - nNegLevelMod;
@@ -209,7 +209,7 @@ function modCLC(rSource, rTarget, rRoll)
 
 		if bEffects then
 			local sMod = StringManager.convertDiceToString(aAddDice, nAddMod, true);
-			rRoll.sDesc = string.format("%s %s", rRoll.sDesc, EffectManager.buildEffectOutput(sMod));
+			rRoll.sDesc = string.format("%s\r%s", rRoll.sDesc, EffectManager.buildEffectOutput(sMod));
 			for _,vDie in ipairs(aAddDice) do
 				if vDie:sub(1,1) == "-" then
 					table.insert(rRoll.aDice, "-p" .. vDie:sub(3));
@@ -232,7 +232,7 @@ function modConcentration(rSource, rTarget, rRoll)
 
 		local nBonusStat, nBonusEffects = ActorManager35E.getAbilityEffectsBonus(rSource, sActionStat);
 		if nBonusEffects > 0 then
-			rRoll.sDesc = string.format("%s %s", rRoll.sDesc, EffectManager.buildEffectOutput(nBonusStat));
+			rRoll.sDesc = string.format("%s\r%s", rRoll.sDesc, EffectManager.buildEffectOutput(nBonusStat));
 			rRoll.nMod = rRoll.nMod + nBonusStat;
 		end
 	end
@@ -241,7 +241,7 @@ end
 function onSpellCast(rSource, rTarget, rRoll)
 	local rMessage = ActionsManager.createActionMessage(rSource, rRoll);
 	rMessage.dice = nil;
-	rMessage.icon = "roll_cast";
+	rMessage.icon = "action_cast";
 
 	if rTarget then
 		rMessage.text = rMessage.text .. " [at " .. ActorManager.getDisplayName(rTarget) .. "]";
@@ -252,7 +252,7 @@ end
 
 function onCastCLC(rSource, rTarget, rRoll)
 	if rTarget then
-		local nSR = ActorManager35E.getSpellDefense(rTarget);
+		local nSR = ActorManager35E.getSpellDefense(rSource, rTarget);
 		if nSR > 0 then
 			if not string.match(rRoll.sDesc, "%[SR NOT ALLOWED%]") then
 				local rRoll = { 
@@ -294,7 +294,7 @@ function onCLC(rSource, rTarget, rRoll)
 		rMessage.text = rMessage.text .. " [at " .. ActorManager.getDisplayName(rTarget) .. "]";
 		
 		if bSRAllowed then
-			local nSR = ActorManager35E.getSpellDefense(rTarget);
+			local nSR = ActorManager35E.getSpellDefense(rSource, rTarget);
 			if nSR > 0 then
 				if nTotal >= nSR then
 					rMessage.text = rMessage.text .. " [SUCCESS]";
