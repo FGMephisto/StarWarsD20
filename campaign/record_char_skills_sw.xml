@@ -138,10 +138,7 @@
 
 			<spacer_list_content_idelete_label_left name="idelete_header" />
 			<spacer_list_content_link_label_left name="label_link" />
-			<spacer_list_content_button_checkbox_label_left name="label_quicklist">
-				<icon>char_quicklist</icon>
-				<tooltip textres="char_tooltip_skillshowmini" />
-			</spacer_list_content_button_checkbox_label_left>
+
 			<spacer_list_content_button_checkbox_label_left name="label_skillclass">
 				<icon>char_encumbrance</icon>
 				<tooltip textres="char_tooltip_skillclass" />
@@ -189,15 +186,18 @@
 			<anchor_listitem_left_sm />
 			<anchor_listitem_right_sm />
 
+			<hs name="group" />
+			<hsc name="groupid" />
+			<hsc name="sortkey" />
+
 			<button_listitem_idelete_left name="idelete" />
 			<spacer_listitem_idelete_left name="idelete_spacer" />
+
 			<buttonc_listitem_left name="shortcut">
 				<icon normal="button_link" pressed="button_link_down" />
 				<script file="campaign/scripts/char_skilllink.lua" />
 			</buttonc_listitem_left>
-			<button_listitem_checkbox_left name="showonminisheet">
-				<default>1</default>
-			</button_listitem_checkbox_left>
+
 			<button_listitem_checkbox_left name="state">
 				<script>
 					function onValueChanged()

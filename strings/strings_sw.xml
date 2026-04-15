@@ -156,12 +156,14 @@
 	<string name="item_grouped_label_firingmodes">Modes</string>
 	<string name="item_grouped_tooltip_firingmodes">Firing Modes</string>
 	<string name="item_grouped_label_size">Size</string>
+
+	<string name="item_label_maxstat">Max Dex Bonus</string>
 	<string name="item_label_speed30">Speed (10m)</string>
 	<string name="item_label_speed20">Speed (6m)</string>
-	<string name="item_label_stundc">Stun DC</string>
+	<string name="item_label_stundc">Stun Fort DC</string>
 	<string name="item_label_firingmodes">Firing modes</string>
 	<string name="item_label_size">Size</string>
-	<string name="item_label_dr">DR</string>
+	<string name="item_label_dr">Dmg Reduction</string>
 	
 	<!-- NPCs -->
 	<!-- Encounters -->
@@ -184,6 +186,13 @@
 	<string name="spell_error_dropclassmissing">Unable to determine class for moved Force, please drop within a class.</string>
 	<string name="spell_error_dropclasslevelmissing">Unable to determine class or level for new Force, please drop within a class level.</string>
 	<string name="spell_label_sr">Force Resist.</string>
+	<string name="spell_label_pp">VP</string>
+	<string name="spell_tooltip_ppmax">Vitality Points Max</string>
+	<string name="spell_tooltip_ppused">Vitality Points Used</string>
+	<string name="spellclass_emptyname">&#171; Force Class &#187;</string>
+	<string name="spelllevel_emptyname">&#171; Force Level &#187;</string>
+	<string name="power_label_atktypeskill">Skill</string>
+	<string name="power_empty_atkskill">&#171; Skill Name &#187;</string>
 	
 	<!-- Special Abilities -->
 	<!-- Editors -->

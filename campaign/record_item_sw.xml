@@ -104,26 +104,26 @@
 			<label_content_column name="dr_label">
 				<static textres="item_label_dr" />
 			</label_content_column>
-			<number_content_column name="dr">
-				<delaykeyupdate />
-				<displaysign />
-			</number_content_column>
-
-			<label_content_column name="bonus_label">
-				<static textres="item_label_bonus" />
-			</label_content_column>
-			<number_content_columnh name="bonus">
+			<number_content_columnh name="dr">
 				<delaykeyupdate />
 				<displaysign />
 			</number_content_columnh>
 
-			<label_content_column name="ac_label">
-				<static textres="item_label_ac" />
-			</label_content_column>
-			<number_content_columnh name="ac">
-				<delaykeyupdate />
-				<displaysign />
-			</number_content_columnh>
+			<!-- <label_content_column name="bonus_label"> -->
+				<!-- <static textres="item_label_bonus" /> -->
+			<!-- </label_content_column> -->
+			<!-- <number_content_columnh name="bonus"> -->
+				<!-- <delaykeyupdate /> -->
+				<!-- <displaysign /> -->
+			<!-- </number_content_columnh> -->
+
+			<!-- <label_content_column name="ac_label"> -->
+				<!-- <static textres="item_label_ac" /> -->
+			<!-- </label_content_column> -->
+			<!-- <number_content_columnh name="ac"> -->
+				<!-- <delaykeyupdate /> -->
+				<!-- <displaysign /> -->
+			<!-- </number_content_columnh> -->
 			
 			<label_content_column name="maxstatbonus_label">
 				<static textres="item_label_maxstat" />

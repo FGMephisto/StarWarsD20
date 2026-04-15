@@ -1,4 +1,4 @@
--- 
+-- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
 -- File adjusted for Star Wars 3.5E
@@ -18,7 +18,7 @@ _tAutoLoadRules = {
 	-- { key = "MM", load = { "3.5E Monsters", }, },
 };
 _tDataModuleSets = 
--- {
+{
 	-- ["client"] =
 	-- {
 		-- {

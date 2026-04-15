@@ -34,10 +34,30 @@
 				</anchored>
 				<parameters>
 					<defaultlabelres>power_label_atktypenone</defaultlabelres>
-					<labelsres>power_label_atktypemelee|power_label_atktyperanged|power_label_atktypemtouch|power_label_atktypertouch|power_label_atktypegrapple</labelsres>
-					<values>melee|ranged|mtouch|rtouch|cm</values>
+					<labelsres>power_label_atktypemelee|power_label_atktyperanged|power_label_atktypemtouch|power_label_atktypertouch|power_label_atktypegrapple|power_label_atktypeskill</labelsres>
+					<values>melee|ranged|mtouch|rtouch|cm|skill</values>
 				</parameters>
+				<script>
+					function onValueChanged()
+						local bSkill = (getValue() == "skill");
+						local bShowMod = (getValue() ~= "");
+						window.atkskill.setVisible(bSkill);
+						window.atkplus.setVisible(not bSkill and bShowMod);
+						if bSkill then
+							window.atkmod.setVisible(false);
+						else
+							window.atkmod.onValueChanged(); -- trigger hideonvalue check
+						end
+					end
+					function onInit()
+						onValueChanged();
+					end
+				</script>
 			</button_stringcycler>
+			<simplestringc name="atkskill">
+				<anchored to="atktype" position="righthigh" offset="5,0" width="80" height="20" />
+				<empty textres="power_empty_atkskill" />
+			</simplestringc>
 			<label name="atkplus">
 				<anchored to="atktype" position="righthigh" offset="5,0" width="10" />
 				<static>+</static>
