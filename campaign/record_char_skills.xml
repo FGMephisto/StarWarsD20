@@ -169,7 +169,7 @@
 			<button_listitem_idelete_left name="idelete" />
 			<spacer_listitem_idelete_left name="idelete_spacer" />
 			<buttonc_listitem_left name="shortcut">
-				<icon normal="button_link" pressed="button_link_down" />
+				<icon normal="button_link" />
 				<script file="campaign/scripts/char_skilllink.lua" />
 			</buttonc_listitem_left>
 			<button_listitem_checkbox_left name="showonminisheet">

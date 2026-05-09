@@ -4,11 +4,9 @@
 --
 
 OOB_MSGTYPE_APPLYSAVE = "applysave";
-OOB_MSGTYPE_FAILEDSAVEEFF = "failedsaveeff";
 
 function onInit()
 	OOBManager.registerOOBMsgHandler(ActionSave.OOB_MSGTYPE_APPLYSAVE, ActionSave.handleApplySave);
-	OOBManager.registerOOBMsgHandler(ActionSave.OOB_MSGTYPE_FAILEDSAVEEFF, ActionSave.handleFailedEffectSave);
 
 	ActionsManager.registerModHandler("save", modSave);
 	ActionsManager.registerResultHandler("save", onSave);
@@ -89,7 +87,7 @@ function getRoll(rActor, sSave)
 		end
 	end
 
-	rRoll.sDesc = ActionCore.encodeActionText({ label = sSave, }, "action_save_tag");
+	rRoll.sDesc = ActionSaveCore.encodeActionText({ label = sSave, });
 
 	if sAbility and sAbility ~= "" then
 		if (sSave == "fortitude" and sAbility ~= "constitution") or
@@ -111,7 +109,7 @@ function modSave(rSource, rTarget, rRoll)
 	local nAddMod = 0;
 	
 	-- Determine save type
-	local sSave = ActionCore.decodeLabelText(rRoll.sDesc, "action_save_tag"):lower();
+	local sSave = ActionSaveCore.decodeLabelText(rRoll.sDesc):lower();
 
 	if rSource then
 		local bEffects = false;
@@ -142,7 +140,7 @@ function modSave(rSource, rTarget, rRoll)
 		local bFlatfooted = false;
 		if not rRoll.bVsSave and ModifierManager.getKey("ATT_FF") then
 			bFlatfooted = true;
-		elseif EffectManager.hasText(rSource, "Flat-footed") or EffectManager.hasText(rSource, "Flatfooted") then
+		elseif EffectManager.hasCondition(rSource, "Flat-footed") or EffectManager.hasCondition(rSource, "Flatfooted") then
 			bFlatfooted = true;
 		end
 
@@ -192,25 +190,25 @@ function modSave(rSource, rTarget, rRoll)
 		end
 
 		-- Get condition modifiers
-		if EffectManager.hasText(rSource, "Frightened") or 
-				EffectManager.hasText(rSource, "Panicked") or
-				EffectManager.hasText(rSource, "Shaken") then
+		if EffectManager.hasCondition(rSource, "Frightened") or 
+				EffectManager.hasCondition(rSource, "Panicked") or
+				EffectManager.hasCondition(rSource, "Shaken") then
 			nAddMod = nAddMod - 2;
 			bEffects = true;
 		end
-		if EffectManager.hasText(rSource, "Sickened") then
+		if EffectManager.hasCondition(rSource, "Sickened") then
 			nAddMod = nAddMod - 2;
 			bEffects = true;
 		end
 		if sSave == "reflex" then
-			if EffectManager.hasText(rSource, "Slowed") then
+			if EffectManager.hasCondition(rSource, "Slowed") then
 				nAddMod = nAddMod - 1;
 				bEffects = true;
 			end
 		end
 
 		-- Get ability modifiers
-		local nBonusStat, nBonusEffects = ActorManager35E.getAbilityEffectsBonus(rSource, sActionStat);
+		local nBonusStat, nBonusEffects = ActorManagerD20.getAbilityEffectsBonus(rSource, sActionStat);
 		if nBonusEffects > 0 then
 			bEffects = true;
 			nAddMod = nAddMod + nBonusStat;
@@ -238,13 +236,7 @@ function modSave(rSource, rTarget, rRoll)
 	if #aAddDesc > 0 then
 		rRoll.sDesc = rRoll.sDesc .. "\r" .. table.concat(aAddDesc, "\r");
 	end
-	for _,vDie in ipairs(aAddDice) do
-		if vDie:sub(1,1) == "-" then
-			table.insert(rRoll.aDice, "-p" .. vDie:sub(3));
-		else
-			table.insert(rRoll.aDice, "p" .. vDie:sub(2));
-		end
-	end
+	DiceRollManager.addRollEffectDice(rSource, rRoll, aAddDice);
 	rRoll.nMod = rRoll.nMod + nAddMod;
 end
 
@@ -253,7 +245,6 @@ function onSave(rSource, rTarget, rRoll)
 	Comm.deliverChatMessage(rMessage);
 	
 	if rRoll.nTarget then
-		rRoll.nTotal = ActionsManager.total(rRoll);
 		if #(rRoll.aDice) > 0 then
 			local nFirstDie = rRoll.aDice[1].result or 0;
 			if nFirstDie == 20 then
@@ -314,12 +305,12 @@ function applySave(rSource, rOrigin, rRoll)
 			local bHalfDamage = bHalfMatch;
 			local bAvoidDamage = false;
 			if bHalfDamage then
-				local sSave = ActionCore.decodeLabelText(rRoll.sDesc, "action_save_tag"):lower();
+				local sSave = ActionSaveCore.decodeLabelText(rRoll.sDesc):lower();
 				if sSave == "reflex" then
-					if EffectManager.hasText(rSource, "Improved Evasion") then 
+					if EffectManager.hasCondition(rSource, "Improved Evasion") then 
 						bAvoidDamage = true;
 						msgLong.text = msgLong.text .. " [IMPROVED EVASION]";
-					elseif EffectManager.hasText(rSource, "Evasion") then
+					elseif EffectManager.hasCondition(rSource, "Evasion") then
 						bAvoidDamage = true;
 						msgLong.text = msgLong.text .. " [EVASION]";
 					end
@@ -337,11 +328,9 @@ function applySave(rSource, rOrigin, rRoll)
 			if rOrigin and rRoll.bRemoveOnMiss then
 				TargetingManager.removeTarget(ActorManager.getCTNodeName(rOrigin), ActorManager.getCTNodeName(rSource));
 			end
-
-			if (rRoll.sEffectRecord or "") ~= "" then
-				EffectManager.notifyExpire(rRoll.sEffectRecord, nil, true);
-			end
 		end
+
+		ActionSaveCore.handleSaveSuccess(rSource, rRoll);
 	else
 		if rRoll.sResult == "critfailure" then
 			msgLong.text = msgLong.text .. " [AUTOMATIC FAILURE]";
@@ -352,9 +341,9 @@ function applySave(rSource, rOrigin, rRoll)
 		if rSource then
 			local bHalfDamage = false;
 			if bHalfMatch then
-				local sSave = ActionCore.decodeLabelText(rRoll.sDesc, "action_save_tag"):lower();
+				local sSave = ActionSaveCore.decodeLabelText(rRoll.sDesc):lower();
 				if sSave == "reflex" then
-					if EffectManager.hasText(rSource, "Improved Evasion") then
+					if EffectManager.hasCondition(rSource, "Improved Evasion") then
 						bHalfDamage = true;
 						msgLong.text = msgLong.text .. " [IMPROVED EVASION]";
 					end
@@ -366,9 +355,7 @@ function applySave(rSource, rOrigin, rRoll)
 			end
 		end
 
-		if (rRoll.sEffectRecord or "") ~= "" then
-			ActionSave.notifyFailedEffectSave(rSource, rRoll.sEffectRecord);
-		end
+		ActionSaveCore.handleSaveFail(rSource, rRoll);
 	end
 	
 	ActionsManager.outputResult(rRoll.bTower, rSource, rOrigin, msgLong, msgShort);
@@ -378,22 +365,4 @@ function applySave(rSource, rOrigin, rRoll)
 	end
 
 	GameManager.callEventFunctions("onSavePostResolve", rSource, rOrigin, rRoll);
-end
-
-function notifyFailedEffectSave(rActor, sEffectRecord)
-	local msgOOB = {
-		type = OOB_MSGTYPE_FAILEDSAVEEFF,
-		sActorNode = ActorManager.getCreatureNodeName(rActor),
-		sEffectNode = sEffectRecord,
-	};
-	Comm.deliverOOBMessage(msgOOB, "");
-end
-function handleFailedEffectSave(msgOOB)
-	local nodeEffect = DB.findNode(msgOOB.sEffectNode);
-	if not nodeEffect then
-		return;
-	end
-
-	local rActor = ActorManager.resolveActor(msgOOB.sActorNode);
-	EffectManager.handleEffectSaveFail(rActor, nodeEffect);
 end

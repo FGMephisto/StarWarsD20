@@ -26,29 +26,19 @@ end
 
 function performRoll(draginfo, rActor, sAbilityStat)
 	local rRoll = getRoll(rActor, sAbilityStat);
-	
 	ActionsManager.performAction(draginfo, rActor, rRoll);
 end
-
 function getRoll(rActor, sAbilityStat)
 	local rRoll = {};
 	rRoll.sType = "ability";
 	rRoll.aDice = DiceRollManager.getActorDice({ "d20" }, rActor);
 	rRoll.nMod = ActorManager35E.getAbilityBonus(rActor, sAbilityStat);
-	
 	rRoll.sDesc = ActionCore.encodeActionText({ label = sAbilityStat, }, "action_ability_tag");
-
 	return rRoll;
 end
 
 function modRoll(rSource, rTarget, rRoll)
-	local aAddDesc = {};
-	local aAddDice = {};
-	local nAddMod = 0;
-	
 	if rSource then
-		local bEffects = false;
-
 		local sAbility = ActionCore.decodeLabelText(rRoll.sDesc, "action_ability_tag"):lower();
 		if sAbility == "" then 
 			if string.match(rRoll.sDesc, "%[STABILIZATION%]") then
@@ -56,57 +46,29 @@ function modRoll(rSource, rTarget, rRoll)
 			end
 		end
 
-		-- GET ACTION MODIFIERS
-		local nEffectCount;
-		aAddDice, nAddMod, nEffectCount = EffectManager.getBonusDiceMod(rSource, "ABIL", { tFilter = { sAbility }, });
-		if (nEffectCount > 0) then
-			bEffects = true;
+		-- ACTION MODIFIERS
+		ActionCore.applyModRollEffectBonusDiceMod(rSource, rRoll, "ABIL", { tFilter = { sAbility }, });
+
+		-- CONDITION MODIFIERS
+		if EffectManager.hasCondition(rSource, "Frightened") or 
+				EffectManager.hasCondition(rSource, "Panicked") or
+				EffectManager.hasCondition(rSource, "Shaken") then
+			rRoll.bEffects = true;
+			rRoll.nEffectMod = rRoll.nEffectMod - 2;
 		end
-		
-		-- GET CONDITION MODIFIERS
-		if EffectManager.hasText(rSource, "Frightened") or 
-				EffectManager.hasText(rSource, "Panicked") or
-				EffectManager.hasText(rSource, "Shaken") then
-			nAddMod = nAddMod - 2;
-			bEffects = true;
-		end
-		if EffectManager.hasText(rSource, "Sickened") then
-			nAddMod = nAddMod - 2;
-			bEffects = true;
+		if EffectManager.hasCondition(rSource, "Sickened") then
+			rRoll.bEffects = true;
+			rRoll.nEffectMod = rRoll.nEffectMod - 2;
 		end
 
-		-- GET STAT MODIFIERS
-		local nBonusStat, nBonusEffects = ActorManager35E.getAbilityEffectsBonus(rSource, sAbility);
-		if nBonusEffects > 0 then
-			bEffects = true;
-			nAddMod = nAddMod + nBonusStat;
-		end
-		
-		-- HANDLE NEGATIVE LEVELS
+		-- STAT MODIFIERS
+		local nBonusStat, nBonusEffects = ActorManagerD20.getAbilityEffectsBonus(rSource, sAbility);
+		ActionCore.applyModRollEffect(rRoll, nil, nBonusStat, nBonusEffects);
+
+		-- NEGATIVE LEVEL MODIFIERS
 		local nNegLevelMod, nNegLevelCount = EffectManager.getBonusMod(rSource, "NLVL");
-		if nNegLevelCount > 0 then
-			nAddMod = nAddMod - nNegLevelMod;
-			bEffects = true;
-		end
-
-		-- IF EFFECTS HAPPENED, THEN ADD NOTE
-		if bEffects then
-			local sMod = StringManager.convertDiceToString(aAddDice, nAddMod, true);
-			table.insert(aAddDesc, EffectManager.buildEffectOutput(sMod));
-		end
+		ActionCore.applyModRollEffect(rRoll, nil, -nNegLevelMod, nNegLevelCount);
 	end
-	
-	if #aAddDesc > 0 then
-		rRoll.sDesc = rRoll.sDesc .. "\r" .. table.concat(aAddDesc, "\r");
-	end
-	for _,vDie in ipairs(aAddDice) do
-		if vDie:sub(1,1) == "-" then
-			table.insert(rRoll.aDice, "-p" .. vDie:sub(3));
-		else
-			table.insert(rRoll.aDice, "p" .. vDie:sub(2));
-		end
-	end
-	rRoll.nMod = rRoll.nMod + nAddMod;
 end
 
 function onRoll(rSource, rTarget, rRoll)
@@ -126,4 +88,3 @@ function onRoll(rSource, rTarget, rRoll)
 	
 	Comm.deliverChatMessage(rMessage);
 end
-

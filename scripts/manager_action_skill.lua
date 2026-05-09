@@ -23,7 +23,6 @@ function performPartySheetRoll(draginfo, rActor, sSkillName, nSkillMod)
 	
 	ActionsManager.performAction(draginfo, rActor, rRoll);
 end
-
 function performPCRoll(draginfo, rActor, nodeSkill)
 	local sSkillName = DB.getValue(nodeSkill, "label", "");
 	local sSubskillName = DB.getValue(nodeSkill, "sublabel", "");
@@ -36,13 +35,10 @@ function performPCRoll(draginfo, rActor, nodeSkill)
 	
 	performRoll(draginfo, rActor, sSkillName, nSkillMod, sSkillStat);
 end
-
 function performRoll(draginfo, rActor, sSkillName, nSkillMod, sSkillStat, sExtra)
 	local rRoll = getRoll(rActor, sSkillName, nSkillMod, sSkillStat, sExtra);
-	
 	ActionsManager.performAction(draginfo, rActor, rRoll);
 end
-
 function getRoll(rActor, sSkillName, nSkillMod, sSkillStat, sExtra)
 	local rRoll = {};
 	rRoll.sType = "skill";
@@ -126,17 +122,17 @@ function modSkill(rSource, rTarget, rRoll)
 		end
 		
 		-- Get condition modifiers
-		if EffectManager.hasText(rSource, "Frightened") or 
-				EffectManager.hasText(rSource, "Panicked") or
-				EffectManager.hasText(rSource, "Shaken") then
+		if EffectManager.hasCondition(rSource, "Frightened") or 
+				EffectManager.hasCondition(rSource, "Panicked") or
+				EffectManager.hasCondition(rSource, "Shaken") then
 			bEffects = true;
 			nAddMod = nAddMod - 2;
 		end
-		if EffectManager.hasText(rSource, "Sickened") then
+		if EffectManager.hasCondition(rSource, "Sickened") then
 			bEffects = true;
 			nAddMod = nAddMod - 2;
 		end
-		if EffectManager.hasText(rSource, "Blinded") then
+		if EffectManager.hasCondition(rSource, "Blinded") then
 			if sActionStat == "strength" or sActionStat == "dexterity" then
 				bEffects = true;
 				nAddMod = nAddMod - 4;
@@ -144,13 +140,13 @@ function modSkill(rSource, rTarget, rRoll)
 				bEffects = true;
 				nAddMod = nAddMod - 4;
 			end
-		elseif EffectManager.hasText(rSource, "Dazzled") then
+		elseif EffectManager.hasCondition(rSource, "Dazzled") then
 			if sSkillLower == "spot" or sSkillLower == "search" or sSkillLower == "perception" then
 				bEffects = true;
 				nAddMod = nAddMod - 1;
 			end
 		end
-		if EffectManager.hasText(rSource, "Fascinated") then
+		if EffectManager.hasCondition(rSource, "Fascinated") then
 			if sSkillLower == "spot" or sSkillLower == "listen" or sSkillLower == "perception" then
 				bEffects = true;
 				nAddMod = nAddMod - 4;
@@ -159,7 +155,7 @@ function modSkill(rSource, rTarget, rRoll)
 		-- Exhausted and Fatigued are handled by the effect checks for general ability modifiers
 
 		-- Get ability modifiers
-		local nBonusStat, nBonusEffects = ActorManager35E.getAbilityEffectsBonus(rSource, sActionStat);
+		local nBonusStat, nBonusEffects = ActorManagerD20.getAbilityEffectsBonus(rSource, sActionStat);
 		if nBonusEffects > 0 then
 			bEffects = true;
 			nAddMod = nAddMod + nBonusStat;
@@ -174,13 +170,7 @@ function modSkill(rSource, rTarget, rRoll)
 
 		-- If effects, then add them
 		if bEffects then
-			for _,vDie in ipairs(aAddDice) do
-				if vDie:sub(1,1) == "-" then
-					table.insert(rRoll.aDice, "-p" .. vDie:sub(3));
-				else
-					table.insert(rRoll.aDice, "p" .. vDie:sub(2));
-				end
-			end
+			DiceRollManager.addRollEffectDice(rSource, rRoll, aAddDice);
 			rRoll.nMod = rRoll.nMod + nAddMod;
 
 			local sMod = StringManager.convertDiceToString(aAddDice, nAddMod, true);
