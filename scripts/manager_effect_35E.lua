@@ -6,7 +6,7 @@
 function onInit()
 	EffectManager.registerStandardDescriptorGroups();
 	EffectManagerD20.registerStandardConditionals();
-	EffectManager.setConditionalCheck("SIZE", ActorCommonManager.isCreatureSizeDnD3);
+	EffectManagerD20.registerSizeConditional(ActorCommonManager.isCreatureSizeDnD3);
 	
 	GameManager.setFunction("onActorStartTurn", EffectManager35E.onActorStartTurn);
 	GameManager.setFunction("onActorEndTurn", EffectManager35E.onActorEndTurn);
@@ -36,16 +36,17 @@ function applySave(rActor, tCompData)
 	if (tCompData.mod or 0) == 0 then
 		return;
 	end
-	local s = tCompData.sRemainder;
-	if (s or "") == "" then
+
+	local sSave = tCompData.sRemainder:match("^%w+");
+	if (sSave or "") == "" then
 		return;
 	end
-	local sSave = DataCommon.save_stol[s:upper()] or s:lower();
+	sSave = DataCommon.save_stol[sSave:upper()] or sSave:lower();
 	if not DataCommon.save_ltos[sSave] then
 		return;
 	end
 
-	local sEffect = DB.getValue(tCompData.node, "label", "");
+	local sEffect = EffectVarManager.getEffectVarFromNode(tCompData.node, "sName", "");
 	local tComps = EffectManager.parseEffect(sEffect);
 	local sSaveDesc = string.format("[EFFECT: %s]", tComps[1] or "");
 

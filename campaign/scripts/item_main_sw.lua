@@ -15,7 +15,7 @@ function onIDModeChanged()
 	self.onStateChanged();
 end
 
-function onStateChanged()
+function onStateChanged() -- Adjusted
 	local nodeRecord = getDatabaseNode();
 	local bReadOnly = WindowManager.getReadOnlyState(nodeRecord);
 	local bID = RecordDataManager.getIDState("item", nodeRecord);
@@ -44,7 +44,7 @@ function onStateChanged()
 
 	local tMagicFields = { "aura", "cl", "prerequisites", };
 	WindowManager.callSafeControlsUpdate(self, tMagicFields, bReadOnly, not bID);
-	divider5.setVisible(WindowManager.getAnyControlVisible(self, tMagicFields));
+	-- divider5.setVisible(WindowManager.getAnyControlVisible(self, tMagicFields));
 	
 	WindowManager.callSafeControlsUpdate(self, { "description", }, bReadOnly, not bID);
 

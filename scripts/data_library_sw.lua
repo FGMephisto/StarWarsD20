@@ -241,7 +241,7 @@ aListViews = {
 				{ sName = "critical", sType = "string", sHeadingRes = "item_grouped_label_critical", bCentered=true },
 				{ sName = "range", sType = "number", sHeadingRes = "item_grouped_label_range", sTooltipRes = "item_grouped_tooltip_range", nWidth=30, bCentered=true },
 				{ sName = "weight", sType = "number", sHeadingRes = "item_grouped_label_weight", sTooltipRes = "item_grouped_tooltip_weight", nWidth=30, bCentered=true },
-				{ sName = "stundc", sType = "number", sHeadingRes = "item_grouped_label_stundc", nWidth=60, bCentered=true },
+				{ sName = "stundc", sType = "string", sHeadingRes = "item_grouped_label_stundc", nWidth=60, bCentered=true },
 				{ sName = "damagetype", sType = "string", sHeadingRes = "item_grouped_label_damagetype", nWidth=100, bCentered=true },
 				{ sName = "firingmodes", sType = "string", sHeadingRes = "item_grouped_label_firingmodes", nWidth=60, bCentered=true },
 				{ sName = "size", sType = "string", sHeadingRes = "item_grouped_label_size", nWidth=60, bCentered=true },

@@ -375,15 +375,15 @@
 				<anchored to="flatfootedac" />
 				<static textres="acff" />
 			</label_fieldtop>
-			<number_chartouchac name="touchac" source="ac.totals.touch">
-				<anchored to="flatfootedac" position="below" offset="0,20" height="28" />
-			</number_chartouchac>
-			<label_fieldtop name="touchac_label">
-				<anchored to="touchac" />
-				<static textres="actouch" />
-			</label_fieldtop>
+			<!-- <number_chartouchac name="touchac" source="ac.totals.touch"> -->
+				<!-- <anchored to="flatfootedac" position="below" offset="0,20" height="28" /> -->
+			<!-- </number_chartouchac> -->
+			<!-- <label_fieldtop name="touchac_label"> -->
+				<!-- <anchored to="touchac" /> -->
+				<!-- <static textres="actouch" /> -->
+			<!-- </label_fieldtop> -->
 			<number_charcmd name="cmd" source="ac.totals.cmd">
-				<anchored to="touchac" position="below" offset="0,20" height="28" />
+				<anchored to="flatfootedac" position="below" offset="0,20" height="28" />
 			</number_charcmd>
 			<label_fieldtop name="label_cmd">
 				<anchored to="cmd" />

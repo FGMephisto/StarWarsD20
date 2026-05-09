@@ -6,6 +6,10 @@
 function onInit()
 	GameManager.setRecordFieldMap("", "hptotal", "hp");
 
+	GameManager.setOption("abilityeffectcond", "3.5E");
+
+	GameManager.setFunction("onActorGetAbilityScore", ActorManager35E.getAbilityScore);
+	GameManager.setFunction("onActorGetAbilityDamage", ActorManager35E.getAbilityDamage);
 	GameManager.setFunction("onActorGetBonus", ActorManager35E.getBonus);
 	GameManager.setFunction("onActorGetEffectsBonus", ActorManager35E.getEffectsBonus);
 	GameManager.setFunction("onActorGetHealthStatus", ActorManager35E.getWoundPercent);
@@ -235,59 +239,6 @@ function getAbilityBonus(rActor, sStat, nodeSpellClass)
 	-- RESULTS
 	return nStatVal;
 end
-function getAbilityEffectsBonus(rActor, sAbility)
-	if not rActor or not sAbility then
-		return 0, 0;
-	end
-	
-	local sAbilityEffect = DataCommon.ability_ltos[sAbility];
-	if not sAbilityEffect then
-		return 0, 0;
-	end
-	
-	local nEffectMod, nAbilityEffects = EffectManager.getBonusMod(rActor, sAbilityEffect);
-	
-	if sAbility == "dexterity" then
-		if EffectManager.hasText(rActor, "Entangled") then
-			nEffectMod = nEffectMod - 4;
-			nAbilityEffects = nAbilityEffects + 1;
-		end
-		if DataCommon.isPFRPG() and EffectManager.hasText(rActor, "Grappled") then
-			nEffectMod = nEffectMod - 4;
-			nAbilityEffects = nAbilityEffects + 1;
-		end
-	end
-	if sAbility == "dexterity" or sAbility == "strength" then
-		if EffectManager.hasText(rActor, "Exhausted") then
-			nEffectMod = nEffectMod - 6;
-			nAbilityEffects = nAbilityEffects + 1;
-		elseif EffectManager.hasText(rActor, "Fatigued") then
-			nEffectMod = nEffectMod - 2;
-			nAbilityEffects = nAbilityEffects + 1;
-		end
-	end
-	
-	local nEffectBonusMod = 0;
-	if nEffectMod > 0 then
-		nEffectBonusMod = math.floor(nEffectMod / 2);
-	else
-		nEffectBonusMod = math.ceil(nEffectMod / 2);
-	end
-
-	local nAbilityMod = 0;
-	local nAbilityScore = getAbilityScore(rActor, sAbility);
-	if nAbilityScore > 0 and not DataCommon.isPFRPG() then
-		local nAbilityDamage = getAbilityDamage(rActor, sAbility);
-		local nCurrentBonus = math.floor((nAbilityScore - nAbilityDamage - 10) / 2);
-		local nAffectedBonus = math.floor((nAbilityScore - nAbilityDamage + nEffectMod - 10) / 2);
-		
-		nAbilityMod = nAffectedBonus - nCurrentBonus;
-	else
-		nAbilityMod = nEffectBonusMod;
-	end
-
-	return nAbilityMod, nAbilityEffects;
-end
 
 --
 --	DEFENSES
@@ -484,49 +435,49 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 		if EffectManager.hasText(rDefender, "GRANTCA", tDefEffData) then
 			bCombatAdvantage = true;
 		end
-		if EffectManager.hasText(rDefender, "Blinded") then
+		if EffectManager.hasCondition(rDefender, "Blinded") then
 			nBonusSituational = nBonusSituational - 2;
 			bCombatAdvantage = true;
 		end
-		if EffectManager.hasText(rDefender, "Cowering") or
-				EffectManager.hasText(rDefender, "Rebuked") then
+		if EffectManager.hasCondition(rDefender, "Cowering") or
+				EffectManager.hasCondition(rDefender, "Rebuked") then
 			nBonusSituational = nBonusSituational - 2;
 			bCombatAdvantage = true;
 		end
-		if EffectManager.hasText(rDefender, "Slowed") then
+		if EffectManager.hasCondition(rDefender, "Slowed") then
 			nBonusSituational = nBonusSituational - 1;
 		end
-		if EffectManager.hasText(rDefender, "Flat-footed") or 
-				EffectManager.hasText(rDefender, "Flatfooted") or 
-				EffectManager.hasText(rDefender, "Climbing") or 
-				EffectManager.hasText(rDefender, "Running") then
+		if EffectManager.hasCondition(rDefender, "Flat-footed") or 
+				EffectManager.hasCondition(rDefender, "Flatfooted") or 
+				EffectManager.hasCondition(rDefender, "Climbing") or 
+				EffectManager.hasCondition(rDefender, "Running") then
 			bCombatAdvantage = true;
 		end
-		if EffectManager.hasText(rDefender, "Pinned") then
+		if EffectManager.hasCondition(rDefender, "Pinned") then
 			bCombatAdvantage = true;
 			if bPFMode then
 				nBonusSituational = nBonusSituational - 4;
 			else
-				if not EffectManager.hasText(rAttacker, "Grappled") then
+				if not EffectManager.hasCondition(rAttacker, "Grappled") then
 					nBonusSituational = nBonusSituational - 4;
 				end
 			end
-		elseif not bPFMode and EffectManager.hasText(rDefender, "Grappled") then
-			if not EffectManager.hasText(rAttacker, "Grappled") then
+		elseif not bPFMode and EffectManager.hasCondition(rDefender, "Grappled") then
+			if not EffectManager.hasCondition(rAttacker, "Grappled") then
 				bCombatAdvantage = true;
 			end
 		end
-		if EffectManager.hasText(rDefender, "Helpless") or 
-				EffectManager.hasText(rDefender, "Paralyzed") or 
-				EffectManager.hasText(rDefender, "Petrified") or
-				EffectManager.hasText(rDefender, "Unconscious") then
+		if EffectManager.hasCondition(rDefender, "Helpless") or 
+				EffectManager.hasCondition(rDefender, "Paralyzed") or 
+				EffectManager.hasCondition(rDefender, "Petrified") or
+				EffectManager.hasCondition(rDefender, "Unconscious") then
 			if sAttackType == "M" then
 				nBonusSituational = nBonusSituational - 4;
 			end
 			bZeroAbility = true;
 		end
-		if EffectManager.hasText(rDefender, "Kneeling") or 
-				EffectManager.hasText(rDefender, "Sitting") then
+		if EffectManager.hasCondition(rDefender, "Kneeling") or 
+				EffectManager.hasCondition(rDefender, "Sitting") then
 			if sAttackType == "M" then
 				nBonusSituational = nBonusSituational - 2;
 			elseif sAttackType == "R" then
@@ -539,10 +490,10 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 				nBonusSituational = nBonusSituational + 4;
 			end
 		end
-		if EffectManager.hasText(rDefender, "Squeezing") then
+		if EffectManager.hasCondition(rDefender, "Squeezing") then
 			nBonusSituational = nBonusSituational - 4;
 		end
-		if EffectManager.hasText(rDefender, "Stunned") then
+		if EffectManager.hasCondition(rDefender, "Stunned") then
 			nBonusSituational = nBonusSituational - 2;
 			if rRoll.sType == "grapple" then
 				nBonusSituational = nBonusSituational - 4;
@@ -605,7 +556,7 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 		
 		-- GET DEFENDER DEFENSE STAT MODIFIERS
 		local nBonusStat = 0;
-		local nBonusStat1 = getAbilityEffectsBonus(rDefender, sDefenseStat);
+		local nBonusStat1 = ActorManagerD20.getAbilityEffectsBonus(rDefender, sDefenseStat);
 		if ActorManager.isPC(rDefender) and (nBonusStat1 > 0) then
 			if DB.getValue(nodeDefender, "encumbrance.armormaxstatbonusactive", 0) == 1 then
 				local nCurrentStatBonus = getAbilityBonus(rDefender, sDefenseStat);
@@ -620,12 +571,12 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 			nFlatFootedMod = nFlatFootedMod + nBonusStat1;
 		end
 		nBonusStat = nBonusStat + nBonusStat1;
-		local nBonusStat2 = getAbilityEffectsBonus(rDefender, sDefenseStat2);
+		local nBonusStat2 = ActorManagerD20.getAbilityEffectsBonus(rDefender, sDefenseStat2);
 		if not bFlatFooted and not bCombatAdvantage  and sDefenseStat2 == "dexterity" then
 			nFlatFootedMod = nFlatFootedMod + nBonusStat2;
 		end
 		nBonusStat = nBonusStat + nBonusStat2;
-		local nBonusStat3 = getAbilityEffectsBonus(rDefender, sDefenseStat3);
+		local nBonusStat3 = ActorManagerD20.getAbilityEffectsBonus(rDefender, sDefenseStat3);
 		if not bFlatFooted and not bCombatAdvantage  and sDefenseStat3 == "dexterity" then
 			nFlatFootedMod = nFlatFootedMod + nBonusStat3;
 		end
@@ -696,7 +647,7 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 			if sAttack:match("%[INCORPOREAL%]") then
 				bIncorporealAttack = true;
 			end
-			local bIncorporealDefender = EffectManager.hasText(rDefender, "Incorporeal", tDefEffData);
+			local bIncorporealDefender = EffectManager.hasCondition(rDefender, "Incorporeal");
 
 			if bIncorporealDefender and not bIncorporealAttack then
 				nMissChance = 50;
@@ -826,7 +777,7 @@ function getEffectsBonus(rActor, sKey, ...)
 		sKey = DataCommon.ability_stol[sKey:upper()] or sKey:lower();
 	end
 	if StringManager.contains(DataCommon.abilities, sKey) then
-		return ActorManager35E.getAbilityEffectsBonus(rActor, sKey, ...);
+		return ActorManagerD20.getAbilityEffectsBonus(rActor, sKey, ...);
 	end
 	return 0, 0;
 end
@@ -837,12 +788,13 @@ end
 
 function rest(rActor, sRestType)
 	if not ActorCommonManager.restDefault(rActor, sRestType) then
-		return;
+		return false;
 	end
 
 	if ActorManager.isPC(rActor) then
 		ActorManager35E.restPC(rActor, sRestType);
 	end
+	return true;
 end
 function restPC(rActor, sRestType)
 	local nodeChar = ActorManager.getCreatureNode(rActor);

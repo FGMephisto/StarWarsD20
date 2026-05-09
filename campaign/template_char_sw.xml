@@ -396,12 +396,9 @@
 		</number_chartotalwithabilitynomod>
 	</template>
 
-	<!-- Adjusted -->
 	<template name="number_chartouchac">
 		<number_chartotalwithabilitynomod>
 			<description textres="armorclasstouch" />
-			<!-- Added "Class" as a contributor -->
-			<source><name>ac.sources.class</name><op>+</op></source>
 			<source><name>ac.sources.size</name><op>+</op></source>
 			<source><name>ac.sources.deflection</name><op>+</op></source>
 			<source><name>ac.sources.dodge</name><op>+</op></source>

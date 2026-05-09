@@ -138,7 +138,7 @@ function linkPCSkills(nodeSkills) -- Adjusted
 		end
 	end
 end
-function linkPCFields(nodePS)
+function linkPCFields(nodePS) -- Adjusted
 	local sClass, sRecord = DB.getValue(nodePS, "link", "", "");
 	if sRecord == "" then
 		return;
@@ -179,7 +179,7 @@ function linkPCFields(nodePS)
 
 	PartyManager.linkRecordField(nodeChar, nodePS, "ac.totals.general", "number", "ac");
 	PartyManager.linkRecordField(nodeChar, nodePS, "ac.totals.flatfooted", "number", "flatfootedac");
-	PartyManager.linkRecordField(nodeChar, nodePS, "ac.totals.touch", "number", "touchac");
+	-- PartyManager.linkRecordField(nodeChar, nodePS, "ac.totals.touch", "number", "touchac");
 	PartyManager.linkRecordField(nodeChar, nodePS, "ac.totals.cmd", "number", "cmd");
 	
 	PartyManager.linkRecordField(nodeChar, nodePS, "saves.fortitude.total", "number", "fortitude");

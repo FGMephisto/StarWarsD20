@@ -50,12 +50,6 @@
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	
-	<string name="menu_init">Initiative</string>
-	<string name="menu_initall">Roll All Initiatives</string>
-	<string name="menu_initnpc">Roll NPC Initiatives</string>
-	<string name="menu_initpc">Roll PC Initiatives</string>
-	<string name="menu_initclear">Clear All Initiatives</string>
-
 	<string name="menu_resetspells">Reset Spells</string>
 	<string name="menu_addspellclass">Add Spell Class</string>
 	<string name="menu_deletespellclass">Delete Spell Class</string>

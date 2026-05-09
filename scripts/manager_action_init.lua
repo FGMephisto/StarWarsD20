@@ -12,13 +12,6 @@ function onInit()
 	ActionsManager.registerResultHandler("init", onResolve);
 end
 
-function handleApplyInit(msgOOB)
-	local rSource = ActorManager.resolveActor(msgOOB.sSourceNode);
-	local nTotal = tonumber(msgOOB.nTotal) or 0;
-
-	DB.setValue(ActorManager.getCTNode(rSource), "initresult", "number", nTotal);
-end
-
 function notifyApplyInit(rSource, nTotal)
 	if not rSource then
 		return;
@@ -32,6 +25,12 @@ function notifyApplyInit(rSource, nTotal)
 	msgOOB.sSourceNode = ActorManager.getCreatureNodeName(rSource);
 
 	Comm.deliverOOBMessage(msgOOB, "");
+end
+function handleApplyInit(msgOOB)
+	local rSource = ActorManager.resolveActor(msgOOB.sSourceNode);
+	local nTotal = tonumber(msgOOB.nTotal) or 0;
+
+	DB.setValue(ActorManager.getCTNode(rSource), "initresult", "number", nTotal);
 end
 
 function getRoll(rActor, bSecretRoll)
@@ -64,10 +63,8 @@ function getRoll(rActor, bSecretRoll)
 
 	return rRoll;
 end
-
 function performRoll(draginfo, rActor, bSecretRoll)
 	local rRoll = getRoll(rActor, bSecretRoll);
-	
 	ActionsManager.performAction(draginfo, rActor, rRoll);
 end
 
@@ -84,13 +81,7 @@ function modRoll(rSource, rTarget, rRoll)
 		
 		local bEffects, aEffectDice, nEffectMod = getEffectAdjustments(rSource, sActionStat);
 		if bEffects then
-			for _,vDie in ipairs(aEffectDice) do
-				if vDie:sub(1,1) == "-" then
-					table.insert(rRoll.aDice, "-p" .. vDie:sub(3));
-				else
-					table.insert(rRoll.aDice, "p" .. vDie:sub(2));
-				end
-			end
+			DiceRollManager.addRollEffectDice(rSource, rRoll, aEffectDice);
 			rRoll.nMod = rRoll.nMod + nEffectMod;
 
 			local sMod = StringManager.convertDiceToString(aEffectDice, nEffectMod, true);
@@ -134,14 +125,14 @@ function getEffectAdjustments(rActor, sActionStat)
 	end
 	
 	-- Get ability effect modifiers
-	local nAbilityMod, nAbilityEffects = ActorManager35E.getAbilityEffectsBonus(rActor, sActionStat);
+	local nAbilityMod, nAbilityEffects = ActorManagerD20.getAbilityEffectsBonus(rActor, sActionStat);
 	if nAbilityEffects > 0 then
 		bEffects = true;
 		nEffectMod = nEffectMod + nAbilityMod;
 	end
 	
 	-- Check effects
-	if EffectManager.hasText(rActor, "Deafened") then
+	if EffectManager.hasCondition(rActor, "Deafened") then
 		bEffects = true;
 		nEffectMod = nEffectMod - 4;
 	end

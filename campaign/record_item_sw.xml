@@ -72,12 +72,12 @@
 			<!-- </label_content_column> -->
 			<!-- <number_content_columnh name="cl" /> -->
 
-			<label_content_column name="prerequisites_label">
-				<static textres="item_label_prereq" />
-			</label_content_column>
-			<string_content_columnh name="prerequisites" />
+			<!-- <label_content_column name="prerequisites_label"> -->
+				<!-- <static textres="item_label_prereq" /> -->
+			<!-- </label_content_column> -->
+			<!-- <string_content_columnh name="prerequisites" /> -->
 			
-			<line_content_top name="divider5" />
+			<!-- <line_content_top name="divider5" /> -->
 
 			<ft_content_columnh_full name="description" />
 
@@ -208,7 +208,7 @@
 			<label_content_column name="stundc_label">
 				<static textres="item_label_stundc" />
 			</label_content_column>
-			<number_content_columnh name="stundc" />
+			<string_content_columnh name="stundc" />
 
 			<label_content_column name="firingmodes_label">
 				<static textres="item_label_firingmodes" />

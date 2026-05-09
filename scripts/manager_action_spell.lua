@@ -8,9 +8,9 @@ OOB_MSGTYPE_APPLYSAVEVS = "applysavevs";
 function onInit()
 	OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_APPLYSAVEVS, handleApplySave);
 
-	ActionsManager.registerTargetingHandler("cast", onSpellTargeting);
-	ActionsManager.registerTargetingHandler("clc", onSpellTargeting);
-	ActionsManager.registerTargetingHandler("spellsave", onSpellTargeting);
+	ActionsManager.registerTargetingHandler("cast", ActionCore.onTargeting);
+	ActionsManager.registerTargetingHandler("clc", ActionCore.onTargeting);
+	ActionsManager.registerTargetingHandler("spellsave", ActionCore.onTargeting);
 
 	ActionsManager.registerModHandler("castsave", modCastSave);
 	ActionsManager.registerModHandler("spellsave", modCastSave);
@@ -59,55 +59,12 @@ function notifyApplySave(rSource, rTarget, bSecret, sDesc, nDC, bRemoveOnMiss)
 
 	msgOOB.nRemoveOnMiss = bRemoveOnMiss and 1 or 0;
 
-	if ActorManager.isPC(rTarget) then
-		local nodeTarget = ActorManager.getCreatureNode(rTarget);
-		if Session.IsHost then
-			local sOwner = DB.getOwner(nodeTarget);
-			if (sOwner or "") ~= "" then
-				for _,vUser in ipairs(User.getActiveUsers()) do
-					if vUser == sOwner then
-						for _,vIdentity in ipairs(User.getActiveIdentities(vUser)) do
-							if DB.getName(nodeTarget) == vIdentity then
-								Comm.deliverOOBMessage(msgOOB, sOwner);
-								return;
-							end
-						end
-					end
-				end
-			end
-		else
-			if DB.isOwner(nodeTarget) then
-				handleApplySave(msgOOB);
-				return;
-			end
-		end
+	if not Session.IsHost and ActorManager.isPC(rTarget) and ActorManager.isOwner(rTarget) then
+		handleApplySave(msgOOB);
+		return;
 	end
 
 	Comm.deliverOOBMessage(msgOOB, "");
-end
-
-function onSpellTargeting(rSource, aTargeting, rRolls)
-	local bRemoveOnMiss = false;
-	local sOptRMMT = OptionsManager.getOption("RMMT");
-	if sOptRMMT == "on" then
-		bRemoveOnMiss = true;
-	elseif sOptRMMT == "multi" then
-		local aTargets = {};
-		for _,vTargetGroup in ipairs(aTargeting) do
-			for _,vTarget in ipairs(vTargetGroup) do
-				table.insert(aTargets, vTarget);
-			end
-		end
-		bRemoveOnMiss = (#aTargets > 1);
-	end
-	
-	if bRemoveOnMiss then
-		for _,vRoll in ipairs(rRolls) do
-			vRoll.bRemoveOnMiss = true;
-		end
-	end
-
-	return aTargeting;
 end
 
 function getSpellCastRoll(rActor, rAction)
@@ -176,7 +133,7 @@ function modCastSave(rSource, rTarget, rRoll)
 			sActionStat = DataCommon.ability_stol[sModStat];
 		end
 		if sActionStat then
-			local nBonusStat, nBonusEffects = ActorManager35E.getAbilityEffectsBonus(rSource, sActionStat);
+			local nBonusStat, nBonusEffects = ActorManagerD20.getAbilityEffectsBonus(rSource, sActionStat);
 			if nBonusEffects > 0 then
 				rRoll.sDesc = string.format("%s\r%s", rRoll.sDesc, EffectManager.buildEffectOutput(nBonusStat));
 				rRoll.nMod = rRoll.nMod + nBonusStat;
@@ -210,13 +167,7 @@ function modCLC(rSource, rTarget, rRoll)
 		if bEffects then
 			local sMod = StringManager.convertDiceToString(aAddDice, nAddMod, true);
 			rRoll.sDesc = string.format("%s\r%s", rRoll.sDesc, EffectManager.buildEffectOutput(sMod));
-			for _,vDie in ipairs(aAddDice) do
-				if vDie:sub(1,1) == "-" then
-					table.insert(rRoll.aDice, "-p" .. vDie:sub(3));
-				else
-					table.insert(rRoll.aDice, "p" .. vDie:sub(2));
-				end
-			end
+			DiceRollManager.addRollEffectDice(rSource, rRoll, aAddDice);
 			rRoll.nMod = rRoll.nMod + nAddMod;
 		end
 	end
@@ -230,7 +181,7 @@ function modConcentration(rSource, rTarget, rRoll)
 			sActionStat = DataCommon.ability_stol[sModStat];
 		end
 
-		local nBonusStat, nBonusEffects = ActorManager35E.getAbilityEffectsBonus(rSource, sActionStat);
+		local nBonusStat, nBonusEffects = ActorManagerD20.getAbilityEffectsBonus(rSource, sActionStat);
 		if nBonusEffects > 0 then
 			rRoll.sDesc = string.format("%s\r%s", rRoll.sDesc, EffectManager.buildEffectOutput(nBonusStat));
 			rRoll.nMod = rRoll.nMod + nBonusStat;

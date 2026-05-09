@@ -5,7 +5,7 @@
 --
 
 local rsname = "Star.Wars.D20";
-local rsmajorversion = 18;
+local rsmajorversion = 19;
 
 function onInit()
 	if Session.IsHost then
@@ -115,6 +115,9 @@ function updateCampaign()
 		if major < 18 then
 			convertRegistry18();
 			convertItem18();
+		end
+		if major < 19 then
+			convertItem19();
 		end
 	end
 end
@@ -1033,5 +1036,25 @@ end
 function convertItem18()
 	for _,nodeItem in ipairs(DB.getChildList("item")) do
 		migrateItem18(nodeItem);
+	end
+end
+
+function migrateItem19(nodeItem)
+	local nodeStunDC = DB.getChild(nodeItem, "stundc");
+	local sType = DB.getValue(nodeItem, "type")
+
+	if nodeStunDC and sType == "Weapon" then
+		if DB.getType(nodeStunDC) == "number" then
+			local nStunDC = DB.getValue(nodeItem, "stundc");
+			local sStunDC = tostring(nStunDC);
+			DB.deleteNode(nodeStunDC);
+			DB.setValue(nodeItem, "stundc", "string", sStunDC);
+		end
+	end
+end
+
+function convertItem19()
+	for _,nodeItem in ipairs(DB.getChildList("item")) do
+		migrateItem19(nodeItem);
 	end
 end

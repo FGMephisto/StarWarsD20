@@ -27,7 +27,7 @@
 				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 			end
 			function onLockModeChanged(bReadOnly)
-				local tFields = { "skills_iadd_profession", "skills_iadd_perform", "skills_iadd_knowledge", "skills_iadd_craft", "skills_iadd_rwlanguage", "skills_iadd_language", "skills_iadd", };
+				local tFields = { "skills_iadd_profession", "skills_iadd_perform", "skills_iadd_knowledge", "skills_iadd_craft", "skills_iadd", skills_iadd_rwlanguage", "skills_iadd_language", };
 				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 			end
 		</script>
@@ -138,7 +138,10 @@
 
 			<spacer_list_content_idelete_label_left name="idelete_header" />
 			<spacer_list_content_link_label_left name="label_link" />
-
+			<!-- <spacer_list_content_button_checkbox_label_left name="label_quicklist"> -->
+				<!-- <icon>char_quicklist</icon> -->
+				<!-- <tooltip textres="char_tooltip_skillshowmini" /> -->
+			<!-- </spacer_list_content_button_checkbox_label_left> -->
 			<spacer_list_content_button_checkbox_label_left name="label_skillclass">
 				<icon>char_encumbrance</icon>
 				<tooltip textres="char_tooltip_skillclass" />
@@ -192,12 +195,13 @@
 
 			<button_listitem_idelete_left name="idelete" />
 			<spacer_listitem_idelete_left name="idelete_spacer" />
-
 			<buttonc_listitem_left name="shortcut">
-				<icon normal="button_link" pressed="button_link_down" />
+				<icon normal="button_link" />
 				<script file="campaign/scripts/char_skilllink.lua" />
 			</buttonc_listitem_left>
-
+			<!-- <button_listitem_checkbox_left name="showonminisheet"> -->
+				<!-- <default>1</default> -->
+			<!-- </button_listitem_checkbox_left> -->
 			<button_listitem_checkbox_left name="state">
 				<script>
 					function onValueChanged()

@@ -6,6 +6,7 @@
 -->
 
 <root>
+	<!-- Adjusted -->
 	<windowclass name="ps_main_labels">
 		<script>
 			function onInit()
@@ -330,11 +331,11 @@
 			<number_ps_defense name="flatfootedac">
 				<anchored to="ac" />
 			</number_ps_defense>			
-			<number_ps_defense name="touchac">
-				<anchored to="flatfootedac" />
-			</number_ps_defense>			
+			<!-- <number_ps_defense name="touchac"> -->
+				<!-- <anchored to="flatfootedac" /> -->
+			<!-- </number_ps_defense>			 -->
 			<number_ps_defense name="cmd">
-				<anchored to="touchac" />
+				<anchored to="flatfootedac" />
 			</number_ps_defense>
 			
 			<number_ps_save name="fortitude">

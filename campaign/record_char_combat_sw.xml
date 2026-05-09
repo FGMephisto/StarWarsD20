@@ -31,13 +31,13 @@
 				<anchored to="ac_label" position="belowleft" offset="0,31" width="80" />
 				<static textres="armorclassff" />
 			</label>
-			<number_chartouchac name="touchac" source="ac.totals.touch">
-				<anchored to="flatfootedac" position="belowleft" offset="0,8" width="32" height="20" />
-			</number_chartouchac>
-			<label name="touchac_label">
-				<anchored to="flatfootedac_label" position="belowleft" offset="0,8" width="80" />
-				<static textres="armorclasstouch" />
-			</label>
+			<!-- <number_chartouchac name="touchac" source="ac.totals.touch"> -->
+				<!-- <anchored to="flatfootedac" position="belowleft" offset="0,8" width="32" height="20" /> -->
+			<!-- </number_chartouchac> -->
+			<!-- <label name="touchac_label"> -->
+				<!-- <anchored to="flatfootedac_label" position="belowleft" offset="0,8" width="80" /> -->
+				<!-- <static textres="armorclasstouch" /> -->
+			<!-- </label> -->
 			<!-- <genericcontrol name="line_cmd"> -->
 				<!-- <anchored height="3"> -->
 					<!-- <top parent="touchac" anchor="bottom" offset="8" /> -->

@@ -467,7 +467,7 @@ function onNPCPostAdd(tCustom)
 				elseif StringManager.isWord(aSQWords[i+1], "precision") and StringManager.isWord(aSQWords[i+2], "damage") then
 					table.insert(aEffects, "IMMUNE: precision");
 					i = i + 1;
-				elseif StringManager.isWord(aSQWords[i+1], ActionCore.getImmuneTypes()) then
+				elseif ActionCore.isImmuneType(aSQWords[i+1]) then
 					table.insert(aEffects, "IMMUNE: " .. aSQWords[i+1]);
 					if StringManager.isWord(aSQWords[i+2], "effects") then
 						i = i + 1;
@@ -490,7 +490,7 @@ function onNPCPostAdd(tCustom)
 				-- Add exception for "magic immunity", which is also a damage type
 				elseif StringManager.isWord(aSQWords[i+1], "magic") then
 					table.insert(aEffects, "IMMUNE: spell");
-				elseif StringManager.isWord(aSQWords[i+1], ActionCore.getImmuneTypes()) then
+				elseif ActionCore.isImmuneType(aSQWords[i+1]) then
 					table.insert(aEffects, "IMMUNE: " .. aSQWords[i+1]);
 					if StringManager.isWord(aSQWords[i+2], "effects") then
 						i = i + 1;

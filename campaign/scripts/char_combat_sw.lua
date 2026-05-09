@@ -33,7 +33,7 @@ end
 
 function onLockModeChanged(bReadOnly) -- Adjusted
 	local tFieldsAC = { "ac", "acclass", "acstat", "acstat2", "acsize", "acnatural", "acdeflection", "acdodge", "acmisc", };
-	local tFieldsACSpecial = { "ffacmisc", "touchacmisc", };
+	local tFieldsACSpecial = { "ffacmisc", };
 	local tFieldsSaveFort = { "fortitude", "fortitudebase", "fortitudestat", "fortitudemisc", };
 	local tFieldsSaveRef = { "reflex", "reflexbase", "reflexstat", "reflexmisc", };
 	local tFieldsSaveWill = { "will", "willbase", "willstat", "willmisc", };
