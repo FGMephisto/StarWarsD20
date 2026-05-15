@@ -633,142 +633,191 @@ sensesdata = {
 
 skilldata = {
 	["Appraise"] = {
-			stat = "intelligence"
+			stat = "intelligence",
+			group = "common",
 		},
 	["Astrogate"] = {
 			stat = "intelligence",
-			trainedonly = 1
+			trainedonly = 1,
+			group = "common",
 		},
 	["Balance"] = {
 			stat = "dexterity",
+			group = "common",
 		},
 	["Bluff"] = {
-			stat = "charisma"
+			stat = "charisma",
+			group = "common",
 		},
 	["Climb"] = {
 			stat = "strength",
-			armorcheckmultiplier = 1
+			armorcheckmultiplier = 1,
+			group = "common",
 		},
 	["Computer Use"] = {
-			stat = "intelligence"
+			stat = "intelligence",
+			group = "common",
 		},
 	["Craft"] = {
 			sublabeling = true,
-			stat = "intelligence"
+			stat = "intelligence",
+			group = "craft",
 		},
 	["Demolitions"] = {
 			stat = "intelligence",
-			trainedonly = 1
+			trainedonly = 1,
+			group = "common",
 		},
 	["Diplomacy"] = {
-			stat = "charisma"
+			stat = "charisma",
+			group = "common",
 		},
 	["Disable Device"] = {
 			stat = "intelligence",
-			trainedonly = 1
+			trainedonly = 1,
+			group = "common",
 		},
 	["Disguise"] = {
-			stat = "charisma"
+			stat = "charisma",
+			group = "common",
 		},
 	["Entertain"] = {
 			sublabeling = true,
-			stat = "charisma"
+			stat = "charisma",
+			group = "entertain",
 		},		
 	["Escape Artist"] = {
 			stat = "dexterity",
-			armorcheckmultiplier = 1
+			armorcheckmultiplier = 1,
+			group = "common",
 		},
 	["Forgery"] = {
-			stat = "intelligence"
+			stat = "intelligence",
+			group = "common",
 		},
 	["Gamble"] = {
-			stat = "wisdom"
+			stat = "wisdom",
+			group = "common",
 		},		
 	["Gather Information"] = {
-			stat = "charisma"
+			stat = "charisma",
+			group = "common",
 		},
 	["Handle Animal"] = {
 			stat = "charisma",
-			trainedonly = 1
+			trainedonly = 1,
+			group = "common",
 		},
 	["Hide"] = {
 			stat = "dexterity",
-			armorcheckmultiplier = 1
+			armorcheckmultiplier = 1,
+			group = "common",
 		},
 	["Intimidate"] = {
-			stat = "charisma"
+			stat = "charisma",
+			group = "common",
 		},
 	["Jump"] = {
 			stat = "strength",
-			armorcheckmultiplier = 1
+			armorcheckmultiplier = 1,
+			group = "common",
 		},
 	["Knowledge"] = {
 			sublabeling = true,
 			stat = "intelligence",
-			trainedonly = 1
+			trainedonly = 1,
+			group = "knowledge",
 		},
 	["Listen"] = {
-			stat = "wisdom"
+			stat = "wisdom",
+			group = "common",
 		},
 	["Move Silently"] = {
 			stat = "dexterity",
-			armorcheckmultiplier = 1
+			armorcheckmultiplier = 1,
+			group = "common",
 		},
 	["Pilot"] = {
 			stat = "dexterity",
-			trainedonly = 1
+			trainedonly = 1,
+			group = "common",
 		},
 	["Profession"] = {
 			sublabeling = true,
 			stat = "wisdom",
-			trainedonly = 1
+			trainedonly = 1,
+			group = "profession",
 		},
 	["Read/Write Language"] = {
 			sublabeling = true,
 			stat = "None",
-			trainedonly = 1			
+			trainedonly = 1,
+			group = "language",			
 		},		
 	["Repair"] = {
 			stat = "intelligence",
-			trainedonly = 1
+			trainedonly = 1,
+			group = "common",
 		},		
 	["Ride"] = {
-			stat = "dexterity"
+			stat = "dexterity",
+			group = "common",
 		},
 	["Search"] = {
-			stat = "intelligence"
+			stat = "intelligence",
+			group = "common",
 		},
 	["Sense Motive"] = {
-			stat = "wisdom"
+			stat = "wisdom",
+			group = "common",
 		},
 	["Sleight of Hand"] = {
 			stat = "dexterity",
 			armorcheckmultiplier = 1,
-			trainedonly = 1
+			trainedonly = 1,
+			group = "common",
 		},
 	["Speak Language"] = {
 			sublabeling = true,
 			stat = "None",
-			trainedonly = 1			
+			trainedonly = 1,
+			group = "language",
 		},
 	["Spot"] = {
-			stat = "wisdom"
+			stat = "wisdom",
+			group = "common",
 		},
 	["Survival"] = {
-			stat = "wisdom"
+			stat = "wisdom",
+			group = "common",
 		},
 	["Swim"] = {
 			stat = "strength",
+			group = "common",
 		},
 	["Treat Injury"] = {
 			stat = "wisdom",
+			group = "common",
 		},		
 	["Tumble"] = {
 			stat = "dexterity",
 			armorcheckmultiplier = 1,
-			trainedonly = 1
+			trainedonly = 1,
+			group = "common",
 		},
 }
+
+-- Skill group data
+skillgroups = {
+	["common"] = { groupid = "10", icon = "button_skills_physical", color = "544E6A64" },
+	["craft"] = { groupid = "20", icon = "button_skills_nature", color = "557D322E" },
+	["entertain"] = { groupid = "30", icon = "button_skills_nature", color = "557D322E" },
+	["force"] = { groupid = "40", icon = "button_skills_crafting", color = "55CDA464" },
+	["knowledge"] = { groupid = "50", icon = "button_skills_social", color = "554E6A64" },
+	["language"] = { groupid = "60", icon = "button_skills_social", color = "554E6A64" },
+	["profession"] = { groupid = "70", icon = "button_skills_social", color = "554E6A64" },
+	["generic"] = { groupid = "90", icon = "button_skills_knowledge", color = "5540301E" }, -- fallback
+};
 
 -- Coin labels
 currency = { "Hard Currency", "Credit Chip" };
