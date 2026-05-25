@@ -114,6 +114,7 @@
 			<label_list_content_number_right name="label_ranks">
 				<anchored width="40" />
 				<static textres="char_label_skillranks" />
+				<tooltip text="Total Skill Ranks (Class ranks + 0.5 * Cross ranks). Edit in Details pop-up." />
 			</label_list_content_number_right>
 
 			<label_list_content_noframe name="label_name">
@@ -178,19 +179,42 @@
 			</spacer_listitem_right>
 			<number_charskillfield name="misc">
 				<anchored width="32" />
-				<tabtarget prev="ranks" />
+				<tabtarget prev="statname" />
 			</number_charskillfield>
 			<number_charskillfield_static name="stat">
 				<anchored width="32" />
 			</number_charskillfield_static>
 			<cycler_charskillability name="statname">
 				<anchored width="40" />
-				<tabtarget next="ranks" prev="sublabel" />
+				<tabtarget next="misc" prev="label" />
 			</cycler_charskillability>
-			<number_charskillranks name="ranks">
+			<number_charskillfield_static name="ranks_total">
 				<anchored width="40" />
-				<tabtarget next="misc" prev="statname" />
-			</number_charskillranks>
+				<script>
+					function onInit()
+						super.onInit();
+						local node = window.getDatabaseNode();
+						if node then
+							DB.addHandler(DB.getPath(node, "ranks"), "onUpdate", onRanksUpdate);
+							DB.addHandler(DB.getPath(node, "ranks_cross"), "onUpdate", onRanksUpdate);
+						end
+						onRanksUpdate();
+					end
+					function onClose()
+						local node = window.getDatabaseNode();
+						if node then
+							DB.removeHandler(DB.getPath(node, "ranks"), "onUpdate", onRanksUpdate);
+							DB.removeHandler(DB.getPath(node, "ranks_cross"), "onUpdate", onRanksUpdate);
+						end
+					end
+					function onRanksUpdate()
+						local node = window.getDatabaseNode();
+						local nClass = DB.getValue(node, "ranks", 0);
+						local nCross = DB.getValue(node, "ranks_cross", 0);
+						setValue(nClass + (nCross * 0.5));
+					end
+				</script>
+			</number_charskillfield_static>
 			<genericcontrol name="armorwidget">
 				<anchored to="rightanchor" width="10" height="10">
 					<top offset="5" />
@@ -199,7 +223,7 @@
 			</genericcontrol>
 
 			<string_listitem_center_underline name="label">
-				<!-- <tabtarget next="sublabel" /> -->
+				<tabtarget next="statname" />
 				<delaykeyupdate />
 				<script>
 					function onValueChanged()
@@ -229,7 +253,7 @@
 			end
 		</script>
 		<sizelimits>
-			<minimum width="1045" height="415" />
+			<minimum width="750" height="415" />
 		</sizelimits>
 		<sheetdata>
 			<windowtitlebar_charsheethelper name="title">
@@ -289,46 +313,49 @@
 
 			<spacer_list_content_link_label_left name="iadd_header" />
 			<spacer_list_content_link_label_left name="spacer_link" />
+			<spacer_list_content_button_checkbox_label_left name="label_skillclass">
+				<icon>char_encumbrance</icon>
+				<tooltip textres="char_tooltip_skillclass" />
+			</spacer_list_content_button_checkbox_label_left>
 
 			<spacer_list_content_label_right>
 				<anchored width="10" />
 			</spacer_list_content_label_right>
-			<label_list_content_number_right>
+			<label_list_content_number_right name="label_total">
 				<anchored width="40" />
 				<static textres="char_skill_label_total" />
 			</label_list_content_number_right>
-			<label_list_content_number_right>
-				<anchored width="40" />
-				<static textres="char_skill_label_ranks_short" />
+			<label_list_content_number_right name="label_misc">
+				<anchored width="32" />
+				<static textres="char_label_skillmisc" />
 			</label_list_content_number_right>
-			<label_list_content_button_right />
-			<label_list_content_number_right>
-				<anchored width="40" />
-				<static textres="char_skill_label_sb" />
+			<label_list_content_number_right name="label_stat">
+				<anchored width="32" />
+				<static text="Stat" />
 			</label_list_content_number_right>
-			<label_list_content_string_right>
-				<anchored width="50" />
-				<center />
-				<static textres="char_skill_label_oml" />
-			</label_list_content_string_right>
-			<label_list_content_string_right>
-				<anchored width="160" />
-				<center />
-				<static textres="char_skill_label_sunsign" />
-			</label_list_content_string_right>
-			<label_list_content_string_right>
-				<anchored width="130" />
+			<label_list_content_string_right name="label_statname">
+				<anchored width="40" />
 				<center />
 				<static textres="char_skill_label_ability" />
 			</label_list_content_string_right>
-			<label_list_content_string_right>
+			<label_list_content_number_right name="label_ranks_cross">
+				<anchored width="40" />
+				<static textres="char_skill_label_ranks_cross" />
+				<tooltip text="Cross-Class Skill Ranks (Cost: 2 skill points per rank. Contributes 0.5 ranks)" />
+			</label_list_content_number_right>
+			<label_list_content_number_right name="label_ranks">
+				<anchored width="40" />
+				<static textres="char_skill_label_ranks_class" />
+				<tooltip text="Class Skill Ranks (Cost: 1 skill point per rank. Contributes 1 rank)" />
+			</label_list_content_number_right>
+			<label_list_content_string_right name="label_group">
 				<anchored width="100" />
 				<center />
 				<static textres="char_skill_label_group" />
 			</label_list_content_string_right>
-			<label_list_content_string_right>
-				<anchored width="100" />
-				<center />
+			<label_list_content_string_right name="label_sublabel">
+				<anchored width="0" />
+				<invisible />
 				<static textres="char_skill_label_name_focus" />
 			</label_list_content_string_right>
 
@@ -363,14 +390,25 @@
 				<script file="campaign/scripts/char_skilllink.lua" />
 			</buttonc_listitem_left>
 
+			<button_listitem_checkbox_left name="state">
+				<script>
+					function onValueChanged()
+						CharManager.updateSkillPoints(DB.getChild(window.getDatabaseNode(), "..."));
+					end
+				</script>
+			</button_listitem_checkbox_left>
+
 			<spacer_listitem_right name="spacer">
 				<anchored width="10" />
 			</spacer_listitem_right>
 
-			<number_charskilltotal name="total" />
+			<number_charskilltotal name="total">
+				<anchored width="40" />
+			</number_charskilltotal>
 
 			<number_listitem_right name="misc">
-				<tabtarget prev="ranks" />
+				<anchored width="32" />
+				<tabtarget prev="statname" />
 				<hideonvalue merge="delete" />
 			</number_listitem_right>
 
@@ -380,12 +418,35 @@
 
 			<cycler_charskillability name="statname">
 				<anchored width="40" />
-				<tabtarget next="ranks" prev="group" />
+				<tabtarget next="misc" prev="ranks_cross" />
 			</cycler_charskillability>
+
+			<number_charskillranks name="ranks_cross">
+				<anchored width="40" />
+				<tabtarget next="statname" prev="ranks" />
+				<script>
+					function onWheel(notches)
+						if isReadOnly() then
+							return false;
+						end
+						setValue(getValue() + (notches * 0.5));
+						return true;
+					end
+				</script>
+			</number_charskillranks>
 
 			<number_charskillranks name="ranks">
 				<anchored width="40" />
-				<tabtarget next="misc" prev="statname" />
+				<tabtarget next="ranks_cross" prev="group" />
+				<script>
+					function onWheel(notches)
+						if isReadOnly() then
+							return false;
+						end
+						setValue(getValue() + notches);
+						return true;
+					end
+				</script>
 			</number_charskillranks>
 			<genericcontrol name="armorwidget">
 				<anchored to="rightanchor" width="10" height="10">
@@ -397,19 +458,19 @@
 			<string_listitem_right name="group">
 				<anchored width="100" />
 				<center />
-				<tabtarget next="statname" prev="sublabel" />
+				<tabtarget next="ranks" prev="label" />
 				<delaykeyupdate />
 			</string_listitem_right>
 
 			<string_listitem_right name="sublabel">
-				<anchored width="100" />
-				<center />
+				<anchored width="0" />
+				<invisible />
 				<tabtarget next="group" prev="label" />
 				<delaykeyupdate />
 			</string_listitem_right>
 
 			<string_listitem_center name="label">
-				<tabtarget next="sublabel" />
+				<tabtarget next="group" />
 				<delaykeyupdate />
 			</string_listitem_center>
 		</sheetdata>

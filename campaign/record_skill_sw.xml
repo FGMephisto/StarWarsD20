@@ -43,6 +43,11 @@
 				<font>reference-b-large</font>
 			</stringc_content_noframe_noscroll_static_top>
 
+			<label_content_column name="group_label">
+				<static textres="skill_label_group" />
+			</label_content_column>
+			<string_content_column_single name="group" />
+
 			<label_content_column name="ability_label">
 				<static textres="skill_label_ability" />
 			</label_content_column>

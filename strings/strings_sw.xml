@@ -93,6 +93,8 @@
 	<string name="modifier_label_DEF_SCONC">9/10 Conc.</string>
 	<string name="modifier_label_DMG_CRIT">Critical</string>
 	<string name="modifier_label_DMG_HALF">Half</string>
+	<string name="modifier_label_TAKE10">Take 10</string>
+	<string name="modifier_label_TAKE20">Take 20</string>
 	
 	<!-- Skills -->
 	<string name="skill_value_knowalienspecies">AS</string>
@@ -215,4 +217,15 @@
 	<string name="drc_label_subtype_sonic">Sonic</string>
 
 	<string name="drc_label_subtype_temp">Vitality</string>
+
+	<!-- Skills Detailed Window -->
+	<string name="char_skill_title">Skill Details</string>
+	<string name="char_skill_label_total">Total</string>
+	<string name="char_skill_label_ability">Ability</string>
+	<string name="char_skill_label_ranks_short">Ranks</string>
+	<string name="char_skill_label_ranks_class">Class</string>
+	<string name="char_skill_label_ranks_cross">Cross</string>
+	<string name="char_skill_label_group">Group</string>
+	<string name="char_skill_label_name_focus">Focus</string>
+	<string name="skill_label_group">Group</string>
 </root>

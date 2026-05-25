@@ -35,7 +35,7 @@ function onClose()
 end
 
 function onLockModeChanged(bReadOnly)
-	local tFields = { "state", "sublabel", "ranks", "statname", "misc", };
+	local tFields = { "state", "sublabel", "ranks", "ranks_cross", "statname", "misc", };
 	WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 	if self.isCustom() then
 		label.setReadOnly(bReadOnly);

@@ -5,7 +5,7 @@
 --
 
 local rsname = "Star.Wars.D20";
-local rsmajorversion = 19;
+local rsmajorversion = 20;
 
 function onInit()
 	if Session.IsHost then
@@ -55,6 +55,9 @@ function updateChar(nodePC, nVersion)
 		end
 		if nVersion < 17 then
 			migrateChar17(nodePC);
+		end
+		if nVersion < 20 then
+			migrateChar20(nodePC);
 		end
 	end
 end
@@ -118,6 +121,9 @@ function updateCampaign()
 		end
 		if major < 19 then
 			convertItem19();
+		end
+		if major < 20 then
+			convertChar20();
 		end
 	end
 end
@@ -239,6 +245,44 @@ function convertChar17()
 	end
 end
 
+function migrateChar20(nodePC)
+	for _,nodeSkill in ipairs(DB.getChildList(nodePC, "skilllist")) do
+		local sLabel = DB.getValue(nodeSkill, "label", "");
+		local sSubLabel = DB.getValue(nodeSkill, "sublabel", "");
+		
+		if sSubLabel ~= "" then
+			DB.setValue(nodeSkill, "label", "string", sSubLabel);
+			DB.setValue(nodeSkill, "sublabel", "string", "");
+			DB.setValue(nodeSkill, "group", "string", sLabel);
+		else
+			local sPrefix, sFocus = sLabel:match("^([%w%s/]+)%s*%(([^)]+)%)$");
+			if not sPrefix then
+				sPrefix, sFocus = sLabel:match("^([%w%s/]+)%s*[:%-]%s*(.+)$");
+			end
+			
+			if sPrefix and sFocus then
+				sPrefix = StringManager.trim(sPrefix);
+				sFocus = StringManager.trim(sFocus);
+				
+				local sLower = sPrefix:lower();
+				if sLower == "forec" then
+					sPrefix = "Force";
+				end
+				
+				DB.setValue(nodeSkill, "label", "string", sFocus);
+				DB.setValue(nodeSkill, "sublabel", "string", "");
+				DB.setValue(nodeSkill, "group", "string", sPrefix);
+			end
+		end
+	end
+end
+
+function convertChar20()
+	for _,nodePC in ipairs(DB.getChildList("charsheet")) do
+		migrateChar20(nodePC);
+	end
+end
+
 function convertNotes16()
 	for _,vNote in ipairs(DB.getChildList("notes")) do
 		convertFTEntry16(vNote, "text");
@@ -272,10 +316,13 @@ end
 function convertFTEntry16(vNode, sField)
 	local vText = DB.getChild(vNode, sField);
 	if vText then
-		local sFT = DB.getValue(vText);
-		sFT = sFT:gsub("recordname=\"library\.d20monsters\.entries\.", "recordname=\"reference\.npcdata\.");
-		sFT = sFT:gsub("recordname=\"library\.PFBestiary\.entries\.", "recordname=\"reference\.npcdata\.");
-		DB.setValue(vText, ".", "formattedtext", sFT);
+		local sFT = DB.getValue(vText, "");
+		sFT = sFT:gsub("recordname=\"library%.d20monsters%.entries%.", "recordname=\"reference%.npcdata%.");
+		sFT = sFT:gsub("recordname=\"library%.PFBestiary%.entries%.", "recordname=\"reference%.npcdata%.");
+		local sType = DB.getType(vText);
+		if sType == "string" or sType == "formattedtext" then
+			DB.setValue(vText, ".", sType, sFT);
+		end
 	end
 end
 
@@ -930,7 +977,7 @@ function convertCT()
 			local sAC = DB.getValue(nodeAC);
 			DB.setValue(nodeEntry, "ac_final", "number", tonumber(string.match(sAC, "^(%d+)")) or 10);
 			DB.setValue(nodeEntry, "ac_touch", "number", tonumber(string.match(sAC, "touch (%d+)")) or 10);
-			local sFlatFooted = string.match(sAC, "flat[%-–]footed (%d+)");
+			local sFlatFooted = string.match(sAC, "flat[%-Â–]footed (%d+)");
 			if not sFlatFooted then
 				sFlatFooted = string.match(sAC, "flatfooted (%d+)");
 			end

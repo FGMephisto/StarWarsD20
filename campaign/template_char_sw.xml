@@ -969,13 +969,22 @@
 				<op>+</op>
 			</source>
 			<source>
+				<name>ranks_cross</name>
+				<op>+</op>
+			</source>
+			<source>
 				<name>misc</name>
 				<op>+</op>
 			</source>
 			<script>
 				function onSourceValue(source, sourcename)
 					if sourcename == "ranks" then
-						return math.floor(self.getSourceValue("ranks"));
+						local nodeWin = window.getDatabaseNode();
+						local nClassRanks = DB.getValue(nodeWin, "ranks", 0);
+						local nCrossRanks = DB.getValue(nodeWin, "ranks_cross", 0);
+						return math.floor(nClassRanks + (nCrossRanks * 0.5));
+					elseif sourcename == "ranks_cross" then
+						return 0;
 					elseif sourcename == "...encumbrance.armorcheckpenalty" then
 						local nMaxActive = self.getSourceValue("...encumbrance.armormaxstatbonusactive");
 						if nMaxActive &gt; 0 then

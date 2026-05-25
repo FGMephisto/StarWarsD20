@@ -812,6 +812,7 @@ skillgroups = {
 	["common"] = { groupid = "10", icon = "button_skills_physical", color = "544E6A64" },
 	["craft"] = { groupid = "20", icon = "button_skills_nature", color = "557D322E" },
 	["entertain"] = { groupid = "30", icon = "button_skills_nature", color = "557D322E" },
+	["perform"] = { groupid = "30", icon = "button_skills_nature", color = "557D322E" },
 	["force"] = { groupid = "40", icon = "button_skills_crafting", color = "55CDA464" },
 	["knowledge"] = { groupid = "50", icon = "button_skills_social", color = "554E6A64" },
 	["language"] = { groupid = "60", icon = "button_skills_social", color = "554E6A64" },

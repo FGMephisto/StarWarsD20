@@ -900,12 +900,13 @@ function getSkillValue(rActor, sSkill, sSubSkill)
 		
 		if nodeSkill then
 			local nRanks = DB.getValue(nodeSkill, "ranks", 0);
+			local nCrossRanks = DB.getValue(nodeSkill, "ranks_cross", 0);
 			local nAbility = DB.getValue(nodeSkill, "stat", 0);
 			local nMisc = DB.getValue(nodeSkill, "misc", 0);
 			
-			nValue = math.floor(nRanks) + nAbility + nMisc;
+			nValue = math.floor(nRanks + (nCrossRanks * 0.5)) + nAbility + nMisc;
 
-			if DataCommon.isPFRPG() and (nRanks > 0) then
+			if DataCommon.isPFRPG() and ((nRanks + (nCrossRanks * 0.5)) > 0) then
 				local nState = DB.getValue(nodeSkill, "state", 0);
 				if nState == 1 then
 					nValue = nValue + 3;
@@ -922,7 +923,7 @@ function getSkillValue(rActor, sSkill, sSubSkill)
 			end
 
 			if bTrainedOnly then
-				if nRanks == 0 then
+				if (nRanks + (nCrossRanks * 0.5)) == 0 then
 					bUntrained = true;
 				end
 			end
@@ -995,17 +996,13 @@ end
 
 function updateSkillPoints(nodeChar)
 	local nSpentTotal = 0;
-
-	local bPFMode = DataCommon.isPFRPG();
 	
-	local nSpent;
 	for _,vNode in ipairs(DB.getChildList(nodeChar, "skilllist")) do
-		nSpent = DB.getValue(vNode, "ranks", 0);
+		local nClassRanks = DB.getValue(vNode, "ranks", 0);
+		local nCrossRanks = DB.getValue(vNode, "ranks_cross", 0);
+		local nSpent = nClassRanks + nCrossRanks;
+		
 		if nSpent > 0 then
-			if not bPFMode and DB.getValue(vNode, "state", 0) == 0 then
-				nSpent = nSpent * 2;
-			end
-			
 			nSpentTotal = nSpentTotal + nSpent;
 		end
 	end
