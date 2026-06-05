@@ -171,19 +171,20 @@
 				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 			end
 			function onLockModeChanged(bReadOnly)
-				local tFields = { "bonus", "damage", "damagetype", "critical", "range", "properties", "stundc", "firingmodes", "size", };
+				<!-- local tFields = { "bonus", "damage", "damagetype", "critical", "range", "properties", "stundc", "firingmodes", "size", }; -->
+				local tFields = { "damage", "damagetype", "critical", "range", "properties", "stundc", "firingmodes", "size", };
 				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 			end
 		</script>
 		<sheetdata>
 			<anchor_content_top />
 
-			<label_content_column name="bonus_label">
-				<static textres="item_label_bonus" />
-			</label_content_column>
-			<number_content_columnh name="bonus">
-				<delaykeyupdate />
-			</number_content_columnh>
+			<!-- <label_content_column name="bonus_label"> -->
+				<!-- <static textres="item_label_bonus" /> -->
+			<!-- </label_content_column> -->
+			<!-- <number_content_columnh name="bonus"> -->
+				<!-- <delaykeyupdate /> -->
+			<!-- </number_content_columnh> -->
 
 			<label_content_column name="damage_label">
 				<static textres="item_label_damage" />

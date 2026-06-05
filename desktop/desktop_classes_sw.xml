@@ -21,6 +21,9 @@
 		</sheetdata>
 	</windowclass>
 
+	<panel name="modifierstack" merge="join">
+		<bounds>15,-100,200,62</bounds>
+	</panel>
 	<windowclass name="modifierstack" merge="join">
 		<sheetdata>
 			<genericcontrol name="base">
@@ -46,14 +49,11 @@
 				</droptypes>
 			</numbercontrol>
 
-			<!-- 5E-Style Take 10 Button -->
 			<button_modifierkey name="TAKE10">
-				<bounds>74,10,60,20</bounds>
+				<bounds>80,8,50,18</bounds>
 			</button_modifierkey>
-
-			<!-- 5E-Style Take 20 Button -->
 			<button_modifierkey name="TAKE20">
-				<bounds>74,32,60,20</bounds>
+				<bounds>80,35,50,18</bounds>
 			</button_modifierkey>
 		</sheetdata>
 	</windowclass>

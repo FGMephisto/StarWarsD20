@@ -40,7 +40,6 @@
 	<script name="LibraryData35E" file="scripts/data_library_sw.lua" />
 	<script name="Options35E" file="scripts/data_options_sw.lua" />
 	<includefile source="desktop/desktop_classes_sw.xml" />
-	<includefile source="desktop/desktop_panels_sw.xml" />
 
 	<!-- Reference -->
 	<includefile source="ref/ref_equipment_lists.xml" />

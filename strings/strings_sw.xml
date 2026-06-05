@@ -191,6 +191,30 @@
 	<string name="spell_label_pp">VP</string>
 	<string name="spell_tooltip_ppmax">Vitality Points Max</string>
 	<string name="spell_tooltip_ppused">Vitality Points Used</string>
+	<string name="spell_label_school">School</string>
+	<string name="spell_label_components">Components</string>
+	<string name="spell_label_casttime">Casting Time</string>
+	<string name="spell_label_range">Range</string>
+	<string name="spell_label_effecttarget">Effect/Target</string>
+	<string name="spell_label_duration">Duration</string>
+	<string name="spell_label_save">Saving Throw</string>
+	<string name="spell_label_basedc">Base Force DC</string>
+	<string name="spell_label_ability">Stat</string>
+	<string name="spell_label_misc">Misc</string>
+	<string name="spell_label_total">Total</string>
+	<string name="spell_label_baseability">Ability</string>
+	<string name="spell_label_mod">Mod</string>
+	<string name="spell_label_cc">CC</string>
+	<string name="spell_label_ccdetail">Conc. Check</string>
+	<string name="spell_label_mode">Mode</string>
+	<string name="spell_label_modestd">Standard</string>
+	<string name="spell_label_modeprep">Preparation</string>
+	<string name="spell_label_modecombat">Combat</string>
+	<string name="spell_label_display">Display</string>
+	<string name="spell_label_displaystd">Summary</string>
+	<string name="spell_label_displayaction">Actions</string>
+	<string name="spell_tooltip_cc">Concentration Check</string>
+	<string name="spell_tooltip_toggle">Click to edit / hide details</string>
 	<string name="spellclass_emptyname">&#171; Force Class &#187;</string>
 	<string name="spelllevel_emptyname">&#171; Force Level &#187;</string>
 	<string name="power_label_atktypeskill">Skill</string>
@@ -228,4 +252,8 @@
 	<string name="char_skill_label_group">Group</string>
 	<string name="char_skill_label_name_focus">Focus</string>
 	<string name="skill_label_group">Group</string>
+
+	<!-- Library -->
+	<string name="library_recordtype_label_specialability">Abilities</string>
+	<string name="library_recordtype_label_spell">Force Powers</string>
 </root>

@@ -28,4 +28,10 @@
 		<preset key="spell_light" merge="delete" />
 	</lightingsettings>
 	<!-- d20 low-light vision not supported; plus limited to 3 special vision types -->
+
+	<panel name="dicepanel" merge="join">
+		<anchored>
+			<left offset="150" />
+		</anchored>
+	</panel>
 </root>
