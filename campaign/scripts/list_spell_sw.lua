@@ -15,16 +15,6 @@ end
 function addEntry(bFocus)
 	local w = createWindow();
 	
-	-- Set the default points value
-	local nodeParent = DB.getParent(getDatabaseNode());
-	if nodeParent then
-		local nCost = tonumber(string.sub(DB.getName(nodeParent), -1)) or 0;
-		if nCost > 0 then
-			nCost = ((nCost - 1) * 2) + 1;
-		end
-		DB.setValue(w.getDatabaseNode(), "cost", "number", nCost);
-	end
-	
 	-- Set the focus to the name if requested.
 	if bFocus and w then
 		w.header.subwindow.name.setFocus();

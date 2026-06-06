@@ -12,7 +12,7 @@ function onInit()
 end
 
 function onLockModeChanged(bReadOnly)
-	local tFields = { "spellclass_iadd", "weapon_iadd", };
+	local tFields = { "weapon_iadd", };
 	WindowManager.callSafeControlsSetVisible(self, tFields, not bReadOnly);
 end
 function onModeChanged()

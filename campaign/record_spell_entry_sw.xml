@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<windowclass name="spell_class">
+		<margins control="0,0,0,5" />
+		<script file="campaign/scripts/spell_class_sw.lua" />
+		<sheetdata>
+			<anchor_listitem_left_lg />
+			<anchor_listitem_right_lg />
+
+			<button_listitem_idelete_left name="idelete" />
+			<iconcycler_listitem_left name="castertype">
+				<parameters>
+					<defaulticon>caster_points</defaulticon>
+					<icons>caster_points</icons>
+					<values>points</values>
+				</parameters>
+				<script>
+					function onValueChanged()
+						window.onCasterTypeChanged();
+					end
+				</script>
+			</iconcycler_listitem_left>
+
+			<button_iadd name="spells_iadd">
+				<anchored to="rightanchor">
+					<top />
+					<right relation="relative" offset="-2" postoffset="-2" />
+				</anchored>
+				<target>spells</target>
+			</button_iadd>
+
+			<number_listitem_right name="points" />
+			<label_listitem_right name="label_points">
+				<static textres="spell_label_pp" />
+			</label_listitem_right>
+
+			<genericcontrol name="detailanchor">
+				<bounds>0,35,0,0</bounds>
+			</genericcontrol>
+
+			<string_listitem_center_underline name="label">
+				<font>sheetlabel</font>
+				<empty textres="spellclass_emptyname" />
+			</string_listitem_center_underline>
+			
+			<genericcontrol name="classframe">
+				<anchored>
+					<top offset="5" />
+					<left offset="5" />
+					<right offset="-5" />
+					<bottom parent="detailanchor" relation="relative" anchor="bottom" />
+				</anchored>
+				<frame name="headersimple" offset="5,5,5,5" />
+				<disabled />
+			</genericcontrol>
+
+			<list_spellitem name="spells">
+				<anchored>
+					<top parent="classframe" anchor="bottom" offset="8" />
+					<left />
+					<right />
+				</anchored>
+				<class>power_item</class>
+			</list_spellitem>
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="power_item" merge="join">
+		<sheetdata>
+			<linkc_listitem_left name="shortcut">
+				<class>spelldesc2</class>
+			</linkc_listitem_left>
+		</sheetdata>
+	</windowclass>
+	<windowclass name="power_item_mini" merge="join">
+		<sheetdata>
+			<linkc_listitem_left name="shortcut">
+				<class>spelldesc2</class>
+			</linkc_listitem_left>
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="power_action_cast">
+		<margins control="0,0,0,2" />
+		<script>
+			function onInit()
+				self.onDataChanged();
+				DB.addHandler(getDatabaseNode(), "onChildUpdate", self.onDataChanged);
+			end
+			function onClose()
+				DB.removeHandler(getDatabaseNode(), "onChildUpdate", self.onDataChanged);
+			end
+			function onDataChanged()
+				local nodeAction = getDatabaseNode();
+				
+				attackview.setValue(PowerActionManagerCore.getActionText(nodeAction, { sSubRoll = "atk" }));
+				levelcheckview.setValue(PowerActionManagerCore.getActionText(nodeAction, { sSubRoll = "clc" }));
+				saveview.setValue(PowerActionManagerCore.getActionText(nodeAction, { sSubRoll = "save" }));
+			end
+			function performAction(draginfo, sSubRoll)
+				PowerActionManagerCore.performAction(draginfo, getDatabaseNode(), { sSubRoll = sSubRoll });
+			end
+		</script>
+		<sheetdata>
+			<button_poweraction name="castbutton">
+				<anchored position="insidetopleft" offset="2,2" />
+			</button_poweraction>
+			<label name="castlabel">
+				<anchored to="castbutton" position="righthigh" offset="5,0" width="40" />
+				<static textres="power_label_cast" />
+			</label>
+
+			<button_poweraction name="attackbutton">
+				<anchored to="castlabel" position="righthigh" offset="5,0" />
+				<icon normal="button_action_attack" pressed="button_action_attack_down" />
+				<subroll>atk</subroll>
+			</button_poweraction>
+			<label name="attackviewlabel">
+				<anchored to="attackbutton" position="righthigh" offset="5,0" />
+				<static textres="power_label_atk" />
+			</label>
+			<string_poweractionview name="attackview">
+				<anchored to="attackviewlabel" position="righthigh" offset="5,0" width="70" />
+				<subroll>atk</subroll>
+			</string_poweractionview>
+
+			<button_poweraction name="savebutton">
+				<anchored to="attackview" position="righthigh" offset="10,0" />
+				<subroll>save</subroll>
+			</button_poweraction>
+			<label name="saveviewlabel">
+				<anchored to="savebutton" position="righthigh" offset="5,0" />
+				<static textres="save" />
+			</label>
+			<string_poweractionview name="saveview">
+				<anchored to="saveviewlabel" position="righthigh" offset="5,0" width="60" />
+				<subroll>save</subroll>
+			</string_poweractionview>
+
+			<button_poweraction name="levelcheckbutton">
+				<anchored to="saveview" position="righthigh" offset="10,0" />
+				<subroll>clc</subroll>
+			</button_poweraction>
+			<label name="levelcheckviewlabel">
+				<anchored to="levelcheckbutton" position="righthigh" offset="5,0" />
+				<static textres="clc" />
+				<tooltip textres="casterlevelcheck" />
+			</label>
+			<string_poweractionview name="levelcheckview">
+				<anchored to="levelcheckviewlabel" position="righthigh" offset="5,0" width="25" />
+				<subroll>clc</subroll>
+			</string_poweractionview>
+		</sheetdata>
+	</windowclass>
+	<windowclass name="power_action_damage">
+		<margins control="0,0,0,2" />
+		<script>
+			function onInit()
+				self.onDataChanged();
+				DB.addHandler(getDatabaseNode(), "onChildUpdate", self.onDataChanged);
+			end
+			function onClose()
+				DB.removeHandler(getDatabaseNode(), "onChildUpdate", self.onDataChanged);
+			end
+			function onDataChanged()
+				damageview.setValue(PowerActionManagerCore.getActionText(getDatabaseNode()));
+			end
+			function performAction(draginfo, sSubRoll)
+				PowerActionManagerCore.performAction(draginfo, getDatabaseNode(), { sSubRoll = sSubRoll });
+			end
+		</script>
+		<sheetdata>
+			<button_poweraction name="damagebutton">
+				<anchored position="insidetopleft" offset="2,2" />
+				<icon normal="button_action_damage" pressed="button_action_damage_down" />
+			</button_poweraction>
+			<label name="damagelabel">
+				<anchored to="damagebutton" position="righthigh" offset="5,0" width="40" />
+				<static textres="power_label_dmg" />
+			</label>
+			<string_poweractionview name="damageview">
+				<anchored to="damagelabel" position="righthigh" offset="10,0">
+					<right parent="" offset="-5" />
+				</anchored>
+			</string_poweractionview>
+		</sheetdata>
+	</windowclass>
+	<windowclass name="power_action_heal">
+		<margins control="0,0,0,2" />
+		<script>
+			function onInit()
+				self.onDataChanged();
+				DB.addHandler(getDatabaseNode(), "onChildUpdate", self.onDataChanged);
+			end
+			function onClose()
+				DB.removeHandler(getDatabaseNode(), "onChildUpdate", self.onDataChanged);
+			end
+			function onDataChanged()
+				healview.setValue(PowerActionManagerCore.getActionText(getDatabaseNode()));
+			end
+			function performAction(draginfo, sSubRoll)
+				PowerActionManagerCore.performAction(draginfo, getDatabaseNode(), { sSubRoll = sSubRoll });
+			end
+		</script>
+		<sheetdata>
+			<button_poweraction name="healbutton">
+				<anchored position="insidetopleft" offset="2,2" />
+				<icon normal="button_action_heal" pressed="button_action_heal_down" />
+			</button_poweraction>
+			<label name="heallabel">
+				<anchored to="healbutton" position="righthigh" offset="5,0" width="40" />
+				<static textres="power_label_heal" />
+			</label>
+			<iconcycler_poweraction_targeting name="healtargeting">
+				<anchored to="heallabel" />
+			</iconcycler_poweraction_targeting>
+			<string_poweractionview name="healview">
+				<anchored to="heallabel" position="righthigh" offset="40,0">
+					<right parent="" offset="-5" />
+				</anchored>
+			</string_poweractionview>
+		</sheetdata>
+	</windowclass>
+	<windowclass name="power_action_effect">
+		<margins control="0,0,0,2" />
+		<script>
+			function onInit()
+				self.onDataChanged();
+				DB.addHandler(getDatabaseNode(), "onChildUpdate", self.onDataChanged);
+			end
+			function onClose()
+				DB.removeHandler(getDatabaseNode(), "onChildUpdate", self.onDataChanged);
+			end
+			function onDataChanged()
+				local nodeAction = getDatabaseNode();
+				effectview.setValue(PowerActionManagerCore.getActionText(nodeAction));
+				durationview.setValue(PowerActionManagerCore.getActionText(nodeAction, { sSubRoll = "duration" }));
+			end
+			function performAction(draginfo, sSubRoll)
+				PowerActionManagerCore.performAction(draginfo, getDatabaseNode(), { sSubRoll = sSubRoll });
+			end
+		</script>
+		<sheetdata>
+			<button_poweraction name="effectbutton">
+				<anchored position="insidetopleft" offset="2,2" />
+				<icon normal="button_action_effect" pressed="button_action_effect_down" />
+			</button_poweraction>
+			<label name="effectlabel">
+				<anchored to="effectbutton" position="righthigh" offset="5,0" width="40" />
+				<static textres="power_label_effect" />
+			</label>
+			<iconcycler_poweraction_effect_targeting name="targeting">
+				<anchored to="effectlabel" />
+			</iconcycler_poweraction_effect_targeting>
+			<string_poweractionview name="effectview">
+				<anchored to="effectlabel" position="righthigh" offset="40,0">
+					<right parent="" offset="-65" />
+				</anchored>
+			</string_poweractionview>
+			<string_poweractionview name="durationview">
+				<anchored to="effectview" position="righthigh" offset="10,0" width="50" />
+			</string_poweractionview>
+		</sheetdata>
+	</windowclass>
+</root>

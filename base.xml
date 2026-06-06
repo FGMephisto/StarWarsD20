@@ -50,7 +50,7 @@
 	<includefile source="campaign/template_char_sw.xml" />
 	<includefile source="campaign/template_spell.xml" />
 
-	<includefile source="campaign/record_spell_entry.xml" />
+	<includefile source="campaign/record_spell_entry_sw.xml" />
 	<!-- <includefile source="campaign/record_spell_mini.xml" /> -->
 	<includefile source="campaign/record_spell_roll.xml" />
 

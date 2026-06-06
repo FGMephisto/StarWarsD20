@@ -1,7 +1,7 @@
 --
 -- Please see the license.html file included with this distribution for
 -- attribution and copyright information.
--- File adjusted for Star Wars 3.5E (Merged from char_skill.lua and char_skilllist_item_sw.lua)
+-- File adjusted for Star Wars D20 (Merged from char_skill.lua and char_skilllist_item.lua)
 --
 
 function onInit()

@@ -9,7 +9,7 @@
 <root>
 	<!-- Adjusted -->
 	<windowclass name="charsheet_actions">
-		<script file="campaign/scripts/char_actions.lua" />
+		<script file="campaign/scripts/char_actions_sw.lua" />
 		<sheetdata>
 			<frame_char name="actionframe">
 				<anchored position="over" />
@@ -77,24 +77,8 @@
 				</script>
 			</button_stringcycler>
 			
-			<buttoncontrol name="spellclass_iadd">
-				<anchored to="actionframe" position="insidebottomright" offset="25,15" width="20" height="20" />
-				<icon normal="button_star" pressed="button_star_down" />
-				<tooltip textres="char_tooltip_actionaddspellclass" />
-				<script>
-					function setLockMode(bReadOnly)
-						setVisible(not bReadOnly);
-					end
-					function getLockMode()
-						return isVisible();
-					end
-					function onButtonPress()
-						window.actions.subwindow.addSpellClass();
-					end
-				</script>
-			</buttoncontrol>
 			<buttoncontrol name="weapon_iadd">
-				<anchored to="spellclass_iadd" position="lefthigh" offset="5,0" width="20" height="20" />
+				<anchored to="actionframe" position="insidebottomright" offset="25,15" width="20" height="20" />
 				<icon normal="button_weapon" pressed="button_weapon_down" />
 				<tooltip textres="char_tooltip_actionaddweapon" />
 				<script>
@@ -114,7 +98,7 @@
 
 	<!-- Adjusted -->
 	<windowclass name="char_actions_details">
-		<script file="campaign/scripts/char_actions_details.lua" />
+		<script file="campaign/scripts/char_actions_details_sw.lua" />
 		<sheetdata>
 			<genericcontrol name="dropcatcher">
 				<anchored position="over" />
@@ -152,6 +136,7 @@
 				</anchored>
 				<class>spell_class</class>
 				<noscroll />
+				<invisible />
 			</list_spellclass>
 		</sheetdata>
 	</windowclass>
@@ -176,6 +161,10 @@
 			function onLockModeChanged(bReadOnly)
 				local tFields = { "cost", "name", "shortdescription",  };
 				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
+				-- Force power names are always read-only
+				if DB.getValue(getDatabaseNode(), "skillpath", "") ~= "" then
+					name.setReadOnly(true);
+				end
 			end
 			function onSpellCounterUpdate()
 				WindowManager.callOuterWindowFunction(parentcontrol.window, "onSpellCounterUpdate");

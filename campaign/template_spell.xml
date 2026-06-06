@@ -24,7 +24,7 @@
 			<noscroll />
 			<datasource>.spells</datasource>
 			<sortby><field>name</field></sortby>
-			<script file="campaign/scripts/list_spell.lua" />
+			<script file="campaign/scripts/list_spell_sw.lua" />
 		</windowlist>
 	</template>
 

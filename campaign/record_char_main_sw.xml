@@ -275,7 +275,6 @@
 			</label_fieldtop>
 			<number_dropadd name="hptemp" source="hp.temporary">
 				<anchored to="hp" position="right" offset="20,0" width="40" />
-				<hideonvalue>0</hideonvalue>
 				<description textres="char_tooltip_hptemp" />
 				<script>
 					function onInit()
