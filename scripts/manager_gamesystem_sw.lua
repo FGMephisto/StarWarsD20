@@ -11,13 +11,14 @@ actions = {
 	["effect"] = { sIcon = "action_effect", sTargeting = "all" },
 	["attack"] = { sIcon = "action_attack", sTargeting = "each", bUseModStack = true },
 	["grapple"] = { sIcon = "action_attack", sTargeting = "each", bUseModStack = true },
-	["damage"] = { sIcon = "action_damage", sTargeting = "each", bUseModStack = true },
+	["damage"] = { sIcon = "action_damage", sTargeting = "all", bUseModStack = true },
 	["heal"] = { sIcon = "action_heal", sTargeting = "all", bUseModStack = true },
 	["cast"] = { sTargeting = "each" },
 	["castclc"] = { sTargeting = "each" },
 	["castsave"] = { sTargeting = "each" },
 	["clc"] = { sTargeting = "each", bUseModStack = true },
 	["spellsave"] = { sTargeting = "each" },
+	["spellfailure"] = { },
 	["skill"] = { bUseModStack = true },
 	["init"] = { bUseModStack = true },
 	["save"] = { bUseModStack = true },
@@ -138,31 +139,31 @@ function onInit() -- Adjusted
 		-- [Interface.getString("language_value_sylvan")] = "Elven",
 		-- [Interface.getString("language_value_terran")] = "Dwarven",
 		-- [Interface.getString("language_value_undercommon")] = "Elven",
-		[Interface.getString("language_value_Basic")] = "Basic",
-		[Interface.getString("language_value_Binary")] = "Binary",
-		[Interface.getString("language_value_Bothese")] = "Bothese",
-		[Interface.getString("language_value_Cerean")] = "Cerean",
-		[Interface.getString("language_value_Dosh")] = "Dosh",
-		[Interface.getString("language_value_Dug")] = "Dug",
-		[Interface.getString("language_value_Durese")] = "Durese",
-		[Interface.getString("language_value_Ewokese")] = "Ewokese",
-		[Interface.getString("language_value_Gamorrean")] = "Gamorrean",
-		[Interface.getString("language_value_Geonosian")] = "Geonosian",
-		[Interface.getString("language_value_Gungan")] = "Gungan",
-		[Interface.getString("language_value_Huttese")] = "Huttese",
-		[Interface.getString("language_value_Ithorese")] = "Ithorese",
-		[Interface.getString("language_value_Jawa_Trade")] = "Jawa Trade Language",
-		[Interface.getString("language_value_Kaminoan")] = "Kaminoan",
-		[Interface.getString("language_value_Kel_Dor")] = "Kel Dor",
-		[Interface.getString("language_value_Mon_Calamarian")] = "Mon Calamarian",
-		[Interface.getString("language_value_Neimoidian")] = "Neimoidian",
-		[Interface.getString("language_value_Quarrenese")] = "Quarrenese",
-		[Interface.getString("language_value_Rodese")] = "Rodese",
-		[Interface.getString("language_value_Ryl")] = "Ryl",
-		[Interface.getString("language_value_Sith")] = "Sith",
-		[Interface.getString("language_value_Sullustese")] = "Sullustese",
-		[Interface.getString("language_value_Yuuzhan_Vong")] = "Yuuzhan Vong",
-		[Interface.getString("language_value_Zabrak")] = "Zabrak",
+		[Interface.getString("language_value_Basic")] = "Celestial",
+		[Interface.getString("language_value_Binary")] = "Celestial",
+		[Interface.getString("language_value_Bothese")] = "Celestial",
+		[Interface.getString("language_value_Cerean")] = "Celestial",
+		[Interface.getString("language_value_Dosh")] = "Celestial",
+		[Interface.getString("language_value_Dug")] = "Celestial",
+		[Interface.getString("language_value_Durese")] = "Celestial",
+		[Interface.getString("language_value_Ewokese")] = "Celestial",
+		[Interface.getString("language_value_Gamorrean")] = "Celestial",
+		[Interface.getString("language_value_Geonosian")] = "Celestial",
+		[Interface.getString("language_value_Gungan")] = "Celestial",
+		[Interface.getString("language_value_Huttese")] = "Celestial",
+		[Interface.getString("language_value_Ithorese")] = "Celestial",
+		[Interface.getString("language_value_Jawa_Trade")] = "Celestial",
+		[Interface.getString("language_value_Kaminoan")] = "Celestial",
+		[Interface.getString("language_value_Kel_Dor")] = "Celestial",
+		[Interface.getString("language_value_Mon_Calamarian")] = "Celestial",
+		[Interface.getString("language_value_Neimoidian")] = "Celestial",
+		[Interface.getString("language_value_Quarrenese")] = "Celestial",
+		[Interface.getString("language_value_Rodese")] = "Celestial",
+		[Interface.getString("language_value_Ryl")] = "Celestial",
+		[Interface.getString("language_value_Sith")] = "Celestial",
+		[Interface.getString("language_value_Sullustese")] = "Celestial",
+		[Interface.getString("language_value_Yuuzhan_Vong")] = "Celestial",
+		[Interface.getString("language_value_Zabrak")] = "Celestial",
 	}
 	if DataCommon.isPFRPG() then
 		-- languages[Interface.getString("language_value_aboleth")] = "";
@@ -258,18 +259,8 @@ function getStabilizationRoll(rActor)
 		rRoll.aDice = DiceRollManager.getActorDice({ "d20" }, rActor);
 		rRoll.nMod = ActorManager35E.getAbilityBonus(rActor, "constitution");
 		
-		local nHP = 0;
-		local nWounds = 0;
-		local nodeActor = ActorManager.getCreatureNode(rActor);
-		if nodeActor then
-			if ActorManager.isPC(rActor) then
-				nHP = DB.getValue(nodeActor, "hp.total", 0);
-				nWounds = DB.getValue(nodeActor, "hp.wounds", 0);
-			else
-				nHP = DB.getValue(nodeActor, "hp", 0);
-				nWounds = DB.getValue(nodeActor, "wounds", 0);
-			end
-		end
+		local nHP = GameManager.getRecordFieldValueLinked(rActor, "hptotal", 0);
+		local nWounds = GameManager.getRecordFieldValueLinked(rActor, "wounds", 0);
 			
 		if nHP > 0 and nWounds > nHP then
 			rRoll.sDesc = string.format("%s [at %+d]", rRoll.sDesc, (nHP - nWounds));
@@ -370,4 +361,3 @@ function performConcentrationCheck(draginfo, rActor, nodeSpellClass)
 		ActionSkill.performRoll(draginfo, rActor, sSkill, nValue, nil, sExtra);
 	end
 end
-

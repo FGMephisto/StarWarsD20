@@ -5,6 +5,8 @@
 
 function onInit()
 	GameManager.setRecordFieldMap("", "hptotal", "hp");
+	GameManager.setRecordFieldMap("", "size", "type");
+	GameManager.setRecordFieldMap("charsheet", "size", "size");
 
 	GameManager.setOption("abilityeffectcond", "3.5E");
 
@@ -27,10 +29,10 @@ end
 -- NOTE 2: We can not use default effect checking in this function; 
 -- 		as it will cause endless loop with conditionals that check health
 function getWoundPercent(rActor)
-	local nHP = GameManager.getRecordFieldValue(rActor, "hptotal", 0);
-	local nTemp = GameManager.getRecordFieldValue(rActor, "hptemp", 0);
-	local nWounds = GameManager.getRecordFieldValue(rActor, "wounds", 0);
-	local nNonlethal = GameManager.getRecordFieldValue(rActor, "nonlethal", 0);
+	local nHP = GameManager.getRecordFieldValueLinked(rActor, "hptotal", 0);
+	local nTemp = GameManager.getRecordFieldValueLinked(rActor, "hptemp", 0);
+	local nWounds = GameManager.getRecordFieldValueLinked(rActor, "wounds", 0);
+	local nNonlethal = GameManager.getRecordFieldValueLinked(rActor, "nonlethal", 0);
 
 	local nPercentLethal = 0;
 	local nPercentNonlethal = 0;
@@ -669,6 +671,8 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 			nMissChance = 50;
 		end
 	end
+
+	nDefenseEffectMod = nDefenseEffectMod + ActorManager35E.getSizeEffectsBonusForDefender(rDefender, rRoll);
 	
 	-- Return the final defense value
 	return nDefense, 0, nDefenseEffectMod, nMissChance;
@@ -758,6 +762,29 @@ function getArmorComps(rActor)
 
 	return tComps;
 end
+function getSizeEffectsBonusForDefender(rDefender, rRoll)
+	if not rDefender then
+		return 0;
+	end
+
+	local nActorSize, nBaseSize = ActorCommonManager.getSize(rDefender);
+	if nActorSize == nBaseSize then
+		return 0;
+	end
+
+	if rRoll.sType == "grapple" then
+		-- Larger grants bonus; Smaller grants penalty
+		nEffectBonus = nActorSize - nBaseSize;
+		nEffectBonus = nEffectBonus * 4;
+	else
+		-- Smaller grants bonus; Larger grants penalty
+		nActorSize = math.max(math.min(nActorSize, 4), -4);
+		nBaseSize = math.max(math.min(nBaseSize, 4), -4);
+		nEffectBonus = DataCommon.sizeCombatMod[nActorSize] - DataCommon.sizeCombatMod[nBaseSize];
+	end
+
+	return nEffectBonus;
+end
 
 --
 --	BONUS
@@ -797,6 +824,8 @@ function rest(rActor, sRestType)
 	return true;
 end
 function restPC(rActor, sRestType)
-	local nodeChar = ActorManager.getCreatureNode(rActor);
-	SpellManager.resetSpells(nodeChar);
+	if sRestType == "long" then
+		local nodeChar = ActorManager.getCreatureNode(rActor);
+		SpellManager.resetSpells(nodeChar);
+	end
 end

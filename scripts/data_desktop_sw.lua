@@ -111,4 +111,5 @@ _tModifierExclusionSets =
 	{ "DEF_KNEELING", "DEF_PRONE", "DEF_RUN", "DEF_PINNED" },
 	{ "DEF_DODGE", "DEF_KNEELING", "DEF_PRONE" },
 	{ "DEF_CONC", "DEF_TCONC", "DEF_MCONC", "DEF_PCONC", "DEF_SCONC" },
+	{ "TAKE10", "TAKE20" },
 };

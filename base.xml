@@ -108,13 +108,12 @@
 	<script name="SpellManager" file="scripts/manager_spell.lua" />
 	<script name="TokenManager2" file="scripts/manager_token2.lua" />
 	<script name="VersionManager2" file="scripts/manager_version2_sw.lua" />
-	<script name="ActionD20" file="scripts/manager_action_d20_sw.lua" />
 	
-	<script name="ActionAbility" file="scripts/manager_action_ability.lua" />
+	<script name="ActionAbility" file="scripts/manager_action_ability_sw.lua" />
 	<script name="ActionAttack" file="scripts/manager_action_attack_sw.lua" />
 	<script name="ActionDamage" file="scripts/manager_action_damage.lua" />
 	<script name="ActionInit" file="scripts/manager_action_init.lua" />
-	<script name="ActionSkill" file="scripts/manager_action_skill.lua" />
+	<script name="ActionSkill" file="scripts/manager_action_skill_sw.lua" />
 	<script name="ActionSave" file="scripts/manager_action_save.lua" />
 	<script name="ActionSpell" file="scripts/manager_action_spell.lua" />
 </root>

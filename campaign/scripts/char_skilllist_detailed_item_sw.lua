@@ -71,8 +71,20 @@ local _bCustom = true;
 function setCustom(state)
 	_bCustom = state;
 
+	label.setEnabled(_bCustom);
+
 	idelete.setVisible(_bCustom);
 	iadd.setVisible(not _bCustom);
+end
+
+function updateWindow()
+	local sLabel = label.getValue();
+	local t = DataCommon.skilldata[sLabel];
+	if t and not t.sublabeling then
+		self.setCustom(false);
+	else
+		self.setCustom(true);
+	end
 end
 
 function isCustom()

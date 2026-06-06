@@ -274,15 +274,17 @@ function applySave(rSource, rOrigin, rRoll)
 	if rRoll.nTarget then
 		msgLong.text = msgLong.text .. "[vs. DC " .. rRoll.nTarget .. "]";
 	end
-	msgShort.text = msgShort.text .. " ->";
-	msgLong.text = msgLong.text .. " ->";
-	if rSource then
-		msgShort.text = msgShort.text .. " [for " .. ActorManager.getDisplayName(rSource) .. "]";
-		msgLong.text = msgLong.text .. " [for " .. ActorManager.getDisplayName(rSource) .. "]";
-	end
-	if rOrigin then
-		msgShort.text = msgShort.text .. " [vs " .. ActorManager.getDisplayName(rOrigin) .. "]";
-		msgLong.text = msgLong.text .. " [vs " .. ActorManager.getDisplayName(rOrigin) .. "]";
+	if rSource or rOrigin then
+		msgShort.text = msgShort.text .. "\r->";
+		msgLong.text = msgLong.text .. "\r->";
+		if rSource then
+			msgShort.text = msgShort.text .. " [for " .. ActorManager.getDisplayName(rSource) .. "]";
+			msgLong.text = msgLong.text .. " [for " .. ActorManager.getDisplayName(rSource) .. "]";
+		end
+		if rOrigin then
+			msgShort.text = msgShort.text .. " [vs " .. ActorManager.getDisplayName(rOrigin) .. "]";
+			msgLong.text = msgLong.text .. " [vs " .. ActorManager.getDisplayName(rOrigin) .. "]";
+		end
 	end
 	
 	msgShort.icon = "action_cast";

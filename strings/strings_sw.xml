@@ -124,6 +124,16 @@
 	<string name="char_tooltip_skilladdlanguage">Add Speak Language</string>
 	<string name="char_tooltip_skilladdrwlanguage">Add Read/Write Language</string>
 
+	<!-- Character Skills Detailed Window -->
+	<string name="char_skill_title">Skill Details</string>
+	<string name="char_skill_label_total">Total</string>
+	<string name="char_skill_label_ability">Ability</string>
+	<string name="char_skill_label_ranks_short">Ranks</string>
+	<string name="char_skill_label_ranks_class">Class</string>
+	<string name="char_skill_label_ranks_cross">Cross</string>
+	<string name="char_skill_label_group">Group</string>
+	<string name="char_skill_label_name_focus">Focus</string>
+
 	<!-- Character - Abilities -->
 	<string name="char_abilities_label_feats">FEATS</string>
 	<string name="char_abilities_label_sa">CLASS ABILITIES</string>
@@ -177,7 +187,10 @@
 	<!-- Feats -->
 	<!-- Races -->
 	<!-- Skills -->
-	
+	<!-- Skills -->
+	<string name="skill_label_group">Group</string>
+	<string name="skill_label_feat">Feat Required</string>
+
 	<!-- Spells -->
 	<string name="spell_tooltip_basedc">Base Force DC</string>
 	<string name="spell_label_sp">Force Penetration</string>
@@ -242,18 +255,6 @@
 
 	<string name="drc_label_subtype_temp">Vitality</string>
 
-	<!-- Skills Detailed Window -->
-	<string name="char_skill_title">Skill Details</string>
-	<string name="char_skill_label_total">Total</string>
-	<string name="char_skill_label_ability">Ability</string>
-	<string name="char_skill_label_ranks_short">Ranks</string>
-	<string name="char_skill_label_ranks_class">Class</string>
-	<string name="char_skill_label_ranks_cross">Cross</string>
-	<string name="char_skill_label_group">Group</string>
-	<string name="char_skill_label_name_focus">Focus</string>
-	<string name="skill_label_group">Group</string>
-
 	<!-- Library -->
 	<string name="library_recordtype_label_specialability">Abilities</string>
-	<string name="library_recordtype_label_spell">Force Powers</string>
 </root>

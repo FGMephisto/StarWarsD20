@@ -120,3 +120,39 @@ function addNewInstance(sLabel)
 		w.sublabel.setFocus();
 	end
 end
+
+function addSkillReference(nodeSource)
+	if not nodeSource then
+		return;
+	end
+
+	local sName = StringManager.trim(DB.getValue(nodeSource, "name", ""));
+	if sName == "" then
+		return;
+	end
+
+	local wSkill = nil;
+	for _, w in pairs(getWindows()) do
+		if StringManager.trim(w.label.getValue()) == sName then
+			wSkill = w;
+			break;
+		end
+	end
+
+	if not wSkill then
+		wSkill = createWindow();
+		wSkill.label.setValue(sName);
+		
+		local sAbility = DB.getValue(nodeSource, "ability", "");
+		sAbility = DataCommon.ability_stol[sAbility:upper()] or sAbility:lower();
+		wSkill.statname.setValue(sAbility);
+		
+		local sGroup = DB.getValue(nodeSource, "group", "");
+		wSkill.group.setValue(StringManager.titleCase(sGroup));
+		
+		local nTrained = DB.getValue(nodeSource, "trained", 0);
+		wSkill.state.setValue(nTrained);
+		
+		wSkill.updateWindow();
+	end
+end

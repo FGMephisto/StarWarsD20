@@ -661,6 +661,7 @@
 				</parameters>
 			</cycler_ability>
 			<button_editor_poweraction_effect_expiration name="expiration" />
+																	
 
 			<header_column name="header_other">
 				<static textres="power_header_effect_other" />

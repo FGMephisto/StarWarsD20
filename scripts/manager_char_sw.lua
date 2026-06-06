@@ -97,8 +97,9 @@ function initWeaponIDTracking()
 	DB.addHandler("charsheet.*.inventorylist.*.isidentified", "onUpdate", onItemIDChanged);
 end
 
-function onCharItemAdd(nodeItem)
+function onCharItemAdd(nodeItem) -- Adjusted
 	DB.setValue(nodeItem, "carried", "number", 1);
+	-- DB.setValue(nodeItem, "showonminisheet", "number", 1);
 
 	if DB.getValue(nodeItem, "type", "") == "Goods and Services" then
 		local sSubType = DB.getValue(nodeItem, "subtype", "");
@@ -854,7 +855,7 @@ end
 -- DATA ACCESS
 --
 
-function getSkillValue(rActor, sSkill, sSubSkill)
+function getSkillValue(rActor, sSkill, sSubSkill) -- Adjusted
 	local nValue = 0;
 	local bUntrained = false;
 
@@ -994,15 +995,19 @@ function getGrappleRollStructures(rActor, sAttack)
 	return rAttack;
 end
 
-function updateSkillPoints(nodeChar)
+function updateSkillPoints(nodeChar) -- Adjusted
 	local nSpentTotal = 0;
+
+	-- local bPFMode = DataCommon.isPFRPG();
 	
+	local nSpent;
 	for _,vNode in ipairs(DB.getChildList(nodeChar, "skilllist")) do
-		local nClassRanks = DB.getValue(vNode, "ranks", 0);
-		local nCrossRanks = DB.getValue(vNode, "ranks_cross", 0);
-		local nSpent = nClassRanks + nCrossRanks;
-		
+		nSpent = DB.getValue(vNode, "ranks", 0) + DB.getValue(vNode, "ranks_cross", 0);
 		if nSpent > 0 then
+			-- if not bPFMode and DB.getValue(vNode, "state", 0) == 0 then
+				-- nSpent = nSpent * 2;
+			-- end
+			
 			nSpentTotal = nSpentTotal + nSpent;
 		end
 	end
@@ -1063,7 +1068,7 @@ function addInfoDB(nodeChar, sClass, sRecord, nodeTargetList)
 	return true;
 end
 
-function getSkillNode(nodeChar, sSkill, sSpecialty)
+function getSkillNode(nodeChar, sSkill, sSpecialty) -- Adjusted
 	if not sSkill then
 		return nil;
 	end
@@ -1088,6 +1093,7 @@ function getSkillNode(nodeChar, sSkill, sSpecialty)
 			
 			DB.setValue(nodeSkill, "label", "string", sSkill);
 			DB.setValue(nodeSkill, "statname", "string", t.stat or "");
+			-- DB.setValue(nodeSkill, "showonminisheet", "number", 1);
 			
 			if t.sublabeling and sSpecialty then
 				DB.setValue(nodeSkill, "sublabel", "string", sSpecialty);
@@ -1698,7 +1704,7 @@ function applyClassStats(nodeChar, nodeClass, nodeSource, nLevel, nTotalLevel)
 		local nHDMult = tonumber(sHDMult) or 1;
 		local nHDSides = tonumber(sHDSides) or 8;
 
-		local nHP = DB.getValue(nodeChar, "hp.total", 0);
+		local nHP = GameManager.getRecordFieldValue(nodeChar, "hptotal", 0);
 		local nConBonus = DB.getValue(nodeChar, "abilities.constitution.bonus", 0);
 		if nTotalLevel == 1 then
 			local nAddHP = (nHDMult * nHDSides);
@@ -1715,7 +1721,7 @@ function applyClassStats(nodeChar, nodeClass, nodeSource, nLevel, nTotalLevel)
 			local sMsg = string.format(sFormat, DB.getValue(nodeClass, "name", ""), DB.getValue(nodeChar, "name", "")) .. " (" .. nAddHP .. "+" .. nConBonus .. ")";
 			ChatManager.SystemMessage(sMsg);
 		end
-		DB.setValue(nodeChar, "hp.total", "number", nHP);
+		GameManager.setRecordFieldValue(nodeChar, "hptotal", "number", nHP);
 	end
 	
 	-- BAB

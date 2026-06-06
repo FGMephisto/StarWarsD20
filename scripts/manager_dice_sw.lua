@@ -239,7 +239,6 @@ function registerActions() -- Adjusted
 	-- DiceRollManager.registerDamageTypeKey("positive", "light");
 	DiceRollManager.registerDamageTypeKey("sonic", "storm");
 	DiceRollManager.registerDamageTypeKey("energy", "fire");
-	DiceRollManager.registerDamageTypeKey("ion", "lightning");
 
 	DiceRollManager.registerDamageTypeKey("bludgeoning");
 	DiceRollManager.registerDamageTypeKey("piercing");

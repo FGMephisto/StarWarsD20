@@ -138,13 +138,9 @@ end
 function updateWindow()
 	local sLabel = label.getValue();
 	local t = DataCommon.skilldata[sLabel];
-	if t then
+	if t and not t.sublabeling then
 		self.setCustom(false);
 		
-		if t.sublabeling then
-			sublabel.setVisible(true);
-		end
-
 		if t.armorcheckmultiplier then
 			armorcheckmultiplier.setValue(t.armorcheckmultiplier);
 		else

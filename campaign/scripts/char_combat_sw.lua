@@ -8,7 +8,7 @@ function onInit() -- Adjusted
 	self.setInitialized();
 	
 	acstat.onValueChanged();
-	acstat2.onValueChanged();
+	-- acstat2.onValueChanged();
 	-- cmdbase.onValueChanged();
 	-- cmdstat.onValueChanged();
 	fortitudestat.onValueChanged();
@@ -17,7 +17,7 @@ function onInit() -- Adjusted
 	initiativestat.onValueChanged();
 	meleestat.onValueChanged();
 	rangedstat.onValueChanged();
-	grapplestat.onValueChanged();
+	-- grapplestat.onValueChanged();
 
 	self.onSystemChanged();
 	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
@@ -32,7 +32,7 @@ function setInitialized()
 end
 
 function onLockModeChanged(bReadOnly) -- Adjusted
-	local tFieldsAC = { "ac", "acclass", "acstat", "acstat2", "acsize", "acnatural", "acdeflection", "acdodge", "acmisc", };
+	local tFieldsAC = { "ac", "acclass", "acstat", "acsize", "acnatural", "acdodge", "acmisc", };
 	local tFieldsACSpecial = { "ffacmisc", };
 	local tFieldsSaveFort = { "fortitude", "fortitudebase", "fortitudestat", "fortitudemisc", };
 	local tFieldsSaveRef = { "reflex", "reflexbase", "reflexstat", "reflexmisc", };
@@ -40,7 +40,7 @@ function onLockModeChanged(bReadOnly) -- Adjusted
 	local tFieldsAttack = { "baseattackbonus", };
 	local tFieldsAttackMelee = { "meleeattackbonus", "meleestat", "meleesize", "meleemisc", };
 	local tFieldsAttackRanged = { "rangedattackbonus", "rangedstat", "rangedsize", "rangedmisc", };
-	local tFieldsAttackGrapple = { "grappleattackbonus", "grapplestat", "grapplesize", "grapplemisc", };
+	-- local tFieldsAttackGrapple = { "grappleattackbonus", "grapplestat", "grapplesize", "grapplemisc", };
 	local tFieldsInit = { "initiative", "initiativestat", "initiativemiscbonus", };
 	local tFieldsOther = { "speedfinal", "speedbase", "speedarmor", "speedmisc", };
 
@@ -52,7 +52,7 @@ function onLockModeChanged(bReadOnly) -- Adjusted
 	WindowManager.callSafeControlsSetLockMode(self, tFieldsAttack, bReadOnly);
 	WindowManager.callSafeControlsSetLockMode(self, tFieldsAttackMelee, bReadOnly);
 	WindowManager.callSafeControlsSetLockMode(self, tFieldsAttackRanged, bReadOnly);
-	WindowManager.callSafeControlsSetLockMode(self, tFieldsAttackGrapple, bReadOnly);
+	-- WindowManager.callSafeControlsSetLockMode(self, tFieldsAttackGrapple, bReadOnly);
 	WindowManager.callSafeControlsSetLockMode(self, tFieldsInit, bReadOnly);
 	WindowManager.callSafeControlsSetLockMode(self, tFieldsOther, bReadOnly);
 end

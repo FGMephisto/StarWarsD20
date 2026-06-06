@@ -25,7 +25,7 @@
 	<string name="armorclasstouch">Touch AC</string>
 	<string name="cmd">CMD</string>
 	<string name="sr">SR</string>
-	<string name="spellresistance">Force Resistance</string>
+	<string name="spellresistance">Spell Resistance</string>
 	<string name="fort">Fort</string>
 	<string name="ref">Ref</string>
 	<string name="will">Will</string>
@@ -50,10 +50,10 @@
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	
-	<string name="menu_resetspells">Reset Force</string>
-	<string name="menu_addspellclass">Add Force Class</string>
-	<string name="menu_deletespellclass">Delete Force Class</string>
-	<string name="menu_addForce">Add Force</string>
+	<string name="menu_resetspells">Reset Spells</string>
+	<string name="menu_addspellclass">Add Spell Class</string>
+	<string name="menu_deletespellclass">Delete Spell Class</string>
+	<string name="menu_addspell">Add Spell</string>
 	<string name="menu_addweapon">Add Weapon</string>
 	<string name="menu_deleteweapon">Delete Weapon</string>
 	
@@ -64,6 +64,10 @@
 		
 	<string name="option_label_HRCC">Attack: Critical confirm</string>
 	<string name="option_label_HRNH">Combat: NPC hit points</string>
+
+	<string name="option_label_AUTO_SPELL_FAILURE">Spell Failure Automation</string>
+	<string name="option_val_ASF_auto">Auto Roll</string>
+	<string name="option_val_ASF_prompt">Prompt Roll</string>
 
 	<!-- Languages -->
 	<string name="language_value_abyssal">Abyssal</string>
@@ -282,8 +286,8 @@
 	<string name="char_message_favoredclasshpadd">Bonus hit point for favored class level added to '%s'.</string>
 	<string name="char_message_favoredclassskilladd">Bonus skill rank for favored class level added to '%s'.</string>
 	
-	<string name="char_title_selectForceclassincrease">Select Force Class Increase</string>
-	<string name="char_message_selectForceclassincrease">Choose %d Force class(es) from the list below to increase.</string>
+	<string name="char_title_selectspellclassincrease">Select Spell Class Increase</string>
+	<string name="char_message_selectspellclassincrease">Choose %d spell class(es) from the list below to increase.</string>
 
 	<string name="char_classes_title">Class &amp; Level</string>
 	<string name="char_label_totallevel">Total Level</string>
@@ -347,7 +351,7 @@
 	<string name="char_label_invarmor">Armor</string>
 	<string name="char_label_invarmormaxability">Max Stat</string>
 	<string name="char_label_invarmorskillcheckpenalty">Skill Chk</string>
-	<string name="char_label_invarmorForcefailure">Force Fail</string>
+	<string name="char_label_invarmorspellfailure">Spell Fail</string>
 	<string name="char_label_totalweight">Total encumbrance</string>
 	<string name="char_label_invenclt">Light</string>
 	<string name="char_label_invencmed">Medium</string>
@@ -378,7 +382,7 @@
 	<string name="char_label_weapondamage">Damage</string>
 	<string name="char_label_weaponrange">Range</string>
 	<string name="char_label_weaponammo">Ammo</string>
-	<string name="char_label_Forces">Forces</string>
+	<string name="char_label_spells">Spells</string>
 	
 	<string name="char_label_weaponmelee1h">Melee One-Handed</string>
 	<string name="char_label_weaponmelee2h">Melee Two-Handed</string>
@@ -389,15 +393,15 @@
 	<string name="char_label_weaponrangedthrown">Ranged Thrown</string>
 	<string name="char_label_weaponrangedthrownoh">Ranged Thrown OH</string>
 	
-	<string name="char_tooltip_actionaddForceclass">Add Force Class</string>
+	<string name="char_tooltip_actionaddspellclass">Add Spell Class</string>
 	<string name="char_tooltip_actionaddweapon">Add Weapon</string>
 	<string name="char_tooltip_weaponmaxability"></string>
 	<string name="char_tooltip_weapontypemelee">Melee</string>
 	<string name="char_tooltip_weapontyperanged">Ranged</string>
 	<string name="char_tooltip_weapontypecm">Combat Maneuver</string>
 	
-	<string name="char_Force_title_selectlevel">Select Level</string>
-	<string name="char_Force_message_selectlevel">Select level for Force (%s) in class (%s).</string>
+	<string name="char_spell_title_selectlevel">Select Level</string>
+	<string name="char_spell_message_selectlevel">Select level for spell (%s) in class (%s).</string>
 
 	<!-- Classes -->
 	<string name="class_label_classtype">Type</string>
@@ -440,8 +444,8 @@
 	<string name="item_grouped_tooltip_maxstatbonus">Maximum Dexterity Bonus</string>
 	<string name="item_grouped_label_checkpenalty">Skill</string>
 	<string name="item_grouped_tooltip_checkpenalty">Skill Check Penalty</string>
-	<string name="item_grouped_label_Forcefailure">Sp Fail</string>
-	<string name="item_grouped_tooltip_Forcefailure">Force Failure Chance</string>
+	<string name="item_grouped_label_spellfailure">Sp Fail</string>
+	<string name="item_grouped_tooltip_spellfailure">Spell Failure Chance</string>
 	<string name="item_grouped_label_speed30">Spd 30</string>
 	<string name="item_grouped_tooltip_speed30">Speed Adjustment for Base 30</string>
 	<string name="item_grouped_label_speed20">Spd 20</string>
@@ -462,7 +466,7 @@
 	<string name="item_label_ac">AC Bonus</string>
 	<string name="item_label_maxstat">Max Dex</string>
 	<string name="item_label_scp">Check Penalty</string>
-	<string name="item_label_Forcefail">Force Fail (%)</string>
+	<string name="item_label_spellfail">Spell Fail (%)</string>
 	<string name="item_label_speed30">Speed (30')</string>
 	<string name="item_label_speed20">Speed (20')</string>
 	<string name="item_label_properties">Properties</string>
@@ -523,8 +527,8 @@
 	<string name="npc_label_decks">Decks</string>
 	<string name="npc_label_weapons">Weapons</string>
 	
-	<string name="npc_tooltip_Forceedit">Edit Force List</string>
-	<string name="npc_tooltip_Forceaddclass">Add Force Class</string>
+	<string name="npc_tooltip_spelledit">Edit Spell List</string>
+	<string name="npc_tooltip_spelladdclass">Add Spell Class</string>
 	
 	<!-- Encounters -->
 	<string name="enc_tooltip_refreshcr">Refresh CR</string>
@@ -539,41 +543,41 @@
 	<string name="quest_label_typeminor">Minor</string>
 	<string name="quest_label_typemajor">Major</string>
 
-	<!-- Forces -->
-	<string name="Force_label_mode">Mode</string>
-	<string name="Force_label_modestd">Standard</string>
-	<string name="Force_label_modeprep">Preparation</string>
-	<string name="Force_label_modecombat">Combat</string>
-	<string name="Force_label_display">Display</string>
-	<string name="Force_label_displaystd">Summary</string>
-	<string name="Force_label_displayaction">Actions</string>
-	<string name="Forceclass_emptyname">&#171; Class &#187;</string>
-	<string name="Forcelevel_emptyname">&#171; Class Level &#187;</string>
-	<string name="Force_emptydesc">&#171; Short Description &#187;</string>
-	<string name="Force_label_pp">PP</string>
-	<string name="Force_label_cc">CC</string>
-	<string name="Force_tooltip_ppmax">Power Points Max</string>
-	<string name="Force_tooltip_ppused">Power Points Used</string>
-	<string name="Force_tooltip_cc">Concentration Check</string>
-	<string name="Force_label_basedc">Base DC</string>
-	<string name="Force_tooltip_basedc">Base Force DC</string>
-	<string name="Force_label_ability">Stat</string>
-	<string name="Force_label_mod">Mod</string>
-	<string name="Force_label_misc">Misc</string>
-	<string name="Force_label_total">Total</string>
-	<string name="Force_label_baseability">Ability</string>
-	<string name="Force_label_sp">Force Penetration</string>
-	<string name="Force_label_ccdetail">Conc. Check</string>
-	<string name="Force_tooltip_toggle">Click to edit / hide details</string>
+	<!-- Spells -->
+	<string name="spell_label_mode">Mode</string>
+	<string name="spell_label_modestd">Standard</string>
+	<string name="spell_label_modeprep">Preparation</string>
+	<string name="spell_label_modecombat">Combat</string>
+	<string name="spell_label_display">Display</string>
+	<string name="spell_label_displaystd">Summary</string>
+	<string name="spell_label_displayaction">Actions</string>
+	<string name="spellclass_emptyname">&#171; Class &#187;</string>
+	<string name="spelllevel_emptyname">&#171; Class Level &#187;</string>
+	<string name="spell_emptydesc">&#171; Short Description &#187;</string>
+	<string name="spell_label_pp">PP</string>
+	<string name="spell_label_cc">CC</string>
+	<string name="spell_tooltip_ppmax">Power Points Max</string>
+	<string name="spell_tooltip_ppused">Power Points Used</string>
+	<string name="spell_tooltip_cc">Concentration Check</string>
+	<string name="spell_label_basedc">Base DC</string>
+	<string name="spell_tooltip_basedc">Base Spell DC</string>
+	<string name="spell_label_ability">Stat</string>
+	<string name="spell_label_mod">Mod</string>
+	<string name="spell_label_misc">Misc</string>
+	<string name="spell_label_total">Total</string>
+	<string name="spell_label_baseability">Ability</string>
+	<string name="spell_label_sp">Spell Penetration</string>
+	<string name="spell_label_ccdetail">Conc. Check</string>
+	<string name="spell_tooltip_toggle">Click to edit / hide details</string>
 	
-	<string name="Force_tooltip_casterprep">Prepared Force caster (Wizard)</string>
-	<string name="Force_tooltip_casterspontaneous">Spontaneous Force caster (Sorcerer)</string>
-	<string name="Force_tooltip_casterpoints">Points Force caster (Psion)</string>
+	<string name="spell_tooltip_casterprep">Prepared spell caster (Wizard)</string>
+	<string name="spell_tooltip_casterspontaneous">Spontaneous spell caster (Sorcerer)</string>
+	<string name="spell_tooltip_casterpoints">Points spell caster (Psion)</string>
 	
-	<string name="Force_tooltip_castForce">Cast Force</string>
+	<string name="spell_tooltip_castspell">Cast Spell</string>
 
-	<string name="Force_error_dropclassmissing">Unable to determine class for moved Force, please drop within a class.</string>
-	<string name="Force_error_dropclasslevelmissing">Unable to determine class or level for new Force, please drop within a class level.</string>
+	<string name="spell_error_dropclassmissing">Unable to determine class for moved spell, please drop within a class.</string>
+	<string name="spell_error_dropclasslevelmissing">Unable to determine class or level for new spell, please drop within a class level.</string>
 	
 	<!-- Feats -->
 	<string name="feat_grouped_label_name">Name</string>
@@ -595,15 +599,15 @@
 	<string name="skill_label_trainedonly">Trained Only</string>
 	<string name="skill_label_armorcheckpenalty">AC Pen. Mult.</string>
 	
-	<!-- Forces -->
-	<string name="Force_label_school">School</string>
-	<string name="Force_label_components">Components</string>
-	<string name="Force_label_casttime">Casting Time</string>
-	<string name="Force_label_range">Range</string>
-	<string name="Force_label_effecttarget">Effect/Target</string>
-	<string name="Force_label_duration">Duration</string>
-	<string name="Force_label_save">Saving Throw</string>
-	<string name="Force_label_sr">Force Resist.</string>
+	<!-- Spells -->
+	<string name="spell_label_school">School</string>
+	<string name="spell_label_components">Components</string>
+	<string name="spell_label_casttime">Casting Time</string>
+	<string name="spell_label_range">Range</string>
+	<string name="spell_label_effecttarget">Effect/Target</string>
+	<string name="spell_label_duration">Duration</string>
+	<string name="spell_label_save">Saving Throw</string>
+	<string name="spell_label_sr">Spell Resist.</string>
 
 	<!-- Special Abilities -->
 	<string name="specialability_grouped_label_name">Name</string>
@@ -654,7 +658,7 @@
 	<string name="power_label_onmissdamage">Damage</string>
 	<string name="power_label_onmissdamage_half">Half on Success</string>
 	
-	<string name="power_label_Forcedmg">Force Dmg?</string>
+	<string name="power_label_spelldmg">Spell Dmg?</string>
 	<string name="power_tooltip_dicemax">Maximum caster level for dice multiple</string>
 	<string name="power_tooltip_statmult">Multiple of caster level or ability</string>
 	<string name="power_tooltip_statmax">Maximum caster level or ability for multiple</string>
@@ -686,4 +690,12 @@
 	<string name="record_label_classfeature">Class Feature</string>
 	<string name="record_label_racialtrait">Racial Trait</string>
 	<string name="record_label_proficiency">Proficiency</string>
+
+	<!-- Actions -->
+	<string name="cast_message_verbalwhilesilenced">Casting spell with verbal components while Silenced. [AUTOMATIC FAIL]</string>
+	<string name="cast_message_somaticwhilepinned">Casting spell with somatic components while Pinned. [AUTOMATIC FAIL]</string>
+	<string name="cast_message_needconcentrationcheck">Casting spell while %s and needs to make a concentration check.</string>
+	<string name="cast_message_verbalwhiledeafened">Casting spell with verbal components while Deafened. [20% FAIL CHANCE]</string>
+	<string name="cast_message_somatic_prompt">Roll somatic spell failure chance. [%d%%]</string>
+	<string name="cast_message_verbal_prompt">Roll verbal spell failure chance. [%d%%]</string>
 </root>

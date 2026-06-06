@@ -12,7 +12,7 @@
 			function onDrop(x, y, draginfo)
 				if draginfo.isType("shortcut") then
 					local sClass = draginfo.getShortcutData();
-					if sClass == "reference_skill" then
+					if sClass == "referenceskill" or sClass == "reference_skill" then
 						content.subwindow.content_skills.subwindow.list.addSkillReference(draginfo.getDatabaseNode());
 					end
 					return true;
@@ -245,7 +245,7 @@
 				if draginfo.isType("shortcut") then
 					local sClass = draginfo.getShortcutData();
 
-					if sClass == "reference_skill" then
+					if sClass == "referenceskill" or sClass == "reference_skill" then
 						content.subwindow.content_main.subwindow.list.addSkillReference(draginfo.getDatabaseNode());
 					end
 					return true;
@@ -472,6 +472,11 @@
 			<string_listitem_center name="label">
 				<tabtarget next="group" />
 				<delaykeyupdate />
+				<script>
+					function onValueChanged()
+						window.updateWindow();
+					end
+				</script>
 			</string_listitem_center>
 		</sheetdata>
 	</windowclass>

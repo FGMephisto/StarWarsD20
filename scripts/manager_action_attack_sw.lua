@@ -462,6 +462,32 @@ function modAttack(rSource, rTarget, rRoll) -- Adjusted
 		rRoll.nAddMod = rRoll.nMod - 2;
 	end
 end
+function applySizeEffectsToModRoll(rSource, _, rRoll)
+	if not rSource then
+		return;
+	end
+
+	local nActorSize, nBaseSize = ActorCommonManager.getSize(rSource);
+	if nActorSize == nBaseSize then
+		return;
+	end
+
+	local nEffectBonus;
+	if rRoll.sType == "grapple" then
+		-- Smaller grants penalty; Larger grants bonus
+		nEffectBonus = nActorSize - nBaseSize;
+		nEffectBonus = nEffectBonus * 4;
+	else
+		-- Smaller grants bonus; Larger grants penalty
+		nActorSize = math.max(math.min(nActorSize, 4), -4);
+		nBaseSize = math.max(math.min(nBaseSize, 4), -4);
+		nEffectBonus = DataCommon.sizeCombatMod[nActorSize] - DataCommon.sizeCombatMod[nBaseSize];
+	end
+
+	rRoll.bEffects = true;
+	rRoll.nMod = rRoll.nMod + nEffectBonus;
+	table.insert(rRoll.tNotifications, string.format("[SIZE %+d]", nEffectBonus));
+end
 
 function onAttack(rSource, rTarget, rRoll)
 	ActionAttackCore.decodeRollData(rRoll);
@@ -752,8 +778,8 @@ function applyAttack(rSource, rTarget, rRoll)
 	msgLong.text = string.format("%s [%d]", msgLong.text, rRoll.nTotal or 0);
 
 	-- Targeting information
-	msgShort.text = string.format("%s ->", msgShort.text);
-	msgLong.text = string.format("%s ->", msgLong.text);
+	msgShort.text = string.format("%s\r->", msgShort.text);
+	msgLong.text = string.format("%s\r->", msgLong.text);
 	if rTarget then
 		local sTargetName = ActorManager.getDisplayName(rTarget);
 		msgShort.text = string.format("%s [at %s]", msgShort.text, sTargetName);

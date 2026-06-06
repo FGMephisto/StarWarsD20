@@ -6,7 +6,6 @@
 function onInit()
 	EffectManager.registerStandardDescriptorGroups();
 	EffectManagerD20.registerStandardConditionals();
-	EffectManagerD20.registerSizeConditional(ActorCommonManager.isCreatureSizeDnD3);
 	
 	GameManager.setFunction("onActorStartTurn", EffectManager35E.onActorStartTurn);
 	GameManager.setFunction("onActorEndTurn", EffectManager35E.onActorEndTurn);

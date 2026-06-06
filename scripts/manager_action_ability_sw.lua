@@ -1,6 +1,7 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
+-- File adjusted for Star Wars 3.5E
 --
 
 function onInit()
@@ -38,6 +39,7 @@ function getRoll(rActor, sAbilityStat)
 end
 
 function modRoll(rSource, rTarget, rRoll)
+	ActionAbility.applyTake1020(rRoll);
 	if rSource then
 		local sAbility = ActionCore.decodeLabelText(rRoll.sDesc, "action_ability_tag"):lower();
 		if sAbility == "" then 
@@ -72,6 +74,7 @@ function modRoll(rSource, rTarget, rRoll)
 end
 
 function onRoll(rSource, rTarget, rRoll)
+	checkTake1020(rRoll);
 	local rMessage = ActionsManager.createActionMessage(rSource, rRoll);
 
 	if rRoll.nTarget then
@@ -87,4 +90,47 @@ function onRoll(rSource, rTarget, rRoll)
 	end
 	
 	Comm.deliverChatMessage(rMessage);
+end
+
+function applyTake1020(rRoll) -- Added
+	local bTake10 = ModifierManager.getKey("TAKE10");
+	local bTake20 = ModifierManager.getKey("TAKE20");
+	if bTake10 then
+		rRoll.bTake10 = true;
+		if (rRoll.sDesc or "") ~= "" then
+			rRoll.sDesc = rRoll.sDesc .. " [TAKE 10]";
+		else
+			rRoll.sDesc = "[TAKE 10]";
+		end
+	end
+	if bTake20 then
+		rRoll.bTake20 = true;
+		if (rRoll.sDesc or "") ~= "" then
+			rRoll.sDesc = rRoll.sDesc .. " [TAKE 20]";
+		else
+			rRoll.sDesc = "[TAKE 20]";
+		end
+	end
+end
+
+function checkTake1020(rRoll) -- Added
+	if not rRoll or not rRoll.aDice then return; end
+	
+	if rRoll.bTake10 or rRoll.bTake20 then
+		local nTargetVal = rRoll.bTake10 and 10 or 20;
+		local bReplaced = false;
+		
+		for _, vDie in ipairs(rRoll.aDice) do
+			if vDie.type == "d20" then
+				vDie.result = nTargetVal;
+				vDie.value = nTargetVal;
+				bReplaced = true;
+			end
+		end
+		
+		if bReplaced then
+			-- Recalculate total with the new d20 value
+			rRoll.nTotal = ActionsManager.total(rRoll);
+		end
+	end
 end

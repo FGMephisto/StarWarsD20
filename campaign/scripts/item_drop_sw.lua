@@ -84,7 +84,7 @@ function onDrop(x, y, draginfo) -- Adjusted
 			local nSourceBonus = DB.getValue(nodeSource, "bonus", 0);
 			local nTargetBonus = DB.getValue(nodeTarget, "bonus", 0);
 			DB.setValue(nodeTarget, "bonus", "number", nSourceBonus + nTargetBonus);
-
+			
 			-- DB.setValue(nodeTarget, "aura", "string", DB.getValue(nodeSource, "aura", ""));
 			-- DB.setValue(nodeTarget, "cl", "number", DB.getValue(nodeSource, "cl", 0));			
 			DB.setValue(nodeTarget, "prerequisites", "string", DB.getValue(nodeSource, "prerequisites", ""));

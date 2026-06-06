@@ -52,7 +52,6 @@ end
 function linkPCSkill(nodeSkill, nodePS, sPSField)
 	PartyManager.linkRecordField(nodeSkill, nodePS, "total", "number", sPSField);
 end
-
 function linkPCSkills(nodeSkills) -- Adjusted
 	if not nodeSkills then
 		return;

@@ -1,6 +1,7 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
+-- File adjusted for Star Wars 3.5E
 --
 
 function onInit()
@@ -72,7 +73,8 @@ function getRoll(rActor, sSkillName, nSkillMod, sSkillStat, sExtra)
 	return rRoll;
 end
 
-function modSkill(rSource, rTarget, rRoll)
+function modSkill(rSource, rTarget, rRoll) -- Adjusted
+	ActionSkill.applyTake1020(rRoll);
 	local bAssist = Input.isShiftPressed();
 	if bAssist then
 		rRoll.sDesc = rRoll.sDesc .. " [ASSIST]";
@@ -177,9 +179,40 @@ function modSkill(rSource, rTarget, rRoll)
 			rRoll.sDesc = string.format("%s\r%s", rRoll.sDesc, EffectManager.buildEffectOutput(sMod));
 		end
 	end
+
+	applySizeEffectsToModRoll(rSource, rTarget, rRoll);
+end
+function applySizeEffectsToModRoll(rSource, _, rRoll)
+	if not rSource then
+		return;
+	end
+
+	ActionCore.decodeRollData(rRoll, "action_skill_tag");
+	local sSkillLower = rRoll.sLabel:lower();
+	if not StringManager.contains({ "fly", "hide", "stealth", }, sSkillLower) then
+		return;
+	end
+
+	local nActorSize, nBaseSize = ActorCommonManager.getSize(rSource);
+	if nActorSize == nBaseSize then
+		return;
+	end
+
+	-- Smaller grants bonus; Larger grants penalty
+	local nEffectBonus = nBaseSize - nActorSize;
+	if StringManager.contains({ "hide", "stealth", }, sSkillLower) then
+		nEffectBonus = nEffectBonus * 4;
+	else
+		nEffectBonus = nEffectBonus * 2;
+	end
+
+	rRoll.bEffects = true;
+	rRoll.nMod = rRoll.nMod + nEffectBonus;
+	table.insert(rRoll.tNotifications, string.format("[SIZE %+d]", nEffectBonus));
 end
 
-function onRoll(rSource, rTarget, rRoll)
+function onRoll(rSource, rTarget, rRoll) -- Adjusted
+	ActionSkill.checkTake1020(rRoll);
 	local rMessage = ActionsManager.createActionMessage(rSource, rRoll);
 	rMessage.text = string.gsub(rMessage.text, " %[MOD:[^]]*%]", "");
 
@@ -197,4 +230,47 @@ function onRoll(rSource, rTarget, rRoll)
 	
 	local nTotal = ActionsManager.total(rRoll);
 	Comm.deliverChatMessage(rMessage);
+end
+
+function applyTake1020(rRoll) -- Added
+	local bTake10 = ModifierManager.getKey("TAKE10");
+	local bTake20 = ModifierManager.getKey("TAKE20");
+	if bTake10 then
+		rRoll.bTake10 = true;
+		if (rRoll.sDesc or "") ~= "" then
+			rRoll.sDesc = rRoll.sDesc .. " [TAKE 10]";
+		else
+			rRoll.sDesc = "[TAKE 10]";
+		end
+	end
+	if bTake20 then
+		rRoll.bTake20 = true;
+		if (rRoll.sDesc or "") ~= "" then
+			rRoll.sDesc = rRoll.sDesc .. " [TAKE 20]";
+		else
+			rRoll.sDesc = "[TAKE 20]";
+		end
+	end
+end
+
+function checkTake1020(rRoll) -- Added
+	if not rRoll or not rRoll.aDice then return; end
+	
+	if rRoll.bTake10 or rRoll.bTake20 then
+		local nTargetVal = rRoll.bTake10 and 10 or 20;
+		local bReplaced = false;
+		
+		for _, vDie in ipairs(rRoll.aDice) do
+			if vDie.type == "d20" then
+				vDie.result = nTargetVal;
+				vDie.value = nTargetVal;
+				bReplaced = true;
+			end
+		end
+		
+		if bReplaced then
+			-- Recalculate total with the new d20 value
+			rRoll.nTotal = ActionsManager.total(rRoll);
+		end
+	end
 end

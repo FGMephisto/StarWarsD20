@@ -10,14 +10,14 @@ function onInit()
 	end
 
 	self.onEncumbranceLimitChanged();
+	GameManager.addEventFunction("onActorSizeChanged", self.onSizeChanged);
 	DB.addHandler(DB.getPath(getDatabaseNode(), "abilities.strength.score"), "onUpdate", self.onStrengthChanged);
-	DB.addHandler(DB.getPath(getDatabaseNode(), "size"), "onUpdate", self.onSizeChanged);
 	DB.addHandler(DB.getPath(getDatabaseNode(), "encumbrance.stradj"), "onUpdate", self.onEncumbranceLimitChanged);
 	DB.addHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", self.onEncumbranceLimitChanged);
 end
 function onClose()
+	GameManager.removeEventFunction("onActorSizeChanged", self.onSizeChanged);
 	DB.removeHandler(DB.getPath(getDatabaseNode(), "abilities.strength.score"), "onUpdate", self.onStrengthChanged);
-	DB.removeHandler(DB.getPath(getDatabaseNode(), "size"), "onUpdate", self.onSizeChanged);
 	DB.removeHandler(DB.getPath(getDatabaseNode(), "encumbrance.stradj"), "onUpdate", self.onEncumbranceLimitChanged);
 	DB.removeHandler(DB.getPath(getDatabaseNode(), "encumbrance.carrymult"), "onUpdate", self.onEncumbranceLimitChanged);
 end
@@ -33,13 +33,14 @@ function onLockModeChanged(bReadOnly)
 	end
 end
 
+function onSizeChanged(rActor)
+	if ActorManager.isEqual(rActor, getDatabaseNode()) then
+		self.onEncumbranceLimitChanged();
+	end
+end
 function onStrengthChanged()
 	self.onEncumbranceLimitChanged();
 end
-function onSizeChanged()
-	self.onEncumbranceLimitChanged();
-end
-
 function onEncumbranceLimitChanged() -- Adjusted
 	local nodeChar = getDatabaseNode();
 
@@ -84,7 +85,7 @@ function onEncumbranceLimitChanged() -- Adjusted
 		nMedium = math.floor(nHeavy / 3 * 2);
 	end	
 
-	local nSize = ActorCommonManager.getCreatureSizeDnD3(ActorManager.resolveActor(nodeChar));
+	local nSize = ActorCommonManager.getSize(ActorManager.resolveActor(nodeChar));
 	if (nSize < 0) then
 		local nMult = 0;
 		if (nSize == -1) then

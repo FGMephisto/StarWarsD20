@@ -299,5 +299,5 @@ function onInit() -- Adjusted
 	LibraryData.overrideRecordTypes(aRecordOverrides);
 	LibraryData.setRecordViews(aListViews);
 	LibraryData.setRecordTypeInfo("vehicle", nil);
-	LibraryData.setRecordTypeInfo("spells", nil);
+	LibraryData.setRecordTypeInfo("spell", nil);
 end

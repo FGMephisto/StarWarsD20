@@ -13,9 +13,31 @@
 		<script>
 			function onInit()
 				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+
+				local node = getDatabaseNode();
+				if node then
+					DB.addHandler(DB.getPath(node, "group"), "onUpdate", onDataUpdate);
+					DB.addHandler(DB.getPath(node, "feat"), "onUpdate", onDataUpdate);
+					DB.addHandler(DB.getPath(node, "ability"), "onUpdate", onDataUpdate);
+					DB.addHandler(DB.getPath(node, "trained"), "onUpdate", onDataUpdate);
+					DB.addHandler(DB.getPath(node, "armorcheckpenalty"), "onUpdate", onDataUpdate);
+				end
+			end
+			function onClose()
+				local node = getDatabaseNode();
+				if node then
+					DB.removeHandler(DB.getPath(node, "group"), "onUpdate", onDataUpdate);
+					DB.removeHandler(DB.getPath(node, "feat"), "onUpdate", onDataUpdate);
+					DB.removeHandler(DB.getPath(node, "ability"), "onUpdate", onDataUpdate);
+					DB.removeHandler(DB.getPath(node, "trained"), "onUpdate", onDataUpdate);
+					DB.removeHandler(DB.getPath(node, "armorcheckpenalty"), "onUpdate", onDataUpdate);
+				end
+			end
+			function onDataUpdate()
+				self.updateTypeLabel();
 			end
 			function onLockModeChanged(bReadOnly)
-				local tFields = { "ability", "trained", "armorcheckpenalty", };
+				local tFields = { "ability", "trained", "armorcheckpenalty", "feat", "group", };
 				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 
 				self.updateTypeLabel();
@@ -26,14 +48,40 @@
 			end
 			function updateTypeLabel()
 				local tLabel = {};
-				table.insert(tLabel, ability.getValue());
-				if trained.getValue() ~= 0 then
+				
+				local sGroup = "";
+				if group then
+					sGroup = (group.getValue() or ""):lower();
+				end
+				local bForce = (sGroup == "force") or sGroup:match("force");
+				
+				local sAbility = "";
+				if ability then
+					sAbility = ability.getValue() or "";
+				end
+				if sAbility ~= "" then
+					table.insert(tLabel, sAbility);
+				end
+
+				if bForce then
+					table.insert(tLabel, "Force Skill");
+				end
+
+				if trained and (trained.getValue() or 0) ~= 0 then
 					table.insert(tLabel, "Trained only");
 				end
-				if armorcheckpenalty.getValue() ~= 0 then
+				if armorcheckpenalty and (armorcheckpenalty.getValue() or 0) ~= 0 then
 					table.insert(tLabel, "Armor check penalty");
 				end
-				type_label.setValue(string.format("[%s]", table.concat(tLabel, "; ")));
+				
+				if bForce and (feat.getValue() or "") ~= "" then
+					local sFeat = feat.getValue() or "";
+					table.insert(tLabel, string.format("Requires the Force-Sensitive and %s feat", sFeat));
+				end
+				
+				if type_label then
+					type_label.setValue(string.format("[%s]", table.concat(tLabel, "; ")));
+				end
 			end
 		</script>
 		<sheetdata>
@@ -46,15 +94,13 @@
 			<label_content_column name="group_label">
 				<static textres="skill_label_group" />
 			</label_content_column>
-			<string_content_column_single name="group" />
+			<string_content_columnh_single name="group" />
 
 			<label_content_column name="ability_label">
 				<static textres="skill_label_ability" />
 			</label_content_column>
-			<string_content_columnh name="ability">
-				<delaykeyupdate />
-			</string_content_columnh>
-			
+			<string_content_columnh_single name="ability" />
+
 			<label_content_column name="trained_label">
 				<static textres="skill_label_trainedonly" />
 			</label_content_column>
@@ -64,6 +110,11 @@
 				<static textres="skill_label_armorcheckpenalty" />
 			</label_content_column>
 			<number_content_columnh name="armorcheckpenalty" />
+			
+			<label_content_column name="feat_label">
+				<static textres="skill_label_feat" />
+			</label_content_column>
+			<string_content_columnh_single name="feat" />
 			
 			<ft_content_columnh_full name="text" />
 		</sheetdata>

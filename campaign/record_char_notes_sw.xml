@@ -42,6 +42,8 @@
 			<string_labeled name="size">
 				<anchored to="weight" position="right" offset="5,0" width="60" />
 				<labelres>char_label_size</labelres>
+				<delaykeyupdate />
+				<script file="campaign/scripts/record_size.lua" />
 			</string_labeled>
 			<string_labeled name="forcepoints">
 				<anchored to="size" position="right" offset="5,0" width="80" />
