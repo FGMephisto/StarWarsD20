@@ -670,7 +670,7 @@
 
 	<string name="power_label_healtype">Type</string>
 	<string name="power_label_healtypenormal">HP</string>
-	<string name="power_label_healtypetemp">TEMP</string>
+	<string name="power_label_healtypetemp">VP</string>
 	<string name="power_label_heal_dice">Dice</string>
 	<string name="power_label_heal_dicemult">Dice Multiplier (Max)</string>
 	<string name="power_label_heal_stat">Mult x Stat (Max)</string>

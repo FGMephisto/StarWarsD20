@@ -237,6 +237,7 @@
 	<!-- Editors -->
 	<string name="weapon_label_stunrange">Stun</string>
 	<string name="power_label_spelldmg">Force Dmg?</string>
+	<string name="power_label_healtypetemp">VP</string>
 	<string name="power_title_heal">Force/Ability Heal</string>
 	<string name="power_title_effect">Force/Ability Effect</string>
 	

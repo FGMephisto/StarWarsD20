@@ -183,19 +183,19 @@
 					<left relation="relative" offset="2" postoffset="2" />
 				</anchored>
 			</icon_usepower>
-			<basicnumber name="cost">
-				<anchored to="leftanchor" width="20" height="20">
-					<top />
-					<left relation="relative" offset="5" postoffset="5" />
-				</anchored>
-				<min>0</min>
-			</basicnumber>
-			<buttongroup_counter_power name="counter">
-				<anchored to="leftanchor">
-					<top />
-					<left relation="relative" offset="5" postoffset="5" />
-				</anchored>
-			</buttongroup_counter_power>
+			<!-- <basicnumber name="cost"> -->
+				<!-- <anchored to="leftanchor" width="20" height="20"> -->
+					<!-- <top /> -->
+					<!-- <left relation="relative" offset="5" postoffset="5" /> -->
+				<!-- </anchored> -->
+				<!-- <min>0</min> -->
+			<!-- </basicnumber> -->
+			<!-- <buttongroup_counter_power name="counter"> -->
+				<!-- <anchored to="leftanchor"> -->
+					<!-- <top /> -->
+					<!-- <left relation="relative" offset="5" postoffset="5" /> -->
+				<!-- </anchored> -->
+			<!-- </buttongroup_counter_power> -->
 
 			<string_poweritem_header_name name="name">
 				<empty textres="library_recordtype_empty_spell" />

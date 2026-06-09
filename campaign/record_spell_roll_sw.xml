@@ -34,8 +34,8 @@
 				</anchored>
 				<parameters>
 					<defaultlabelres>power_label_atktypenone</defaultlabelres>
-					<labelsres>power_label_atktypemelee|power_label_atktyperanged|power_label_atktypemtouch|power_label_atktypertouch|power_label_atktypegrapple|power_label_atktypeskill</labelsres>
-					<values>melee|ranged|mtouch|rtouch|cm|skill</values>
+					<labelsres>power_label_atktypemelee|power_label_atktyperanged|power_label_atktypeskill</labelsres>
+					<values>melee|ranged|skill</values>
 				</parameters>
 				<script>
 					function onValueChanged()
@@ -46,10 +46,17 @@
 						if bSkill then
 							window.atkmod.setVisible(false);
 						else
-							window.atkmod.onValueChanged(); -- trigger hideonvalue check
+							if window.atkmod.onValueChanged then
+								window.atkmod.onValueChanged();
+							else
+								window.atkmod.setVisible(window.atkmod.getValue() ~= 0);
+							end
 						end
 					end
 					function onInit()
+						if super and super.onInit then
+							super.onInit();
+						end
 						onValueChanged();
 					end
 				</script>
@@ -68,33 +75,6 @@
 				<hideonvalue value="0" />
 			</basicnumber>
 			
-			<header_column name="header_clc">
-				<static textres="power_header_cast_clc" />
-				<center />
-			</header_column>
-			<label name="clcplus">
-				<anchored width="10">
-					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
-					<left offset="5" />
-				</anchored>
-				<static>+</static>
-				<center />
-			</label>
-			<basicnumber name="clcmod">
-				<anchored to="clcplus" position="right" offset="5,0" width="25" />
-				<hideonvalue value="0" />
-			</basicnumber>
-			<label name="srnotallowedlabel">
-				<anchored>
-					<top parent="clcmod" />
-					<right offset="-30" />
-				</anchored>
-				<static textres="power_label_srnotallowed" />
-			</label>
-			<button_checkbox name="srnotallowed">
-				<anchored to="srnotallowedlabel" position="right" offset="5,0" width="20" />
-			</button_checkbox>
-
 			<header_column name="header_save">
 				<static textres="power_header_cast_save" />
 				<center />
@@ -183,20 +163,20 @@
 				<readonly />
 			</simplestringc>
 			
-			<label_column>
-				<static textres="power_label_metamagic" />
-			</label_column>
-			<button_stringcycler name="meta">
-				<anchored width="80">
-					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
-					<left offset="97" />
-				</anchored>
-				<parameters>
-					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>power_label_metamagicempower|power_label_metamagicmaximize</labelsres>
-					<values>empower|maximize</values>
-				</parameters>
-			</button_stringcycler>
+			<!-- <label_column> -->
+				<!-- <static textres="power_label_metamagic" /> -->
+			<!-- </label_column> -->
+			<!-- <button_stringcycler name="meta"> -->
+				<!-- <anchored width="80"> -->
+					<!-- <top parent="columnanchor" anchor="bottom" relation="relative" offset="7" /> -->
+					<!-- <left offset="97" /> -->
+				<!-- </anchored> -->
+				<!-- <parameters> -->
+					<!-- <defaultlabelres>dash</defaultlabelres> -->
+					<!-- <labelsres>power_label_metamagicempower|power_label_metamagicmaximize</labelsres> -->
+					<!-- <values>empower|maximize</values> -->
+				<!-- </parameters> -->
+			<!-- </button_stringcycler> -->
 
 			<label_column>
 				<static textres="power_label_spelldmg" />
@@ -392,20 +372,20 @@
 				</parameters>
 			</button_stringcycler>
 			
-			<label_column>
-				<static textres="power_label_metamagic" />
-			</label_column>
-			<button_stringcycler name="meta">
-				<anchored width="80">
-					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
-					<left offset="97" />
-				</anchored>
-				<parameters>
-					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>power_label_metamagicempower|power_label_metamagicmaximize</labelsres>
-					<values>empower|maximize</values>
-				</parameters>
-			</button_stringcycler>
+			<!-- <label_column> -->
+				<!-- <static textres="power_label_metamagic" /> -->
+			<!-- </label_column> -->
+			<!-- <button_stringcycler name="meta"> -->
+				<!-- <anchored width="80"> -->
+					<!-- <top parent="columnanchor" anchor="bottom" relation="relative" offset="7" /> -->
+					<!-- <left offset="97" /> -->
+				<!-- </anchored> -->
+				<!-- <parameters> -->
+					<!-- <defaultlabelres>dash</defaultlabelres> -->
+					<!-- <labelsres>power_label_metamagicempower|power_label_metamagicmaximize</labelsres> -->
+					<!-- <values>empower|maximize</values> -->
+				<!-- </parameters> -->
+			<!-- </button_stringcycler> -->
 
 			<header_column name="header_heal">
 				<static textres="power_header_heal" />

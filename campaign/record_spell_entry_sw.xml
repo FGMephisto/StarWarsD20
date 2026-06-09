@@ -76,6 +76,11 @@
 			<linkc_listitem_left name="shortcut">
 				<class>spelldesc2</class>
 			</linkc_listitem_left>
+
+			<number_listitem_linked_right name="total" insertbefore="header">
+				<nodrag />
+				<script file="custom/scripts/number_power_skill_total_hm3.lua" />
+			</number_listitem_linked_right>
 		</sheetdata>
 	</windowclass>
 	<windowclass name="power_item_mini" merge="join">
@@ -100,7 +105,9 @@
 				local nodeAction = getDatabaseNode();
 				
 				attackview.setValue(PowerActionManagerCore.getActionText(nodeAction, { sSubRoll = "atk" }));
-				levelcheckview.setValue(PowerActionManagerCore.getActionText(nodeAction, { sSubRoll = "clc" }));
+				if levelcheckview then
+					levelcheckview.setValue(PowerActionManagerCore.getActionText(nodeAction, { sSubRoll = "clc" }));
+				end
 				saveview.setValue(PowerActionManagerCore.getActionText(nodeAction, { sSubRoll = "save" }));
 			end
 			function performAction(draginfo, sSubRoll)
@@ -143,19 +150,19 @@
 				<subroll>save</subroll>
 			</string_poweractionview>
 
-			<button_poweraction name="levelcheckbutton">
-				<anchored to="saveview" position="righthigh" offset="10,0" />
-				<subroll>clc</subroll>
-			</button_poweraction>
-			<label name="levelcheckviewlabel">
-				<anchored to="levelcheckbutton" position="righthigh" offset="5,0" />
-				<static textres="clc" />
-				<tooltip textres="casterlevelcheck" />
-			</label>
-			<string_poweractionview name="levelcheckview">
-				<anchored to="levelcheckviewlabel" position="righthigh" offset="5,0" width="25" />
-				<subroll>clc</subroll>
-			</string_poweractionview>
+			<!-- <button_poweraction name="levelcheckbutton"> -->
+				<!-- <anchored to="saveview" position="righthigh" offset="10,0" /> -->
+				<!-- <subroll>clc</subroll> -->
+			<!-- </button_poweraction> -->
+			<!-- <label name="levelcheckviewlabel"> -->
+				<!-- <anchored to="levelcheckbutton" position="righthigh" offset="5,0" /> -->
+				<!-- <static textres="clc" /> -->
+				<!-- <tooltip textres="casterlevelcheck" /> -->
+			<!-- </label> -->
+			<!-- <string_poweractionview name="levelcheckview"> -->
+				<!-- <anchored to="levelcheckviewlabel" position="righthigh" offset="5,0" width="25" /> -->
+				<!-- <subroll>clc</subroll> -->
+			<!-- </string_poweractionview> -->
 		</sheetdata>
 	</windowclass>
 	<windowclass name="power_action_damage">
