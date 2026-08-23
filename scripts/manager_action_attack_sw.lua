@@ -228,7 +228,7 @@ function modAttack(rSource, rTarget, rRoll) -- Adjusted
 	end
 	if bMultiShot then
 		table.insert(aAddDesc, "[MultiShot]");
-		nAddMod = nAddMod + 2;
+		nAddMod = nAddMod - 4;
 	end
 	if bRapidShot then
 		table.insert(aAddDesc, "[Rapid Shot]");

@@ -6,7 +6,7 @@
 
 function onInit() -- Adjusted
 	registerOptions();
-	DecalManager.setDefault("images/decals/stw_decal.jpg@Star Wars D20 Assets");
+	DecalManager.setDefault("images/decals/stw_decal.jpg@Star_Wars_D20_Assets");
 end
 
 function registerOptions()

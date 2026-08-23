@@ -373,21 +373,11 @@ function addToWeaponDB(nodeItem)
 	local nAtkBonus = nBonus;
 
 	local sType = string.lower(DB.getValue(nodeItem, "subtype", ""));
-	local bMelee = true;
-	local bRanged = false;
-	if string.find(sType, "melee") then
-		bMelee = true;
-		if nRange > 0 then
-			bRanged = true;
-		end
-	elseif string.find(sType, "ranged") then
-		bMelee = false;
-		bRanged = true;
-	end
-	
-	local bDouble = false;
 	local sProps = DB.getValue(nodeItem, "properties", "");
 	local sPropsLower = sProps:lower();
+	local sNameLower = sName:lower();
+
+	local bDouble = false;
 	if sPropsLower:match("double") then
 		bDouble = true;
 	end
@@ -397,6 +387,28 @@ function addToWeaponDB(nodeItem)
 	local bTwoWeaponFight = false;
 	if hasFeat(nodeChar, "Two-Weapon Fighting") then
 		bTwoWeaponFight = true;
+	end
+
+	local bThrown = sPropsLower:match("thrown") or sType:match("thrown");
+	local bMelee = false;
+	local bRanged = false;
+	if bThrown then
+		bMelee = true;
+		bRanged = true;
+	elseif nRange > 0 then
+		if string.find(sType, "melee") then
+			bMelee = true;
+			bRanged = true;
+		else
+			bMelee = false;
+			bRanged = true;
+		end
+	elseif string.find(sType, "ranged") or string.find(sType, "blaster") or string.find(sType, "slugthrower") or string.find(sType, "heavy") or string.find(sType, "projectile") then
+		bMelee = false;
+		bRanged = true;
+	else
+		bMelee = true;
+		bRanged = false;
 	end
 	
 	local aDamage = {};
@@ -446,7 +458,7 @@ function addToWeaponDB(nodeItem)
 	local nThresholdIndex = 1;
 	local nMultIndex = 1;
 	for kCrit, sCrit in ipairs(aCrit) do
-		local sCritThreshold = string.match(sCrit, "(%d+)[%-–]20");
+		local sCritThreshold = string.match(sCrit, "(%d+)[%-â€“]20");
 		if sCritThreshold then
 			aCritThreshold[nThresholdIndex] = tonumber(sCritThreshold) or 20;
 			nThresholdIndex = nThresholdIndex + 1;
@@ -636,14 +648,10 @@ function addToWeaponDB(nodeItem)
 
 					DB.setValue(nodeDmg, "critmult", "number", aCritMult[1]);
 					
-					if sName == "Sling" then
+					if bThrown or sNameLower:match("sling") or sNameLower:match("spear") or sNameLower:match("dagger") or sNameLower:match("knife") or sNameLower:match("javelin") or sNameLower:match("atlatl") then
 						DB.setValue(nodeDmg, "stat", "string", "strength");
-					elseif sName == "Shortbow" or sName == "Longbow" or sName == "Shortbow, composite" or sName == "Longbow, composite" then
-						DB.setValue(nodeDmg, "stat", "string", "");
-					elseif string.find(string.lower(sName), "crossbow") or sName == "Net" or sName == "Blowgun" then
-						DB.setValue(nodeDmg, "stat", "string", "");
 					else
-						DB.setValue(nodeDmg, "stat", "string", "strength");
+						DB.setValue(nodeDmg, "stat", "string", "");
 					end
 					
 					DB.setValue(nodeDmg, "type", "string", sFinalDamageType1);
