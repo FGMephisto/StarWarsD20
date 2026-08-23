@@ -631,6 +631,58 @@ function updateSpellClassCounts(nodeSpellClass)
 	end
 end
 
+function getSpellNode(nodeAction)
+	if not nodeAction then
+		return nil;
+	end
+	local nodeParent = DB.getParent(nodeAction);
+	if not nodeParent then
+		return nil;
+	end
+	if DB.getName(nodeParent) == "actions" then
+		return DB.getParent(nodeParent);
+	end
+	return nodeAction;
+end
+
+function getSpellClassNode(nodeAction)
+	if not nodeAction then
+		return nil;
+	end
+	local nodeCur = nodeAction;
+	while nodeCur do
+		local nodeParent = DB.getParent(nodeCur);
+		if not nodeParent then
+			break;
+		end
+		local sParentName = DB.getName(nodeParent);
+		if sParentName == "spellset" then
+			return nodeCur;
+		end
+		nodeCur = nodeParent;
+	end
+	return nil;
+end
+
+function getActorNodeFromAction(nodeAction)
+	if not nodeAction then
+		return nil;
+	end
+	local nodeCur = nodeAction;
+	while nodeCur do
+		local nodeParent = DB.getParent(nodeCur);
+		if not nodeParent then
+			break;
+		end
+		local sParentName = DB.getName(nodeParent);
+		if sParentName == "charsheet" or sParentName == "npc" or sParentName == "combattracker" then
+			return nodeCur;
+		end
+		nodeCur = nodeParent;
+	end
+	return nil;
+end
+
 function getSpellActionOutputOrder(nodeAction)
 	if not nodeAction then
 		return 1;
@@ -661,12 +713,15 @@ function getSpellAction(rActor, nodeAction, sSubRoll)
 	if not nodeAction then
 		return;
 	end
-	
+
+	local nodeSpell = getSpellNode(nodeAction);
+	local nodeSpellClass = getSpellClassNode(nodeAction);
+
 	local rAction = {
 		type = DB.getValue(nodeAction, "type", ""),
-		label = DB.getValue(nodeAction, "...name", ""),
+		label = DB.getValue(nodeSpell, "name", ""),
 		order = getSpellActionOutputOrder(nodeAction),
-		nodeSpell = DB.getChild(nodeAction, "..."),
+		nodeSpell = nodeSpell,
 	};
 
 	if rAction.type == "cast" then
@@ -750,7 +805,6 @@ function getSpellAction(rActor, nodeAction, sSubRoll)
 			rAction.sr = "no";
 		end
 		
-		local nodeSpellClass = DB.getChild(nodeAction, ".......");
 		rAction.dcstat = DB.getValue(nodeSpellClass, "dc.ability", "");
 		
 		local sSaveType = DB.getValue(nodeAction, "savetype", "");
@@ -789,7 +843,6 @@ function getSpellAction(rActor, nodeAction, sSubRoll)
 		EffectManagerD20.getStandardEffectDataFromAction(nodeAction, rAction);
 		rAction.aDice, rAction.nDuration = getActionEffectDuration(rActor, nodeAction);
 
-		local nodeSpellClass = DB.getChild(nodeAction, ".......");
 		ActorEffectManager.evalEffectTags(rActor, rAction, nodeSpellClass);
 	end
 	
@@ -800,7 +853,7 @@ function onSpellAction(draginfo, nodeAction, sSubRoll)
 	if not nodeAction then
 		return;
 	end
-	local nodeActor = DB.getChild(nodeAction, ".........");
+	local nodeActor = getActorNodeFromAction(nodeAction);
 	local rActor = ActorManager.resolveActor(nodeActor);
 	if not rActor then
 		return;
@@ -868,8 +921,8 @@ function onSpellAction(draginfo, nodeAction, sSubRoll)
 end
 
 function getActionAbilityBonus(nodeAction)
-	local nodeSpellClass = DB.getChild(nodeAction, ".......");
-	local nodeCreature = DB.getChild(nodeSpellClass, "...");
+	local nodeSpellClass = getSpellClassNode(nodeAction);
+	local nodeCreature = getActorNodeFromAction(nodeAction);
 
 	local sAbility = DB.getValue(nodeSpellClass, "dc.ability", "");
 
@@ -878,8 +931,9 @@ function getActionAbilityBonus(nodeAction)
 end
 
 function getActionCLC(nodeAction)
-	local nStat = DB.getValue(nodeAction, ".......cl", 0);
-	local nPen = DB.getValue(nodeAction, ".......sp", 0);
+	local nodeSpellClass = getSpellClassNode(nodeAction);
+	local nStat = DB.getValue(nodeSpellClass, "cl", 0);
+	local nPen = DB.getValue(nodeSpellClass, "sp", 0);
 	local nMod = DB.getValue(nodeAction, "clcmod", 0);
 	
 	return nStat + nPen + nMod;
@@ -888,19 +942,22 @@ end
 function getActionSaveDC(nodeAction)
 	local nTotal;
 	
+	local nodeSpellClass = getSpellClassNode(nodeAction);
+	local nodeSpell = getSpellNode(nodeAction);
+
 	if DB.getValue(nodeAction, "savedctype", "") == "fixed" then
 		nTotal = DB.getValue(nodeAction, "savedcmod", 0);
 	elseif DB.getValue(nodeAction, "savedctype", "") == "casterlevel" then
 		local nClassStat = getActionAbilityBonus(nodeAction);
-		local nClassMisc = DB.getValue(nodeAction, ".......dc.misc", 0);
-		local nCasterLevel = math.floor(DB.getValue(nodeAction, ".......cl", 0)/2);
+		local nClassMisc = DB.getValue(nodeSpellClass, "dc.misc", 0);
+		local nCasterLevel = math.floor(DB.getValue(nodeSpellClass, "cl", 0)/2);
 		local nMod = DB.getValue(nodeAction, "savedcmod", 0);
 
 		nTotal = 10 + nClassStat + nClassMisc + nCasterLevel + nMod;
 	else
 		local nClassStat = getActionAbilityBonus(nodeAction);
-		local nClassMisc = DB.getValue(nodeAction, ".......dc.misc", 0);
-		local nSpellLevel = DB.getValue(nodeAction, ".....level", 0);
+		local nClassMisc = DB.getValue(nodeSpellClass, "dc.misc", 0);
+		local nSpellLevel = DB.getValue(nodeSpell, "level", 0);
 		local nMod = DB.getValue(nodeAction, "savedcmod", 0);
 		
 		nTotal = 10 + nClassStat + nClassMisc + nSpellLevel + nMod;
@@ -915,7 +972,8 @@ function getActionMod(rActor, nodeAction, sStat, nStatMax)
 	if sStat == "" then
 		nStat = 0;
 	elseif sStat == "cl" or sStat == "halfcl" or sStat == "oddcl" then
-		nStat = DB.getValue(nodeAction, ".......cl", 0);
+		local nodeSpellClass = getSpellClassNode(nodeAction);
+		nStat = DB.getValue(nodeSpellClass, "cl", 0);
 		if sStat == "halfcl" then
 			nStat = math.floor((nStat + 0.5) / 2);
 		elseif sStat == "oddcl" then
@@ -1076,13 +1134,14 @@ function getActionAttackText(nodeAction)
 	local sAttackType = DB.getValue(nodeAction, "atktype", "");
 	local nAttackMod = DB.getValue(nodeAction, "atkmod", 0);
 
-	local nodeActor = DB.getChild(nodeAction, ".........");
+	local nodeActor = getActorNodeFromAction(nodeAction);
 	local rActor = ActorManager.resolveActor(nodeActor);
 
 	if sAttackType == "skill" then
 		local sSkill = DB.getValue(nodeAction, "atkskill", "");
 		if sSkill == "" then
-			sSkill = DB.getValue(nodeAction, "...name", "");
+			local nodeSpell = getSpellNode(nodeAction);
+			sSkill = DB.getValue(nodeSpell, "name", "");
 		end
 		if sSkill ~= "" then
 			if rActor then
@@ -1186,7 +1245,7 @@ function getActionSaveText(nodeAction)
 end
 
 function getActionDamageText(nodeAction)
-	local nodeActor = DB.getChild(nodeAction, ".........");
+	local nodeActor = getActorNodeFromAction(nodeAction);
 	local rActor = ActorManager.resolveActor(nodeActor);
 
 	local clauses = SpellManager.getActionDamage(rActor, nodeAction);
@@ -1215,7 +1274,7 @@ function getActionDamageText(nodeAction)
 end
 
 function getActionHealText(nodeAction)
-	local nodeActor = DB.getChild(nodeAction, ".........");
+	local nodeActor = getActorNodeFromAction(nodeAction);
 	local rActor = ActorManager.resolveActor(nodeActor);
 
 	local clauses = SpellManager.getActionHeal(rActor, nodeAction);
@@ -1245,7 +1304,7 @@ function getActionHealText(nodeAction)
 end
 
 function getActionEffectDurationText(node)
-	local nodeActor = DB.getChild(node, ".........");
+	local nodeActor = getActorNodeFromAction(node);
 	local rActor = ActorManager.resolveActor(nodeActor);
 
 	local aDice, nMod = getActionEffectDuration(rActor, node);
