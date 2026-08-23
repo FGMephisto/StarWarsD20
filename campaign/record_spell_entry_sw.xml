@@ -79,7 +79,7 @@
 
 			<number_listitem_linked_right name="total" insertbefore="header">
 				<nodrag />
-				<script file="custom/scripts/number_power_skill_total_hm3.lua" />
+				<script file="custom/scripts/number_power_skill_total_sw.lua" />
 			</number_listitem_linked_right>
 		</sheetdata>
 	</windowclass>
