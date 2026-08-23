@@ -991,29 +991,18 @@ function getActionDamage(rActor, nodeAction)
 	if not nodeAction then
 		return {};
 	end
-	
+
 	local clauses = {};
 	local aDamageNodes = UtilityManager.getNodeSortedChildren(nodeAction, "damagelist");
 	for _,v in ipairs(aDamageNodes) do
 		local aDmgDice = DB.getValue(v, "dice", {});
 		local nDmgMod = DB.getValue(v, "bonus", 0);
 
-		local sDmgStat = DB.getValue(v, "stat", "");
-		local nDmgStatMult = 1;
-		local nDmgStatMax = 0;
-		if sDmgStat ~= "" then
-			nDmgStatMult = math.max(DB.getValue(v, "statmult", 1), 0.5);
-			nDmgStatMax = math.max(DB.getValue(v, "statmax", 0), 0);
-			
-			local nDmgStat = getActionMod(rActor, nodeAction, sDmgStat, nDmgStatMax);
-			nDmgMod = nDmgMod + math.floor(nDmgStat * nDmgStatMult);
-		end
-
 		local aDamageTypes = ActionDamageCore.getDamageTypeArray(DB.getValue(v, "type", ""));
 		local sDmgType = table.concat(aDamageTypes, ",");
 		local nDC = DB.getValue(v, "dc", 0);
-		
-		table.insert(clauses, { dice = aDmgDice, modifier = nDmgMod, mult = 2, stat = sDmgStat, statmax = nDmgStatMax, statmult = nDmgStatMult, dmgtype = sDmgType, dc = nDC });
+
+		table.insert(clauses, { dice = aDmgDice, modifier = nDmgMod, mult = 2, dmgtype = sDmgType, dc = nDC });
 	end
 
 	return clauses;
@@ -1023,26 +1012,15 @@ function getActionHeal(rActor, nodeAction)
 	if not nodeAction then
 		return {};
 	end
-	
+
 	local clauses = {};
 	local aDamageNodes = UtilityManager.getNodeSortedChildren(nodeAction, "heallist");
 	for _,v in ipairs(aDamageNodes) do
 		local aDice = DB.getValue(v, "dice", {});
 		local nMod = DB.getValue(v, "bonus", 0);
-
-		local sStat = DB.getValue(v, "stat", "");
-		local nStatMult = 1;
-		local nStatMax = 0;
-		if sStat ~= "" then
-			nStatMult = math.max(DB.getValue(v, "statmult", 1), 0.5);
-			nStatMax = math.max(DB.getValue(v, "statmax", 0), 0);
-			
-			local nStat = getActionMod(rActor, nodeAction, sStat, nStatMax);
-			nMod = nMod + math.floor(nStat * nStatMult);
-		end
 		local nDC = DB.getValue(v, "dc", 0);
 
-		table.insert(clauses, { dice = aDice, modifier = nMod, stat = sStat, statmax = nStatMax, statmult = nStatMult, dc = nDC });
+		table.insert(clauses, { dice = aDice, modifier = nMod, dc = nDC });
 	end
 
 	return clauses;

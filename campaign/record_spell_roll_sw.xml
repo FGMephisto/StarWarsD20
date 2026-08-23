@@ -220,11 +220,7 @@
 				<static textres="power_label_dmg_dice" />
 			</label_fieldtop>
 			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="135,1" width="160" />
-				<static textres="power_label_dmg_stat" />
-			</label_fieldtop>
-			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="305,1" width="50" />
+				<anchored to="list" position="aboveleft" offset="135,1" width="50" />
 				<static textres="power_label_dmg_bonus" />
 			</label_fieldtop>
 		</sheetdata>
@@ -255,44 +251,11 @@
 			<label_listitem_left name="label_plus">
 				<static>+</static>
 			</label_listitem_left>
-			<number_listitem_left name="statmult">
-				<anchored width="20" />
-				<default>1</default>
-				<min>0.5</min>
-				<wheel>0.5</wheel>
-				<hideonvalue>1</hideonvalue>
-				<tooltip textres="power_tooltip_statmult" />
-			</number_listitem_left>
-			<label_listitem_left name="label_statmultx">
-				<static>x</static>
-			</label_listitem_left>
-			<stringcycler_listitem_left name="stat">
-				<anchored width="60" />
-				<parameters>
-					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>str|dex|con|int|wis|cha</labelsres>
-					<values>strength|dexterity|constitution|intelligence|wisdom|charisma</values>
-				</parameters>
-			</stringcycler_listitem_left>
-			<label_listitem_left name="statmaxparen">
-				<static>(</static>
-			</label_listitem_left>
-			<number_listitem_left name="statmax">
-				<anchored width="20" />
-				<hideonvalue value="0" />
-				<tooltip textres="power_tooltip_statmax" />
-			</number_listitem_left>
-			<label_listitem_left name="statmaxparen2">
-				<static>)</static>
-			</label_listitem_left>
-			<label_listitem_left name="label_plus2">
-				<static>+</static>
-			</label_listitem_left>
 			<number_listitem_left name="bonus">
 				<anchored width="30" />
 				<hideonvalue>0</hideonvalue>
 			</number_listitem_left>
-			
+
 			<label name="label_type">
 				<anchored position="insidetopleft" offset="20,25" />
 				<static textres="power_label_dmgtype" />
@@ -386,7 +349,7 @@
 				<datasource>.heallist</datasource>
 				<class>power_action_editor_heal_entry</class>
 			</list_editor>
-			
+
 			<label_fieldtop>
 				<anchored to="list" position="aboveleft" offset="5,1" width="55" />
 				<static textres="power_label_dmg_dc" />
@@ -396,11 +359,7 @@
 				<static textres="power_label_heal_dice" />
 			</label_fieldtop>
 			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="135,1" width="160" />
-				<static textres="power_label_heal_stat" />
-			</label_fieldtop>
-			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="305,1" width="50" />
+				<anchored to="list" position="aboveleft" offset="135,1" width="50" />
 				<static textres="power_label_heal_bonus" />
 			</label_fieldtop>
 		</sheetdata>
@@ -429,39 +388,6 @@
 			</dice_listitem_left>
 
 			<label_listitem_left name="label_plus">
-				<static>+</static>
-			</label_listitem_left>
-			<number_listitem_left name="statmult">
-				<anchored width="20" />
-				<default>1</default>
-				<min>0.5</min>
-				<wheel>0.5</wheel>
-				<hideonvalue>1</hideonvalue>
-				<tooltip textres="power_tooltip_statmult" />
-			</number_listitem_left>
-			<label_listitem_left name="label_statmultx">
-				<static>x</static>
-			</label_listitem_left>
-			<stringcycler_listitem_left name="stat">
-				<anchored width="60" />
-				<parameters>
-					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>str|dex|con|int|wis|cha</labelsres>
-					<values>strength|dexterity|constitution|intelligence|wisdom|charisma</values>
-				</parameters>
-			</stringcycler_listitem_left>
-			<label_listitem_left name="statmaxparen">
-				<static>(</static>
-			</label_listitem_left>
-			<number_listitem_left name="statmax">
-				<anchored width="20" />
-				<hideonvalue value="0" />
-				<tooltip textres="power_tooltip_statmax" />
-			</number_listitem_left>
-			<label_listitem_left name="statmaxparen2">
-				<static>)</static>
-			</label_listitem_left>
-			<label_listitem_left name="label_plus2">
 				<static>+</static>
 			</label_listitem_left>
 			<number_listitem_left name="bonus">
