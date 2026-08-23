@@ -203,8 +203,8 @@ function parseSpell(nodeSpell)
 	
 	-- Get the description minos some problem characters and in lowercase
 	local sDesc = string.lower(DB.getValue(nodeSpell, "description", ""));
-	sDesc = string.gsub(sDesc, "’", "'");
-	sDesc = string.gsub(sDesc, "–", "-");
+	sDesc = string.gsub(sDesc, "â€™", "'");
+	sDesc = string.gsub(sDesc, "â€“", "-");
 	
 	local aWords = StringManager.parseWords(sDesc);
 	
@@ -675,63 +675,70 @@ function getSpellAction(rActor, nodeAction, sSubRoll)
 		
 		local sAttackType = DB.getValue(nodeAction, "atktype", "");
 		if sAttackType ~= "" then
-			if sAttackType == "mtouch" then
-				rAction.range = "M";
-				rAction.touch = true;
-			elseif sAttackType == "rtouch" then
-				rAction.range = "R";
-				rAction.touch = true;
-			elseif sAttackType == "ranged" then
-				rAction.range = "R";
-			elseif sAttackType == "cm" then
-				rAction.range = "M";
-				rAction.cm = true;
+			if sAttackType == "skill" then
+				rAction.skill = true;
+				local sSkill = DB.getValue(nodeAction, "atkskill", "");
+				if sSkill == "" then
+					sSkill = rAction.label;
+				end
+				rAction.skillname = sSkill;
+				local nSkillVal, _, sStat = CharManager.getSkillValue(rActor, sSkill);
+				rAction.modifier = (nSkillVal or 0) + DB.getValue(nodeAction, "atkmod", 0);
+				rAction.stat = sStat;
 			else
-				rAction.range = "M";
-			end
-			
-			if rAction.cm then
-				rAction.modifier = ActorManager35E.getAbilityScore(rActor, "cmb") + DB.getValue(nodeAction, "atkmod", 0);
-			else
-				rAction.modifier = ActorManager35E.getAbilityScore(rActor, "bab") + DB.getValue(nodeAction, "atkmod", 0);
-			end
-			rAction.modifier = DB.getValue(nodeAction, "atkmod", 0);
-			rAction.crit = 20;
+				if sAttackType == "mtouch" then
+					rAction.range = "M";
+					rAction.touch = true;
+				elseif sAttackType == "rtouch" then
+					rAction.range = "R";
+					rAction.touch = true;
+				elseif sAttackType == "ranged" then
+					rAction.range = "R";
+				elseif sAttackType == "cm" then
+					rAction.range = "M";
+					rAction.cm = true;
+				else
+					rAction.range = "M";
+				end
+				
+				rAction.modifier = DB.getValue(nodeAction, "atkmod", 0);
+				rAction.crit = 20;
 
-			if ActorManager.isPC(rActor) then
-				local nodeActor = ActorManager.getCreatureNode(rActor);
-				if rAction.range == "R" then
-					rAction.stat = DB.getValue(nodeActor, "attackbonus.ranged.ability", "");
-					if rAction.stat == "" then
-						rAction.stat = "dexterity";
-					end
-					rAction.modifier = rAction.modifier + DB.getValue(nodeActor, "attackbonus.ranged.size", 0) + DB.getValue(nodeActor, "attackbonus.ranged.misc", 0);
-				else
-					if rAction.cm then
-						rAction.stat = DB.getValue(nodeActor, "attackbonus.grapple.ability", "");
+				if ActorManager.isPC(rActor) then
+					local nodeActor = ActorManager.getCreatureNode(rActor);
+					if rAction.range == "R" then
+						rAction.stat = DB.getValue(nodeActor, "attackbonus.ranged.ability", "");
 						if rAction.stat == "" then
-							rAction.stat = "strength";
+							rAction.stat = "dexterity";
 						end
-						rAction.modifier = rAction.modifier + DB.getValue(nodeActor, "attackbonus.grapple.size", 0) + DB.getValue(nodeActor, "attackbonus.grapple.misc", 0);
+						rAction.modifier = rAction.modifier + DB.getValue(nodeActor, "attackbonus.ranged.size", 0) + DB.getValue(nodeActor, "attackbonus.ranged.misc", 0);
 					else
-						rAction.stat = DB.getValue(nodeActor, "attackbonus.melee.ability", "");
-						if rAction.stat == "" then
-							rAction.stat = "strength";
+						if rAction.cm then
+							rAction.stat = DB.getValue(nodeActor, "attackbonus.grapple.ability", "");
+							if rAction.stat == "" then
+								rAction.stat = "strength";
+							end
+							rAction.modifier = rAction.modifier + DB.getValue(nodeActor, "attackbonus.grapple.size", 0) + DB.getValue(nodeActor, "attackbonus.grapple.misc", 0);
+						else
+							rAction.stat = DB.getValue(nodeActor, "attackbonus.melee.ability", "");
+							if rAction.stat == "" then
+								rAction.stat = "strength";
+							end
+							rAction.modifier = rAction.modifier + DB.getValue(nodeActor, "attackbonus.melee.size", 0) + DB.getValue(nodeActor, "attackbonus.melee.misc", 0);
 						end
-						rAction.modifier = rAction.modifier + DB.getValue(nodeActor, "attackbonus.melee.size", 0) + DB.getValue(nodeActor, "attackbonus.melee.misc", 0);
 					end
-				end
-				rAction.modifier = rAction.modifier + ActorManager35E.getAbilityScore(rActor, "bab") + ActorManager35E.getAbilityBonus(rActor, rAction.stat);
-			else
-				if rAction.range == "R" then
-					rAction.stat = "dexterity";
-				else
-					rAction.stat = "strength";
-				end
-				if rAction.cm then
-					rAction.modifier = rAction.modifier + ActorManager35E.getAbilityScore(rActor, "cmb");
-				else
 					rAction.modifier = rAction.modifier + ActorManager35E.getAbilityScore(rActor, "bab") + ActorManager35E.getAbilityBonus(rActor, rAction.stat);
+				else
+					if rAction.range == "R" then
+						rAction.stat = "dexterity";
+					else
+						rAction.stat = "strength";
+					end
+					if rAction.cm then
+						rAction.modifier = rAction.modifier + ActorManager35E.getAbilityScore(rActor, "cmb");
+					else
+						rAction.modifier = rAction.modifier + ActorManager35E.getAbilityScore(rActor, "bab") + ActorManager35E.getAbilityBonus(rActor, rAction.stat);
+					end
 				end
 			end
 		end
@@ -809,7 +816,10 @@ function onSpellAction(draginfo, nodeAction, sSubRoll)
 		end
 		
 		if not rAction.subtype or rAction.subtype == "atk" then
-			if rAction.range then
+			if rAction.skill then
+				local rRoll = ActionSkill.getRoll(rActor, rAction.skillname, rAction.modifier, rAction.stat);
+				table.insert(rRolls, rRoll);
+			elseif rAction.range then
 				local rRoll = ActionAttack.getRoll(rActor, rAction);
 				rRoll.bSpell = true;
 				table.insert(rRolls, rRoll);
@@ -1062,24 +1072,92 @@ end
 
 function getActionAttackText(nodeAction)
 	local sAttack = "";
-	
+
 	local sAttackType = DB.getValue(nodeAction, "atktype", "");
 	local nAttackMod = DB.getValue(nodeAction, "atkmod", 0);
-	if sAttackType == "melee" then
-		sAttack = Interface.getString("power_label_atktypemelee");
+
+	local nodeActor = DB.getChild(nodeAction, ".........");
+	local rActor = ActorManager.resolveActor(nodeActor);
+
+	if sAttackType == "skill" then
+		local sSkill = DB.getValue(nodeAction, "atkskill", "");
+		if sSkill == "" then
+			sSkill = DB.getValue(nodeAction, "...name", "");
+		end
+		if sSkill ~= "" then
+			if rActor then
+				local nSkillVal = CharManager.getSkillValue(rActor, sSkill);
+				sAttack = string.format("%s %+d", sSkill, (nSkillVal or 0) + nAttackMod);
+			else
+				sAttack = sSkill;
+				if nAttackMod ~= 0 then
+					sAttack = sAttack .. string.format(" %+d", nAttackMod);
+				end
+			end
+		else
+			sAttack = Interface.getString("power_label_atktypeskill");
+		end
+	elseif sAttackType == "melee" then
+		if rActor then
+			local nBAB = ActorManager35E.getAbilityScore(rActor, "bab");
+			local sStat = "strength";
+			local nMisc = 0;
+			local nSize = 0;
+			if ActorManager.isPC(rActor) then
+				local nodeCreature = ActorManager.getCreatureNode(rActor);
+				sStat = DB.getValue(nodeCreature, "attackbonus.melee.ability", "");
+				if sStat == "" then sStat = "strength"; end
+				nMisc = DB.getValue(nodeCreature, "attackbonus.melee.misc", 0);
+				nSize = DB.getValue(nodeCreature, "attackbonus.melee.size", 0);
+			end
+			local nStatBonus = ActorManager35E.getAbilityBonus(rActor, sStat);
+			local nTotal = nBAB + nStatBonus + nMisc + nSize + nAttackMod;
+			sAttack = string.format("%s %+d", Interface.getString("power_label_atktypemelee"), nTotal);
+		else
+			sAttack = Interface.getString("power_label_atktypemelee");
+			if nAttackMod ~= 0 then
+				sAttack = sAttack .. string.format(" %+d", nAttackMod);
+			end
+		end
 	elseif sAttackType == "ranged" then
-		sAttack = Interface.getString("power_label_atktyperanged");
+		if rActor then
+			local nBAB = ActorManager35E.getAbilityScore(rActor, "bab");
+			local sStat = "dexterity";
+			local nMisc = 0;
+			local nSize = 0;
+			if ActorManager.isPC(rActor) then
+				local nodeCreature = ActorManager.getCreatureNode(rActor);
+				sStat = DB.getValue(nodeCreature, "attackbonus.ranged.ability", "");
+				if sStat == "" then sStat = "dexterity"; end
+				nMisc = DB.getValue(nodeCreature, "attackbonus.ranged.misc", 0);
+				nSize = DB.getValue(nodeCreature, "attackbonus.ranged.size", 0);
+			end
+			local nStatBonus = ActorManager35E.getAbilityBonus(rActor, sStat);
+			local nTotal = nBAB + nStatBonus + nMisc + nSize + nAttackMod;
+			sAttack = string.format("%s %+d", Interface.getString("power_label_atktyperanged"), nTotal);
+		else
+			sAttack = Interface.getString("power_label_atktyperanged");
+			if nAttackMod ~= 0 then
+				sAttack = sAttack .. string.format(" %+d", nAttackMod);
+			end
+		end
 	elseif sAttackType == "mtouch" then
 		sAttack = Interface.getString("power_label_atktypemtouch");
+		if nAttackMod ~= 0 then
+			sAttack = sAttack .. string.format(" %+d", nAttackMod);
+		end
 	elseif sAttackType == "rtouch" then
 		sAttack = Interface.getString("power_label_atktypertouch");
+		if nAttackMod ~= 0 then
+			sAttack = sAttack .. string.format(" %+d", nAttackMod);
+		end
 	elseif sAttackType == "cm" then
 		sAttack = Interface.getString("power_label_atktypegrapple");
+		if nAttackMod ~= 0 then
+			sAttack = sAttack .. string.format(" %+d", nAttackMod);
+		end
 	end
-	if sAttack ~= "" and nAttackMod ~= 0 then
-		sAttack = sAttack .. " + " .. nAttackMod;
-	end
-	
+
 	return sAttack;
 end
 
