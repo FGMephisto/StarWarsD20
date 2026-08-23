@@ -235,6 +235,8 @@
 	
 	<!-- Special Abilities -->
 	<!-- Editors -->
+	<string name="power_label_dmg_dc">Check DC</string>
+	<string name="power_tooltip_dmg_dc">Force skill check DC result required</string>
 	<string name="weapon_label_stunrange">Stun</string>
 	<string name="power_label_spelldmg">Force Dmg?</string>
 	<string name="power_label_healtypetemp">VP</string>

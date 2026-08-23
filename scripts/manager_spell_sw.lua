@@ -983,9 +983,6 @@ function getActionMod(rActor, nodeAction, sStat, nStatMax)
 		nStat = ActorManager35E.getAbilityBonus(rActor, sStat);
 	end
 	
-	if nStat > 0 and nStatMax and nStatMax > 0 then
-		nStat = math.max(math.min(nStat, nStatMax), 0);
-	end
 	
 	return nStat;
 end
@@ -999,21 +996,6 @@ function getActionDamage(rActor, nodeAction)
 	local aDamageNodes = UtilityManager.getNodeSortedChildren(nodeAction, "damagelist");
 	for _,v in ipairs(aDamageNodes) do
 		local aDmgDice = DB.getValue(v, "dice", {});
-		if #aDmgDice > 0 then
-			local sDiceStat = DB.getValue(v, "dicestat", "");
-			local nDiceStatMax = DB.getValue(v, "dicestatmax", 0);
-			
-			local nDiceMult = math.max(getActionMod(rActor, nodeAction, sDiceStat, nDiceStatMax), 1);
-			if nDiceMult > 1 then
-				local nCopy = #aDmgDice;
-				for i = 2, nDiceMult do
-					for j = 1, nCopy do
-						table.insert(aDmgDice, aDmgDice[j]);
-					end
-				end
-			end
-		end
-		
 		local nDmgMod = DB.getValue(v, "bonus", 0);
 
 		local sDmgStat = DB.getValue(v, "stat", "");
@@ -1029,8 +1011,9 @@ function getActionDamage(rActor, nodeAction)
 
 		local aDamageTypes = ActionDamageCore.getDamageTypeArray(DB.getValue(v, "type", ""));
 		local sDmgType = table.concat(aDamageTypes, ",");
+		local nDC = DB.getValue(v, "dc", 0);
 		
-		table.insert(clauses, { dice = aDmgDice, modifier = nDmgMod, mult = 2, stat = sDmgStat, statmax = nDmgStatMax, statmult = nDmgStatMult, dmgtype = sDmgType });
+		table.insert(clauses, { dice = aDmgDice, modifier = nDmgMod, mult = 2, stat = sDmgStat, statmax = nDmgStatMax, statmult = nDmgStatMult, dmgtype = sDmgType, dc = nDC });
 	end
 
 	return clauses;
@@ -1045,21 +1028,6 @@ function getActionHeal(rActor, nodeAction)
 	local aDamageNodes = UtilityManager.getNodeSortedChildren(nodeAction, "heallist");
 	for _,v in ipairs(aDamageNodes) do
 		local aDice = DB.getValue(v, "dice", {});
-		if #aDice > 0 then
-			local sDiceStat = DB.getValue(v, "dicestat", "");
-			local nDiceStatMax = DB.getValue(v, "dicestatmax", 0);
-			
-			local nDiceMult = math.max(getActionMod(rActor, nodeAction, sDiceStat, nDiceStatMax), 1);
-			if nDiceMult > 1 then
-				local nCopy = #aDice;
-				for i = 2, nDiceMult do
-					for j = 1, nCopy do
-						table.insert(aDice, aDice[j]);
-					end
-				end
-			end
-		end
-		
 		local nMod = DB.getValue(v, "bonus", 0);
 
 		local sStat = DB.getValue(v, "stat", "");
@@ -1072,8 +1040,9 @@ function getActionHeal(rActor, nodeAction)
 			local nStat = getActionMod(rActor, nodeAction, sStat, nStatMax);
 			nMod = nMod + math.floor(nStat * nStatMult);
 		end
+		local nDC = DB.getValue(v, "dc", 0);
 
-		table.insert(clauses, { dice = aDice, modifier = nMod, mult = 2, stat = sStat, statmax = nStatMax, statmult = nStatMult });
+		table.insert(clauses, { dice = aDice, modifier = nMod, stat = sStat, statmax = nStatMax, statmult = nStatMult, dc = nDC });
 	end
 
 	return clauses;
@@ -1085,21 +1054,6 @@ function getActionEffectDuration(rActor, nodeAction)
 	end
 	
 	local aDice = DB.getValue(nodeAction, "durdice", {});
-	if #aDice > 0 then
-		local sDiceStat = DB.getValue(nodeAction, "durdicestat", "");
-		local nDiceStatMax = DB.getValue(nodeAction, "durdicestatmax", 0);
-		
-		local nDiceMult = math.max(getActionMod(rActor, nodeAction, sDiceStat, nDiceStatMax), 1);
-		if nDiceMult > 1 then
-			local nCopy = #aDice;
-			for i = 2, nDiceMult do
-				for j = 1, nCopy do
-					table.insert(aDice, aDice[j]);
-				end
-			end
-		end
-	end
-	
 	local nMod = DB.getValue(nodeAction, "durmod", 0);
 	
 	local sStat = DB.getValue(nodeAction, "durstat", "");
@@ -1251,17 +1205,20 @@ function getActionDamageText(nodeAction)
 	local clauses = SpellManager.getActionDamage(rActor, nodeAction);
 	
 	local aOutput = {};
-	for _,rDamage in ipairs(ActionCore.getCombinedClauses(clauses)) do
-		local sDice = StringManager.convertDiceToString(rDamage.aDice, rDamage.nMod);
+	for _,rDamage in ipairs(clauses) do
+		local sDice = StringManager.convertDiceToString(rDamage.dice, rDamage.modifier);
 		if sDice ~= "" then
-			if rDamage.sType ~= "" then
-				table.insert(aOutput, string.format("%s %s", sDice, rDamage.sType));
-			else
-				table.insert(aOutput, sDice);
+			local sClauseText = sDice;
+			if rDamage.dmgtype and rDamage.dmgtype ~= "" and rDamage.dmgtype ~= "spell" then
+				sClauseText = string.format("%s %s", sClauseText, rDamage.dmgtype);
 			end
+			if (rDamage.dc or 0) > 0 then
+				sClauseText = string.format("[DC %d] %s", rDamage.dc, sClauseText);
+			end
+			table.insert(aOutput, sClauseText);
 		end
 	end
-	local sDamage = table.concat(aOutput, " + ");
+	local sDamage = table.concat(aOutput, " | ");
 	
 	local sMeta = DB.getValue(nodeAction, "meta", "");
 	if sMeta == "empower" then
@@ -1279,16 +1236,18 @@ function getActionHealText(nodeAction)
 
 	local clauses = SpellManager.getActionHeal(rActor, nodeAction);
 	
-	local aHealDice = {};
-	local nHealMod = 0;
+	local aOutput = {};
 	for _,tClause in ipairs(clauses) do
-		for _,vDie in ipairs(tClause.dice) do
-			table.insert(aHealDice, vDie);
+		local sDice = StringManager.convertDiceToString(tClause.dice, tClause.modifier);
+		if sDice ~= "" then
+			local sClauseText = sDice;
+			if (tClause.dc or 0) > 0 then
+				sClauseText = string.format("[DC %d] %s", tClause.dc, sClauseText);
+			end
+			table.insert(aOutput, sClauseText);
 		end
-		nHealMod = nHealMod + tClause.modifier;
 	end
-
-	local sHeal = StringManager.convertDiceToString(aHealDice, nHealMod);
+	local sHeal = table.concat(aOutput, " | ");
 	if DB.getValue(nodeAction, "healtype", "") == "temp" then
 		sHeal = sHeal .. " temporary";
 	end

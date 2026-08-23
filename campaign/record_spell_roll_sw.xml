@@ -212,19 +212,19 @@
 			</list_editor>
 			
 			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="5,1" width="60" />
+				<anchored to="list" position="aboveleft" offset="5,1" width="55" />
+				<static textres="power_label_dmg_dc" />
+			</label_fieldtop>
+			<label_fieldtop>
+				<anchored to="list" position="aboveleft" offset="65,1" width="60" />
 				<static textres="power_label_dmg_dice" />
 			</label_fieldtop>
 			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="85,1" width="120" />
-				<static textres="power_label_dmg_dicemult" />
-			</label_fieldtop>
-			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="220,1" width="160" />
+				<anchored to="list" position="aboveleft" offset="135,1" width="160" />
 				<static textres="power_label_dmg_stat" />
 			</label_fieldtop>
 			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="390,1" width="50" />
+				<anchored to="list" position="aboveleft" offset="305,1" width="50" />
 				<static textres="power_label_dmg_bonus" />
 			</label_fieldtop>
 		</sheetdata>
@@ -239,31 +239,19 @@
 				<editmode>list_iedit</editmode>
 			</button_listitem_idelete_left>
 
+			<label_listitem_left name="label_dc">
+				<static>DC</static>
+			</label_listitem_left>
+			<number_listitem_left name="dc">
+				<anchored width="30" />
+				<hideonvalue>0</hideonvalue>
+				<tooltip textres="power_tooltip_dmg_dc" />
+			</number_listitem_left>
+
 			<dice_listitem_left name="dice">
 				<anchored width="60" />
 			</dice_listitem_left>
-			<label_listitem_left name="label_dicestatx">
-				<static>x</static>
-			</label_listitem_left>
-			<stringcycler_listitem_left name="dicestat">
-				<anchored width="60" />
-				<parameters>
-					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl</labelsres>
-					<values>cl|halfcl|oddcl</values>
-				</parameters>
-			</stringcycler_listitem_left>
-			<label_listitem_left name="dicestatmaxparen">
-				<static>(</static>
-			</label_listitem_left>
-			<number_listitem_left name="dicestatmax">
-				<anchored width="20" />
-				<hideonvalue value="0" />
-				<tooltip textres="power_tooltip_dicemax" />
-			</number_listitem_left>
-			<label_listitem_left name="dicestatmaxparen2">
-				<static>)</static>
-			</label_listitem_left>
+
 			<label_listitem_left name="label_plus">
 				<static>+</static>
 			</label_listitem_left>
@@ -282,8 +270,8 @@
 				<anchored width="60" />
 				<parameters>
 					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl|str|dex|con|int|wis|cha</labelsres>
-					<values>cl|halfcl|oddcl|strength|dexterity|constitution|intelligence|wisdom|charisma</values>
+					<labelsres>str|dex|con|int|wis|cha</labelsres>
+					<values>strength|dexterity|constitution|intelligence|wisdom|charisma</values>
 				</parameters>
 			</stringcycler_listitem_left>
 			<label_listitem_left name="statmaxparen">
@@ -319,51 +307,37 @@
 	</windowclass>
 
 	<windowclass name="power_action_editor_heal">
-		<script>
-			function onDrop(x, y, draginfo)
-				local sDragType = draginfo.getType();
-				
-				if sDragType == "dice" then
-					local w = list.createWindow();
-					for _, vDie in ipairs(draginfo.getDiceData()) do
-						w.dice.addDie(vDie.type);
-					end
-					return true;
-				elseif sDragType == "number" then
-					local w = list.createWindow();
-					w.bonus.setValue(draginfo.getNumberData());
-					return true;
-				end
-			end
-		</script>
+		<frame>recordsheet</frame>
+		<placement>
+			<size width="450" height="250" />
+		</placement>
+		<sizelimits>
+			<minimum width="450" height="250" />
+			<dynamic />
+		</sizelimits>
+		<nodelete />
+		<playercontrol />
 		<sheetdata>
-			<anchor_column name="columnanchor" />
-			
-			<label_column name="name_label">
-				<static textres="power_label_name" />
-			</label_column>
-			<simplestringc name="name">
-				<anchored>
-					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
-					<left offset="97" />
-					<right offset="-5" />
-				</anchored>
-				<multilinespacing>20</multilinespacing>
-				<readonly />
-			</simplestringc>
+			<windowtitlebar_charmove name="title">
+				<resource>power_title_heal</resource>
+			</windowtitlebar_charmove>
+			<anchor_title_charmove name="anchortitle" />
 
-			<label_column name="healtargeting_label">
-				<static textres="power_label_targeting" />
-			</label_column>
-			<stringcycler_column_poweraction_targeting name="healtargeting" />
-			
-			<label_column name="healtype_label">
-				<static textres="power_label_healtype" />
-			</label_column>
+			<anchor_reorder_column_left />
+			<anchor_column_left />
+
+			<genericcontrol name="columnanchor">
+				<anchored position="insidetopleft" offset="5,25" height="0" width="0" />
+			</genericcontrol>
+
+			<header_column name="header_type">
+				<static textres="power_header_heal_type" />
+				<center />
+			</header_column>
 			<button_stringcycler name="healtype">
-				<anchored width="40" height="20">
+				<anchored width="80" height="20">
 					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
-					<left offset="97" />
+					<left offset="5" />
 				</anchored>
 				<parameters>
 					<defaultlabelres>power_label_healtypenormal</defaultlabelres>
@@ -371,21 +345,30 @@
 					<values>temp</values>
 				</parameters>
 			</button_stringcycler>
-			
-			<!-- <label_column> -->
-				<!-- <static textres="power_label_metamagic" /> -->
-			<!-- </label_column> -->
-			<!-- <button_stringcycler name="meta"> -->
-				<!-- <anchored width="80"> -->
-					<!-- <top parent="columnanchor" anchor="bottom" relation="relative" offset="7" /> -->
-					<!-- <left offset="97" /> -->
-				<!-- </anchored> -->
-				<!-- <parameters> -->
-					<!-- <defaultlabelres>dash</defaultlabelres> -->
-					<!-- <labelsres>power_label_metamagicempower|power_label_metamagicmaximize</labelsres> -->
-					<!-- <values>empower|maximize</values> -->
-				<!-- </parameters> -->
-			<!-- </button_stringcycler> -->
+			<button_stringcycler name="healtargeting">
+				<anchored to="healtype" position="righthigh" offset="10,0" width="60" />
+				<parameters>
+					<defaultlabelres>power_label_targetall</defaultlabelres>
+					<labelsres>power_label_targetself</labelsres>
+					<values>self</values>
+				</parameters>
+			</button_stringcycler>
+
+			<header_column name="header_meta">
+				<static textres="power_header_meta" />
+				<center />
+			</header_column>
+			<button_stringcycler name="meta">
+				<anchored width="80" height="20">
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
+					<left offset="5" />
+				</anchored>
+				<parameters>
+					<defaultlabelres>power_label_meta_none</defaultlabelres>
+					<labelsres>power_label_meta_emp|power_label_meta_max</labelsres>
+					<values>empower|maximize</values>
+				</parameters>
+			</button_stringcycler>
 
 			<header_column name="header_heal">
 				<static textres="power_header_heal" />
@@ -405,19 +388,19 @@
 			</list_editor>
 			
 			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="5,1" width="60" />
+				<anchored to="list" position="aboveleft" offset="5,1" width="55" />
+				<static textres="power_label_dmg_dc" />
+			</label_fieldtop>
+			<label_fieldtop>
+				<anchored to="list" position="aboveleft" offset="65,1" width="60" />
 				<static textres="power_label_heal_dice" />
 			</label_fieldtop>
 			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="85,1" width="120" />
-				<static textres="power_label_heal_dicemult" />
-			</label_fieldtop>
-			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="220,1" width="160" />
+				<anchored to="list" position="aboveleft" offset="135,1" width="160" />
 				<static textres="power_label_heal_stat" />
 			</label_fieldtop>
 			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="390,1" width="50" />
+				<anchored to="list" position="aboveleft" offset="305,1" width="50" />
 				<static textres="power_label_heal_bonus" />
 			</label_fieldtop>
 		</sheetdata>
@@ -432,31 +415,19 @@
 				<editmode>list_iedit</editmode>
 			</button_listitem_idelete_left>
 
+			<label_listitem_left name="label_dc">
+				<static>DC</static>
+			</label_listitem_left>
+			<number_listitem_left name="dc">
+				<anchored width="30" />
+				<hideonvalue>0</hideonvalue>
+				<tooltip textres="power_tooltip_dmg_dc" />
+			</number_listitem_left>
+
 			<dice_listitem_left name="dice">
 				<anchored width="60" />
 			</dice_listitem_left>
-			<label_listitem_left name="label_dicestatx">
-				<static>x</static>
-			</label_listitem_left>
-			<stringcycler_listitem_left name="dicestat">
-				<anchored width="60" />
-				<parameters>
-					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl</labelsres>
-					<values>cl|halfcl|oddcl</values>
-				</parameters>
-			</stringcycler_listitem_left>
-			<label_listitem_left name="dicestatmaxparen">
-				<static>(</static>
-			</label_listitem_left>
-			<number_listitem_left name="dicestatmax">
-				<anchored width="20" />
-				<hideonvalue value="0" />
-				<tooltip textres="power_tooltip_dicemax" />
-			</number_listitem_left>
-			<label_listitem_left name="dicestatmaxparen2">
-				<static>)</static>
-			</label_listitem_left>
+
 			<label_listitem_left name="label_plus">
 				<static>+</static>
 			</label_listitem_left>
@@ -475,8 +446,8 @@
 				<anchored width="60" />
 				<parameters>
 					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl|str|dex|con|int|wis|cha</labelsres>
-					<values>cl|halfcl|oddcl|strength|dexterity|constitution|intelligence|wisdom|charisma</values>
+					<labelsres>str|dex|con|int|wis|cha</labelsres>
+					<values>strength|dexterity|constitution|intelligence|wisdom|charisma</values>
 				</parameters>
 			</stringcycler_listitem_left>
 			<label_listitem_left name="statmaxparen">
