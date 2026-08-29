@@ -40,10 +40,6 @@ end
 function addWeapon()
 	local w = weaponlist.createWindow();
 	if w then
-		local nodeWeapon = w.getDatabaseNode();
-		if nodeWeapon and #DB.getChildList(nodeWeapon, "actionlist") == 0 then
-			CharManager.addWeaponAction(nodeWeapon, 0, "Melee Attack");
-		end
 		w.name.setFocus();
 	end
 end

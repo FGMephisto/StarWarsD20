@@ -518,6 +518,7 @@ spelleffects = {
 firingmodes = {
 	"M",
 	"M/A",
+	"M/A only",
 };
 
 -- NPC damage properties

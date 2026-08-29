@@ -261,8 +261,8 @@
 				<bounds>0,395,385,100</bounds>
 			</frame_char>
 			<number_dropadd name="hp" source="hp.total">
-				<anchored to="hpframe" position="insidetopleft" offset="60,27" width="40" height="28" />
-				<description textres="hp" />
+				<anchored to="hpframe" position="insidetopleft" offset="40,27" width="40" height="28" />
+				<description textres="char_tooltip_maxwp" />
 				<script>
 					function onValueChanged()
 						window.onHealthChanged();
@@ -271,10 +271,25 @@
 			</number_dropadd>
 			<label_fieldtop name="hp_label">
 				<anchored to="hp" />
-				<static textres="hp" />
+				<static textres="char_label_maxhp" />
 			</label_fieldtop>
+
+			<number_dropadd name="vp" source="hp.vp">
+				<anchored to="hp" position="right" offset="18,0" width="40" />
+				<description textres="char_tooltip_maxvp" />
+				<script>
+					function onValueChanged()
+						window.onHealthChanged();
+					end
+				</script>
+			</number_dropadd>
+			<label_fieldtop name="vp_label">
+				<anchored to="vp" />
+				<static textres="char_label_maxvp" />
+			</label_fieldtop>
+
 			<number_dropadd name="hptemp" source="hp.temporary">
-				<anchored to="hp" position="right" offset="20,0" width="40" />
+				<anchored to="vp" position="right" offset="18,0" width="40" />
 				<description textres="char_tooltip_hptemp" />
 				<script>
 					function onInit()
@@ -292,16 +307,18 @@
 				<anchored to="hptemp" />
 				<static textres="char_label_hptemp" />
 			</label_fieldtop>
+
 			<number_charwounds name="wounds" source="hp.wounds">
-				<anchored to="hpframe" position="insidetopright" offset="120,27" width="40" height="28" />
+				<anchored to="hptemp" position="right" offset="18,0" width="40" height="28" />
 				<description textres="char_tooltip_wounds" />
 			</number_charwounds>
 			<label_fieldtop name="wounds_label">
 				<anchored to="wounds" />
 				<static textres="char_label_wounds" />
 			</label_fieldtop>
+
 			<number_dropadd name="nonlethal" source="hp.nonlethal">
-				<anchored to="wounds" position="right" offset="20,0" width="40" />
+				<anchored to="wounds" position="right" offset="18,0" width="40" />
 				<hideonvalue>0</hideonvalue>
 				<description textres="char_tooltip_nonlethal" />
 				<script>

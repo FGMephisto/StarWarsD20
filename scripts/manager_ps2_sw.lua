@@ -158,6 +158,7 @@ function linkPCFields(nodePS) -- Adjusted
 	PartyManager.linkRecordField(nodeChar, nodePS, "senses", "string");
 	
 	PartyManager.linkRecordField(nodeChar, nodePS, "hp.total", "number", "hptotal");
+	PartyManager.linkRecordField(nodeChar, nodePS, "hp.vp", "number", "hpvp");
 	PartyManager.linkRecordField(nodeChar, nodePS, "hp.temporary", "number", "hptemp");
 	PartyManager.linkRecordField(nodeChar, nodePS, "hp.wounds", "number", "wounds");
 	PartyManager.linkRecordField(nodeChar, nodePS, "hp.nonlethal", "number", "nonlethal");

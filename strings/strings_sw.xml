@@ -18,6 +18,10 @@
 	<string name="woundpoints">Wound Points</string>
 	<string name="hp">WP</string>
 	<string name="hptemp">VP</string>
+	<string name="char_label_maxhp">Max WP</string>
+	<string name="char_label_maxvp">Max VP</string>
+	<string name="char_tooltip_maxwp">Maximum Wound Points</string>
+	<string name="char_tooltip_maxvp">Maximum Vitality Points</string>
 
 	<string name="menu_resetspells">Reset Force</string>
 	<string name="menu_addspellclass">Add Force Class</string>
@@ -26,13 +30,25 @@
 	<string name="char_menu_addforceskills">Add Force Skills</string>
 	<string name="char_menu_firemode">Fire Mode</string>
 	<string name="char_menu_firemode_single">Single</string>
+	<string name="char_menu_firemode_rapid">Rapid Shot (-2)</string>
 	<string name="char_menu_firemode_multifire">Multifire (-4)</string>
+	<string name="char_menu_firemode_multifire_multishot">Multifire (-2)</string>
+	<string name="char_menu_firemode_multifire_rapid">Multifire &amp; Rapid Shot (-6)</string>
+	<string name="char_menu_firemode_multifire_rapid_multishot">Multifire &amp; Rapid Shot (-4)</string>
 	<string name="char_menu_firemode_multishot">Multishot (-2)</string>
 	<string name="char_menu_firemode_autofire">Autofire (-6)</string>
+	<string name="char_menu_firemode_autofire_multishot">Autofire (-4)</string>
+	<string name="char_menu_firemode_autofire_rapid">Autofire &amp; Rapid Shot (-8)</string>
+	<string name="char_menu_firemode_autofire_rapid_multishot">Autofire &amp; Rapid Shot (-6)</string>
 	<string name="char_menu_firemode_s">S</string>
+	<string name="char_menu_firemode_r">R</string>
 	<string name="char_menu_firemode_m">M</string>
+	<string name="char_menu_firemode_mr">M+R</string>
 	<string name="char_menu_firemode_a">A</string>
+	<string name="char_menu_firemode_ar">A+R</string>
 	<string name="char_label_weaponmode">Mode</string>
+	<string name="char_label_firemode">Mode</string>
+	<string name="char_tooltip_actionstun">Fortitude Attack (Stun)</string>
 	<string name="weapon_label_weapon">Weapon</string>
 	<string name="weapon_label_note">Note</string>
 	<string name="weapon_header_stats">STATS</string>
@@ -188,7 +204,7 @@
 	<string name="item_label_maxstat">Max Dex Bonus</string>
 	<string name="item_label_speed30">Speed (10m)</string>
 	<string name="item_label_speed20">Speed (6m)</string>
-	<string name="item_label_stundc">Stun Fort DC</string>
+	<string name="item_label_stundc">Fort DC</string>
 	<string name="item_label_firingmodes">Firing modes</string>
 	<string name="item_label_size">Size</string>
 	<string name="item_label_dr">Dmg Reduction</string>
@@ -289,6 +305,7 @@
 	<string name="wpn_menu_action_add_ranged">Add Ranged Action</string>
 	<string name="wpn_menu_action_add_throwing">Add Thrown Action</string>
 	<string name="weapon_label_type">Type</string>
+	<string name="item_label_range">Range Incr.</string>
 
 	<!-- NPC Defense Fields -->
 	<string name="npc_label_hp_vp">VP / WP</string>

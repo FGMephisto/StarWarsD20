@@ -816,11 +816,10 @@
 	</template>
 	<template name="state_charweapontype">
 		<buttonfield>
-			<anchored width="25" height="25" />
+			<anchored width="20" height="20" />
 			<state icon="char_weapon_melee" tooltipres="char_tooltip_weapontypemelee" />
 			<state icon="char_weapon_ranged" tooltipres="char_tooltip_weapontyperanged" />
-			<state icon="char_weapon_cm" tooltipres="char_tooltip_weapontypethrown" />
-			<state icon="char_weapon" tooltipres="char_tooltip_weapontypeall" />
+			<state icon="char_weapon_thrown" tooltipres="char_tooltip_weapontypethrown" />
 			<script>
 				function onValueChanged()
 					if window.onTypeChanged then
