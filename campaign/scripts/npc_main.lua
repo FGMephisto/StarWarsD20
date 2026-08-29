@@ -56,10 +56,12 @@ function update()
 	WindowManager.callSafeControlUpdate(self, "spacereach", bReadOnly);
 	WindowManager.callSafeControlUpdate(self, "specialattacks", bReadOnly);
 	
-	WindowManager.callSafeControlUpdate(self, "babgrp", bReadOnly);
-	WindowManager.callSafeControlUpdate(self, "feats", bReadOnly);
 	WindowManager.callSafeControlUpdate(self, "skills", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "forceskills", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "feats", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "forcefeats", bReadOnly);
 	WindowManager.callSafeControlUpdate(self, "languages", bReadOnly);
+	WindowManager.callSafeControlUpdate(self, "equipment", bReadOnly);
 	WindowManager.callSafeControlUpdate(self, "advancement", bReadOnly);
 	WindowManager.callSafeControlUpdate(self, "leveladjustment", bReadOnly);
 

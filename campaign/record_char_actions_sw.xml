@@ -32,13 +32,13 @@
 
 			<button_expand name="expand">
 				<anchored to="actionframe" position="insidebottomleft" offset="25,15" />
-				<target>actions,spellclasslist,levels,spells</target>
-				<togglelevel>3</togglelevel>
+				<target>actions,spellclasslist,spells,actions</target>
+				<togglelevel>2</togglelevel>
 			</button_expand>
 			<button_collapse name="collapse">
 				<anchored to="actionframe" position="insidebottomleft" offset="55,15" />
-				<target>actions,spellclasslist,levels,spells</target>
-				<togglelevel>3</togglelevel>
+				<target>actions,spellclasslist,spells,actions</target>
+				<togglelevel>2</togglelevel>
 			</button_collapse>
 
 			<label name="label_mode">
@@ -48,8 +48,8 @@
 			<button_stringcycler name="spellmode">
 				<anchored to="label_mode" position="righthigh" offset="10,0" width="80" />
 				<parameters>
-					<labelsres>spell_label_modeprep|spell_label_modecombat</labelsres>
-					<values>preparation|combat</values>
+					<labelsres>spell_label_modecombat</labelsres>
+					<values>combat</values>
 					<defaultlabelres>spell_label_modestd</defaultlabelres>
 				</parameters>
 				<script>

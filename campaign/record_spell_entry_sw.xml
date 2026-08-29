@@ -35,7 +35,9 @@
 				<target>spells</target>
 			</button_iadd>
 
-			<number_listitem_right name="points" />
+			<number_listitem_right name="points">
+				<script file="common/scripts/number_crosslink.lua" />
+			</number_listitem_right>
 			<label_listitem_right name="label_points">
 				<static textres="spell_label_pp" />
 			</label_listitem_right>

@@ -35,7 +35,10 @@ function updateGroupID()
 		sGroup = StringManager.simplify(sGroup)
 	end
 
-	local aSkillGroup = DataCommon.skillgroups[sGroup];
+	local aSkillGroup = nil;
+	if DataCommon.skillgroups then
+		aSkillGroup = DataCommon.skillgroups[sGroup] or DataCommon.skillgroups["generic"];
+	end
 	if aSkillGroup then
 		groupid.setValue(aSkillGroup.groupid);
 	end

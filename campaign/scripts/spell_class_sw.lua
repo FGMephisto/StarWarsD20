@@ -10,28 +10,17 @@ function onInit()
 
 	local nodeChar = DB.getChild(getDatabaseNode(), "...");
 	if nodeChar then
-		self.updatePoints();
-		DB.addHandler(DB.getPath(nodeChar, "hp.temporary"), "onUpdate", self.updatePoints);
+		if DB.getChild(nodeChar, "hptemp") or not DB.getChild(nodeChar, "hp.temporary") then
+			points.setLink(DB.createChild(nodeChar, "hptemp", "number"));
+		else
+			points.setLink(DB.createChild(nodeChar, "hp.temporary", "number"));
+		end
 	end
 
 	self.onCasterTypeChanged();
 	self.onDisplayChanged();
 
 	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
-end
-
-function onClose()
-	local nodeChar = DB.getChild(getDatabaseNode(), "...");
-	if nodeChar then
-		DB.removeHandler(DB.getPath(nodeChar, "hp.temporary"), "onUpdate", self.updatePoints);
-	end
-end
-
-function updatePoints()
-	local nodeChar = DB.getChild(getDatabaseNode(), "...");
-	if nodeChar then
-		points.setValue(DB.getValue(nodeChar, "hp.temporary", 0));
-	end
 end
 
 function onLockModeChanged(bReadOnly)

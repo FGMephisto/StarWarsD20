@@ -46,8 +46,10 @@ function updateGroupID()
 		sGroup = StringManager.simplify(sGroup)
 	end
 
-	local aSkillGroup = DataCommon.skillgroups[sGroup]
-	                 or DataCommon.skillgroups["generic"];
+	local aSkillGroup = nil;
+	if DataCommon.skillgroups then
+		aSkillGroup = DataCommon.skillgroups[sGroup] or DataCommon.skillgroups["generic"];
+	end
 	if aSkillGroup then
 		groupid.setValue(aSkillGroup.groupid);
 	end
@@ -68,13 +70,48 @@ end
 -- Custom entries have configurable stats and editable labels.
 local _bCustom = true;
 
+function isAllowDelete()
+	if self.isCustom() then
+		return true;
+	end
+	local sLabel = label.getValue();
+	local rSkill = DataCommon.skilldata[sLabel];
+	if rSkill and (rSkill.sublabeling or rSkill.group == "force") then
+		return true;
+	end
+	if group and group.getValue():lower() == "force" then
+		return true;
+	end
+	return false;
+end
+
 function setCustom(state)
 	_bCustom = state;
 
 	label.setEnabled(_bCustom);
 
-	idelete.setVisible(_bCustom);
-	iadd.setVisible(not _bCustom);
+	local bAllowDelete = self.isAllowDelete();
+	idelete.setVisible(bAllowDelete);
+	iadd.setVisible(not bAllowDelete and not (group and group.getValue():lower() == "force"));
+
+	self.updateMenuItems();
+end
+
+function updateMenuItems()
+	resetMenuItems();
+	if self.isAllowDelete() then
+		registerMenuItem(Interface.getString("list_menu_deleteitem"), "delete", 6);
+		registerMenuItem(Interface.getString("list_menu_deleteconfirm"), "delete", 6, 7);
+	end
+end
+
+function onMenuSelection(selection, subselection)
+	if selection == 6 and subselection == 7 then
+		local node = getDatabaseNode();
+		if node then
+			node.delete();
+		end
+	end
 end
 
 function updateWindow()

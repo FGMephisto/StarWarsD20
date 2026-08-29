@@ -23,6 +23,22 @@
 	<string name="menu_addspellclass">Add Force Class</string>
 	<string name="menu_deletespellclass">Delete Force Class</string>
 	<string name="menu_addspell">Add Force</string>
+	<string name="char_menu_addforceskills">Add Force Skills</string>
+	<string name="char_menu_firemode">Fire Mode</string>
+	<string name="char_menu_firemode_single">Single</string>
+	<string name="char_menu_firemode_multifire">Multifire (-4)</string>
+	<string name="char_menu_firemode_multishot">Multishot (-2)</string>
+	<string name="char_menu_firemode_autofire">Autofire (-6)</string>
+	<string name="char_menu_firemode_s">S</string>
+	<string name="char_menu_firemode_m">M</string>
+	<string name="char_menu_firemode_a">A</string>
+	<string name="char_label_weaponmode">Mode</string>
+	<string name="weapon_label_weapon">Weapon</string>
+	<string name="weapon_label_note">Note</string>
+	<string name="weapon_header_stats">STATS</string>
+	<string name="weapon_label_firingmodes">Firing Modes</string>
+	<string name="char_tooltip_weapontypethrown">Thrown</string>
+	<string name="char_tooltip_weapontypeall">All Actions</string>
 	
 	<!-- Options -->
 	<!-- Languages -->
@@ -198,6 +214,7 @@
 	<string name="spell_tooltip_casterspontaneous">Spontaneous Force caster</string>
 	<string name="spell_tooltip_casterpoints">Points Force caster</string>
 	<string name="spell_tooltip_castspell">Use Force</string>
+	<string name="power_label_cast">Use</string>
 	<string name="spell_error_dropclassmissing">Unable to determine class for moved Force, please drop within a class.</string>
 	<string name="spell_error_dropclasslevelmissing">Unable to determine class or level for new Force, please drop within a class level.</string>
 	<string name="spell_label_sr">Force Resist.</string>
@@ -227,8 +244,9 @@
 	<string name="spell_label_displaystd">Summary</string>
 	<string name="spell_label_displayaction">Actions</string>
 	<string name="spell_tooltip_cc">Concentration Check</string>
-	<string name="spell_tooltip_toggle">Click to edit / hide details</string>
-	<string name="spellclass_emptyname">&#171; Force Class &#187;</string>
+	<string name="spellclass_emptyname">&#171; Force Powers &#187;</string>
+	<string name="spell_header_forcepowers">Force Powers</string>
+	<string name="npc_tooltip_poweradd">Add Power</string>
 	<string name="spelllevel_emptyname">&#171; Force Level &#187;</string>
 	<string name="power_label_atktypeskill">Skill</string>
 	<string name="power_empty_atkskill">&#171; Skill Name &#187;</string>
@@ -260,4 +278,36 @@
 
 	<!-- Library -->
 	<string name="library_recordtype_label_specialability">Abilities</string>
+
+	<!-- Weapon Actions & Editor -->
+	<string name="char_actions_wpn_editor_label_type">Type</string>
+	<string name="char_actions_wpn_editor_type_melee">Melee</string>
+	<string name="char_actions_wpn_editor_type_ranged">Ranged</string>
+	<string name="char_actions_wpn_editor_type_thrown">Thrown</string>
+	<string name="wpn_menu_action_add">Add Action</string>
+	<string name="wpn_menu_action_add_melee">Add Melee Action</string>
+	<string name="wpn_menu_action_add_ranged">Add Ranged Action</string>
+	<string name="wpn_menu_action_add_throwing">Add Thrown Action</string>
+	<string name="weapon_label_type">Type</string>
+
+	<!-- NPC Defense Fields -->
+	<string name="npc_label_hp_vp">VP / WP</string>
+	<string name="npc_tooltip_hp_vp">Vitality Points / Wound Points</string>
+	<string name="npc_label_hp_vp_dr">VP / WP / DR</string>
+	<string name="npc_tooltip_hp_vp_dr">Vitality Points / Wound Points / Damage Reduction</string>
+	<string name="npc_tooltip_hptemp">Vitality Points</string>
+	<string name="npc_tooltip_hp">Wound Points</string>
+	<string name="npc_tooltip_dr">Damage Reduction</string>
+	<string name="npc_label_force_rep">Force / Rep</string>
+	<string name="npc_tooltip_force_rep">Force Points / Dark Side Points / Reputation</string>
+	<string name="npc_label_fp">FP</string>
+	<string name="npc_tooltip_fp">Force Points</string>
+	<string name="npc_label_dsp">DSP</string>
+	<string name="npc_tooltip_dsp">Dark Side Points</string>
+	<string name="npc_label_rep">Rep</string>
+	<string name="npc_tooltip_rep">Reputation</string>
+	<string name="npc_label_reputation">Reputation</string>
+	<string name="npc_label_forcefeats">Force Feats</string>
+	<string name="npc_label_forceskills">Force Skills</string>
+	<string name="npc_label_equipment">Equipment</string>
 </root>

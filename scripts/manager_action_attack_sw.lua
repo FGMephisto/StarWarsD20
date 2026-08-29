@@ -192,25 +192,25 @@ function modAttack(rSource, rTarget, rRoll) -- Adjusted
 
 	local bMinimumCover = ModifierManager.getKey("DEF_MCOVER");
 	local bTotalDefense = ModifierManager.getKey("DEF_TDEF");
-	local bDodging = ModifierManager.getKey("DEF_DOD");
-	local bKneeling = ModifierManager.getKey("DEF_KNE");
-	local bProne = ModifierManager.getKey("DEF_PRO");
+	local bDodging = ModifierManager.getKey("DEF_DODGE") or ModifierManager.getKey("DEF_DOD");
+	local bKneeling = ModifierManager.getKey("DEF_KNEELING") or ModifierManager.getKey("DEF_KNE");
+	local bProne = ModifierManager.getKey("DEF_PRONE") or ModifierManager.getKey("DEF_PRO");
 	local bRunning = ModifierManager.getKey("DEF_RUN");
-	local bPinned = ModifierManager.getKey("DEF_PIN");
+	local bPinned = ModifierManager.getKey("DEF_PINNED") or ModifierManager.getKey("DEF_PIN");
 	local bMinimumConceal = ModifierManager.getKey("DEF_MCONC");
 	local bPartialConceal = ModifierManager.getKey("DEF_PCONC");
 	local bSuperiosConceal = ModifierManager.getKey("DEF_SCONC");
 
 	-- Check attack modifiers
-	local bMultifire = ModifierManager.getKey("ATT_MFI");
-	local bAutofire = ModifierManager.getKey("ATT_AFI");
-	local bMultiShot = ModifierManager.getKey("ATT_MSO");
-	local bRapidShot = ModifierManager.getKey("ATT_RSO");
-	local bPointBlank = ModifierManager.getKey("ATT_PBL");
-	local bFireintoMelee = ModifierManager.getKey("ATT_ITM");
-	local bFlanking = ModifierManager.getKey("ATT_FLA");
-	local bHigherGround = ModifierManager.getKey("ATT_HGR");	
-	local bAProne = ModifierManager.getKey("ATT_PRO");
+	local bMultifire = ModifierManager.getKey("ATT_MULTIFIRE") or ModifierManager.getKey("ATT_MFI");
+	local bAutofire = ModifierManager.getKey("ATT_AUTOFIRE") or ModifierManager.getKey("ATT_AFI");
+	local bMultiShot = ModifierManager.getKey("ATT_MULTISHOT") or ModifierManager.getKey("ATT_MSO");
+	local bRapidShot = ModifierManager.getKey("ATT_RAPIDSHOT") or ModifierManager.getKey("ATT_RSO");
+	local bPointBlank = ModifierManager.getKey("ATT_PBLANK") or ModifierManager.getKey("ATT_PBL");
+	local bFireintoMelee = ModifierManager.getKey("ATT_ITMELEE") or ModifierManager.getKey("ATT_ITM");
+	local bFlanking = ModifierManager.getKey("ATT_FLANK") or ModifierManager.getKey("ATT_FLA");
+	local bHigherGround = ModifierManager.getKey("ATT_HGROUND") or ModifierManager.getKey("ATT_HGR");	
+	local bAProne = ModifierManager.getKey("ATT_PRONE") or ModifierManager.getKey("ATT_PRO");
 	local bAConceal = ModifierManager.getKey("ATT_CONC");	
 
 	-- Add attack modifiers and adjust attack roll string
@@ -218,15 +218,15 @@ function modAttack(rSource, rTarget, rRoll) -- Adjusted
 		table.insert(aAddDesc, "[OPPORTUNITY]");
 	end
 
-	if bMultifire then
+	if bMultifire and not string.match(rRoll.sDesc, "%[Multifire%]") then
 		table.insert(aAddDesc, "[Multifire]");
 		nAddMod = nAddMod - 4;
 	end
-	if bAutofire then
+	if bAutofire and not string.match(rRoll.sDesc, "%[Autofire%]") then
 		table.insert(aAddDesc, "[Autofire]");
 		nAddMod = nAddMod - 6;
 	end
-	if bMultiShot then
+	if bMultiShot and not string.match(rRoll.sDesc, "%[MultiShot%]") then
 		table.insert(aAddDesc, "[MultiShot]");
 		nAddMod = nAddMod - 4;
 	end

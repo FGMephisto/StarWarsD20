@@ -39,7 +39,7 @@
 		</tab>
 		<tab merge="add">
 			<name>spells</name>
-			<resource>tab_spells</resource>
+			<resource>tab_powers</resource>
 			<class>npc_spells</class>
 			<embed />
 		</tab>
@@ -158,19 +158,25 @@
 			<string_columnh name="ac" />
 
 			<label_column name="hptemp_label">
-				<static textres="hptemp" />
+				<static textres="npc_label_hp_vp_dr" />
 			</label_column>
-			<number_column name="hptemp" />
-
-			<label_column name="hp_label">
-				<static textres="hp" />
-			</label_column>
-			<number_column name="hp" />
-
-			<label_column name="dr_label">
-				<static textres="dr" />
-			</label_column>
-			<number_columnh name="dr" />
+			<number_column name="hptemp">
+				<tooltip textres="npc_tooltip_hptemp" />
+			</number_column>
+			<basicnumber name="hp">
+				<anchored to="hptemp" width="40" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+				<tooltip textres="npc_tooltip_hp" />
+			</basicnumber>
+			<basicnumber name="dr">
+				<anchored to="hptemp" width="40" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+				<tooltip textres="npc_tooltip_dr" />
+			</basicnumber>
 
 			<label_column>
 				<anchored>
@@ -179,7 +185,7 @@
 				<static textres="npc_label_saves" />
 			</label_column>
 			<number_npc_save name="fortitudesave">
-				<anchored width="50" height="20">
+				<anchored width="40" height="20">
 					<top parent="columnanchor" anchor="bottom" relation="relative" offset="20" />
 					<left offset="97" />
 				</anchored>
@@ -190,7 +196,7 @@
 				<static textres="fortitude" />
 			</label_fieldtop>
 			<number_npc_save name="reflexsave">
-				<anchored to="fortitudesave" width="50" height="20">
+				<anchored to="fortitudesave" width="40" height="20">
 					<top />
 					<left anchor="right" relation="relative" offset="10" />
 				</anchored>
@@ -201,7 +207,7 @@
 				<static textres="reflex" />
 			</label_fieldtop>
 			<number_npc_save name="willsave">
-				<anchored to="fortitudesave" width="50" height="20">
+				<anchored to="fortitudesave" width="40" height="20">
 					<top />
 					<left anchor="right" relation="relative" offset="10" />
 				</anchored>
@@ -267,7 +273,7 @@
 				<static textres="npc_label_abilities" />
 			</label_column>
 			<number_npc_ability name="strength">
-				<anchored width="25" height="20">
+				<anchored width="40" height="20">
 					<top parent="columnanchor" anchor="bottom" relation="relative" offset="20" />
 					<left offset="97" />
 				</anchored>
@@ -278,7 +284,7 @@
 				<static textres="str" />
 			</label_fieldtop>
 			<number_npc_ability name="dexterity">
-				<anchored to="strength" width="25" height="20">
+				<anchored to="strength" width="40" height="20">
 					<top />
 					<left anchor="right" relation="relative" offset="10" />
 				</anchored>
@@ -289,7 +295,7 @@
 				<static textres="dex" />
 			</label_fieldtop>
 			<number_npc_ability name="constitution">
-				<anchored to="strength" width="25" height="20">
+				<anchored to="strength" width="40" height="20">
 					<top />
 					<left anchor="right" relation="relative" offset="10" />
 				</anchored>
@@ -300,7 +306,7 @@
 				<static textres="con" />
 			</label_fieldtop>
 			<number_npc_ability name="intelligence">
-				<anchored to="strength" width="25" height="20">
+				<anchored to="strength" width="40" height="20">
 					<top />
 					<left anchor="right" relation="relative" offset="10" />
 				</anchored>
@@ -311,7 +317,7 @@
 				<static textres="int" />
 			</label_fieldtop>
 			<number_npc_ability name="wisdom">
-				<anchored to="strength" width="25" height="20">
+				<anchored to="strength" width="40" height="20">
 					<top />
 					<left anchor="right" relation="relative" offset="10" />
 				</anchored>
@@ -322,7 +328,7 @@
 				<static textres="wis" />
 			</label_fieldtop>
 			<number_npc_ability name="charisma">
-				<anchored to="strength" width="25" height="20">
+				<anchored to="strength" width="40" height="20">
 					<top />
 					<left anchor="right" relation="relative" offset="10" />
 				</anchored>
@@ -333,6 +339,50 @@
 				<static textres="cha" />
 			</label_fieldtop>
 			
+			<label_column name="force_label">
+				<anchored>
+					<top offset="20" />
+				</anchored>
+				<static textres="npc_label_force_rep" />
+				<tooltip textres="npc_tooltip_force_rep" />
+			</label_column>
+			<basicnumber name="forcepoints">
+				<anchored width="40" height="20">
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="20" />
+					<left offset="97" />
+				</anchored>
+				<tooltip textres="npc_tooltip_fp" />
+			</basicnumber>
+			<label_fieldtop name="forcepoints_label">
+				<anchored to="forcepoints" />
+				<static textres="npc_label_fp" />
+				<tooltip textres="npc_tooltip_fp" />
+			</label_fieldtop>
+			<basicnumber name="darksidepoints">
+				<anchored to="forcepoints" width="40" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+				<tooltip textres="npc_tooltip_dsp" />
+			</basicnumber>
+			<label_fieldtop name="darksidepoints_label">
+				<anchored to="darksidepoints" />
+				<static textres="npc_label_dsp" />
+				<tooltip textres="npc_tooltip_dsp" />
+			</label_fieldtop>
+			<basicnumber name="reputation">
+				<anchored to="forcepoints" width="40" height="20">
+					<top />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+				<tooltip textres="npc_tooltip_rep" />
+			</basicnumber>
+			<label_fieldtop name="reputation_label">
+				<anchored to="reputation" />
+				<static textres="npc_label_rep" />
+				<tooltip textres="npc_tooltip_rep" />
+			</label_fieldtop>
+			
 			<!-- <label_column name="babgrp_label"> -->
 				<!-- <static textres="npc_label_babgrp" /> -->
 			<!-- </label_column> -->
@@ -341,11 +391,6 @@
 				<!-- <script file="campaign/scripts/npc_babgrp.lua" /> -->
 			<!-- </string_columnh> -->
 			
-			<label_column name="feats_label">
-				<static textres="npc_label_feats" />
-			</label_column>
-			<string_columnh name="feats" />
-
 			<label_column name="skills_label">
 				<static textres="npc_label_skills" />
 			</label_column>
@@ -353,10 +398,32 @@
 				<script file="campaign/scripts/npc_skill.lua" />
 			</string_columnh_multiroll>
 
+			<label_column name="forceskills_label">
+				<static textres="npc_label_forceskills" />
+			</label_column>
+			<string_columnh_multiroll name="forceskills">
+				<script file="campaign/scripts/npc_skill.lua" />
+			</string_columnh_multiroll>
+
+			<label_column name="feats_label">
+				<static textres="npc_label_feats" />
+			</label_column>
+			<string_columnh name="feats" />
+
+			<label_column name="forcefeats_label">
+				<static textres="npc_label_forcefeats" />
+			</label_column>
+			<string_columnh name="forcefeats" />
+
 			<label_column name="languages_label">
 				<static textres="npc_label_languages" />
 			</label_column>
 			<string_columnh name="languages" />
+
+			<label_column name="equipment_label">
+				<static textres="npc_label_equipment" />
+			</label_column>
+			<string_columnh name="equipment" />
 
 			<!-- <label_column name="advancement_label"> -->
 				<!-- <static textres="npc_label_advancement" /> -->
@@ -502,7 +569,7 @@
 			</label_column>
 			<number_columnh name="basesave" />
 
-			<header_column name="header_offense">>
+			<header_column name="header_offense">
 				<static textres="npc_header_offense" />
 			</header_column>
 			
@@ -580,12 +647,12 @@
 		<sheetdata>
 			<button_expand name="expand_full">
 				<anchored position="insidetopleft" offset="5,2" />
-				<target>spellclasslist,levels,spells</target>
+				<target>spellclasslist,spells,actions</target>
 				<togglelevel>2</togglelevel>
 			</button_expand>
 			<button_collapse name="collapse_full">
 				<anchored position="insidetopleft" offset="35,2" />
-				<target>spellclasslist,levels,spells</target>
+				<target>spellclasslist,spells,actions</target>
 				<togglelevel>2</togglelevel>
 			</button_collapse>
 			<label name="label_mode">
@@ -595,8 +662,8 @@
 			<button_stringcycler name="spellmode">
 				<anchored to="label_mode" position="righthigh" offset="10,0" width="80" />
 				<parameters>
-					<labelsres>spell_label_modeprep|spell_label_modecombat</labelsres>
-					<values>preparation|combat</values>
+					<labelsres>spell_label_modecombat</labelsres>
+					<values>combat</values>
 					<defaultlabelres>spell_label_modestd</defaultlabelres>
 				</parameters>
 				<script>
@@ -605,17 +672,15 @@
 					end
 				</script>
 			</button_stringcycler>
-			<buttoncontrol name="spellclass_iadd">
-				<anchored position="insidetopright" offset="35,2" width="20" height="20" />
-				<icon normal="button_star" pressed="button_star_down" />
-				<tooltip textres="npc_tooltip_spelladdclass" />
-				<invisible />
+			<button_iadd name="spell_iadd">
+				<anchored position="insidetopright" offset="10,2" />
+				<tooltip textres="npc_tooltip_poweradd" />
 				<script>
 					function onButtonPress()
-						window.addSpellClass();
+						window.addPower();
 					end
 				</script>
-			</buttoncontrol>
+			</button_iadd>
 
 			<list_spellclass name="spellclasslist">
 				<anchored position="insidetop" offset="0,30" />

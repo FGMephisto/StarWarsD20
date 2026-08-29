@@ -14,6 +14,11 @@ function onInit()
 
 	local node = getDatabaseNode();
 	DB.addHandler(DB.getPath(node, "spellset"), "onChildUpdate", updateAbility);
+
+	if spellmode then
+		local sMode = DB.getValue(node, "spellmode", "");
+		spellmode.setStringValue(sMode);
+	end
 end
 function onClose()
 	local node = getDatabaseNode();
@@ -27,7 +32,7 @@ end
 
 function onLockModeChanged(bReadOnly)
 	local bReadOnly = WindowManager.getReadOnlyState(getDatabaseNode());
-	WindowManager.callSafeControlsSetVisible(self, { "spellclass_iadd", }, not bReadOnly);
+	WindowManager.callSafeControlsSetVisible(self, { "spell_iadd", "spellclass_iadd" }, not bReadOnly);
 end
 
 function updateAbility()
@@ -36,37 +41,70 @@ function updateAbility()
 	end
 end
 function onModeChanged()
+	local sMode = "";
+	if spellmode then
+		sMode = spellmode.getStringValue();
+	end
+	DB.setValue(getDatabaseNode(), "spellmode", "string", sMode);
 	for _,vClass in pairs(spellclasslist.getWindows()) do
 		vClass.onSpellCounterUpdate();
+		vClass.onDisplayChanged();
 	end
 end
 
-function addSpellClass()
-	local w = spellclasslist.createWindow();
-	if w then
-		w.activatedetail.setValue(1);
-		w.label.setFocus();
-		DB.setValue(getDatabaseNode(), "spellmode", "string", "");
+function getOrCreateForceClass()
+	local nodeNPC = getDatabaseNode();
+	local nodeSpellSet = DB.createChild(nodeNPC, "spellset");
+	local aClasses = DB.getChildList(nodeSpellSet);
+	if #aClasses > 0 then
+		return aClasses[1];
 	end
+	
+	local nodeClass = DB.createChild(nodeSpellSet);
+	DB.setValue(nodeClass, "label", "string", Interface.getString("spell_header_forcepowers") or "Force Powers");
+	DB.setValue(nodeClass, "castertype", "string", "points");
+	return nodeClass;
 end
-function onSpellDrop(x, y, draginfo)
-	if draginfo.isType("spellmove") then
-		ChatManager.Message(Interface.getString("spell_error_dropclassmissing"));
-		return true;
-	elseif draginfo.isType("spelldescwithlevel") then
-		ChatManager.Message(Interface.getString("spell_error_dropclassmissing"));
-		return true;
-	elseif draginfo.isType("shortcut") then
-		local sClass = draginfo.getShortcutData();
-		
-		if sClass == "spelldesc" or sClass == "spelldesc2" then
-			ChatManager.Message(Interface.getString("spell_error_dropclasslevelmissing"));
-			return true;
+
+function addPower()
+	local nodeClass = self.getOrCreateForceClass();
+	if not nodeClass then return; end
+	
+	local nodeSpells = DB.createChild(nodeClass, "spells");
+	local nodePower = DB.createChild(nodeSpells);
+
+	for _, vWin in pairs(spellclasslist.getWindows()) do
+		if vWin.getDatabaseNode() == nodeClass then
+			for _, vSpell in pairs(vWin.spells.getWindows()) do
+				if vSpell.getDatabaseNode() == nodePower then
+					if vSpell.name then
+						vSpell.name.setFocus();
+					end
+					return;
+				end
+			end
 		end
 	end
 end
 
--- DEPRECATED (2025-03)
-function update()
-	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+function addSpellClass()
+	self.addPower();
+end
+
+function onSpellDrop(x, y, draginfo)
+	if draginfo.isType("shortcut") then
+		local sClass, sRecord = draginfo.getShortcutData();
+		if sClass == "spelldesc" or sClass == "spelldesc2" or sClass == "power" or sClass == "reference_spell" then
+			local nodeSource = draginfo.getDatabaseNode();
+			if nodeSource then
+				local nodeClass = self.getOrCreateForceClass();
+				if nodeClass then
+					local nodeSpells = DB.createChild(nodeClass, "spells");
+					local nodeNew = DB.createChild(nodeSpells);
+					DB.copyNode(nodeSource, nodeNew);
+					return true;
+				end
+			end
+		end
+	end
 end

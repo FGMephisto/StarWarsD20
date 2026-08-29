@@ -40,6 +40,10 @@ end
 function addWeapon()
 	local w = weaponlist.createWindow();
 	if w then
+		local nodeWeapon = w.getDatabaseNode();
+		if nodeWeapon and #DB.getChildList(nodeWeapon, "actionlist") == 0 then
+			CharManager.addWeaponAction(nodeWeapon, 0, "Melee Attack");
+		end
 		w.name.setFocus();
 	end
 end
@@ -51,10 +55,14 @@ function updateAbility()
 	end
 	bUpdateLock = true;
 	for _,v in pairs(weaponlist.getWindows()) do
-		v.onDataChanged();
+		if v.onDataChanged then
+			v.onDataChanged();
+		end
 	end
 	for _,v in pairs(spellclasslist.getWindows()) do
-		v.onStatUpdate();
+		if v.onStatUpdate then
+			v.onStatUpdate();
+		end
 	end
 	bUpdateLock = false;
 end

@@ -76,6 +76,4 @@ function onClose()
 		DB.deleteChild(nodeRecord, "firingmodes")
 		DB.deleteChild(nodeRecord, "size")
 	end
-	
-	-- ToDo Clean up Vehicles fields
 end

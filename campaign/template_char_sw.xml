@@ -819,11 +819,12 @@
 			<anchored width="25" height="25" />
 			<state icon="char_weapon_melee" tooltipres="char_tooltip_weapontypemelee" />
 			<state icon="char_weapon_ranged" tooltipres="char_tooltip_weapontyperanged" />
+			<state icon="char_weapon_cm" tooltipres="char_tooltip_weapontypethrown" />
+			<state icon="char_weapon" tooltipres="char_tooltip_weapontypeall" />
 			<script>
-				function onInit()
-					if DataCommon.isPFRPG() then
-						setStateIcons(2, "char_weapon_cm");
-						setStateTooltipText(2, Interface.getString("char_tooltip_weapontypecm"));
+				function onValueChanged()
+					if window.onTypeChanged then
+						window.onTypeChanged();
 					end
 				end
 			</script>

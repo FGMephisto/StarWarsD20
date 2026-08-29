@@ -5,7 +5,7 @@
 --
 
 local rsname = "Star.Wars.D20";
-local rsmajorversion = 20;
+local rsmajorversion = 21;
 
 function onInit()
 	if Session.IsHost then
@@ -58,6 +58,9 @@ function updateChar(nodePC, nVersion)
 		end
 		if nVersion < 20 then
 			migrateChar20(nodePC);
+		end
+		if nVersion < 21 then
+			migrateChar21(nodePC);
 		end
 	end
 end
@@ -124,6 +127,9 @@ function updateCampaign()
 		end
 		if major < 20 then
 			convertChar20();
+		end
+		if major < 21 then
+			convertChar21();
 		end
 	end
 end
@@ -280,6 +286,79 @@ end
 function convertChar20()
 	for _,nodePC in ipairs(DB.getChildList("charsheet")) do
 		migrateChar20(nodePC);
+	end
+end
+
+function migrateChar21(nodePC)
+	for _, nodeWeapon in ipairs(DB.getChildList(nodePC, "weaponlist")) do
+		local nodeActionList = DB.getChild(nodeWeapon, "actionlist");
+		if not nodeActionList or #DB.getChildList(nodeActionList) == 0 then
+			nodeActionList = DB.createChild(nodeWeapon, "actionlist");
+			if nodeActionList then
+				local nodeAction = DB.createChild(nodeActionList);
+				if nodeAction then
+					local sWpnName = DB.getValue(nodeWeapon, "name", "");
+					local sActionName = "Standard Attack";
+					local sSuffix = sWpnName:match("%(([^%)]+)%)");
+					if sSuffix and sSuffix ~= "" then
+						sActionName = sSuffix;
+					elseif DB.getValue(nodeWeapon, "type", 0) == 0 then
+						sActionName = "Melee Attack";
+					elseif DB.getValue(nodeWeapon, "type", 0) == 1 then
+						sActionName = "Ranged Attack";
+					end
+
+					DB.setValue(nodeAction, "name", "string", sActionName);
+					DB.setValue(nodeAction, "atktype", "number", DB.getValue(nodeWeapon, "type", 0));
+					DB.setValue(nodeAction, "attacks", "number", DB.getValue(nodeWeapon, "attacks", 1));
+					DB.setValue(nodeAction, "attackstat", "string", DB.getValue(nodeWeapon, "attackstat", ""));
+					DB.setValue(nodeAction, "bonus", "number", DB.getValue(nodeWeapon, "bonus", 0));
+					DB.setValue(nodeAction, "attack1modifier", "number", DB.getValue(nodeWeapon, "attack1modifier", 0));
+					DB.setValue(nodeAction, "attack2modifier", "number", DB.getValue(nodeWeapon, "attack2modifier", 0));
+					DB.setValue(nodeAction, "attack3modifier", "number", DB.getValue(nodeWeapon, "attack3modifier", 0));
+					DB.setValue(nodeAction, "attack4modifier", "number", DB.getValue(nodeWeapon, "attack4modifier", 0));
+					DB.setValue(nodeAction, "critatkrange", "number", DB.getValue(nodeWeapon, "critatkrange", 20));
+					DB.setValue(nodeAction, "rangeincrement", "number", DB.getValue(nodeWeapon, "rangeincrement", 0));
+					DB.setValue(nodeAction, "firingmodes", "string", DB.getValue(nodeWeapon, "firingmodes", ""));
+					DB.setValue(nodeAction, "firemode", "string", DB.getValue(nodeWeapon, "firemode", ""));
+					DB.setValue(nodeAction, "maxammo", "number", DB.getValue(nodeWeapon, "maxammo", 0));
+					DB.setValue(nodeAction, "ammo", "number", DB.getValue(nodeWeapon, "ammo", 0));
+
+					local aDmgList = DB.getChildList(nodeWeapon, "damagelist");
+					if #aDmgList > 0 then
+						local nodeDmg = aDmgList[1];
+						DB.setValue(nodeAction, "dice", "dice", DB.getValue(nodeDmg, "dice", {}));
+						DB.setValue(nodeAction, "damagebonus", "number", DB.getValue(nodeDmg, "bonus", 0));
+						DB.setValue(nodeAction, "damagestat", "string", DB.getValue(nodeDmg, "stat", ""));
+						DB.setValue(nodeAction, "damagestatmult", "number", DB.getValue(nodeDmg, "statmult", 1.0));
+						DB.setValue(nodeAction, "damagestatmax", "number", DB.getValue(nodeDmg, "statmax", 0));
+						DB.setValue(nodeAction, "critdmgmult", "number", DB.getValue(nodeDmg, "critmult", 2));
+						DB.setValue(nodeAction, "damagetype", "string", DB.getValue(nodeDmg, "type", ""));
+					end
+
+					DB.deleteChild(nodeWeapon, "damagelist");
+					DB.deleteChild(nodeWeapon, "attacks");
+					DB.deleteChild(nodeWeapon, "attackstat");
+					DB.deleteChild(nodeWeapon, "bonus");
+					DB.deleteChild(nodeWeapon, "attack1modifier");
+					DB.deleteChild(nodeWeapon, "attack2modifier");
+					DB.deleteChild(nodeWeapon, "attack3modifier");
+					DB.deleteChild(nodeWeapon, "attack4modifier");
+					DB.deleteChild(nodeWeapon, "critatkrange");
+					DB.deleteChild(nodeWeapon, "rangeincrement");
+					DB.deleteChild(nodeWeapon, "firingmodes");
+					DB.deleteChild(nodeWeapon, "firemode");
+					DB.deleteChild(nodeWeapon, "maxammo");
+					DB.deleteChild(nodeWeapon, "ammo");
+				end
+			end
+		end
+	end
+end
+
+function convertChar21()
+	for _, nodePC in ipairs(DB.getChildList("charsheet")) do
+		migrateChar21(nodePC);
 	end
 end
 

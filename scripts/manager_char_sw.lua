@@ -319,7 +319,6 @@ function removeFromWeaponDB(nodeItem)
 		return false;
 	end
 	
-	-- Check to see if any of the weapon nodes linked to this item node should be deleted
 	local sItemNode = DB.getPath(nodeItem);
 	local sItemNode2 = "....inventorylist." .. DB.getName(nodeItem);
 	local bFound = false;
@@ -335,28 +334,23 @@ function removeFromWeaponDB(nodeItem)
 end
 
 function addToWeaponDB(nodeItem)
-	-- Parameter validation
 	if DB.getValue(nodeItem, "type", "") ~= "Weapon" then
 		return;
 	end
 	
-	-- Get the weapon list we are going to add to
 	local nodeChar = DB.getChild(nodeItem, "...");
 	local nodeWeapons = DB.createChild(nodeChar, "weaponlist");
 	if not nodeWeapons then
 		return nil;
 	end
 	
-	-- Set new weapons as equipped
 	DB.setValue(nodeItem, "carried", "number", 2);
 
-	-- Determine identification
 	local nItemID = 0;
 	if LibraryData.getIDState("item", nodeItem, true) then
 		nItemID = 1;
 	end
 	
-	-- Grab some information from the source node to populate the new weapon entries
 	local sName;
 	if nItemID == 1 then
 		sName = DB.getValue(nodeItem, "name", "");
@@ -364,10 +358,7 @@ function addToWeaponDB(nodeItem)
 		sName = DB.getValue(nodeItem, "nonid_name", "");
 		sName = "** " .. sName .. " **";
 	end
-	local nBonus = 0;
-	if nItemID == 1 then
-		nBonus = DB.getValue(nodeItem, "bonus", 0);
-	end
+	local nBonus = (nItemID == 1) and DB.getValue(nodeItem, "bonus", 0) or 0;
 
 	local nRange = DB.getValue(nodeItem, "range", 0);
 	local nAtkBonus = nBonus;
@@ -377,17 +368,11 @@ function addToWeaponDB(nodeItem)
 	local sPropsLower = sProps:lower();
 	local sNameLower = sName:lower();
 
-	local bDouble = false;
-	if sPropsLower:match("double") then
-		bDouble = true;
-	end
+	local bDouble = sPropsLower:match("double") ~= nil;
 	if nAtkBonus == 0 and (sPropsLower:match("masterwork") or sPropsLower:match("adamantine")) then
 		nAtkBonus = 1;
 	end
-	local bTwoWeaponFight = false;
-	if hasFeat(nodeChar, "Two-Weapon Fighting") then
-		bTwoWeaponFight = true;
-	end
+	local bTwoWeaponFight = CharManager.hasFeat(nodeChar, "Two-Weapon Fighting");
 
 	local bThrown = sPropsLower:match("thrown") or sType:match("thrown");
 	local bMelee = false;
@@ -414,50 +399,27 @@ function addToWeaponDB(nodeItem)
 	local aDamage = {};
 	local sDamage = DB.getValue(nodeItem, "damage", "");
 	local aDamageSplit = StringManager.split(sDamage, "/");
-	for kDamage, vDamage in ipairs(aDamageSplit) do
+	for _, vDamage in ipairs(aDamageSplit) do
 		local diceDamage, nDamage = StringManager.convertStringToDice(vDamage);
 		table.insert(aDamage, { dice = diceDamage, mod = nDamage });
 	end
 	
 	local sDamageType = DB.getValue(nodeItem, "damagetype", ""):lower();
-	local sFinalDamageType1 = "";
-	local sFinalDamageType2 = "";
-	if bDouble then
-		local aDoubleDamageTypes = StringManager.split(sDamageType, "/");
-		if #aDoubleDamageTypes > 1 then
-			sFinalDamageType1 = table.concat(ActionDamageCore.getDamageTypeArray(aDoubleDamageTypes[1]:gsub(" and ", ","):gsub(" or ", ",")), ",");
-			sFinalDamageType2 = table.concat(ActionDamageCore.getDamageTypeArray(aDoubleDamageTypes[2]:gsub(" and ", ","):gsub(" or ", ",")), ",");
+	if sDamageType == "" then
+		if bRanged then
+			sDamageType = "energy";
 		else
-			local aTempDamageTypes = ActionDamageCore.getDamageTypeArray(sDamageType:gsub(" and ", ","):gsub(" or ", ","));
-			local aDamageTypes = {};
-			local aSharedDamageTypes = {};
-			for _,sSubDamageType in ipairs(aTempDamageTypes) do
-				if StringManager.contains({ "bludgeoning", "piercing", "slashing"}, sSubDamageType) then
-					table.insert(aDamageTypes, sSubDamageType);
-				else
-					table.insert(aSharedDamageTypes, sSubDamageType);
-				end
-			end
-			local aCalcDamageType1 = { aDamageTypes[1] or "" };
-			local aCalcDamageType2 = { aDamageTypes[2] or aDamageTypes[1] or "" };
-			for _,sSubDamageType in ipairs(aSharedDamageTypes) do
-				table.insert(aCalcDamageType1, sSubDamageType);
-				table.insert(aCalcDamageType2, sSubDamageType);
-			end
-			sFinalDamageType1 = table.concat(aCalcDamageType1, ",")
-			sFinalDamageType2 = table.concat(aCalcDamageType2, ",")
+			sDamageType = "slashing";
 		end
-	else
-		sFinalDamageType1 = table.concat(ActionDamageCore.getDamageTypeArray(sDamageType:gsub(" and ", ","):gsub(" or ", ",")), ",");
 	end
-	
-	local aCritThreshold = { 20 };
-	local aCritMult = { 2 };
+
+	local aCritThreshold = { 20, 20 };
+	local aCritMult = { 2, 2 };
 	local sCritical = DB.getValue(nodeItem, "critical", "");
 	local aCrit = StringManager.split(sCritical, "/");
 	local nThresholdIndex = 1;
 	local nMultIndex = 1;
-	for kCrit, sCrit in ipairs(aCrit) do
+	for _, sCrit in ipairs(aCrit) do
 		local sCritThreshold = string.match(sCrit, "(%d+)[%-–]20");
 		if sCritThreshold then
 			aCritThreshold[nThresholdIndex] = tonumber(sCritThreshold) or 20;
@@ -471,194 +433,172 @@ function addToWeaponDB(nodeItem)
 		end
 	end
 	
-	-- Get some character data to pre-fill weapon info
+	local sFiringModes = DB.getValue(nodeItem, "firingmodes", "");
+	local nMaxAmmo = DB.getValue(nodeItem, "maxammo", 0);
+
 	local nBAB = DB.getValue(nodeChar, "attackbonus.base", 0);
-	local nAttacks = math.floor((nBAB - 1) / 5) + 1;
-	if nAttacks < 1 then
-		nAttacks = 1;
-	end
+	local nAttacks = math.max(math.floor((nBAB - 1) / 5) + 1, 1);
 	local sMeleeAttackStat = DB.getValue(nodeChar, "attackbonus.melee.ability", "");
 	local sRangedAttackStat = DB.getValue(nodeChar, "attackbonus.ranged.ability", "");
 
-	if bMelee then
-		local nodeWeapon = DB.createChild(nodeWeapons);
-		if nodeWeapon then
-			DB.setValue(nodeWeapon, "isidentified", "number", nItemID);
-			DB.setValue(nodeWeapon, "shortcut", "windowreference", "item", "....inventorylist." .. DB.getName(nodeItem));
-			
-			if bDouble then
-				DB.setValue(nodeWeapon, "name", "string", sName .. " (2H)");
-			else
-				DB.setValue(nodeWeapon, "name", "string", sName);
-			end
-			DB.setValue(nodeWeapon, "type", "number", 0);
-			DB.setValue(nodeWeapon, "properties", "string", sProps);
-			
-			DB.setValue(nodeWeapon, "attacks", "number", nAttacks);
-			DB.setValue(nodeWeapon, "attackstat", "string", sMeleeAttackStat);
-			DB.setValue(nodeWeapon, "bonus", "number", nAtkBonus);
+	local bHasStun = sPropsLower:match("stun") or sDamageType:match("stun");
+	local bIsIon = sPropsLower:match("ion") or sDamageType:match("ion") or sNameLower:match("ion");
 
-			DB.setValue(nodeWeapon, "critatkrange", "number", aCritThreshold[1]);
-
-			local nodeDmgList = DB.createChild(nodeWeapon, "damagelist");
-			if nodeDmgList then
-				local nodeDmg = DB.createChild(nodeDmgList);
-				if nodeDmg then
-					if aDamage[1] then
-						DB.setValue(nodeDmg, "dice", "dice", aDamage[1].dice);
-						DB.setValue(nodeDmg, "bonus", "number", nBonus + aDamage[1].mod);
-					else
-						DB.setValue(nodeDmg, "bonus", "number", nBonus);
-					end
-
-					DB.setValue(nodeDmg, "stat", "string", "strength");
-					if string.find(sType, "two%-handed") then
-						DB.setValue(nodeDmg, "statmult", "number", 1.5);
-					end
-					
-					DB.setValue(nodeDmg, "critmult", "number", aCritMult[1]);
-					DB.setValue(nodeDmg, "type", "string", sFinalDamageType1);
-				end
-			end
-		end
+	-- Create Parent Weapon
+	local nodeWeapon = DB.createChild(nodeWeapons);
+	if not nodeWeapon then
+		return nil;
 	end
 
-	-- Double head 1
-	if bMelee and bDouble then
-		local nodeWeapon = DB.createChild(nodeWeapons);
-		if nodeWeapon then
-			DB.setValue(nodeWeapon, "isidentified", "number", nItemID);
-			DB.setValue(nodeWeapon, "shortcut", "windowreference", "item", "....inventorylist." .. DB.getName(nodeItem));
-			
-			DB.setValue(nodeWeapon, "name", "string", sName .. " (D1)");
-			DB.setValue(nodeWeapon, "type", "number", 0);
-			DB.setValue(nodeWeapon, "properties", "string", sProps);
+	DB.setValue(nodeWeapon, "isidentified", "number", nItemID);
+	DB.setValue(nodeWeapon, "shortcut", "windowreference", "item", "....inventorylist." .. DB.getName(nodeItem));
+	DB.setValue(nodeWeapon, "name", "string", sName);
+	DB.setValue(nodeWeapon, "properties", "string", sProps);
+	DB.setValue(nodeWeapon, "type", "number", bRanged and 1 or 0);
 
-			DB.setValue(nodeWeapon, "attacks", "number", nAttacks);
-			DB.setValue(nodeWeapon, "attackstat", "string", sMeleeAttackStat);
-			if bTwoWeaponFight then
-				DB.setValue(nodeWeapon, "bonus", "number", nAtkBonus - 2);
-			else
-				DB.setValue(nodeWeapon, "bonus", "number", nAtkBonus - 4);
-			end
-			
-			DB.setValue(nodeWeapon, "critatkrange", "number", aCritThreshold[1]);
-
-			local nodeDmgList = DB.createChild(nodeWeapon, "damagelist");
-			if nodeDmgList then
-				local nodeDmg = DB.createChild(nodeDmgList);
-				if nodeDmg then
-					if aDamage[1] then
-						DB.setValue(nodeDmg, "dice", "dice", aDamage[1].dice);
-						DB.setValue(nodeDmg, "bonus", "number", nBonus + aDamage[1].mod);
-					else
-						DB.setValue(nodeDmg, "bonus", "number", nBonus);
-					end
-
-					DB.setValue(nodeDmg, "critmult", "number", aCritMult[1]);
-					DB.setValue(nodeDmg, "stat", "string", "strength");
-					
-					DB.setValue(nodeDmg, "type", "string", sFinalDamageType1);
-				end
-			end
-		end
+	local nodeActionList = DB.createChild(nodeWeapon, "actionlist");
+	if not nodeActionList then
+		return nodeWeapon;
 	end
 
-	-- Double head 2
-	if bMelee and bDouble then
-		local nodeWeapon = DB.createChild(nodeWeapons);
-		if nodeWeapon then
-			DB.setValue(nodeWeapon, "isidentified", "number", nItemID);
-			DB.setValue(nodeWeapon, "shortcut", "windowreference", "item", "....inventorylist." .. DB.getName(nodeItem));
-			
-			DB.setValue(nodeWeapon, "name", "string", sName .. " (D2)");
-			DB.setValue(nodeWeapon, "type", "number", 0);
-			DB.setValue(nodeWeapon, "properties", "string", sProps);
+	-- Sub-actions generation
+	if bDouble then
+		local nodeA1 = DB.createChild(nodeActionList);
+		DB.setValue(nodeA1, "name", "string", "Single End (2H)");
+		DB.setValue(nodeA1, "atktype", "number", 0);
+		DB.setValue(nodeA1, "attacks", "number", nAttacks);
+		DB.setValue(nodeA1, "attackstat", "string", sMeleeAttackStat);
+		DB.setValue(nodeA1, "bonus", "number", nAtkBonus);
+		DB.setValue(nodeA1, "critatkrange", "number", aCritThreshold[1]);
+		DB.setValue(nodeA1, "dice", "dice", aDamage[1] and aDamage[1].dice or {});
+		DB.setValue(nodeA1, "damagebonus", "number", nBonus + (aDamage[1] and aDamage[1].mod or 0));
+		DB.setValue(nodeA1, "damagestat", "string", "strength");
+		DB.setValue(nodeA1, "damagestatmult", "number", 1.5);
+		DB.setValue(nodeA1, "critdmgmult", "number", aCritMult[1]);
+		DB.setValue(nodeA1, "damagetype", "string", sDamageType);
 
-			DB.setValue(nodeWeapon, "attacks", "number", 1);
-			DB.setValue(nodeWeapon, "attackstat", "string", sMeleeAttackStat);
-			if bTwoWeaponFight then
-				DB.setValue(nodeWeapon, "bonus", "number", nAtkBonus - 2);
-			else
-				DB.setValue(nodeWeapon, "bonus", "number", nAtkBonus - 8);
-			end
-			
-			if aCritThreshold[2] then
-				DB.setValue(nodeWeapon, "critatkrange", "number", aCritThreshold[2]);
-			else
-				DB.setValue(nodeWeapon, "critatkrange", "number", aCritThreshold[1]);
-			end
+		local nodeA2 = DB.createChild(nodeActionList);
+		DB.setValue(nodeA2, "name", "string", "Primary (TWF)");
+		DB.setValue(nodeA2, "atktype", "number", 0);
+		DB.setValue(nodeA2, "attacks", "number", nAttacks);
+		DB.setValue(nodeA2, "attackstat", "string", sMeleeAttackStat);
+		DB.setValue(nodeA2, "bonus", "number", nAtkBonus - (bTwoWeaponFight and 2 or 4));
+		DB.setValue(nodeA2, "critatkrange", "number", aCritThreshold[1]);
+		DB.setValue(nodeA2, "dice", "dice", aDamage[1] and aDamage[1].dice or {});
+		DB.setValue(nodeA2, "damagebonus", "number", nBonus + (aDamage[1] and aDamage[1].mod or 0));
+		DB.setValue(nodeA2, "damagestat", "string", "strength");
+		DB.setValue(nodeA2, "damagestatmult", "number", 1.0);
+		DB.setValue(nodeA2, "critdmgmult", "number", aCritMult[1]);
+		DB.setValue(nodeA2, "damagetype", "string", sDamageType);
 
-			local nodeDmgList = DB.createChild(nodeWeapon, "damagelist");
-			if nodeDmgList then
-				local nodeDmg = DB.createChild(nodeDmgList);
-				if nodeDmg then
-					if aDamage[2] then
-						DB.setValue(nodeDmg, "dice", "dice", aDamage[2].dice);
-						DB.setValue(nodeDmg, "bonus", "number", nBonus + aDamage[2].mod);
-					elseif aDamage[1] then
-						DB.setValue(nodeDmg, "dice", "dice", aDamage[1].dice);
-						DB.setValue(nodeDmg, "bonus", "number", nBonus + aDamage[1].mod);
-					else
-						DB.setValue(nodeDmg, "bonus", "number", nBonus);
-					end
+		local nodeA3 = DB.createChild(nodeActionList);
+		DB.setValue(nodeA3, "name", "string", "Off-Hand (TWF)");
+		DB.setValue(nodeA3, "atktype", "number", 0);
+		DB.setValue(nodeA3, "attacks", "number", 1);
+		DB.setValue(nodeA3, "attackstat", "string", sMeleeAttackStat);
+		DB.setValue(nodeA3, "bonus", "number", nAtkBonus - (bTwoWeaponFight and 2 or 8));
+		DB.setValue(nodeA3, "critatkrange", "number", aCritThreshold[2] or aCritThreshold[1]);
+		local aDmg2 = aDamage[2] or aDamage[1];
+		DB.setValue(nodeA3, "dice", "dice", aDmg2 and aDmg2.dice or {});
+		DB.setValue(nodeA3, "damagebonus", "number", nBonus + (aDmg2 and aDmg2.mod or 0));
+		DB.setValue(nodeA3, "damagestat", "string", "strength");
+		DB.setValue(nodeA3, "damagestatmult", "number", 0.5);
+		DB.setValue(nodeA3, "critdmgmult", "number", aCritMult[2] or aCritMult[1]);
+		DB.setValue(nodeA3, "damagetype", "string", sDamageType);
 
-					if aCritMult[2] then
-						DB.setValue(nodeDmg, "critmult", "number", aCritMult[2]);
-					else
-						DB.setValue(nodeDmg, "critmult", "number", aCritMult[1]);
-					end
-					
-					DB.setValue(nodeDmg, "stat", "string", "strength");
-					DB.setValue(nodeDmg, "statmult", "number", 0.5);
-					
-					DB.setValue(nodeDmg, "type", "string", sFinalDamageType2);
-				end
-			end
+	elseif bThrown then
+		local nodeA1 = DB.createChild(nodeActionList);
+		DB.setValue(nodeA1, "name", "string", "Melee Attack");
+		DB.setValue(nodeA1, "atktype", "number", 0);
+		DB.setValue(nodeA1, "attacks", "number", nAttacks);
+		DB.setValue(nodeA1, "attackstat", "string", sMeleeAttackStat);
+		DB.setValue(nodeA1, "bonus", "number", nAtkBonus);
+		DB.setValue(nodeA1, "critatkrange", "number", aCritThreshold[1]);
+		DB.setValue(nodeA1, "dice", "dice", aDamage[1] and aDamage[1].dice or {});
+		DB.setValue(nodeA1, "damagebonus", "number", nBonus + (aDamage[1] and aDamage[1].mod or 0));
+		DB.setValue(nodeA1, "damagestat", "string", "strength");
+		DB.setValue(nodeA1, "damagestatmult", "number", 1.0);
+		DB.setValue(nodeA1, "critdmgmult", "number", aCritMult[1]);
+		DB.setValue(nodeA1, "damagetype", "string", sDamageType);
+
+		local nodeA2 = DB.createChild(nodeActionList);
+		DB.setValue(nodeA2, "name", "string", "Throw");
+		DB.setValue(nodeA2, "atktype", "number", 1);
+		DB.setValue(nodeA2, "attacks", "number", nAttacks);
+		DB.setValue(nodeA2, "attackstat", "string", sRangedAttackStat);
+		DB.setValue(nodeA2, "bonus", "number", nAtkBonus);
+		DB.setValue(nodeA2, "critatkrange", "number", aCritThreshold[1]);
+		DB.setValue(nodeA2, "rangeincrement", "number", nRange > 0 and nRange or 4);
+		DB.setValue(nodeA2, "dice", "dice", aDamage[1] and aDamage[1].dice or {});
+		DB.setValue(nodeA2, "damagebonus", "number", nBonus + (aDamage[1] and aDamage[1].mod or 0));
+		DB.setValue(nodeA2, "damagestat", "string", "strength");
+		DB.setValue(nodeA2, "damagestatmult", "number", 1.0);
+		DB.setValue(nodeA2, "critdmgmult", "number", aCritMult[1]);
+		DB.setValue(nodeA2, "damagetype", "string", sDamageType);
+
+	elseif bRanged then
+		local sMainActionName = bIsIon and "Ion Blast" or (bHasStun and "Lethal Mode" or "Standard Attack");
+		local nodeA1 = DB.createChild(nodeActionList);
+		DB.setValue(nodeA1, "name", "string", sMainActionName);
+		DB.setValue(nodeA1, "atktype", "number", 1);
+		DB.setValue(nodeA1, "attacks", "number", nAttacks);
+		DB.setValue(nodeA1, "attackstat", "string", sRangedAttackStat);
+		DB.setValue(nodeA1, "bonus", "number", nAtkBonus);
+		DB.setValue(nodeA1, "critatkrange", "number", aCritThreshold[1]);
+		DB.setValue(nodeA1, "rangeincrement", "number", nRange);
+		if sFiringModes ~= "" then
+			DB.setValue(nodeA1, "firingmodes", "string", sFiringModes);
 		end
+		if nMaxAmmo > 0 then
+			DB.setValue(nodeA1, "maxammo", "number", nMaxAmmo);
+		end
+		DB.setValue(nodeA1, "dice", "dice", aDamage[1] and aDamage[1].dice or {});
+		DB.setValue(nodeA1, "damagebonus", "number", nBonus + (aDamage[1] and aDamage[1].mod or 0));
+		DB.setValue(nodeA1, "damagestat", "string", "");
+		DB.setValue(nodeA1, "critdmgmult", "number", aCritMult[1]);
+		DB.setValue(nodeA1, "damagetype", "string", bIsIon and "ion" or sDamageType);
+
+		if bHasStun and not bIsIon then
+			local nodeA2 = DB.createChild(nodeActionList);
+			DB.setValue(nodeA2, "name", "string", "Stun Setting");
+			DB.setValue(nodeA2, "atktype", "number", 1);
+			DB.setValue(nodeA2, "attacks", "number", nAttacks);
+			DB.setValue(nodeA2, "attackstat", "string", sRangedAttackStat);
+			DB.setValue(nodeA2, "bonus", "number", nAtkBonus);
+			DB.setValue(nodeA2, "critatkrange", "number", 20);
+			DB.setValue(nodeA2, "rangeincrement", "number", 6);
+			if nMaxAmmo > 0 then
+				DB.setValue(nodeA2, "maxammo", "number", nMaxAmmo);
+			end
+			local aStunDice, nStunMod = StringManager.convertStringToDice("1d6");
+			DB.setValue(nodeA2, "dice", "dice", aStunDice);
+			DB.setValue(nodeA2, "damagebonus", "number", nStunMod);
+			DB.setValue(nodeA2, "damagestat", "string", "");
+			DB.setValue(nodeA2, "critdmgmult", "number", 2);
+			DB.setValue(nodeA2, "damagetype", "string", "stun");
+		end
+
+	else
+		local nodeA1 = DB.createChild(nodeActionList);
+		DB.setValue(nodeA1, "name", "string", "Melee Attack");
+		DB.setValue(nodeA1, "atktype", "number", 0);
+		DB.setValue(nodeA1, "attacks", "number", nAttacks);
+		DB.setValue(nodeA1, "attackstat", "string", sMeleeAttackStat);
+		DB.setValue(nodeA1, "bonus", "number", nAtkBonus);
+		DB.setValue(nodeA1, "critatkrange", "number", aCritThreshold[1]);
+		DB.setValue(nodeA1, "dice", "dice", aDamage[1] and aDamage[1].dice or {});
+		DB.setValue(nodeA1, "damagebonus", "number", nBonus + (aDamage[1] and aDamage[1].mod or 0));
+		DB.setValue(nodeA1, "damagestat", "string", "strength");
+		if string.find(sType, "two%-handed") then
+			DB.setValue(nodeA1, "damagestatmult", "number", 1.5);
+		else
+			DB.setValue(nodeA1, "damagestatmult", "number", 1.0);
+		end
+		DB.setValue(nodeA1, "critdmgmult", "number", aCritMult[1]);
+		DB.setValue(nodeA1, "damagetype", "string", sDamageType);
 	end
 
-	if bRanged then
-		local nodeWeapon = DB.createChild(nodeWeapons);
-		if nodeWeapon then
-			DB.setValue(nodeWeapon, "isidentified", "number", nItemID);
-			DB.setValue(nodeWeapon, "shortcut", "windowreference", "item", "....inventorylist." .. DB.getName(nodeItem));
-			
-			DB.setValue(nodeWeapon, "name", "string", sName);
-			DB.setValue(nodeWeapon, "type", "number", 1);
-			DB.setValue(nodeWeapon, "properties", "string", sProps);
-			DB.setValue(nodeWeapon, "rangeincrement", "number", nRange);
-
-			DB.setValue(nodeWeapon, "attacks", "number", nAttacks);
-			DB.setValue(nodeWeapon, "attackstat", "string", sRangedAttackStat);
-			DB.setValue(nodeWeapon, "bonus", "number", nAtkBonus);
-
-			DB.setValue(nodeWeapon, "critatkrange", "number", aCritThreshold[1]);
-
-			local nodeDmgList = DB.createChild(nodeWeapon, "damagelist");
-			if nodeDmgList then
-				local nodeDmg = DB.createChild(nodeDmgList);
-				if nodeDmg then
-					if aDamage[1] then
-						DB.setValue(nodeDmg, "dice", "dice", aDamage[1].dice);
-						DB.setValue(nodeDmg, "bonus", "number", nBonus + aDamage[1].mod);
-					else
-						DB.setValue(nodeDmg, "bonus", "number", nBonus);
-					end
-
-					DB.setValue(nodeDmg, "critmult", "number", aCritMult[1]);
-					
-					if bThrown or sNameLower:match("sling") or sNameLower:match("spear") or sNameLower:match("dagger") or sNameLower:match("knife") or sNameLower:match("javelin") or sNameLower:match("atlatl") then
-						DB.setValue(nodeDmg, "stat", "string", "strength");
-					else
-						DB.setValue(nodeDmg, "stat", "string", "");
-					end
-					
-					DB.setValue(nodeDmg, "type", "string", sFinalDamageType1);
-				end
-			end
-		end
-	end
+	return nodeWeapon;
 end
 
 function onItemIDChanged(nodeItemID)
@@ -669,7 +609,7 @@ function onItemIDChanged(nodeItemID)
 	for _,vWeapon in ipairs(DB.getChildList(nodeChar, "weaponlist")) do
 		local _,sRecord = DB.getValue(vWeapon, "shortcut", "", "");
 		if sRecord == sPath then
-			checkWeaponIDChange(vWeapon);
+			CharManager.checkWeaponIDChange(vWeapon);
 		end
 	end
 end
@@ -690,16 +630,6 @@ function checkWeaponIDChange(nodeWeapon)
 		return;
 	end
 	
-	local sOldName = DB.getValue(nodeWeapon, "name", "");
-	local aOldParens = {};
-	for w in sOldName:gmatch("%([^%)]+%)") do
-		table.insert(aOldParens, w);
-	end
-	local sOldSuffix = nil;
-	if #aOldParens > 0 then
-		sOldSuffix = aOldParens[#aOldParens];
-	end
-	
 	local sName;
 	if bItemID then
 		sName = DB.getValue(nodeItem, "name", "");
@@ -707,73 +637,89 @@ function checkWeaponIDChange(nodeWeapon)
 		sName = DB.getValue(nodeItem, "nonid_name", "");
 		sName = "** " .. sName .. " **";
 	end
-	if sOldSuffix then
-		sName = sName .. " " .. sOldSuffix;
-	end
 	DB.setValue(nodeWeapon, "name", "string", sName);
 	
-	local nBonus = 0;
-	if bItemID then
-		DB.setValue(nodeWeapon, "bonus", "number", DB.getValue(nodeWeapon, "bonus", 0) + DB.getValue(nodeItem, "bonus", 0));
-		local aDamageNodes = UtilityManager.getNodeSortedChildren(nodeWeapon, "damagelist");
-		if #aDamageNodes > 0 then
-			DB.setValue(aDamageNodes[1], "bonus", "number", DB.getValue(aDamageNodes[1], "bonus", 0) + DB.getValue(nodeItem, "bonus", 0));
-		end
-	else
-		DB.setValue(nodeWeapon, "bonus", "number", DB.getValue(nodeWeapon, "bonus", 0) - DB.getValue(nodeItem, "bonus", 0));
-		local aDamageNodes = UtilityManager.getNodeSortedChildren(nodeWeapon, "damagelist");
-		if #aDamageNodes > 0 then
-			DB.setValue(aDamageNodes[1], "bonus", "number", DB.getValue(aDamageNodes[1], "bonus", 0) - DB.getValue(nodeItem, "bonus", 0));
-		end
+	local nDiff = bItemID and DB.getValue(nodeItem, "bonus", 0) or -DB.getValue(nodeItem, "bonus", 0);
+	for _, nodeAction in ipairs(DB.getChildList(nodeWeapon, "actionlist")) do
+		DB.setValue(nodeAction, "bonus", "number", DB.getValue(nodeAction, "bonus", 0) + nDiff);
+		DB.setValue(nodeAction, "damagebonus", "number", DB.getValue(nodeAction, "damagebonus", 0) + nDiff);
 	end
 	
-	if bItemID then
-		DB.setValue(nodeWeapon, "isidentified", "number", 1);
-	else
-		DB.setValue(nodeWeapon, "isidentified", "number", 0);
-	end
+	DB.setValue(nodeWeapon, "isidentified", "number", bItemID and 1 or 0);
 end
 
-function getWeaponAttackRollStructures(nodeWeapon, nAttack)
-	if not nodeWeapon then
-		return;
+function addWeaponAction(nodeWeapon, nAtkType, sActionName)
+	if not nodeWeapon then return nil; end
+	local nodeActionList = DB.createChild(nodeWeapon, "actionlist");
+	if not nodeActionList then return nil; end
+
+	local nodeAction = DB.createChild(nodeActionList);
+	if not nodeAction then return nil; end
+
+	local nodeChar = DB.getChild(nodeWeapon, "...");
+	local nBAB = DB.getValue(nodeChar, "attackbonus.base", 0);
+	local nAttacks = math.max(math.floor((nBAB - 1) / 5) + 1, 1);
+
+	nAtkType = nAtkType or 0;
+	if not sActionName or sActionName == "" then
+		if nAtkType == 0 then sActionName = "Melee Attack";
+		elseif nAtkType == 1 then sActionName = "Ranged Attack";
+		else sActionName = "Throwing Attack";
+		end
 	end
-	
+
+	DB.setValue(nodeAction, "name", "string", sActionName);
+	DB.setValue(nodeAction, "atktype", "number", nAtkType);
+	DB.setValue(nodeAction, "attacks", "number", nAttacks);
+	DB.setValue(nodeAction, "critatkrange", "number", 20);
+	DB.setValue(nodeAction, "critdmgmult", "number", 2);
+
+	if nAtkType == 0 then
+		DB.setValue(nodeAction, "attackstat", "string", DB.getValue(nodeChar, "attackbonus.melee.ability", "strength"));
+		DB.setValue(nodeAction, "damagestat", "string", "strength");
+		DB.setValue(nodeAction, "damagestatmult", "number", 1.0);
+		DB.setValue(nodeAction, "damagetype", "string", "slashing");
+	else
+		DB.setValue(nodeAction, "attackstat", "string", DB.getValue(nodeChar, "attackbonus.ranged.ability", "dexterity"));
+		DB.setValue(nodeAction, "damagestat", "string", "");
+		DB.setValue(nodeAction, "damagetype", "string", "energy");
+		DB.setValue(nodeAction, "rangeincrement", "number", 10);
+	end
+
+	return nodeAction;
+end
+
+function getWeaponAttackRollStructures(nodeWeapon, nodeAction, nAttack)
+	if not nodeWeapon then return nil; end
+	local nodeData = nodeAction or nodeWeapon;
 	local nodeChar = DB.getChild(nodeWeapon, "...");
 	local rActor = ActorManager.resolveActor(nodeChar);
 
 	local rAttack = {};
 	rAttack.type = "attack";
-	rAttack.label = DB.getValue(nodeWeapon, "name", "");
-	local nType = DB.getValue(nodeWeapon, "type", 0);
-	if nType == 2 then
-		rAttack.range = "M";
-		rAttack.cm = true;
-	elseif nType == 1 then
+	
+	local sWeaponName = DB.getValue(nodeWeapon, "name", "");
+	local sActionName = DB.getValue(nodeData, "name", "");
+	if sActionName ~= "" and sActionName ~= sWeaponName and sActionName ~= "Standard Attack" and sActionName ~= "Melee Attack" and sActionName ~= "Ranged Attack" then
+		rAttack.label = sWeaponName .. " (" .. sActionName .. ")";
+	else
+		rAttack.label = sWeaponName;
+	end
+
+	local nType = DB.getValue(nodeData, "atktype", DB.getValue(nodeWeapon, "type", 0));
+	if nType == 1 or nType == 2 then
 		rAttack.range = "R";
 	else
 		rAttack.range = "M";
 	end
-	rAttack.crit = DB.getValue(nodeWeapon, "critatkrange", 20);
-	rAttack.stat = DB.getValue(nodeWeapon, "attackstat", "");
+
+	rAttack.crit = DB.getValue(nodeData, "critatkrange", 20);
+	rAttack.stat = DB.getValue(nodeData, "attackstat", "");
 	if rAttack.stat == "" then
-		if rAttack.range == "M" then
-			if rAttack.cm then
-				rAttack.stat = DB.getValue(nodeChar, "attackbonus.grapple.ability", "");
-				if rAttack.stat == "" then
-					rAttack.stat = "strength";
-				end
-			else
-				rAttack.stat = DB.getValue(nodeChar, "attackbonus.melee.ability", "");
-				if rAttack.stat == "" then
-					rAttack.stat = "strength";
-				end
-			end
+		if rAttack.range == "R" then
+			rAttack.stat = DB.getValue(nodeChar, "attackbonus.ranged.ability", "dexterity");
 		else
-			rAttack.stat = DB.getValue(nodeChar, "attackbonus.ranged.ability", "");
-			if rAttack.stat == "" then
-				rAttack.stat = "dexterity";
-			end
+			rAttack.stat = DB.getValue(nodeChar, "attackbonus.melee.ability", "strength");
 		end
 	end
 	
@@ -785,57 +731,59 @@ function getWeaponAttackRollStructures(nodeWeapon, nAttack)
 	return rActor, rAttack;
 end
 
-function getWeaponDamageRollStructures(nodeWeapon)
+function getWeaponDamageRollStructures(nodeWeapon, nodeAction)
+	if not nodeWeapon then return nil; end
+	local nodeData = nodeAction or nodeWeapon;
 	local nodeChar = DB.getChild(nodeWeapon, "...");
 	local rActor = ActorManager.resolveActor(nodeChar);
 
-	local bRanged = (DB.getValue(nodeWeapon, "type", 0) == 1);
+	local nType = DB.getValue(nodeData, "atktype", DB.getValue(nodeWeapon, "type", 0));
+	local bRanged = (nType == 1 or nType == 2);
 
 	local rDamage = {};
 	rDamage.type = "damage";
-	rDamage.label = DB.getValue(nodeWeapon, "name", "");
-	if bRanged then
-		rDamage.range = "R";
+	
+	local sWeaponName = DB.getValue(nodeWeapon, "name", "");
+	local sActionName = DB.getValue(nodeData, "name", "");
+	if sActionName ~= "" and sActionName ~= sWeaponName and sActionName ~= "Standard Attack" and sActionName ~= "Melee Attack" and sActionName ~= "Ranged Attack" then
+		rDamage.label = sWeaponName .. " (" .. sActionName .. ")";
 	else
-		rDamage.range = "M";
+		rDamage.label = sWeaponName;
 	end
-	
-	rDamage.clauses = {};
-	local aDamageNodes = UtilityManager.getNodeSortedChildren(nodeWeapon, "damagelist");
-	for _,v in ipairs(aDamageNodes) do
-		local sDmgType = DB.getValue(v, "type", "");
-		local aDmgDice = DB.getValue(v, "dice", {});
-		local nDmgMod = DB.getValue(v, "bonus", 0);
-		local nDmgMult = DB.getValue(v, "critmult", 2);
 
-		local nMult = 1;
-		local nMax = 0;
-		local sDmgAbility = DB.getValue(v, "stat", "");
-		if sDmgAbility ~= "" then
-			nMult = DB.getValue(v, "statmult", 1);
-			nMax = DB.getValue(v, "statmax", 0);
-			local nAbilityBonus = ActorManager35E.getAbilityBonus(rActor, sDmgAbility);
-			if nMax > 0 then
-				nAbilityBonus = math.min(nAbilityBonus, nMax);
-			end
-			if nAbilityBonus > 0 and nMult ~= 1 then
-				nAbilityBonus = math.floor(nMult * nAbilityBonus);
-			end
-			nDmgMod = nDmgMod + nAbilityBonus;
+	rDamage.range = bRanged and "R" or "M";
+	rDamage.clauses = {};
+
+	local aDmgDice = DB.getValue(nodeData, "dice", {});
+	local nDmgMod = DB.getValue(nodeData, "damagebonus", 0);
+	local nDmgMult = DB.getValue(nodeData, "critdmgmult", 2);
+	local sDmgType = DB.getValue(nodeData, "damagetype", "");
+
+	local sDmgAbility = DB.getValue(nodeData, "damagestat", "");
+	local nMult = DB.getValue(nodeData, "damagestatmult", 1.0);
+	local nMax = DB.getValue(nodeData, "damagestatmax", 0);
+
+	if sDmgAbility ~= "" then
+		local nAbilityBonus = ActorManager35E.getAbilityBonus(rActor, sDmgAbility);
+		if nMax > 0 then
+			nAbilityBonus = math.min(nAbilityBonus, nMax);
 		end
-		
-		table.insert(rDamage.clauses, 
-				{ 
-					dice = aDmgDice, 
-					modifier = nDmgMod, 
-					mult = nDmgMult,
-					stat = sDmgAbility, 
-					statmax = nMax,
-					statmult = nMult,
-					dmgtype = sDmgType, 
-				});
+		if nAbilityBonus > 0 and nMult ~= 1 then
+			nAbilityBonus = math.floor(nMult * nAbilityBonus);
+		end
+		nDmgMod = nDmgMod + nAbilityBonus;
 	end
-	
+
+	table.insert(rDamage.clauses, {
+		dice = aDmgDice,
+		modifier = nDmgMod,
+		mult = nDmgMult,
+		stat = sDmgAbility,
+		statmax = nMax,
+		statmult = nMult,
+		dmgtype = sDmgType,
+	});
+
 	return rActor, rDamage;
 end
 

@@ -34,6 +34,21 @@ function onClose()
 	end
 end
 
+function isAllowDelete()
+	if self.isCustom() then
+		return true;
+	end
+	local sLabel = label.getValue();
+	local rSkill = DataCommon.skilldata[sLabel];
+	if rSkill and (rSkill.sublabeling or rSkill.group == "force") then
+		return true;
+	end
+	if group and group.getValue():lower() == "force" then
+		return true;
+	end
+	return false;
+end
+
 function onLockModeChanged(bReadOnly)
 	local tFields = { "state", "sublabel", "ranks", "ranks_cross", "statname", "misc", };
 	WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
@@ -41,21 +56,32 @@ function onLockModeChanged(bReadOnly)
 		label.setReadOnly(bReadOnly);
 	end
 
-	local bAllowDelete = self.isCustom();
-	if not bAllowDelete then
-		local sLabel = label.getValue();
-		local rSkill = DataCommon.skilldata[sLabel];
-		if rSkill and rSkill.sublabeling then
-			bAllowDelete = true;
-		end
-	end
-	
+	local bAllowDelete = self.isAllowDelete();
 	if bAllowDelete then
 		idelete_spacer.setVisible(false);
 		idelete.setVisible(not bReadOnly);
 	else
 		idelete_spacer.setVisible(not bReadOnly);
 		idelete.setVisible(false);
+	end
+
+	self.updateMenuItems(bReadOnly);
+end
+
+function updateMenuItems(bReadOnly)
+	resetMenuItems();
+	if self.isAllowDelete() and not bReadOnly then
+		registerMenuItem(Interface.getString("list_menu_deleteitem"), "delete", 6);
+		registerMenuItem(Interface.getString("list_menu_deleteconfirm"), "delete", 6, 7);
+	end
+end
+
+function onMenuSelection(selection, subselection)
+	if selection == 6 and subselection == 7 then
+		local node = getDatabaseNode();
+		if node then
+			node.delete();
+		end
 	end
 end
 
@@ -110,8 +136,10 @@ function updateGroupID()
 		sGroup = StringManager.simplify(sGroup)
 	end
 
-	local aSkillGroup = DataCommon.skillgroups[sGroup]
-	                 or DataCommon.skillgroups["generic"];
+	local aSkillGroup = nil;
+	if DataCommon.skillgroups then
+		aSkillGroup = DataCommon.skillgroups[sGroup] or DataCommon.skillgroups["generic"];
+	end
 	if aSkillGroup then
 		groupid.setValue(aSkillGroup.groupid);
 	end

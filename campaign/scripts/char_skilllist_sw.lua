@@ -14,8 +14,16 @@ function onInit() -- Adjusted
 	DB.addHandler(DB.getPath(nodeChar, "skilllist.*.name"), "onUpdate", self.onDataChanged);
 	DB.addHandler(DB.getPath(nodeChar, "skilllist.*.name_focus"), "onUpdate", self.onDataChanged);
 
+	registerMenuItem(Interface.getString("char_menu_addforceskills"), "insert", 4);
+
 	self.constructDefaultSkills();
 	_bInitialized = true;
+end
+
+function onMenuSelection(selection, subselection)
+	if selection == 4 then
+		self.addForceSkills();
+	end
 end
 
 function onClose() -- Added
@@ -62,7 +70,7 @@ function constructDefaultSkills() -- Adjusted
 
 		-- Set data for new list entries
 		if not matches then
-			if not t.sublabeling then
+			if not t.sublabeling and t.group ~= "force" then
 				w = createWindow();
 				if w then
 					w.label.setValue(k);
@@ -80,7 +88,10 @@ function constructDefaultSkills() -- Adjusted
 			w.group.setValue(StringManager.titleCase(t.group))
 
 			-- Get groupid from skillgroups
-			local aSkillGroup = DataCommon.skillgroups[StringManager.simplify(t.group)] or DataCommon.skillgroups["generic"];
+			local aSkillGroup = nil;
+			if DataCommon.skillgroups then
+				aSkillGroup = DataCommon.skillgroups[StringManager.simplify(t.group)] or DataCommon.skillgroups["generic"];
+			end
 			if aSkillGroup then
 				w.groupid.setValue(aSkillGroup.groupid)
 			end
@@ -108,6 +119,89 @@ end
 
 function onSkillDataUpdate()
 	CharManager.updateSkillPoints(window.getDatabaseNode());
+end
+
+function addForceSkills()
+	local nodeChar = window.getDatabaseNode();
+	if not nodeChar then
+		return;
+	end
+
+	-- Map existing skills (normalized lower-case trimmed name)
+	local aExisting = {};
+	for _, w in pairs(getWindows()) do
+		if w.label then
+			local sLabel = w.label.getValue();
+			if type(sLabel) == "string" then
+				local sTrimmed = StringManager.trim(sLabel):lower();
+				if sTrimmed ~= "" then
+					aExisting[sTrimmed] = true;
+				end
+			end
+		end
+	end
+
+	-- Also check database child nodes directly to ensure no un-instantiated / unlinked nodes exist
+	for _, nodeSkill in pairs(DB.getChildren(nodeChar, "skilllist")) do
+		local sName = DB.getValue(nodeSkill, "label", "");
+		if sName == "" then
+			sName = DB.getValue(nodeSkill, "name", "");
+		end
+		if type(sName) == "string" then
+			local sTrimmed = StringManager.trim(sName):lower();
+			if sTrimmed ~= "" then
+				aExisting[sTrimmed] = true;
+			end
+		end
+	end
+
+	local bAddedAny = false;
+	local aSkillGroup = nil;
+	if DataCommon.skillgroups then
+		aSkillGroup = DataCommon.skillgroups["force"] or DataCommon.skillgroups["generic"];
+	end
+	local sGroupId = aSkillGroup and aSkillGroup.groupid or "40";
+
+	-- Sort skill names alphabetically for predictable creation order
+	local aForceSkillNames = {};
+	if DataCommon.forceskills then
+		for sSkillName, _ in pairs(DataCommon.forceskills) do
+			table.insert(aForceSkillNames, sSkillName);
+		end
+	end
+	table.sort(aForceSkillNames);
+
+	for _, sSkillName in ipairs(aForceSkillNames) do
+		local sNormalized = StringManager.trim(sSkillName):lower();
+		if not aExisting[sNormalized] then
+			local rSkill = DataCommon.forceskills[sSkillName];
+			local w = createWindow();
+			if w then
+				w.label.setValue(sSkillName);
+				w.statname.setValue(rSkill.stat or "");
+				w.group.setValue(StringManager.titleCase(rSkill.group or "Force"));
+				w.groupid.setValue(sGroupId);
+				if rSkill.trainedonly and w.state then
+					w.state.setValue(rSkill.trainedonly);
+				end
+				if w.updateWindow then
+					w.updateWindow();
+				end
+				if w.onDataChanged then
+					w.onDataChanged();
+				end
+				aExisting[sNormalized] = true;
+				bAddedAny = true;
+			end
+		end
+	end
+
+	if bAddedAny then
+		self.applySort();
+		if window.updateSkillGroups then
+			window.updateSkillGroups();
+		end
+	end
 end
 
 function addNewInstance(sLabel)

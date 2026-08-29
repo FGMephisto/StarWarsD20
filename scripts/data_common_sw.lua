@@ -331,6 +331,16 @@ immunetypes = {
 	"energy",
 };
 
+-- Weapon damage types for autofill
+wpn_autofill_dmgtypes = {
+	"Energy",
+	"Slashing",
+	"Piercing",
+	"Bludgeoning",
+	"Ion",
+	"Stun",
+};
+
 dmgtypes = {
 	"acid",  		-- ENERGY DAMAGE TYPES
 	"cold",
@@ -502,6 +512,12 @@ spelleffects = {
 	"slowed",
 	"stunned",
 	"unconscious"
+};
+
+-- Firing modes
+firingmodes = {
+	"M",
+	"M/A",
 };
 
 -- NPC damage properties
@@ -811,7 +827,60 @@ skilldata = {
 			trainedonly = 1,
 			group = "general",
 		},
+	-- Force Skills
+	["Absorb/Dissipate Energy"] = { stat = "dexterity", trainedonly = 1, aspect = "Control", group = "force" },
+	["Affect Mind"] = { stat = "charisma", aspect = "Alter", group = "force" },
+	["Battlemind"] = { stat = "wisdom", aspect = "Control", group = "force" },
+	["Control Mind"] = { stat = "charisma", trainedonly = 1, aspect = "Control", darkside = true, group = "force" },
+	["Drain Energy"] = { stat = "constitution", trainedonly = 1, aspect = "Alter", group = "force" },
+	["Drain Force"] = { stat = "wisdom", trainedonly = 1, aspect = "Alter", darkside = true, group = "force" },
+	["Empathy"] = { stat = "wisdom", aspect = "Sense", group = "force" },
+	["Enhance Ability"] = { stat = "constitution", aspect = "Control", group = "force" },
+	["Enhance Senses"] = { stat = "wisdom", aspect = "Control", group = "force" },
+	["Farseeing"] = { stat = "wisdom", trainedonly = 1, aspect = "Sense", group = "force" },
+	["Fear"] = { stat = "charisma", trainedonly = 1, aspect = "Sense", darkside = true, group = "force" },
+	["Force Defense"] = { stat = "charisma", aspect = "Control", group = "force" },
+	["Force Grip"] = { stat = "constitution", trainedonly = 1, aspect = "Alter", darkside = true, group = "force" },
+	["Force Lightning"] = { stat = "charisma", trainedonly = 1, aspect = "Alter", darkside = true, group = "force" },
+	["Force Stealth"] = { stat = "wisdom", aspect = "Control", group = "force" },
+	["Force Strike"] = { stat = "wisdom", aspect = "Alter", group = "force" },
+	["Friendship"] = { stat = "charisma", aspect = "Sense", group = "force" },
+	["Heal Another"] = { stat = "wisdom", trainedonly = 1, aspect = "Alter", group = "force" },
+	["Heal Self"] = { stat = "wisdom", trainedonly = 1, aspect = "Control", group = "force" },
+	["Illusion"] = { stat = "charisma", trainedonly = 1, aspect = "Alter", group = "force" },
+	["Move Object"] = { stat = "intelligence", aspect = "Alter", group = "force" },
+	["See Force"] = { stat = "wisdom", aspect = "Sense", group = "force" },
+	["Telepathy"] = { stat = "wisdom", aspect = "Sense", group = "force" },
+	["Transfer Force"] = { stat = "wisdom", trainedonly = 1, aspect = "Alter", group = "force" },
 }
+
+-- Force skill properties
+forceskills = {
+	["Absorb/Dissipate Energy"] = { stat = "dexterity", trainedonly = 1, aspect = "Control", group = "force" },
+	["Affect Mind"] = { stat = "charisma", aspect = "Alter", group = "force" },
+	["Battlemind"] = { stat = "wisdom", aspect = "Control", group = "force" },
+	["Control Mind"] = { stat = "charisma", trainedonly = 1, aspect = "Control", darkside = true, group = "force" },
+	["Drain Energy"] = { stat = "constitution", trainedonly = 1, aspect = "Alter", group = "force" },
+	["Drain Force"] = { stat = "wisdom", trainedonly = 1, aspect = "Alter", darkside = true, group = "force" },
+	["Empathy"] = { stat = "wisdom", aspect = "Sense", group = "force" },
+	["Enhance Ability"] = { stat = "constitution", aspect = "Control", group = "force" },
+	["Enhance Senses"] = { stat = "wisdom", aspect = "Control", group = "force" },
+	["Farseeing"] = { stat = "wisdom", trainedonly = 1, aspect = "Sense", group = "force" },
+	["Fear"] = { stat = "charisma", trainedonly = 1, aspect = "Sense", darkside = true, group = "force" },
+	["Force Defense"] = { stat = "charisma", aspect = "Control", group = "force" },
+	["Force Grip"] = { stat = "constitution", trainedonly = 1, aspect = "Alter", darkside = true, group = "force" },
+	["Force Lightning"] = { stat = "charisma", trainedonly = 1, aspect = "Alter", darkside = true, group = "force" },
+	["Force Stealth"] = { stat = "wisdom", aspect = "Control", group = "force" },
+	["Force Strike"] = { stat = "wisdom", aspect = "Alter", group = "force" },
+	["Friendship"] = { stat = "charisma", aspect = "Sense", group = "force" },
+	["Heal Another"] = { stat = "wisdom", trainedonly = 1, aspect = "Alter", group = "force" },
+	["Heal Self"] = { stat = "wisdom", trainedonly = 1, aspect = "Control", group = "force" },
+	["Illusion"] = { stat = "charisma", trainedonly = 1, aspect = "Alter", group = "force" },
+	["Move Object"] = { stat = "intelligence", aspect = "Alter", group = "force" },
+	["See Force"] = { stat = "wisdom", aspect = "Sense", group = "force" },
+	["Telepathy"] = { stat = "wisdom", aspect = "Sense", group = "force" },
+	["Transfer Force"] = { stat = "wisdom", trainedonly = 1, aspect = "Alter", group = "force" },
+};
 
 -- Skill group data
 skillgroups = {

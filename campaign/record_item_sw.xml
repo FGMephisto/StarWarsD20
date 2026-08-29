@@ -171,7 +171,6 @@
 				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 			end
 			function onLockModeChanged(bReadOnly)
-				<!-- local tFields = { "bonus", "damage", "damagetype", "critical", "range", "properties", "stundc", "firingmodes", "size", }; -->
 				local tFields = { "damage", "damagetype", "critical", "range", "properties", "stundc", "firingmodes", "size", };
 				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 			end
@@ -194,7 +193,10 @@
 			<label_content_column name="damagetype_label">
 				<static textres="item_label_dmgtype" />
 			</label_content_column>
-			<string_content_columnh name="damagetype" />
+			<string_content_columnh name="damagetype">
+				<script file="custom/scripts/string_autofill_sw.lua" />
+				<target>wpn_autofill_dmgtypes</target>
+			</string_content_columnh>
 			
 			<label_content_column name="critical_label">
 				<static textres="item_label_critical" />
@@ -214,7 +216,10 @@
 			<label_content_column name="firingmodes_label">
 				<static textres="item_label_firingmodes" />
 			</label_content_column>
-			<string_content_columnh name="firingmodes" />
+			<string_content_columnh name="firingmodes">
+				<script file="custom/scripts/string_autofill_sw.lua" />
+				<target>firingmodes</target>
+			</string_content_columnh>
 
 			<label_content_column name="size_label">
 				<static textres="item_label_size" />
