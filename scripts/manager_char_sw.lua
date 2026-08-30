@@ -72,6 +72,7 @@ function onInit()
 		CharInventoryManager.registerFieldUpdateCallback("maxstatbonus", CharManager.onCharInventoryArmorCalcIfCarried);
 		CharInventoryManager.registerFieldUpdateCallback("checkpenalty", CharManager.onCharInventoryArmorCalcIfCarried);
 		CharInventoryManager.registerFieldUpdateCallback("spellfailure", CharManager.onCharInventoryArmorCalcIfCarried);
+		CharInventoryManager.registerFieldUpdateCallback("dr", CharManager.onCharInventoryArmorCalcIfCarried);
 		CharInventoryManager.registerFieldUpdateCallback("speed20", CharManager.onCharInventoryArmorCalcIfCarried);
 		CharInventoryManager.registerFieldUpdateCallback("speed30", CharManager.onCharInventoryArmorCalcIfCarried);
 	end
@@ -217,6 +218,7 @@ end
 function calcItemArmorClass(nodeChar) -- Adjusted
 	local nMainArmorTotal = 0;
 	local nMainShieldTotal = 0;
+	local nMainDRTotal = 0;
 	local nMainMaxStatBonus = 0;
 	local nMainCheckPenalty = 0;
 	local nMainSpellFailure = 0;
@@ -237,8 +239,10 @@ function calcItemArmorClass(nodeChar) -- Adjusted
 				else
 					if bID then
 						nMainArmorTotal = nMainArmorTotal + DB.getValue(vNode, "ac", 0) + DB.getValue(vNode, "bonus", 0);
+						nMainDRTotal = nMainDRTotal + DB.getValue(vNode, "dr", 0);
 					else
 						nMainArmorTotal = nMainArmorTotal + DB.getValue(vNode, "ac", 0);
+						nMainDRTotal = nMainDRTotal + DB.getValue(vNode, "dr", 0);
 					end
 					
 					local nItemSpeed30 = DB.getValue(vNode, "speed30", 0);
@@ -281,6 +285,11 @@ function calcItemArmorClass(nodeChar) -- Adjusted
 	
 	DB.setValue(nodeChar, "ac.sources.armor", "number", nMainArmorTotal);
 	DB.setValue(nodeChar, "ac.sources.shield", "number", nMainShieldTotal);
+	if nMainDRTotal > 0 then
+		DB.setValue(nodeChar, "defenses.damagereduction", "string", tostring(nMainDRTotal));
+	else
+		DB.setValue(nodeChar, "defenses.damagereduction", "string", "");
+	end
 	if nMainMaxStatBonus > 0 then
 		DB.setValue(nodeChar, "encumbrance.armormaxstatbonusactive", "number", 1);
 		DB.setValue(nodeChar, "encumbrance.armormaxstatbonus", "number", nMainMaxStatBonus);

@@ -4,6 +4,16 @@
 --
 
 function onInit()
+	local nodeChar = getDatabaseNode();
+	if nodeChar then
+		local nodeDR = DB.getChild(nodeChar, "defenses.damagereduction");
+		if nodeDR and nodeDR.getType() == "number" then
+			local nVal = nodeDR.getValue();
+			nodeDR.delete();
+			DB.setValue(nodeChar, "defenses.damagereduction", "string", (nVal > 0 and tostring(nVal)) or "");
+		end
+	end
+
 	self.onLevelChanged();
 	self.onSystemChanged();
 	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));

@@ -45,15 +45,18 @@ function linkPCFields()
 		
 		ac_final.setLink(DB.createChild(nodeChar, "ac.totals.general", "number"), true);
 		ac_touch.setLink(DB.createChild(nodeChar, "ac.totals.touch", "number"), true);
-		ac_flatfooted.setLink(DB.createChild(nodeChar, "ac.totals.flatfooted", "number"), true);
-		cmd.setLink(DB.createChild(nodeChar, "ac.totals.cmd", "number"), true);
+		local nodeDR = DB.getChild(nodeChar, "defenses.damagereduction");
+		if nodeDR and nodeDR.getType() == "number" then
+			local nVal = nodeDR.getValue();
+			nodeDR.delete();
+			DB.setValue(nodeChar, "defenses.damagereduction", "string", (nVal > 0 and tostring(nVal)) or "");
+		end
+		dr.setLink(DB.createChild(nodeChar, "defenses.damagereduction", "string"), true);
 		
 		fortitudesave.setLink(DB.createChild(nodeChar, "saves.fortitude.total", "number"), true);
 		reflexsave.setLink(DB.createChild(nodeChar, "saves.reflex.total", "number"), true);
 		willsave.setLink(DB.createChild(nodeChar, "saves.will.total", "number"), true);
 		
-		sr.setLink(DB.createChild(nodeChar, "defenses.sr.total", "number"), true);
-
 		init.setLink(DB.createChild(nodeChar, "initiative.total", "number"), true);
 	end
 end

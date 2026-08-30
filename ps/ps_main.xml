@@ -356,17 +356,10 @@
 				<anchored height="20">
 					<left parent="ac" />
 					<bottom parent="chacheck" />
-					<right parent="reflex" />
+					<right parent="will" />
 				</anchored>
 				<tooltip textres="ps_label_dr" />
 			</string_ps>
-			<number_ps_linked name="sr">
-				<anchored height="20">
-					<left parent="will" />
-					<bottom parent="chacheck" />
-					<right parent="will" />
-				</anchored>
-			</number_ps_linked>
 			
 			<button_idelete name="idelete">
 				<anchored position="insidetopright" offset="10,10" />

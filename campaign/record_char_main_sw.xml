@@ -309,7 +309,7 @@
 			</label_fieldtop>
 
 			<number_charwounds name="wounds" source="hp.wounds">
-				<anchored to="hptemp" position="right" offset="18,0" width="40" height="28" />
+				<anchored to="hptemp" position="right" offset="18,0" width="40" />
 				<description textres="char_tooltip_wounds" />
 			</number_charwounds>
 			<label_fieldtop name="wounds_label">

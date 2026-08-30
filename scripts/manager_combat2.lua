@@ -32,7 +32,7 @@ function onTurnEnd(nodeEntry)
 	end
 	
 	-- Handle beginning of turn changes
-	DB.setValue(nodeEntry, "immediate", "number", 0);
+
 	
 	-- Check for stabilization (based on option)
 	local sOptionHRST = OptionsManager.getOption("HRST");
@@ -88,11 +88,12 @@ function onNPCPostAdd(tCustom)
 	local sAC = DB.getValue(nodeNPC, "ac", "10");
 	DB.setValue(tCustom.nodeCT, "ac_final", "number", tonumber(string.match(sAC, "^(%d+)")) or 10);
 	DB.setValue(tCustom.nodeCT, "ac_touch", "number", tonumber(string.match(sAC, "touch (%d+)")) or 10);
-	local sFlatFooted = string.match(sAC, "flat[%-–]footed (%d+)");
+	local sFlatFooted = string.match(sAC, "flat[%-â€“]footed (%d+)");
 	if not sFlatFooted then
 		sFlatFooted = string.match(sAC, "flatfooted (%d+)");
 	end
 	DB.setValue(tCustom.nodeCT, "ac_flatfooted", "number", tonumber(sFlatFooted) or 10);
+	DB.setValue(tCustom.nodeCT, "dr", "number", DB.getValue(nodeNPC, "dr", 0));
 	
 	-- Handle BAB / Grapple / CM Field
 	local sBABGrp = DB.getValue(nodeNPC, "babgrp", "");
@@ -554,7 +555,7 @@ end
 function resetInit()
 	function resetCombatantInit(nodeCT)
 		DB.setValue(nodeCT, "initresult", "number", 0);
-		DB.setValue(nodeCT, "immediate", "number", 0);
+
 	end
 	CombatManager.callForEachCombatant(resetCombatantInit);
 end
@@ -599,7 +600,7 @@ function parseAttackLine(rActor, sLine)
 	local sOptANPC = OptionsManager.getOption("ANPC");
 
 	-- PARSE 'OR'/'AND' PHRASES
-	sLine = sLine:gsub("–", "-");
+	sLine = sLine:gsub("â€“", "-");
 	local aPhrasesOR, aSkipOR = ActionCore.decodeAndOrClauses(sLine);
 
 	-- PARSE EACH ATTACK

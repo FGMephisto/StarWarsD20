@@ -21,6 +21,8 @@ function onInit()
 
 	ActionDamageD20.registerStandardDamageHealHandlers();
 	GameManager.setMultiKeyFunction("onActionPostModRoll", "damage", ActionDamage.onPostModRoll);
+	GameManager.setFunction("onHealthApplyStatusChange", ActionDamage.applyStatusChangeSW);
+	GameManager.setFunction("onDamageApplyResults", ActionDamage.applyDamageResultsSW);
 
 	ActionsManager.registerModHandler("stabilization", modStabilization);
 	ActionsManager.registerResultHandler("stabilization", onStabilization);
@@ -78,19 +80,19 @@ end
 
 -- From the Paizo official FAQ:
 --		https://paizo.com/paizo/faq/v5748nruor1fm#v5748eaic9t3f
--- When the damage dealt by a creature’s weapons or natural attacks changes due to a change in its size (or the size of its weapon), use the following rules to determine the new damage.
--- • If the size increases by one step, look up the original damage on the chart and increase the damage by two steps.
+-- When the damage dealt by a creatureâ€™s weapons or natural attacks changes due to a change in its size (or the size of its weapon), use the following rules to determine the new damage.
+-- â€¢ If the size increases by one step, look up the original damage on the chart and increase the damage by two steps.
 --		If the initial size is Small or lower (or is treated as Small or lower) or the initial damage is 1d6 or less, instead increase the damage by one step.
--- • If the size decreases by one step, look up the original damage on the chart and decrease the damage by two steps.
+-- â€¢ If the size decreases by one step, look up the original damage on the chart and decrease the damage by two steps.
 --		If the initial size is Medium or lower (or is treated as Medium or lower) or the initial damage is 1d8 or less, instead decrease the damage by one step.
--- • If the exact number of original dice is not found on this chart, apply the following before adjusting the damage dice.
+-- â€¢ If the exact number of original dice is not found on this chart, apply the following before adjusting the damage dice.
 --		If the damage is a number of d6, find the next lowest number of d6 on the chart and use that number of d8 as the original damage value (for example, 10d6 would instead be treated as 8d8).
 --		If the damage is a number of d8, find the next highest number of d8 on the chart and use that number of d6 as the original damage value (for example, 5d8 would instead be treated as 6d6).
 --		Once you have the new damage value, adjust by the number of steps noted above.
--- • If the die type is not referenced on this chart, apply the following rules before adjusting the damage dice.
+-- â€¢ If the die type is not referenced on this chart, apply the following rules before adjusting the damage dice.
 --		2d4 counts as 1d8 on the chart, 3d4 counts as 2d6 on the chart, and so on for higher numbers of d4.
 --		1d12 counts as 2d6 on the chart, and so on for higher numbers of d12.
--- • Finally, 2d10 increases to 4d8 and decreases to 2d8, regardless of the initial size, and so on for higher numbers of d10.
+-- â€¢ Finally, 2d10 increases to 4d8 and decreases to 2d8, regardless of the initial size, and so on for higher numbers of d10.
 local _tDamageDiceProgression = {
 	"1d1", "1d2", "1d3", "1d4", "1d6", "1d8", "1d10",
 	"2d6", "2d8", "3d6", "3d8", "4d6", "4d8", "6d6",
@@ -248,4 +250,116 @@ function applyFailedStabilization(rActor, bSecret)
 		nTotal = 1,
 	};
 	ActionHealthD20.apply(nil, rActor, rRoll);
+end
+
+--
+--	SW D20 DAMAGE RESULTS (ARMOR DR VS VP / WP)
+--
+
+function applyDamageResultsSW(rSource, rTarget, rRoll, tApplyData)
+	tApplyData.nConcentrationDamage = tApplyData.nAdjustedDamage;
+
+	local bCritical = tApplyData.bCritical or (rRoll and rRoll.sDesc and (rRoll.sDesc:match("%[CRITICAL%]") or rRoll.sDesc:match("%[CRIT%]")));
+
+	if not bCritical then
+		-- Step 1: Absorb damage with Vitality Points (VP)
+		if ((tApplyData.tHealth["hp"].nTemp or 0) > 0) and ((tApplyData.nAdjustedDamage or 0) > 0) then
+			if tApplyData.nAdjustedDamage > tApplyData.tHealth["hp"].nTemp then
+				table.insert(tApplyData.tNotifications, string.format("[VP ABSORBED: %d]", tApplyData.tHealth["hp"].nTemp));
+				tApplyData.nAdjustedDamage = tApplyData.nAdjustedDamage - tApplyData.tHealth["hp"].nTemp;
+				tApplyData.tHealth["hp"].nTemp = 0;
+			else
+				table.insert(tApplyData.tNotifications, string.format("[VP ABSORBED: %d]", tApplyData.nAdjustedDamage));
+				tApplyData.tHealth["hp"].nTemp = tApplyData.tHealth["hp"].nTemp - tApplyData.nAdjustedDamage;
+				tApplyData.nAdjustedDamage = 0;
+			end
+		end
+		ActionHealthD20.applyDamageResultsNonlethal(rSource, rTarget, rRoll, tApplyData);
+	end
+
+	if (tApplyData.nAdjustedDamage or 0) <= 0 then
+		return;
+	end
+
+	-- Step 2: Apply Armor DR only to damage that penetrates into Wound Points
+	local nArmorDR = ActionDamage.getArmorDR(rTarget, rSource, rRoll);
+	if nArmorDR > 0 then
+		local nPrev = tApplyData.nAdjustedDamage;
+		tApplyData.nAdjustedDamage = math.max(0, tApplyData.nAdjustedDamage - nArmorDR);
+		local nAbsorbed = nPrev - tApplyData.nAdjustedDamage;
+		if nAbsorbed > 0 then
+			table.insert(tApplyData.tNotifications, string.format("[ARMOR DR: %d]", nAbsorbed));
+		end
+	end
+
+	if (tApplyData.nAdjustedDamage or 0) <= 0 then
+		return;
+	end
+
+	-- Step 3: Apply leftover damage to Wound Points
+	ActionHealthD20.applyDamageResultsNormal(rSource, rTarget, rRoll, tApplyData);
+	ActionHealthD20.applyDamageResultsDeathSave(rSource, rTarget, rRoll, tApplyData);
+	ActionHealthD20.applyDamageResultsSystemShock(rSource, rTarget, rRoll, tApplyData);
+end
+
+function getArmorDR(rTarget, rSource, rRoll)
+	if not rTarget then
+		return 0;
+	end
+
+	-- Lightsabers ignore armor DR as per Star Wars d20 rules
+	local sDamageTypes = "";
+	if rRoll and rRoll.sDesc then
+		sDamageTypes = rRoll.sDesc:lower();
+	end
+	if sDamageTypes:match("lightsaber") then
+		return 0;
+	end
+
+	local nDR = 0;
+	local sDR = GameManager.getRecordFieldValueLinked(rTarget, "dr", "");
+	if (sDR == "" or sDR == 0) then
+		sDR = GameManager.getRecordFieldValueLinked(rTarget, "damagereduction", "");
+	end
+	if (sDR == "" or sDR == 0) then
+		sDR = GameManager.getRecordFieldValueLinked(rTarget, "defenses.damagereduction", "");
+	end
+	if type(sDR) == "number" then
+		nDR = sDR;
+	elseif type(sDR) == "string" and sDR ~= "" then
+		nDR = tonumber(sDR:match("(%d+)")) or 0;
+	end
+
+	local nEffectDR = EffectManager.getBonusMod(rTarget, "DR") + EffectManager.getBonusMod(rTarget, "ARMORDR") + EffectManager.getBonusMod(rTarget, "ADR");
+	nDR = nDR + nEffectDR;
+
+	return math.max(0, nDR);
+end
+
+--
+--	SW D20 STATUS CHANGE (LOST WOUND POINTS / FATIGUED)
+--
+
+function applyStatusChangeSW(rSource, rTarget, rRoll, tApplyData)
+	ActionHealthD20.applyStatusChangeDefault(rSource, rTarget, rRoll, tApplyData);
+
+	if not rTarget or not tApplyData or not tApplyData.tHealth or not tApplyData.tHealth["hp"] then
+		return;
+	end
+
+	local nWounds = tApplyData.tHealth["hp"].nWounds or 0;
+	if tApplyData.sType == "damage" then
+		if nWounds > 0 then
+			if not EffectManager.hasCondition(rTarget, "Fatigued") then
+				EffectManager.addCondition(rTarget, "Fatigued");
+				table.insert(tApplyData.tNotifications, "[FATIGUED]");
+			end
+		end
+	elseif tApplyData.sType == "heal" or tApplyData.sType == "fheal" or tApplyData.sType == "recovery" then
+		if nWounds <= 0 then
+			if EffectManager.hasCondition(rTarget, "Fatigued") then
+				EffectManager.removeCondition(rTarget, "Fatigued");
+			end
+		end
+	end
 end
