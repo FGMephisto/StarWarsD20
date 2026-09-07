@@ -53,7 +53,7 @@ CLASS_FEATURE_ALCHEMY = "^alchemy$";
 CLASS_FEATURE_DOMAINS = "^domains$";
 CLASS_FEATURE_DOMAIN_SPELLS = "Domain Spells";
 
-function onInit()
+function onInit() -- Adjusted
 	WindowMenuManager.initCharMinisheetSupport();
 
 	CharManager.initWeaponIDTracking();
@@ -254,7 +254,7 @@ function calcItemArmorClass(nodeChar) -- Adjusted
 						end
 					end
 					local nItemSpeed20 = DB.getValue(vNode, "speed20", 0);
-					if (nItemSpeed20 > 0) and (nItemSpeed20 < 10) then
+					if (nItemSpeed20 > 0) and (nItemSpeed20 < 6) then
 						if nMainSpeed20 > 0 then
 							nMainSpeed20 = math.min(nMainSpeed20, nItemSpeed20);
 						else
@@ -342,7 +342,7 @@ function removeFromWeaponDB(nodeItem)
 	return bFound;
 end
 
-function addToWeaponDB(nodeItem)
+function addToWeaponDB(nodeItem) -- Adjusted
 	if DB.getValue(nodeItem, "type", "") ~= "Weapon" then
 		return;
 	end
@@ -386,18 +386,12 @@ function addToWeaponDB(nodeItem)
 	local bThrown = sPropsLower:match("thrown") or sType:match("thrown");
 	local bMelee = false;
 	local bRanged = false;
-	if bThrown then
+	if string.find(sType, "melee") then
 		bMelee = true;
-		bRanged = true;
-	elseif nRange > 0 then
-		if string.find(sType, "melee") then
-			bMelee = true;
-			bRanged = true;
-		else
-			bMelee = false;
+		if nRange > 0 or bThrown then
 			bRanged = true;
 		end
-	elseif string.find(sType, "ranged") or string.find(sType, "blaster") or string.find(sType, "slugthrower") or string.find(sType, "heavy") or string.find(sType, "projectile") then
+	elseif bThrown or string.find(sType, "ranged") or string.find(sType, "blaster") or string.find(sType, "slugthrower") or string.find(sType, "heavy") or string.find(sType, "projectile") or string.find(sType, "firearm") then
 		bMelee = false;
 		bRanged = true;
 	else
@@ -671,12 +665,25 @@ function checkWeaponIDChange(nodeWeapon)
 		return;
 	end
 	
+	local sOldName = DB.getValue(nodeWeapon, "name", "");
+	local aOldParens = {};
+	for w in sOldName:gmatch("%([^%)]+%)") do
+		table.insert(aOldParens, w);
+	end
+	local sOldSuffix = nil;
+	if #aOldParens > 0 then
+		sOldSuffix = aOldParens[#aOldParens];
+	end
+
 	local sName;
 	if bItemID then
 		sName = DB.getValue(nodeItem, "name", "");
 	else
 		sName = DB.getValue(nodeItem, "nonid_name", "");
 		sName = "** " .. sName .. " **";
+	end
+	if sOldSuffix then
+		sName = sName .. " " .. sOldSuffix;
 	end
 	DB.setValue(nodeWeapon, "name", "string", sName);
 	
@@ -701,7 +708,7 @@ function checkWeaponIDChange(nodeWeapon)
 	end
 end
 
-function getWeaponAttackRollStructures(nodeWeapon, nAttack)
+function getWeaponAttackRollStructures(nodeWeapon, nAttack) -- Adjusted
 	if not nodeWeapon then
 		return;
 	end
@@ -713,10 +720,7 @@ function getWeaponAttackRollStructures(nodeWeapon, nAttack)
 	rAttack.type = "attack";
 	rAttack.label = DB.getValue(nodeWeapon, "name", "");
 	local nType = DB.getValue(nodeWeapon, "type", 0);
-	if nType == 2 then
-		rAttack.range = "M";
-		rAttack.cm = true;
-	elseif nType == 1 then
+	if nType == 1 or nType == 2 then
 		rAttack.range = "R";
 	else
 		rAttack.range = "M";
@@ -725,16 +729,9 @@ function getWeaponAttackRollStructures(nodeWeapon, nAttack)
 	rAttack.stat = DB.getValue(nodeWeapon, "attackstat", "");
 	if rAttack.stat == "" then
 		if rAttack.range == "M" then
-			if rAttack.cm then
-				rAttack.stat = DB.getValue(nodeChar, "attackbonus.grapple.ability", "");
-				if rAttack.stat == "" then
-					rAttack.stat = "strength";
-				end
-			else
-				rAttack.stat = DB.getValue(nodeChar, "attackbonus.melee.ability", "");
-				if rAttack.stat == "" then
-					rAttack.stat = "strength";
-				end
+			rAttack.stat = DB.getValue(nodeChar, "attackbonus.melee.ability", "");
+			if rAttack.stat == "" then
+				rAttack.stat = "strength";
 			end
 		else
 			rAttack.stat = DB.getValue(nodeChar, "attackbonus.ranged.ability", "");
@@ -757,7 +754,7 @@ function getWeaponAttackRollStructures(nodeWeapon, nAttack)
 	return rActor, rAttack;
 end
 
-function getWeaponDamageRollStructures(nodeWeapon)
+function getWeaponDamageRollStructures(nodeWeapon) -- Adjusted
 	if not nodeWeapon then
 		return;
 	end

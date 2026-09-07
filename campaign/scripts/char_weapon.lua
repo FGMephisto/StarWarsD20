@@ -475,18 +475,14 @@ function onDamageAction(draginfo)
 	return true;
 end
 
-function calcAttackBonus(n)
+function calcAttackBonus(n) -- Adjusted
 	local nodeWeapon = getDatabaseNode();
 	local nodeChar = DB.getChild(nodeWeapon, "...");
 	local rActor, rAttack = CharManager.getWeaponAttackRollStructures(nodeWeapon);
 
 	local nBonus = DB.getValue(nodeChar, "attackbonus.base", 0);
 	nBonus = nBonus + ActorManager35E.getAbilityBonus(rActor, rAttack.stat);
-	if rAttack.cm then
-		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.grapple.size", 0);
-		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.grapple.misc", 0);
-		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.grapple.temporary", 0);
-	elseif rAttack.range == "R" then
+	if rAttack.range == "R" then
 		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.ranged.size", 0);
 		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.ranged.misc", 0);
 		nBonus = nBonus + DB.getValue(nodeChar, "attackbonus.ranged.temporary", 0);
