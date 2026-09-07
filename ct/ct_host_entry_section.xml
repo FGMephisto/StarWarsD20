@@ -25,8 +25,17 @@
 
 			<anchor_ct_section name="anchor_section" />
 
-			<label name="init_label">
+			<label name="immediate_label">
 				<anchored to="anchor_section" position="insidetopleft" offset="5,10"/>
+				<static textres="ct_label_immediate" />
+			</label>
+			<buttonfield name="immediate">
+				<anchored to="immediate_label" position="righthigh" offset="5,0" width="12" height="20" />
+				<state icon="button_checkoff" tooltipres="ct_tooltip_immediateoff" />
+				<state icon="button_checkon" tooltipres="ct_tooltip_immediateon" />
+			</buttonfield>
+			<label name="init_label">
+				<anchored to="immediate" position="righthigh" offset="10,0"/>
 				<static textres="init" />
 			</label>
 			<number_ct_init name="init">
@@ -34,7 +43,7 @@
 				<readonly />
 			</number_ct_init>
 			<label name="grapple_label">
-				<anchored to="init" position="righthigh" offset="15,0"/>
+				<anchored to="init" position="righthigh" offset="10,0"/>
 				<static textres="grp" />
 			</label>
 			<number_ct_grapple name="grapple">
@@ -42,13 +51,29 @@
 				<description textres="grapple" />
 				<readonly />
 			</number_ct_grapple>
+			<label name="aoo_label">
+				<anchored to="grapple" position="righthigh" offset="10,0"/>
+				<static textres="ct_label_aoo" />
+				<tooltip textres="ct_tooltip_aoo" />
+			</label>
+			<number_ct name="aoo">
+				<anchored to="aoo_label" position="righthigh" offset="10,0" />
+			</number_ct>
+			<label name="aoomax_label">
+				<anchored to="aoo" position="righthigh" offset="5,0"/>
+				<static text="/" />
+			</label>
+			<number_ct name="aoomax">
+				<anchored to="aoomax_label" position="righthigh" offset="5,0" />
+				<default>1</default>
+			</number_ct>
 			<label name="speedlabel">
-				<anchored to="grapple" position="righthigh" offset="15,0"/>
+				<anchored to="aoomax" position="righthigh" offset="10,0"/>
 				<static textres="ct_label_speed" />
 			</label>
 			<string_ct name="speed">
 				<anchored to="speedlabel" position="righthigh" offset="5,0" height="20">
-					<right parent="anchor_section" offset="-5" />
+					<right parent="anchor_section" offset="-15" />
 				</anchored>
 				<readonly />
 			</string_ct>
@@ -88,8 +113,17 @@
 
 			<anchor_ct_section name="anchor_section" />
 
-			<label name="init_label">
+			<label name="immediate_label">
 				<anchored to="anchor_section" position="insidetopleft" offset="5,10"/>
+				<static textres="ct_label_immediate" />
+			</label>
+			<buttonfield name="immediate">
+				<anchored to="immediate_label" position="righthigh" offset="5,0" width="12" height="20" />
+				<state icon="button_checkoff" tooltipres="ct_tooltip_immediateoff" />
+				<state icon="button_checkon" tooltipres="ct_tooltip_immediateon" />
+			</buttonfield>
+			<label name="init_label">
+				<anchored to="immediate" position="righthigh" offset="10,0"/>
 				<static textres="init" />
 			</label>
 			<number_ct_init name="init">
@@ -105,13 +139,29 @@
 				<description textres="grapple" />
 				<readonly />
 			</number_ct_grapple>
+			<label name="aoo_label">
+				<anchored to="grapple" position="righthigh" offset="10,0"/>
+				<static textres="ct_label_aoo" />
+				<tooltip textres="ct_tooltip_aoo" />
+			</label>
+			<number_ct name="aoo">
+				<anchored to="aoo_label" position="righthigh" offset="10,0" />
+			</number_ct>
+			<label name="aoomax_label">
+				<anchored to="aoo" position="righthigh" offset="5,0"/>
+				<static text="/" />
+			</label>
+			<number_ct name="aoomax">
+				<anchored to="aoomax_label" position="righthigh" offset="5,0" />
+				<default>1</default>
+			</number_ct>
 			<label name="speedlabel">
-				<anchored to="grapple" position="righthigh" offset="15,0"/>
+				<anchored to="aoomax" position="righthigh" offset="15,0"/>
 				<static textres="ct_label_speed" />
 			</label>
 			<string_ct name="speed">
 				<anchored to="speedlabel" position="righthigh" offset="5,0" height="20">
-					<right parent="anchor_section" offset="-5" />
+					<right parent="anchor_section" offset="-15" />
 				</anchored>
 				<readonly />
 			</string_ct>
@@ -165,72 +215,74 @@
 
 			<anchor_ct_section name="anchor_section" />
 
-			<!-- Column 1: DEF / Fort -->
 			<label name="ac_final_label">
-				<anchored to="anchor_section" position="insidetopleft" offset="5,10" width="28" />
+				<anchored to="anchor_section" position="insidetopleft" offset="5,10"/>
 				<static textres="ac" />
 			</label>
 			<number_ct name="ac_final">
-				<anchored to="ac_final_label" position="righthigh" offset="5,0" />
+				<anchored to="ac_final_label" position="righthigh" offset="10,0" />
 				<description textres="armorclass" />
 			</number_ct>
-			<label name="fortitudelabel">
-				<anchored to="ac_final_label" position="below" offset="0,10" />
-				<static textres="fort" />
-			</label>
-			<number_ct_save name="fortitudesave">
-				<anchored to="ac_final" position="below" offset="0,10" />
-				<description textres="fortitude" />
-				<target>fortitude</target>
-			</number_ct_save>
-
-			<!-- Column 2: FF / Ref -->
 			<label name="ac_ff_label">
-				<anchored to="ac_final" position="righthigh" offset="12,0" width="28" />
+				<anchored to="ac_final" position="righthigh" offset="15,0"/>
 				<static textres="acff" />
 			</label>
 			<number_ct name="ac_flatfooted">
-				<anchored to="ac_ff_label" position="righthigh" offset="5,0" />
+				<anchored to="ac_ff_label" position="righthigh" offset="10,0" />
 				<description textres="armorclassff" />
 			</number_ct>
-			<label name="reflexlabel">
-				<anchored to="ac_ff_label" position="below" offset="0,10" />
-				<static textres="ref" />
-			</label>
-			<number_ct_save name="reflexsave">
-				<anchored to="ac_flatfooted" position="below" offset="0,10" />
-				<description textres="reflex" />
-				<target>reflex</target>
-			</number_ct_save>
-
-			<!-- Column 3: Tch / Will -->
 			<label name="ac_touch_label">
-				<anchored to="ac_flatfooted" position="righthigh" offset="12,0" width="28" />
+				<anchored to="ac_flatfooted" position="righthigh" offset="15,0"/>
 				<static textres="actouch" />
 			</label>
 			<number_ct name="ac_touch">
-				<anchored to="ac_touch_label" position="righthigh" offset="5,0" />
+				<anchored to="ac_touch_label" position="righthigh" offset="10,0" />
 				<description textres="armorclasstouch" />
 			</number_ct>
+			<label name="cmd_label">
+				<anchored to="ac_touch" position="righthigh" offset="15,0"/>
+				<static textres="cmd" />
+			</label>
+			<number_ct name="cmd">
+				<anchored to="cmd_label" position="righthigh" offset="10,0" />
+				<description textres="cmd" />
+			</number_ct>
+
+			<label name="fortitudelabel">
+				<anchored to="anchor_section" position="insidetopleft" offset="5,40"/>
+				<static textres="fort" />
+			</label>
+			<number_ct_save name="fortitudesave">
+				<anchored to="fortitudelabel" position="righthigh" offset="10,0" />
+				<description textres="fortitude" />
+				<target>fortitude</target>
+			</number_ct_save>
+			<label name="reflexlabel">
+				<anchored to="fortitudesave" position="righthigh" offset="15,0"/>
+				<static textres="ref" />
+			</label>
+			<number_ct_save name="reflexsave">
+				<anchored to="reflexlabel" position="righthigh" offset="10,0" />
+				<description textres="reflex" />
+				<target>reflex</target>
+			</number_ct_save>
 			<label name="willlabel">
-				<anchored to="ac_touch_label" position="below" offset="0,10" />
+				<anchored to="reflexsave" position="righthigh" offset="15,0"/>
 				<static textres="will" />
 			</label>
 			<number_ct_save name="willsave">
-				<anchored to="ac_touch" position="below" offset="0,10" />
+				<anchored to="willlabel" position="righthigh" offset="10,0" />
 				<description textres="will_long" />
 				<target>will</target>
 			</number_ct_save>
-
-			<!-- Column 4: DR -->
-			<label name="dr_label">
-				<anchored to="ac_touch" position="righthigh" offset="12,0" width="28" />
-				<static textres="dr" />
+			<label name="sr_label">
+				<anchored to="willsave" position="righthigh" offset="15,0"/>
+				<static textres="sr" />
 			</label>
-			<string_ct name="dr">
-				<anchored to="dr_label" position="righthigh" offset="5,0" width="30" height="20" />
-				<description textres="char_label_dr" />
-			</string_ct>
+			<number_ct name="sr">
+				<anchored to="sr_label" position="righthigh" offset="10,0" />
+				<description textres="spellresistance" />
+			</number_ct>
 
 			<genericcontrol name="spacer">
 				<anchored to="anchor_section" height="60">

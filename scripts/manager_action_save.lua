@@ -44,28 +44,8 @@ function performPartySheetRoll(draginfo, rActor, sSave)
 	ActionsManager.performAction(draginfo, rActor, rRoll);
 end
 
-function performVsRoll(draginfo, rActor, sSave, nTargetDC, bSecretRoll, rSource, bRemoveOnMiss, sSaveDesc)
-	local rRoll = getRoll(rActor, sSave);
-
-	if bSecretRoll then
-		rRoll.bSecret = true;
-	end
-	rRoll.nTarget = nTargetDC;
-	rRoll.bRemoveOnMiss = bRemoveOnMiss;
-	if sSaveDesc then
-		rRoll.sSaveDesc = sSaveDesc;
-	end
-	if rSource then
-		rRoll.sSource = ActorManager.getCTNodeName(rSource);
-	end
-	rRoll.bVsSave = true;
-
-	ActionsManager.performAction(draginfo, rActor, rRoll);
-end
-
 function performRoll(draginfo, rActor, sSave)
 	local rRoll = getRoll(rActor, sSave);
-	
 	ActionsManager.performAction(draginfo, rActor, rRoll);
 end
 
@@ -104,6 +84,7 @@ function getRoll(rActor, sSave)
 end
 
 function modSave(rSource, rTarget, rRoll)
+	local bEffects = false;
 	local aAddDesc = {};
 	local aAddDice = {};
 	local nAddMod = 0;
@@ -112,7 +93,11 @@ function modSave(rSource, rTarget, rRoll)
 	local sSave = ActionSaveCore.decodeLabelText(rRoll.sDesc):lower();
 
 	if rSource then
-		local bEffects = false;
+		-- Determine origin actor of save roll, if any
+		local rSaveSource = nil;
+		if rRoll.sSource then
+			rSaveSource = ActorManager.resolveActor(rRoll.sSource);
+		end
 
 		-- Determine ability used
 		local sActionStat = nil;
@@ -138,19 +123,28 @@ function modSave(rSource, rTarget, rRoll)
 		
 		-- Determine flatfooted status
 		local bFlatfooted = false;
-		if not rRoll.bVsSave and ModifierManager.getKey("ATT_FF") then
+		local bCA = false;
+		if not rRoll.bVsSave then
+			if ModifierManager.getKey("ATT_FF") then
+				bFlatfooted = true;
+			end
+			bCA = ModifierManager.getKey("ATT_CA");
+		end
+		if EffectManager.hasCondition(rSource, "Flat-Footed") or EffectManager.hasCondition(rSource, "Flatfooted") then
 			bFlatfooted = true;
-		elseif EffectManager.hasCondition(rSource, "Flat-footed") or EffectManager.hasCondition(rSource, "Flatfooted") then
-			bFlatfooted = true;
+		end
+		if bFlatfooted and ActorManager35E.hasRollSpecialAbility(rSource, "Uncanny Dodge") then
+			bFlatfooted = false;
+		end
+		if EffectManager.hasCondition(rSource, "@CA", { rTarget = rSaveSource, tActionTags = rRoll.tActionTags, }) then
+			bCA = true;
+		elseif EffectManager.hasCondition(rSaveSource, "CA", { rTarget = rSource, tActionTags = rRoll.tActionTags, }) then
+			bCA = true;
 		end
 
 		-- Get effect modifiers
-		local rSaveSource = nil;
-		if rRoll.sSource then
-			rSaveSource = ActorManager.resolveActor(rRoll.sSource);
-		end
 		local aExistingBonusByType = {};
-		local aSaveEffects = EffectManager.getCompsDataByTag(rSource, "SAVE", { rTarget = rSaveSource, tFilter = aSaveFilter });
+		local aSaveEffects = EffectManager.getCompsDataByTag(rSource, "SAVE", { rTarget = rSaveSource, tFilter = aSaveFilter, tActionTags = rRoll.tActionTags, });
 		for _,v in pairs(aSaveEffects) do
 			-- Determine bonus type if any
 			local sBonusType = nil;
@@ -163,7 +157,7 @@ function modSave(rSource, rTarget, rRoll)
 			-- Dodge bonuses stack (by rules)
 			if sBonusType then
 				if sBonusType == "dodge" then
-					if not bFlatfooted then
+					if not bFlatfooted and not bCA then
 						nAddMod = nAddMod + v.mod;
 						bEffects = true;
 					end
@@ -208,7 +202,8 @@ function modSave(rSource, rTarget, rRoll)
 		end
 
 		-- Get ability modifiers
-		local nBonusStat, nBonusEffects = ActorManagerD20.getAbilityEffectsBonus(rSource, sActionStat);
+		local tEffData ={ tActionTags = rRoll.tActionTags, }
+		local nBonusStat, nBonusEffects = ActorManagerD20.getAbilityEffectsBonus(rSource, sActionStat, tEffData);
 		if nBonusEffects > 0 then
 			bEffects = true;
 			nAddMod = nAddMod + nBonusStat;
@@ -221,23 +216,22 @@ function modSave(rSource, rTarget, rRoll)
 			nAddMod = nAddMod - nNegLevelMod;
 		end
 
-		-- If flatfooted, then add a note
+		-- If flatfooted or CA, then add a note
 		if bFlatfooted then
 			table.insert(aAddDesc, "[FF]");
 		end
-		
-		-- If effects, then add them
-		if bEffects then
-			local sMod = StringManager.convertDiceToString(aAddDice, nAddMod, true);
-			table.insert(aAddDesc, EffectManager.buildEffectOutput(sMod));
+		if bCA then
+			table.insert(aAddDesc, "[CA]");
 		end
 	end
 	
-	if #aAddDesc > 0 then
-		rRoll.sDesc = rRoll.sDesc .. "\r" .. table.concat(aAddDesc, "\r");
+	DiceRollManager.addRollEffectDiceMod(rSource, rRoll, aAddDice, nAddMod);
+	if bEffects then
+		table.insert(aAddDesc, EffectManager.buildEffectDiceModOutput(aAddDice, nAddMod));
 	end
-	DiceRollManager.addRollEffectDice(rSource, rRoll, aAddDice);
-	rRoll.nMod = rRoll.nMod + nAddMod;
+	if #aAddDesc > 0 then
+		rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, table.concat(aAddDesc, "\r"));
+	end
 end
 
 function onSave(rSource, rTarget, rRoll)
@@ -287,8 +281,6 @@ function applySave(rSource, rOrigin, rRoll)
 		end
 	end
 	
-	msgShort.icon = "action_cast";
-		
 	local sAttack = "";
 	local bHalfMatch = false;
 	if rRoll.sSaveDesc then
@@ -296,10 +288,14 @@ function applySave(rSource, rOrigin, rRoll)
 		bHalfMatch = (rRoll.sSaveDesc:match("%[HALF ON SAVE%]") ~= nil);
 	end
 	
+	msgShort.icon = "action_save";
+
 	if rRoll.sResult == "critsuccess" or rRoll.sResult == "success" then
 		if rRoll.sResult == "critsuccess" then
+			msgLong.icon = "action_save_success_crit";
 			msgLong.text = msgLong.text .. " [AUTOMATIC SUCCESS]";
 		else
+			msgLong.icon = "action_save_success";
 			msgLong.text = msgLong.text .. " [SUCCESS]";
 		end
 		
@@ -309,12 +305,26 @@ function applySave(rSource, rOrigin, rRoll)
 			if bHalfDamage then
 				local sSave = ActionSaveCore.decodeLabelText(rRoll.sDesc):lower();
 				if sSave == "reflex" then
-					if EffectManager.hasCondition(rSource, "Improved Evasion") then 
-						bAvoidDamage = true;
-						msgLong.text = msgLong.text .. " [IMPROVED EVASION]";
-					elseif EffectManager.hasCondition(rSource, "Evasion") then
-						bAvoidDamage = true;
-						msgLong.text = msgLong.text .. " [EVASION]";
+					if ActorManager35E.hasRollSpecialAbility(rSource, "Improved Evasion") then
+						local bHelpless = EffectManager.hasCondition(rSource, "Helpless") or
+								EffectManager.hasCondition(rSource, "Paralyzed") or
+								EffectManager.hasCondition(rSource, "Petrified") or
+								EffectManager.hasCondition(rSource, "Sleeping") or
+								EffectManager.hasCondition(rSource, "Unconscious");
+						if not bHelpless then
+							bAvoidDamage = true;
+							msgLong.text = msgLong.text .. "\r[IMPROVED EVASION]";
+						end
+					elseif ActorManager35E.hasRollSpecialAbility(rSource, "Evasion") then
+						local bHelpless = EffectManager.hasCondition(rSource, "Helpless") or
+								EffectManager.hasCondition(rSource, "Paralyzed") or
+								EffectManager.hasCondition(rSource, "Petrified") or
+								EffectManager.hasCondition(rSource, "Sleeping") or
+								EffectManager.hasCondition(rSource, "Unconscious");
+						if not bHelpless then
+							bAvoidDamage = true;
+							msgLong.text = msgLong.text .. "\r[EVASION]";
+						end
 					end
 				end
 			end
@@ -332,11 +342,13 @@ function applySave(rSource, rOrigin, rRoll)
 			end
 		end
 
-		ActionSaveCore.handleSaveSuccess(rSource, rRoll);
+		ActionSaveCore.handleSaveSuccess(rSource, rOrigin, rRoll);
 	else
 		if rRoll.sResult == "critfailure" then
+			msgLong.icon = "action_save_failure_crit";
 			msgLong.text = msgLong.text .. " [AUTOMATIC FAILURE]";
 		else
+			msgLong.icon = "action_save_failure";
 			msgLong.text = msgLong.text .. " [FAILURE]";
 		end
 
@@ -345,9 +357,16 @@ function applySave(rSource, rOrigin, rRoll)
 			if bHalfMatch then
 				local sSave = ActionSaveCore.decodeLabelText(rRoll.sDesc):lower();
 				if sSave == "reflex" then
-					if EffectManager.hasCondition(rSource, "Improved Evasion") then
-						bHalfDamage = true;
-						msgLong.text = msgLong.text .. " [IMPROVED EVASION]";
+					if ActorManager35E.hasRollSpecialAbility(rSource, "Improved Evasion") then
+						local bHelpless = EffectManager.hasCondition(rSource, "Helpless") or
+								EffectManager.hasCondition(rSource, "Paralyzed") or
+								EffectManager.hasCondition(rSource, "Petrified") or
+								EffectManager.hasCondition(rSource, "Sleeping") or
+								EffectManager.hasCondition(rSource, "Unconscious");
+						if not bHelpless then
+							bHalfDamage = true;
+							msgLong.text = msgLong.text .. "\r[IMPROVED EVASION]";
+						end
 					end
 				end
 			end
@@ -357,7 +376,7 @@ function applySave(rSource, rOrigin, rRoll)
 			end
 		end
 
-		ActionSaveCore.handleSaveFail(rSource, rRoll);
+		ActionSaveCore.handleSaveFail(rSource, rOrigin, rRoll);
 	end
 	
 	ActionsManager.outputResult(rRoll.bTower, rSource, rOrigin, msgLong, msgShort);
@@ -367,4 +386,27 @@ function applySave(rSource, rOrigin, rRoll)
 	end
 
 	GameManager.callEventFunctions("onSavePostResolve", rSource, rOrigin, rRoll);
+end
+
+--
+--	LEGACY (2026-06)
+--
+
+function performVsRoll(draginfo, rActor, sSave, nTargetDC, bSecretRoll, rSource, bRemoveOnMiss, sSaveDesc)
+	local rRoll = getRoll(rActor, sSave);
+
+	if bSecretRoll then
+		rRoll.bSecret = true;
+	end
+	rRoll.nTarget = nTargetDC;
+	rRoll.bRemoveOnMiss = bRemoveOnMiss;
+	if sSaveDesc then
+		rRoll.sSaveDesc = sSaveDesc;
+	end
+	rRoll.bVsSave = true;
+
+	-- Legacy (2026-08)
+	rRoll.sSource = ActorManager.getCTNodeName(rSource);
+
+	ActionsManager.performAction(draginfo, rActor, rRoll);
 end

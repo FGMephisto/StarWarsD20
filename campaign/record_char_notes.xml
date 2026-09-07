@@ -6,15 +6,13 @@
 -->
 
 <root>
-	<!-- Adjusted -->
 	<windowclass name="charsheet_notes">
 		<script>
 			function onInit()
 				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 			end
 			function onLockModeChanged(bReadOnly)
-				-- local tFields = { "gender", "age", "height", "weight", "size", "alignment", "deity", "appearance", "notes", "languages_iadd", };
-				local tFields = { "gender", "age", "height", "weight", "size", "forcepoints", "darksidepoints", "appearance", "notes", "languages_iadd", };
+				local tFields = { "gender", "age", "height", "weight", "size", "alignment", "deity", "appearance", "notes", "languages_iadd", };
 				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 			end
 		</script>
@@ -44,13 +42,13 @@
 				<delaykeyupdate />
 				<script file="campaign/scripts/record_size.lua" />
 			</string_labeled>
-			<string_labeled name="forcepoints">
+			<string_labeled name="alignment">
 				<anchored to="size" position="righthigh" offset="5,0" width="80" />
-				<labelres>char_label_forcepoints</labelres>
+				<labelres>char_label_alignment</labelres>
 			</string_labeled>
-			<string_labeled name="darksidepoints">
-				<anchored to="forcepoints" position="righthigh" offset="5,0" width="80" />
-				<labelres>char_label_darksidepoints</labelres>
+			<string_labeled name="deity">
+				<anchored to="alignment" position="righthigh" offset="5,0" width="80" />
+				<labelres>char_label_deity</labelres>
 			</string_labeled>
 
 			<frame_char name="appearanceframe">

@@ -1,12 +1,13 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars D20
 --
 
 function isPFRPG()
 	return false;
 end
+
+resttypes = { "long", "short", };
 
 -- Abilities (database names)
 abilities = {
@@ -87,6 +88,7 @@ creaturesize = {
 	["huge"] = 2,
 	["gargantuan"] = 3,
 	["colossal"] = 4,
+	-- ["epic"] = 5,
 	["f"] = -4,
 	["d"] = -3,
 	["t"] = -2,
@@ -177,6 +179,7 @@ conditions = {
 	"dazzled",
 	"deafened", 
 	"entangled", 
+	-- "ethereal",
 	"exhausted",
 	"fascinated",
 	"fatigued",
@@ -203,7 +206,7 @@ conditions = {
 	"stable", 
 	"stunned",
 	"turned",
-	"unconscious"
+	"unconscious",
 };
 
 -- Bonus/penalty effect types for token widgets
@@ -385,16 +388,38 @@ basicdmgtypes = {
 };
 
 specialdmgtypes = {
+	-- "adamantine",
+	-- "cold iron",
+	-- "epic",
+	-- "magic",
+	-- "silver",
+	-- "chaotic",
+	-- "evil",
+	-- "good",
+	-- "lawful",
 	-- "nonlethal",
 	-- "spell",
 	"critical",
 	-- "precision",
+	-- "ghost touch",
+};
+
+spellschools = {
+	-- "abjuration",
+	-- "conjuration",
+	-- "divination",
+	-- "enchantment",
+	-- "evocation",
+	-- "illusion",	
+	-- "necromancy",
+	-- "transmutation",
 };
 
 -- Bonus types supported in power descriptions
 bonustypes = {
 	-- "alchemical",
 	"armor",
+	"armorenhancement",
 	"circumstance",
 	"competence",
 	"deflection",
@@ -404,11 +429,14 @@ bonustypes = {
 	"luck",
 	"morale",
 	"natural",
+	"naturalenhancement",
+	"naturalsize",
 	"profane",
 	"racial",
 	"resistance",
 	-- "sacred",
-	-- "shield",
+	"shield",
+	"shieldenhancement",
 	"size",
 	"trait",
 };
@@ -422,13 +450,16 @@ stackablebonustypes = {
 actypes = {
 	["dex"] = "dex",
 	["armor"] = "armor",
+	["armorenhancement"] = "armorenhancement",
 	["shield"] = "shield",
+	["shieldenhancement"] = "shieldenhancement",
 	["natural"] = "natural",
+	["naturalenhancement"] = "naturalenhancement",
 	["dodge"] = "dodge",
 	["deflection"] = "deflection",
 	["size"] = "size",
+	["naturalsize"] = "naturalsize",
 };
-
 acarmormatch = {
 	-- "padded",
 	-- "padded armor",
@@ -463,19 +494,18 @@ acarmormatch = {
 	-- "plate barding",
 	-- "bracers of armor",
 	-- "mithral chain shirt",
-	"Blast helmet, vest",
-	"Combat jumpsuit",
-	"Padded flight suit",
-	"Armored flight suit",
-	"Battle armor, padded",
-	"Battle armor, medium",
-	"Armored spacesuit",
-	"Battle armor, heavy",
-	"Corellian powersuit",
-	"Stormtrooper armor",
-	"Battleframe",
+	"blast helmet, vest",
+	"combat jumpsuit",
+	"padded flight suit",
+	"armored flight suit",
+	"battle armor, padded",
+	"battle armor, medium",
+	"armored spacesuit",
+	"battle armor, heavy",
+	"corellian powersuit",
+	"stormtrooper armor",
+	"battleframe",
 };
-
 acshieldmatch = {
 	-- "buckler",
 	-- "light shield",
@@ -486,7 +516,6 @@ acshieldmatch = {
 	-- "heavy steel shield",
 	-- "tower shield",
 };
-
 acdeflectionmatch = {
 	-- "ring of protection"
 };
@@ -512,13 +541,6 @@ spelleffects = {
 	"slowed",
 	"stunned",
 	"unconscious"
-};
-
--- Firing modes
-firingmodes = {
-	"M",
-	"M/A",
-	"M/A only",
 };
 
 -- NPC damage properties
@@ -959,4 +981,11 @@ classdata = {
 		hd = "d12", bab = "fast", fort = "good", ref = "bad", will = "bad", skillranks = 4,
 		skills = "Astrogate (Int), Computer Use (Int), Craft (Int), Demolitions (Int), Intimidate (Cha), Knowledge (Int), Pilot (Dex), Profession (Wis), Repair (Int) and Treat Injury (Wis)",
 	},
+};
+
+-- Firing modes
+firingmodes = {
+	"M",
+	"M/A",
+	"M/A only",
 };

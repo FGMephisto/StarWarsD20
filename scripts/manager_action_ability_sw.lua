@@ -1,7 +1,6 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars D20
 --
 
 function onInit()
@@ -38,7 +37,7 @@ function getRoll(rActor, sAbilityStat)
 	return rRoll;
 end
 
-function modRoll(rSource, rTarget, rRoll)
+function modRoll(rSource, rTarget, rRoll) -- Adjusted
 	ActionAbility.applyTake1020(rRoll);
 	if rSource then
 		local sAbility = ActionCore.decodeLabelText(rRoll.sDesc, "action_ability_tag"):lower();
@@ -49,7 +48,7 @@ function modRoll(rSource, rTarget, rRoll)
 		end
 
 		-- ACTION MODIFIERS
-		ActionCore.applyModRollEffectBonusDiceMod(rSource, rRoll, "ABIL", { tFilter = { sAbility }, });
+		ActionCore.applyModRollEffectBonusDiceMod(rSource, rRoll, "ABIL", { tFilter = { sAbility }, tActionTags = rRoll.tActionTags, });
 
 		-- CONDITION MODIFIERS
 		if EffectManager.hasCondition(rSource, "Frightened") or 
@@ -73,19 +72,19 @@ function modRoll(rSource, rTarget, rRoll)
 	end
 end
 
-function onRoll(rSource, rTarget, rRoll)
-	checkTake1020(rRoll);
+function onRoll(rSource, rTarget, rRoll) -- Adjusted
+	ActionAbility.checkTake1020(rRoll);
 	local rMessage = ActionsManager.createActionMessage(rSource, rRoll);
 
 	if rRoll.nTarget then
 		local nTotal = ActionsManager.total(rRoll);
 		local nTargetDC = tonumber(rRoll.nTarget) or 0;
 		
-		rMessage.text = rMessage.text .. " [vs. DC " .. nTargetDC .. "]";
+		rMessage.text = StringManager.appendLine(rMessage.text, string.format("[vs. DC %d]", nTargetDC));
 		if nTotal >= nTargetDC then
-			rMessage.text = rMessage.text .. " [SUCCESS]";
+			rMessage.text = StringManager.appendLine(rMessage.text, "[SUCCESS]");
 		else
-			rMessage.text = rMessage.text .. " [FAILURE]";
+			rMessage.text = StringManager.appendLine(rMessage.text, "[FAILURE]");
 		end
 	end
 	

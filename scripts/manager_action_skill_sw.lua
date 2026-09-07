@@ -1,7 +1,6 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars D20
 --
 
 function onInit()
@@ -75,14 +74,16 @@ end
 
 function modSkill(rSource, rTarget, rRoll) -- Adjusted
 	ActionSkill.applyTake1020(rRoll);
+	local bEffects = false;
+	local aAddDice = {};
+	local nAddMod = 0;
+
 	local bAssist = Input.isShiftPressed();
 	if bAssist then
 		rRoll.sDesc = rRoll.sDesc .. " [ASSIST]";
 	end
 
 	if rSource then
-		local bEffects = false;
-
 		-- Determine skill used
 		local sSkillLower = ActionCore.decodeLabelText(rRoll.sDesc, "action_skill_tag"):lower();
 
@@ -118,7 +119,8 @@ function modSkill(rSource, rTarget, rRoll) -- Adjusted
 		end
 		
 		-- Get effects
-		local aAddDice, nAddMod, nEffectCount = EffectManager.getBonusDiceMod(rSource, "SKILL", { tFilter = aSkillFilter, });
+		local nEffectCount;
+		aAddDice, nAddMod, nEffectCount = EffectManager.getBonusDiceMod(rSource, "SKILL", { tFilter = aSkillFilter, });
 		if (nEffectCount > 0) then
 			bEffects = true;
 		end
@@ -169,15 +171,11 @@ function modSkill(rSource, rTarget, rRoll) -- Adjusted
 			bEffects = true;
 			nAddMod = nAddMod - nNegLevelMod;
 		end
+	end
 
-		-- If effects, then add them
-		if bEffects then
-			DiceRollManager.addRollEffectDice(rSource, rRoll, aAddDice);
-			rRoll.nMod = rRoll.nMod + nAddMod;
-
-			local sMod = StringManager.convertDiceToString(aAddDice, nAddMod, true);
-			rRoll.sDesc = string.format("%s\r%s", rRoll.sDesc, EffectManager.buildEffectOutput(sMod));
-		end
+	if bEffects then
+		DiceRollManager.addRollEffectDiceMod(rSource, rRoll, aAddDice, nAddMod);
+		rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, EffectManager.buildEffectDiceModOutput(aAddDice, nAddMod));
 	end
 
 	applySizeEffectsToModRoll(rSource, rTarget, rRoll);
@@ -220,11 +218,11 @@ function onRoll(rSource, rTarget, rRoll) -- Adjusted
 		local nTotal = ActionsManager.total(rRoll);
 		local nTargetDC = tonumber(rRoll.nTarget) or 0;
 		
-		rMessage.text = rMessage.text .. " [vs. DC " .. nTargetDC .. "]";
+		rMessage.text = StringManager.appendLine(rMessage.text, string.format("[vs. DC %d]", nTargetDC));
 		if nTotal >= nTargetDC then
-			rMessage.text = rMessage.text .. " [SUCCESS]";
+			rMessage.text = StringManager.appendLine(rMessage.text, "[SUCCESS]");
 		else
-			rMessage.text = rMessage.text .. " [FAILURE]";
+			rMessage.text = StringManager.appendLine(rMessage.text, "[FAILURE]");
 		end
 	end
 	

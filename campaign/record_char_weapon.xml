@@ -3,7 +3,6 @@
 <!-- 
   Please see the license.html file included with this distribution for 
   attribution and copyright information.
-  File adjusted for Star Wars D20
 -->
 
 <root>
@@ -15,7 +14,7 @@
 			<anchor_listitem_right />
 			<anchor_listitem_top />
 
-			<!-- Left side controls -->
+			<!-- Left side -->
 			<button_listitem_idelete_left name="idelete" />
 			<link_listitem_left name="shortcut" />
 			<button_listitem_carried_left name="carried" />
@@ -26,7 +25,7 @@
 				</anchored>
 			</state_charweapontype>
 
-			<!-- Right side controls (ordered right-to-left relative to rightanchor) -->
+			<!-- Right side -->
 			<buttonc_listitem_right name="activatedetail">
 				<icon normal="button_details" pressed="button_details_down" />
 				<script>
@@ -36,31 +35,18 @@
 				</script>
 			</buttonc_listitem_right>
 
-			<!-- Damage Value Box -->
-			<stringcontrol name="damageview">
-				<anchored width="85" height="20">
-					<top parent="rightanchor" />
-					<right parent="rightanchor" relation="relative" offset="-5" postoffset="-5" />
+			<stringc_listitem_right_static name="damageview">
+				<anchored width="100" height="-1">
+					<top parent="contentanchor" relation="relative" offset="0" postoffset="0" />
 				</anchored>
-				<readonly />
-				<frame name="fielddark" offset="7,5,7,5" />
-				<cursor hover="hand" />
+				<multilinespacing>20</multilinespacing>
 				<script>
 					function onDragStart(button, x, y, draginfo)
 						return window.onDamageAction(draginfo);
 					end
-					function onDoubleClick(x, y)
-						return window.onDamageAction();
-					end
 				</script>
-			</stringcontrol>
-
-			<!-- Damage Button (Blood Drop) -->
-			<buttoncontrol name="button_damage">
-				<anchored width="20" height="20">
-					<top parent="rightanchor" />
-					<right parent="rightanchor" relation="relative" offset="-5" postoffset="-5" />
-				</anchored>
+			</stringc_listitem_right_static>
+			<buttonc_listitem_right name="button_damage">
 				<icon normal="button_action_damage" pressed="button_action_damage_down" />
 				<script>
 					function onButtonPress(x, y)
@@ -70,32 +56,74 @@
 						return window.onDamageAction(draginfo);
 					end
 				</script>
-			</buttoncontrol>
-
-			<!-- Fortitude Attack Button (Stun) -->
-			<buttoncontrol name="button_stun">
-				<anchored width="20" height="20">
-					<top parent="rightanchor" />
-					<right parent="rightanchor" relation="relative" offset="-5" postoffset="-5" />
+			</buttonc_listitem_right>
+			<spacer_listitem_right name="attackview">
+				<anchored>
+					<right offset="-5" postoffset="-5" />
 				</anchored>
-				<icon normal="button_action_effect" pressed="button_action_effect_down" />
-				<tooltip textres="char_tooltip_actionstun" />
+				<frame name="slottedmodifier" offset="5,5,5,5" width="138" />
+			</spacer_listitem_right>
+			<simplenumber name="attackview1">
+				<anchored to="attackview" position="insidetopleft" offset="1,0" width="30" height="20" />
+				<displaysign />
 				<script>
-					function onButtonPress(x, y)
-						window.onFortitudeAction();
+					function onClickDown()
+						return true;
+					end
+					function onClickRelease(x, y)
+						return window.onSingleAttackAction(1);
 					end
 					function onDragStart(button, x, y, draginfo)
-						return window.onFortitudeAction(draginfo);
+						return window.onSingleAttackAction(1, draginfo);
 					end
 				</script>
-			</buttoncontrol>
-
-			<!-- Attack Button (Sword) -->
-			<buttoncontrol name="button_attack">
-				<anchored width="20" height="20">
-					<top parent="rightanchor" />
-					<right parent="rightanchor" relation="relative" offset="-5" postoffset="-5" />
-				</anchored>
+			</simplenumber>
+			<simplenumber name="attackview2">
+				<anchored to="attackview1" position="righthigh" offset="2,0" width="30" height="20" />
+				<displaysign />
+				<script>
+					function onClickDown()
+						return true;
+					end
+					function onClickRelease(x, y)
+						return window.onSingleAttackAction(2);
+					end
+					function onDragStart(button, x, y, draginfo)
+						return window.onSingleAttackAction(2, draginfo);
+					end
+				</script>
+			</simplenumber>
+			<simplenumber name="attackview3">
+				<anchored to="attackview2" position="righthigh" offset="2,0" width="30" height="20" />
+				<displaysign />
+				<script>
+					function onClickDown()
+						return true;
+					end
+					function onClickRelease(x, y)
+						return window.onSingleAttackAction(3);
+					end
+					function onDragStart(button, x, y, draginfo)
+						return window.onSingleAttackAction(3, draginfo);
+					end
+				</script>
+			</simplenumber>
+			<simplenumber name="attackview4">
+				<anchored to="attackview3" position="righthigh" offset="2,0" width="30" height="20" />
+				<displaysign />
+				<script>
+					function onClickDown()
+						return true;
+					end
+					function onClickRelease(x, y)
+						return window.onSingleAttackAction(4);
+					end
+					function onDragStart(button, x, y, draginfo)
+						return window.onSingleAttackAction(4, draginfo);
+					end
+				</script>
+			</simplenumber>
+			<buttonc_listitem_right name="button_attack">
 				<icon normal="button_action_attack" pressed="button_action_attack_down" />
 				<script>
 					function onButtonPress(x, y)
@@ -105,131 +133,19 @@
 						return window.onFullAttackAction(draginfo);
 					end
 				</script>
-			</buttoncontrol>
+			</buttonc_listitem_right>
 
-			<!-- Weapon Name (Fills the space on the left between Type and Attack) -->
+			<!-- Center -->
 			<string_listitem_center_underline name="name" />
 
-			<!-- Row 2: Details Area -->
-			<area_content_top name="area_details_row2">
-				<anchored height="20">
-					<top parent="name" anchor="bottom" relation="relative" offset="4" />
-					<left parent="" offset="20" />
-					<right parent="" offset="-5" />
-				</anchored>
-			</area_content_top>
-
-			<label name="label_firemode">
-				<anchored to="area_details_row2" position="insidetopleft" offset="0,0" width="45" />
-				<static textres="char_label_firemode" />
-			</label>
-			<button_stringcycler name="firemode">
-				<anchored to="label_firemode" position="righthigh" offset="10,0" width="40" height="20" />
-				<frame name="fielddark" offset="5,5,5,5" />
-				<stateframe>
-					<hover name="fieldfocus" offset="5,5,5,5" />
-				</stateframe>
-				<parameters>
-					<defaultlabelres>char_menu_firemode_s</defaultlabelres>
-					<labelsres>char_menu_firemode_m|char_menu_firemode_a</labelsres>
-					<values>multifire|autofire</values>
-				</parameters>
-				<script>
-					function onValueChanged()
-						window.onAttackChanged();
-						window.updateFireModeTooltip();
-					end
-				</script>
-			</button_stringcycler>
-
-			<!-- Row 2: Attack view modifier slots to the right of firemode -->
-			<genericcontrol name="attackview">
-				<anchored to="firemode" position="righthigh" offset="15,0" height="20" />
-				<frame name="slottedmodifier" offset="5,5,5,5" width="266" />
-			</genericcontrol>
-			<numbercontrol name="attackview1">
-				<anchored to="attackview" position="insidetopleft" offset="1,0" width="30" height="20" />
-				<displaysign />
-				<script>
-					function onClickDown() return true; end
-					function onClickRelease(x, y) return window.onSingleAttackAction(1); end
-					function onDragStart(button, x, y, draginfo) return window.onSingleAttackAction(1, draginfo); end
-				</script>
-			</numbercontrol>
-			<numbercontrol name="attackview2">
-				<anchored to="attackview1" position="righthigh" offset="2,0" width="30" height="20" />
-				<displaysign />
-				<script>
-					function onClickDown() return true; end
-					function onClickRelease(x, y) return window.onSingleAttackAction(2); end
-					function onDragStart(button, x, y, draginfo) return window.onSingleAttackAction(2, draginfo); end
-				</script>
-			</numbercontrol>
-			<numbercontrol name="attackview3">
-				<anchored to="attackview2" position="righthigh" offset="2,0" width="30" height="20" />
-				<displaysign />
-				<script>
-					function onClickDown() return true; end
-					function onClickRelease(x, y) return window.onSingleAttackAction(3); end
-					function onDragStart(button, x, y, draginfo) return window.onSingleAttackAction(3, draginfo); end
-				</script>
-			</numbercontrol>
-			<numbercontrol name="attackview4">
-				<anchored to="attackview3" position="righthigh" offset="2,0" width="30" height="20" />
-				<displaysign />
-				<script>
-					function onClickDown() return true; end
-					function onClickRelease(x, y) return window.onSingleAttackAction(4); end
-					function onDragStart(button, x, y, draginfo) return window.onSingleAttackAction(4, draginfo); end
-				</script>
-			</numbercontrol>
-			<numbercontrol name="attackview5">
-				<anchored to="attackview4" position="righthigh" offset="2,0" width="30" height="20" />
-				<displaysign />
-				<script>
-					function onClickDown() return true; end
-					function onClickRelease(x, y) return window.onSingleAttackAction(5); end
-					function onDragStart(button, x, y, draginfo) return window.onSingleAttackAction(5, draginfo); end
-				</script>
-			</numbercontrol>
-			<numbercontrol name="attackview6">
-				<anchored to="attackview5" position="righthigh" offset="2,0" width="30" height="20" />
-				<displaysign />
-				<script>
-					function onClickDown() return true; end
-					function onClickRelease(x, y) return window.onSingleAttackAction(6); end
-					function onDragStart(button, x, y, draginfo) return window.onSingleAttackAction(6, draginfo); end
-				</script>
-			</numbercontrol>
-			<numbercontrol name="attackview7">
-				<anchored to="attackview6" position="righthigh" offset="2,0" width="30" height="20" />
-				<displaysign />
-				<script>
-					function onClickDown() return true; end
-					function onClickRelease(x, y) return window.onSingleAttackAction(7); end
-					function onDragStart(button, x, y, draginfo) return window.onSingleAttackAction(7, draginfo); end
-				</script>
-			</numbercontrol>
-			<numbercontrol name="attackview8">
-				<anchored to="attackview7" position="righthigh" offset="2,0" width="30" height="20" />
-				<displaysign />
-				<script>
-					function onClickDown() return true; end
-					function onClickRelease(x, y) return window.onSingleAttackAction(8); end
-					function onDragStart(button, x, y, draginfo) return window.onSingleAttackAction(8, draginfo); end
-				</script>
-			</numbercontrol>
-
-			<!-- Row 3: Ranged / Ammo Details Section -->
+			<!-- Sections -->
 			<sub_content_column name="sub_ranged">
 				<anchored>
-					<top parent="area_details_row2" anchor="bottom" relation="relative" offset="4" />
 					<left parent="" offset="20" />
 				</anchored>
 			</sub_content_column>
 		</sheetdata>
 	</windowclass>
-
 	<windowclass name="char_weapon_ranged">
 		<margins control="0,0,0,2" />
 		<script>
@@ -243,6 +159,8 @@
 
 				local tFields = { "rangeincrement", };
 				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
+				--local tFields = { "maxammo", };
+				--WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 
 				local bShowRange = not bReadOnly or (rangeincrement.getValue() ~= 0);
 				WindowManager.callSafeControlsSetVisible(self, { "label_rangeincrement", "rangeincrement", }, bShowRange);
@@ -264,7 +182,7 @@
 			</area_content_top>
 
 			<label name="label_rangeincrement">
-				<anchored to="area_details" position="insidetopleft" offset="0,0" width="45" />
+				<anchored to="area_details" position="insidetopleft" offset="0,0" />
 				<static textres="char_label_weaponrange" />
 			</label>
 			<number_content_base name="rangeincrement">
@@ -274,19 +192,19 @@
 			</number_content_base>
 
 			<label name="label_ammo">
-				<anchored to="rangeincrement" position="righthigh" offset="10,0" width="45" />
+				<anchored to="rangeincrement" position="righthigh" offset="10,0" />
 				<static textres="char_label_weaponammo" />
 			</label>
 			<number_content_base name="maxammo">
 				<anchored to="label_ammo" position="righthigh" offset="10,0" width="40" />
 				<frame name="fielddark" offset="5,5,5,5" />
 				<min>0</min>
-				<max>500</max>
+				<max>100</max>
 			</number_content_base>
 			<state_charammocounter name="ammocounter">
 				<anchored to="maxammo" height="20">
 					<top />
-					<left relation="relative" offset="8" postoffset="5" />
+					<left relation="relative" offset="5" postoffset="5" />
 				</anchored>
 			</state_charammocounter>
 		</sheetdata>
@@ -305,7 +223,6 @@
 			</sub_content_framed_groupbox>
 		</sheetdata>
 	</windowclass>
-
 	<windowclass name="char_weapon_editor_main">
 		<script>
 			function onDrop(x, y, draginfo)
@@ -339,40 +256,10 @@
 				<delaykeyupdate />
 			</string_column>
 			
-			<label_column>
-				<static textres="weapon_label_firingmodes" />
-			</label_column>
-			<button_stringcycler name="firingmodes">
-				<anchored width="80" height="20">
-					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
-					<left offset="97" />
-				</anchored>
-				<parameters>
-					<defaultlabel>-</defaultlabel>
-					<labels>M|M/A|M/A only</labels>
-					<values>M|M/A|M/A only</values>
-				</parameters>
-			</button_stringcycler>
-
 			<label_column name="label_rangeincrement">
 				<static textres="char_label_weaponrange" />
 			</label_column>
 			<number_column name="rangeincrement">
-				<min>0</min>
-			</number_column>
-
-			<label_column name="label_maxammo">
-				<static textres="char_label_weaponammo" />
-			</label_column>
-			<number_column name="maxammo">
-				<min>0</min>
-				<max>500</max>
-			</number_column>
-
-			<label_column name="label_stundc">
-				<static textres="item_label_stundc" />
-			</label_column>
-			<number_column name="stundc">
 				<min>0</min>
 			</number_column>
 
@@ -501,7 +388,6 @@
 			</label_fieldtop>
 		</sheetdata>
 	</windowclass>
-
 	<windowclass name="char_weapon_damage_entry">
 		<margins control="0,0,0,2" />
 		<sheetdata>

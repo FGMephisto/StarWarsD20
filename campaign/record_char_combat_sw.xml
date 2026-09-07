@@ -3,7 +3,6 @@
 <!-- 
   Please see the license.html file included with this distribution for 
   attribution and copyright information.
-  File adjusted for Star Wars D20
 -->
 
 <root>
@@ -11,9 +10,348 @@
 	<windowclass name="charsheet_combat">
 		<script file="campaign/scripts/char_combat_sw.lua" />
 		<sheetdata>
+			<!-- Attacks -->
+			<frame_char name="attackframe">
+				<anchored position="insidetopleft" height="150">
+					<right offset="-130" />
+				</anchored>
+			</frame_char>
+
+			<label name="baseattackbonus_label">
+				<anchored to="attackframe" position="insidetopleft" offset="20,20" />
+				<static textres="char_label_combatatkbase" />
+			</label>
+			<basicnumber name="baseattackbonus" source="attackbonus.base">
+				<anchored to="attackframe" position="insidetopleft" offset="152,16" width="32" height="20" />
+				<displaysign />
+				<description textres="char_tooltip_combatatkbase" />
+			</basicnumber>
+			<!-- "Total" column -->
+			<number_charmeleetotal name="meleeattackbonus" source="attackbonus.melee.total">
+				<anchored to="attackframe" position="insidetopleft" offset="105,56" width="32" height="20" />
+			</number_charmeleetotal>
+			<label name="meleeattackbonus_label">
+				<anchored to="attackframe" position="insidetopleft" offset="20,56" width="80" />
+				<static textres="char_label_combatatkmelee" />
+			</label>
+			<number_charrangedtotal name="rangedattackbonus" source="attackbonus.ranged.total">
+				<anchored to="meleeattackbonus" position="belowleft" offset="0,8" width="32" height="20" />
+			</number_charrangedtotal>
+			<label name="rangedattackbonus_label">
+				<anchored to="meleeattackbonus_label" position="belowleft" offset="0,8" width="80" />
+				<static textres="char_label_combatatkranged" />
+			</label>
+			<!-- <number_chargrappletotal name="grappleattackbonus" source="attackbonus.grapple.total"> -->
+				<!-- <anchored to="rangedattackbonus" position="belowleft" offset="0,8" width="32" height="20" /> -->
+			<!-- </number_chargrappletotal> -->
+			<!-- <label name="label_grapple"> -->
+				<!-- <anchored to="rangedattackbonus_label" position="belowleft" offset="0,8" width="80" /> -->
+				<!-- <static textres="grapple" /> -->
+			<!-- </label> -->
+			<label_fieldtop name="atktotal_label">
+				<anchored to="meleeattackbonus" />
+				<static textres="char_label_combattotal" />
+			</label_fieldtop>
+			
+			<!-- "Base" column -->
+			<number_charcombatmod_static name="meleebaseattackbonus" source="attackbonus.base">
+				<anchored to="baseattackbonus" offset="0,20" />
+			</number_charcombatmod_static>
+			<!-- "Stat" column -->
+			<cycler_charcombatability name="meleestat">
+				<anchored to="meleebaseattackbonus" />
+				<baseability>strength</baseability>
+				<fieldabilitymod>meleestatmod</fieldabilitymod>
+				<source><name>attackbonus.melee.ability</name></source>
+			</cycler_charcombatability>
+			<number_charcombatabilitymod name="meleestatmod" source="attackbonus.melee.abilitymod">
+				<anchored to="meleebaseattackbonus" offset="48,0" />
+			</number_charcombatabilitymod>
+			<number_charcombatmod name="meleesize" source="attackbonus.melee.size">
+				<anchored to="meleestatmod" />
+			</number_charcombatmod>
+			<number_charcombatmod name="meleemisc" source="attackbonus.melee.misc">
+				<anchored to="meleesize" />
+			</number_charcombatmod>
+
+			<number_charcombatmod_static name="rangedbaseattackbonus" source="attackbonus.base">
+				<anchored to="meleebaseattackbonus" />
+			</number_charcombatmod_static>
+			<cycler_charcombatability name="rangedstat">
+				<anchored to="rangedbaseattackbonus" />
+				<baseability>dexterity</baseability>
+				<fieldabilitymod>rangedstatmod</fieldabilitymod>
+				<source><name>attackbonus.ranged.ability</name></source>
+			</cycler_charcombatability>
+			<number_charcombatabilitymod name="rangedstatmod" source="attackbonus.ranged.abilitymod">
+				<anchored to="rangedbaseattackbonus" offset="48,0" />
+			</number_charcombatabilitymod>
+			<number_charcombatmod name="rangedsize" source="attackbonus.ranged.size">
+				<anchored to="rangedstatmod" />
+			</number_charcombatmod>
+			<number_charcombatmod name="rangedmisc" source="attackbonus.ranged.misc">
+				<anchored to="rangedsize" />
+			</number_charcombatmod>
+
+			<!-- <number_charcombatmod_static name="grapplebaseattackbonus" source="attackbonus.base"> -->
+				<!-- <anchored to="rangedbaseattackbonus" /> -->
+			<!-- </number_charcombatmod_static> -->
+			<!-- <cycler_charcombatability name="grapplestat"> -->
+				<!-- <anchored to="grapplebaseattackbonus" /> -->
+				<!-- <baseability>strength</baseability> -->
+				<!-- <fieldabilitymod>grapplestatmod</fieldabilitymod> -->
+				<!-- <source><name>attackbonus.grapple.ability</name></source> -->
+			<!-- </cycler_charcombatability> -->
+			<!-- <number_charcombatabilitymod name="grapplestatmod" source="attackbonus.grapple.abilitymod"> -->
+				<!-- <anchored to="grapplebaseattackbonus" offset="48,0" /> -->
+			<!-- </number_charcombatabilitymod> -->
+			<!-- <number_charcombatmod name="grapplesize" source="attackbonus.grapple.size"> -->
+				<!-- <anchored to="grapplestatmod" /> -->
+			<!-- </number_charcombatmod> -->
+			<!-- <number_charcombatmod name="grapplemisc" source="attackbonus.grapple.misc"> -->
+				<!-- <anchored to="grapplesize" /> -->
+			<!-- </number_charcombatmod> -->
+
+			<label_fieldtop name="atkstatmod_label">
+				<anchored to="meleestatmod">
+					<left parent="meleestat" />
+				</anchored>
+				<static textres="char_label_combatability" />
+			</label_fieldtop>
+			<label_fieldtop name="atksize_label">
+				<anchored to="meleesize" />
+				<static textres="char_label_combatsize" />
+			</label_fieldtop>
+			<label_fieldtop name="atkmisc_label">
+				<anchored to="meleemisc" />
+				<static textres="char_label_combatmisc" />
+			</label_fieldtop>
+
+			<!-- Defenses - Saves -->
+			<frame_char name="saveframe">
+				<anchored position="insidetopleft" offset="0,150" height="120">
+					<right offset="-130" />
+				</anchored>
+			</frame_char>
+			
+			<!-- "Total" column -->
+			<number_charsavefort name="fortitude" source="saves.fortitude.total">
+				<anchored to="saveframe" position="insidetopleft" offset="105,28" width="32" height="20" />
+			</number_charsavefort>
+			<label name="fortitude_label">
+				<anchored to="saveframe" position="insidetopleft" offset="20,28" width="80" />
+				<static textres="fortitude" />
+			</label>
+			<number_charsaveref name="reflex" source="saves.reflex.total">
+				<anchored to="fortitude" position="belowleft" offset="0,8" width="32" height="20" />
+			</number_charsaveref>
+			<label name="reflex_label">
+				<anchored to="fortitude_label" position="belowleft" offset="0,8" width="80" />
+				<static textres="reflex" />
+			</label>
+			<number_charsavewill name="will" source="saves.will.total">
+				<anchored to="reflex" position="belowleft" offset="0,8" width="32" height="20" />
+			</number_charsavewill>
+			<label name="will_label">
+				<anchored to="reflex_label" position="belowleft" offset="0,8" width="80" />
+				<static textres="will_long" />
+			</label>
+			<label_fieldtop name="savettotal_label">
+				<anchored to="fortitude" />
+				<static textres="char_label_combattotal" />
+			</label_fieldtop>
+			
+			<!-- "Class" column -->
+			<number_charcombatmod name="fortitudebase" source="saves.fortitude.base">
+				<anchored to="fortitude" offset="15,0" width="32" />
+			</number_charcombatmod>
+			<number_charcombatmod name="reflexbase" source="saves.reflex.base">
+				<anchored to="fortitudebase" position="belowleft" offset="0,8" width="32" height="20" />
+			</number_charcombatmod>
+			<number_charcombatmod name="willbase" source="saves.will.base">
+				<anchored to="reflexbase" position="belowleft" offset="0,8" width="32" height="20" />
+			</number_charcombatmod>
+			<label_fieldtop name="savebase_label">
+				<anchored to="fortitudebase" />
+				<static textres="char_label_combatsaveclass" />
+			</label_fieldtop>
+			
+			<!-- "Stat" column -->
+			<cycler_charcombatability name="fortitudestat">
+				<anchored to="fortitudebase" offset="28,0" />
+				<baseability>constitution</baseability>
+				<fieldabilitymod>fortitudestatmod</fieldabilitymod>
+				<source><name>saves.fortitude.ability</name></source>
+			</cycler_charcombatability>
+			
+			<cycler_charcombatability name="reflexstat">
+				<anchored to="fortitudestat" position="belowleft" offset="0,8" />
+				<baseability>dexterity</baseability>
+				<fieldabilitymod>reflexstatmod</fieldabilitymod>
+				<source><name>saves.reflex.ability</name></source>
+			</cycler_charcombatability>
+			
+			<cycler_charcombatability name="willstat">
+				<anchored to="reflexstat" position="belowleft" offset="0,8" />
+				<baseability>wisdom</baseability>
+				<fieldabilitymod>willstatmod</fieldabilitymod>
+				<source><name>saves.will.ability</name></source>
+			</cycler_charcombatability>
+			
+			<number_charcombatabilitymod name="fortitudestatmod" source="saves.fortitude.abilitymod">
+				<anchored to="fortitudestat" />
+			</number_charcombatabilitymod>
+			
+			<number_charcombatabilitymod name="reflexstatmod" source="saves.reflex.abilitymod">
+				<anchored to="reflexstat" />
+			</number_charcombatabilitymod>
+			
+			<number_charcombatabilitymod name="willstatmod" source="saves.will.abilitymod">
+				<anchored to="willstat" />
+			</number_charcombatabilitymod>
+			
+			<label_fieldtop name="savestatmod_label">
+				<anchored to="fortitudestat" />
+				<static textres="char_label_combatability" />
+			</label_fieldtop>
+			
+			<!-- "Miscellaneous" column -->
+			<number_charcombatmod name="fortitudemisc" source="saves.fortitude.misc">
+				<anchored to="fortitudestatmod" />
+			</number_charcombatmod>
+			<number_charcombatmod name="reflexmisc" source="saves.reflex.misc">
+				<anchored to="reflexstatmod" />
+			</number_charcombatmod>
+			<number_charcombatmod name="willmisc" source="saves.will.misc">
+				<anchored to="willstatmod" />
+			</number_charcombatmod>
+			
+			<label_fieldtop name="savemisc_label">
+				<anchored to="fortitudemisc" />
+				<static textres="char_label_combatmisc" />
+			</label_fieldtop>
+
+			<!-- INITIATIVE -->
+			<frame_char name="initiativeframe">
+				<anchored position="insidetopright" width="130" height="150" />
+			</frame_char>
+			<number_charinit name="initiative" source="initiative.total">
+				<anchored to="initiativeframe" position="insidetopleft" offset="78,16" width="32" height="20" />
+			</number_charinit>
+			<label name="initiative_label">
+				<anchored>
+					<left parent="initiativeframe" offset="15" />
+					<top parent="initiative" />
+				</anchored>
+				<static textres="initiative" />
+			</label>
+			<cycler_charcombatability name="initiativestat">
+				<anchored to="initiativeframe" position="insidetopleft" offset="14,54" />
+				<baseability>dexterity</baseability>
+				<fieldabilitymod>initiativestatmod</fieldabilitymod>
+				<source><name>initiative.ability</name></source>
+			</cycler_charcombatability>
+			<number_charcombatabilitymod name="initiativestatmod" source="initiative.abilitymod">
+				<anchored to="initiativeframe" position="insidetopleft" offset="48,54" width="30" height="20" />
+				<hideonvalue>0</hideonvalue>
+				<displaysign />
+			</number_charcombatabilitymod>
+			<label_fieldtop name="initiativestatmod_label">
+				<anchored to="initiativestatmod">
+					<left parent="initiativestat" />
+				</anchored>
+				<static textres="char_label_combatability" />
+			</label_fieldtop>
+			<basicnumber name="initiativemiscbonus" source="initiative.misc">
+				<anchored to="initiativestatmod" position="right" offset="8,0" width="30" />
+				<hideonvalue>0</hideonvalue>
+				<displaysign />
+			</basicnumber>
+			<label_fieldtop name="initiativemiscbonus_label">
+				<anchored to="initiativemiscbonus" />
+				<static textres="char_label_combatmisc" />
+			</label_fieldtop>
+
+			<!-- Speed -->
+			<frame_char name="speedframe">
+				<anchored position="insidetopright" offset="0,150" width="130" height="120" />
+			</frame_char>
+			
+			<number_charspeed name="speedfinal" source="speed.total">
+				<anchored to="speedframe" position="insidetopleft" offset="78,16" width="32" height="20" />
+			</number_charspeed>
+			<label name="speedfinal_label">
+				<anchored>
+					<left parent="speedframe" offset="15" />
+					<top parent="speedfinal" />
+				</anchored>
+				<static textres="char_label_combatspeed" />
+			</label>
+			<basicnumber name="speedbase" source="speed.base">
+				<anchored to="speedframe" position="insidetopleft" offset="12,54" width="30" height="20" />
+				<hideonvalue>0</hideonvalue>
+			</basicnumber>
+			<label_fieldtop name="speedbase_label">
+				<anchored to="speedbase" />
+				<static textres="char_label_combatbase" />
+			</label_fieldtop>
+			<basicnumber name="speedarmor" source="speed.armor">
+				<anchored to="speedbase" position="right" offset="8,0" width="30" />
+				<hideonvalue>0</hideonvalue>
+			</basicnumber>
+			<label_fieldtop name="speedarmor_label">
+				<anchored to="speedarmor" />
+				<static textres="char_label_combatarmor" />
+			</label_fieldtop>
+			<basicnumber name="speedmisc" source="speed.misc">
+				<anchored to="speedarmor" position="right" offset="8,0" width="30" />
+				<hideonvalue>0</hideonvalue>
+			</basicnumber>
+			<label_fieldtop name="speedmisc_label">
+				<anchored to="speedmisc" />
+				<static textres="char_label_combatmisc" />
+			</label_fieldtop>
+
+			<!-- Defenses - Spell -->
+			<!-- <frame_char name="srframe"> -->
+				<!-- <anchored position="insidetopright" offset="0,180" width="130" height="90" /> -->
+			<!-- </frame_char> -->
+			
+			<!-- <number_charsr name="srfinal" source="defenses.sr.total"> -->
+				<!-- <anchored to="srframe" position="insidetopleft" offset="78,16" width="32" height="20" /> -->
+				<!-- <hideonvalue>0</hideonvalue> -->
+			<!-- </number_charsr> -->
+			<!-- <label name="srfinal_label"> -->
+				<!-- <anchored> -->
+					<!-- <left parent="srframe" offset="15" /> -->
+					<!-- <top parent="srfinal" /> -->
+				<!-- </anchored> -->
+				<!-- <static textres="sr" /> -->
+			<!-- </label> -->
+			<!-- <basicnumber name="srbase" source="defenses.sr.base"> -->
+				<!-- <anchored to="srframe" width="30" height="20"> -->
+					<!-- <top offset="54" /> -->
+					<!-- <right anchor="center" offset="-4" /> -->
+				<!-- </anchored> -->
+				<!-- <hideonvalue>0</hideonvalue> -->
+			<!-- </basicnumber> -->
+			<!-- <label_fieldtop name="srbase_label"> -->
+				<!-- <anchored to="srbase" /> -->
+				<!-- <static textres="char_label_combatbase" /> -->
+			<!-- </label_fieldtop> -->
+			<!-- <basicnumber name="srmisc" source="defenses.sr.misc"> -->
+				<!-- <anchored to="srbase" position="right" offset="8,0" width="30" /> -->
+				<!-- <hideonvalue>0</hideonvalue> -->
+			<!-- </basicnumber> -->
+			<!-- <label_fieldtop name="srmisc_label"> -->
+				<!-- <anchored to="srmisc" /> -->
+				<!-- <static textres="char_label_combatmisc" /> -->
+			<!-- </label_fieldtop> -->
+
 			<!-- Defenses - Armor -->
 			<frame_char name="acframe">
-				<anchored position="insidetopleft" width="480" height="90" />
+				<!-- <anchored position="insidetopleft" width="480" height="90" /> -->
+				<anchored position="insidetop" offset="0,270" height="210" />
 			</frame_char>
 			
 			<!-- "Total" column with labels aligned left -->
@@ -277,340 +615,6 @@
 			<!-- </basicnumber> -->
 			<label_fieldtop name="acmisc_label">
 				<anchored to="acmisc" />
-				<static textres="char_label_combatmisc" />
-			</label_fieldtop>
-
-			<!-- Defenses - Saves -->
-			<frame_char name="saveframe">
-				<anchored position="insidetopleft" offset="0,90" width="350" height="120" />
-			</frame_char>
-			
-			<!-- "Total" column -->
-			<number_charsavefort name="fortitude" source="saves.fortitude.total">
-				<anchored to="saveframe" position="insidetopleft" offset="105,28" width="32" height="20" />
-			</number_charsavefort>
-			<label name="fortitude_label">
-				<anchored to="saveframe" position="insidetopleft" offset="20,28" width="80" />
-				<static textres="fortitude" />
-			</label>
-			<number_charsaveref name="reflex" source="saves.reflex.total">
-				<anchored to="fortitude" position="belowleft" offset="0,8" width="32" height="20" />
-			</number_charsaveref>
-			<label name="reflex_label">
-				<anchored to="fortitude_label" position="belowleft" offset="0,8" width="80" />
-				<static textres="reflex" />
-			</label>
-			<number_charsavewill name="will" source="saves.will.total">
-				<anchored to="reflex" position="belowleft" offset="0,8" width="32" height="20" />
-			</number_charsavewill>
-			<label name="will_label">
-				<anchored to="reflex_label" position="belowleft" offset="0,8" width="80" />
-				<static textres="will_long" />
-			</label>
-			<label_fieldtop name="savettotal_label">
-				<anchored to="fortitude" />
-				<static textres="char_label_combattotal" />
-			</label_fieldtop>
-			
-			<!-- "Class" column -->
-			<number_charcombatmod name="fortitudebase" source="saves.fortitude.base">
-				<anchored to="fortitude" offset="15,0" width="32" />
-			</number_charcombatmod>
-			<number_charcombatmod name="reflexbase" source="saves.reflex.base">
-				<anchored to="fortitudebase" position="belowleft" offset="0,8" width="32" height="20" />
-			</number_charcombatmod>
-			<number_charcombatmod name="willbase" source="saves.will.base">
-				<anchored to="reflexbase" position="belowleft" offset="0,8" width="32" height="20" />
-			</number_charcombatmod>
-			<label_fieldtop name="savebase_label">
-				<anchored to="fortitudebase" />
-				<static textres="char_label_combatsaveclass" />
-			</label_fieldtop>
-			
-			<!-- "Stat" column -->
-			<cycler_charcombatability name="fortitudestat">
-				<anchored to="fortitudebase" offset="28,0" />
-				<baseability>constitution</baseability>
-				<fieldabilitymod>fortitudestatmod</fieldabilitymod>
-				<source><name>saves.fortitude.ability</name></source>
-			</cycler_charcombatability>
-			
-			<cycler_charcombatability name="reflexstat">
-				<anchored to="fortitudestat" position="belowleft" offset="0,8" />
-				<baseability>dexterity</baseability>
-				<fieldabilitymod>reflexstatmod</fieldabilitymod>
-				<source><name>saves.reflex.ability</name></source>
-			</cycler_charcombatability>
-			
-			<cycler_charcombatability name="willstat">
-				<anchored to="reflexstat" position="belowleft" offset="0,8" />
-				<baseability>wisdom</baseability>
-				<fieldabilitymod>willstatmod</fieldabilitymod>
-				<source><name>saves.will.ability</name></source>
-			</cycler_charcombatability>
-			
-			<number_charcombatabilitymod name="fortitudestatmod" source="saves.fortitude.abilitymod">
-				<anchored to="fortitudestat" />
-			</number_charcombatabilitymod>
-			
-			<number_charcombatabilitymod name="reflexstatmod" source="saves.reflex.abilitymod">
-				<anchored to="reflexstat" />
-			</number_charcombatabilitymod>
-			
-			<number_charcombatabilitymod name="willstatmod" source="saves.will.abilitymod">
-				<anchored to="willstat" />
-			</number_charcombatabilitymod>
-			
-			<label_fieldtop name="savestatmod_label">
-				<anchored to="fortitudestat" />
-				<static textres="char_label_combatability" />
-			</label_fieldtop>
-			
-			<!-- "Miscellaneous" column -->
-			<number_charcombatmod name="fortitudemisc" source="saves.fortitude.misc">
-				<anchored to="fortitudestatmod" />
-			</number_charcombatmod>
-			<number_charcombatmod name="reflexmisc" source="saves.reflex.misc">
-				<anchored to="reflexstatmod" />
-			</number_charcombatmod>
-			<number_charcombatmod name="willmisc" source="saves.will.misc">
-				<anchored to="willstatmod" />
-			</number_charcombatmod>
-			
-			<label_fieldtop name="savemisc_label">
-				<anchored to="fortitudemisc" />
-				<static textres="char_label_combatmisc" />
-			</label_fieldtop>
-
-			<!-- Attacks -->
-			<frame_char name="attackframe">
-				<anchored position="insidetopleft" offset="0,210" width="350" height="130" />
-			</frame_char>
-
-			<label name="baseattackbonus_label">
-				<anchored to="attackframe" position="insidetopleft" offset="20,20" />
-				<static textres="char_label_combatatkbase" />
-			</label>
-			<basicnumber name="baseattackbonus" source="attackbonus.base">
-				<anchored to="attackframe" position="insidetopleft" offset="152,16" width="32" height="20" />
-				<displaysign />
-				<description textres="char_tooltip_combatatkbase" />
-			</basicnumber>
-			<!-- "Total" column -->
-			<number_charmeleetotal name="meleeattackbonus" source="attackbonus.melee.total">
-				<anchored to="attackframe" position="insidetopleft" offset="105,56" width="32" height="20" />
-			</number_charmeleetotal>
-			<label name="meleeattackbonus_label">
-				<anchored to="attackframe" position="insidetopleft" offset="20,56" width="80" />
-				<static textres="char_label_combatatkmelee" />
-			</label>
-			<number_charrangedtotal name="rangedattackbonus" source="attackbonus.ranged.total">
-				<anchored to="meleeattackbonus" position="belowleft" offset="0,8" width="32" height="20" />
-			</number_charrangedtotal>
-			<label name="rangedattackbonus_label">
-				<anchored to="meleeattackbonus_label" position="belowleft" offset="0,8" width="80" />
-				<static textres="char_label_combatatkranged" />
-			</label>
-			<!-- <number_chargrappletotal name="grappleattackbonus" source="attackbonus.grapple.total"> -->
-				<!-- <anchored to="rangedattackbonus" position="belowleft" offset="0,8" width="32" height="20" /> -->
-			<!-- </number_chargrappletotal> -->
-			<!-- <label name="label_grapple"> -->
-				<!-- <anchored to="rangedattackbonus_label" position="belowleft" offset="0,8" width="80" /> -->
-				<!-- <static textres="grapple" /> -->
-			<!-- </label> -->
-			<label_fieldtop name="atktotal_label">
-				<anchored to="meleeattackbonus" />
-				<static textres="char_label_combattotal" />
-			</label_fieldtop>
-			
-			<!-- "Base" column -->
-			<number_charcombatmod_static name="meleebaseattackbonus" source="attackbonus.base">
-				<anchored to="baseattackbonus" offset="0,20" />
-			</number_charcombatmod_static>
-			<!-- "Stat" column -->
-			<cycler_charcombatability name="meleestat">
-				<anchored to="meleebaseattackbonus" />
-				<baseability>strength</baseability>
-				<fieldabilitymod>meleestatmod</fieldabilitymod>
-				<source><name>attackbonus.melee.ability</name></source>
-			</cycler_charcombatability>
-			<number_charcombatabilitymod name="meleestatmod" source="attackbonus.melee.abilitymod">
-				<anchored to="meleebaseattackbonus" offset="48,0" />
-			</number_charcombatabilitymod>
-			<number_charcombatmod name="meleesize" source="attackbonus.melee.size">
-				<anchored to="meleestatmod" />
-			</number_charcombatmod>
-			<number_charcombatmod name="meleemisc" source="attackbonus.melee.misc">
-				<anchored to="meleesize" />
-			</number_charcombatmod>
-
-			<number_charcombatmod_static name="rangedbaseattackbonus" source="attackbonus.base">
-				<anchored to="meleebaseattackbonus" />
-			</number_charcombatmod_static>
-			<cycler_charcombatability name="rangedstat">
-				<anchored to="rangedbaseattackbonus" />
-				<baseability>dexterity</baseability>
-				<fieldabilitymod>rangedstatmod</fieldabilitymod>
-				<source><name>attackbonus.ranged.ability</name></source>
-			</cycler_charcombatability>
-			<number_charcombatabilitymod name="rangedstatmod" source="attackbonus.ranged.abilitymod">
-				<anchored to="rangedbaseattackbonus" offset="48,0" />
-			</number_charcombatabilitymod>
-			<number_charcombatmod name="rangedsize" source="attackbonus.ranged.size">
-				<anchored to="rangedstatmod" />
-			</number_charcombatmod>
-			<number_charcombatmod name="rangedmisc" source="attackbonus.ranged.misc">
-				<anchored to="rangedsize" />
-			</number_charcombatmod>
-
-			<!-- <number_charcombatmod_static name="grapplebaseattackbonus" source="attackbonus.base"> -->
-				<!-- <anchored to="rangedbaseattackbonus" /> -->
-			<!-- </number_charcombatmod_static> -->
-			<!-- <cycler_charcombatability name="grapplestat"> -->
-				<!-- <anchored to="grapplebaseattackbonus" /> -->
-				<!-- <baseability>strength</baseability> -->
-				<!-- <fieldabilitymod>grapplestatmod</fieldabilitymod> -->
-				<!-- <source><name>attackbonus.grapple.ability</name></source> -->
-			<!-- </cycler_charcombatability> -->
-			<!-- <number_charcombatabilitymod name="grapplestatmod" source="attackbonus.grapple.abilitymod"> -->
-				<!-- <anchored to="grapplebaseattackbonus" offset="48,0" /> -->
-			<!-- </number_charcombatabilitymod> -->
-			<!-- <number_charcombatmod name="grapplesize" source="attackbonus.grapple.size"> -->
-				<!-- <anchored to="grapplestatmod" /> -->
-			<!-- </number_charcombatmod> -->
-			<!-- <number_charcombatmod name="grapplemisc" source="attackbonus.grapple.misc"> -->
-				<!-- <anchored to="grapplesize" /> -->
-			<!-- </number_charcombatmod> -->
-
-			<label_fieldtop name="atkstatmod_label">
-				<anchored to="meleestatmod">
-					<left parent="meleestat" />
-				</anchored>
-				<static textres="char_label_combatability" />
-			</label_fieldtop>
-			<label_fieldtop name="atksize_label">
-				<anchored to="meleesize" />
-				<static textres="char_label_combatsize" />
-			</label_fieldtop>
-			<label_fieldtop name="atkmisc_label">
-				<anchored to="meleemisc" />
-				<static textres="char_label_combatmisc" />
-			</label_fieldtop>
-
-			<!-- Defenses - Spell -->
-			<!-- <frame_char name="srframe"> -->
-				<!-- <bounds>350,210,130,90</bounds> -->
-			<!-- </frame_char> -->
-			
-			<!-- <number_charsr name="srfinal" source="defenses.sr.total"> -->
-				<!-- <anchored to="srframe" position="insidetopleft" offset="78,16" width="32" height="20" /> -->
-				<!-- <hideonvalue>0</hideonvalue> -->
-			<!-- </number_charsr> -->
-			<!-- <label name="srfinal_label"> -->
-				<!-- <anchored> -->
-					<!-- <left parent="srframe" offset="15" /> -->
-					<!-- <top parent="srfinal" /> -->
-				<!-- </anchored> -->
-				<!-- <static textres="sr" /> -->
-			<!-- </label> -->
-			<!-- <basicnumber name="srbase" source="defenses.sr.base"> -->
-				<!-- <anchored to="srframe" width="30" height="20"> -->
-					<!-- <top offset="54" /> -->
-					<!-- <right anchor="center" offset="-4" /> -->
-				<!-- </anchored> -->
-				<!-- <hideonvalue>0</hideonvalue> -->
-			<!-- </basicnumber> -->
-			<!-- <label_fieldtop name="srbase_label"> -->
-				<!-- <anchored to="srbase" /> -->
-				<!-- <static textres="char_label_combatbase" /> -->
-			<!-- </label_fieldtop> -->
-			<!-- <basicnumber name="srmisc" source="defenses.sr.misc"> -->
-				<!-- <anchored to="srbase" position="right" offset="8,0" width="30" /> -->
-				<!-- <hideonvalue>0</hideonvalue> -->
-			<!-- </basicnumber> -->
-			<!-- <label_fieldtop name="srmisc_label"> -->
-				<!-- <anchored to="srmisc" /> -->
-				<!-- <static textres="char_label_combatmisc" /> -->
-			<!-- </label_fieldtop> -->
-
-			<!-- Speed -->
-			<frame_char name="speedframe">
-				<anchored position="insidetopleft" offset="350,90" width="130" height="120" />
-			</frame_char>
-			
-			<number_charspeed name="speedfinal" source="speed.total">
-				<anchored to="speedframe" position="insidetopleft" offset="78,16" width="32" height="20" />
-			</number_charspeed>
-			<label name="speedfinal_label">
-				<anchored>
-					<left parent="speedframe" offset="15" />
-					<top parent="speedfinal" />
-				</anchored>
-				<static textres="char_label_combatspeed" />
-			</label>
-			<basicnumber name="speedbase" source="speed.base">
-				<anchored to="speedframe" position="insidetopleft" offset="12,54" width="30" height="20" />
-				<hideonvalue>0</hideonvalue>
-			</basicnumber>
-			<label_fieldtop name="speedbase_label">
-				<anchored to="speedbase" />
-				<static textres="char_label_combatbase" />
-			</label_fieldtop>
-			<basicnumber name="speedarmor" source="speed.armor">
-				<anchored to="speedbase" position="right" offset="8,0" width="30" />
-				<hideonvalue>0</hideonvalue>
-			</basicnumber>
-			<label_fieldtop name="speedarmor_label">
-				<anchored to="speedarmor" />
-				<static textres="char_label_combatarmor" />
-			</label_fieldtop>
-			<basicnumber name="speedmisc" source="speed.misc">
-				<anchored to="speedarmor" position="right" offset="8,0" width="30" />
-				<hideonvalue>0</hideonvalue>
-			</basicnumber>
-			<label_fieldtop name="speedmisc_label">
-				<anchored to="speedmisc" />
-				<static textres="char_label_combatmisc" />
-			</label_fieldtop>
-
-			<!-- INITIATIVE -->
-			<frame_char name="initiativeframe">
-				<anchored position="insidetopleft" offset="350,210" width="130" height="130" />
-			</frame_char>
-			<number_charinit name="initiative" source="initiative.total">
-				<anchored to="initiativeframe" position="insidetopleft" offset="78,16" width="32" height="20" />
-			</number_charinit>
-			<label name="initiative_label">
-				<anchored>
-					<left parent="initiativeframe" offset="15" />
-					<top parent="initiative" />
-				</anchored>
-				<static textres="initiative" />
-			</label>
-			<cycler_charcombatability name="initiativestat">
-				<anchored to="initiativeframe" position="insidetopleft" offset="14,54" />
-				<baseability>dexterity</baseability>
-				<fieldabilitymod>initiativestatmod</fieldabilitymod>
-				<source><name>initiative.ability</name></source>
-			</cycler_charcombatability>
-			<number_charcombatabilitymod name="initiativestatmod" source="initiative.abilitymod">
-				<anchored to="initiativeframe" position="insidetopleft" offset="48,54" width="30" height="20" />
-				<hideonvalue>0</hideonvalue>
-				<displaysign />
-			</number_charcombatabilitymod>
-			<label_fieldtop name="initiativestatmod_label">
-				<anchored to="initiativestatmod">
-					<left parent="initiativestat" />
-				</anchored>
-				<static textres="char_label_combatability" />
-			</label_fieldtop>
-			<basicnumber name="initiativemiscbonus" source="initiative.misc">
-				<anchored to="initiativestatmod" position="right" offset="8,0" width="30" />
-				<hideonvalue>0</hideonvalue>
-				<displaysign />
-			</basicnumber>
-			<label_fieldtop name="initiativemiscbonus_label">
-				<anchored to="initiativemiscbonus" />
 				<static textres="char_label_combatmisc" />
 			</label_fieldtop>
 		</sheetdata>

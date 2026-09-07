@@ -11,7 +11,7 @@ function onInit()
 	end
 end
 
-function onLockModeChanged(bReadOnly)
+function onLockModeChanged(bReadOnly) -- Adjusted
 	local tFields = { "weapon_iadd", };
 	WindowManager.callSafeControlsSetVisible(self, tFields, not bReadOnly);
 end

@@ -1,13 +1,12 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars D20
 --
 
 -- Ruleset action types
 actions = {
 	["dice"] = { bUseModStack = true },
-	["table"] = { },
+	["table"] = { sIcon = "action_table", },
 	["effect"] = { sIcon = "action_effect", sTargeting = "all" },
 	["attack"] = { sIcon = "action_attack", sTargeting = "each", bUseModStack = true },
 	["grapple"] = { sIcon = "action_attack", sTargeting = "each", bUseModStack = true },
@@ -28,19 +27,8 @@ actions = {
 	-- TRIGGERED
 	["critconfirm"] = { sIcon = "action_attack" },
 	["misschance"] = { },
+	["fortification"] = { },
 	["stabilization"] = { },
-};
-
-targetactions = {
-	"attack",
-	"critconfirm",
-	"grapple",
-	"damage",
-	"heal",
-	"effect",
-	"cast",
-	"clc",
-	"spellsave"
 };
 
 currencies = { -- Adjusted
@@ -326,6 +314,12 @@ function performConcentrationCheck(draginfo, rActor, nodeSpellClass)
 			rRoll.sDesc = string.format("%s (Spell Class %+d)", rRoll.sDesc, nCCMisc);
 		end
 		
+		local tCoCDice, nCoCMod, nCoCEffects = EffectManager.getBonusDiceMod(rActor, "COC");
+		if nCoCEffects > 0 then
+			rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, EffectManager.buildEffectDiceModOutput(tCoCDice, nCoCMod));
+			DiceRollManager.addRollEffectDiceMod(rActor, rRoll, tCoCDice, nCoCMod);
+		end
+
 		ActionsManager.performAction(draginfo, rActor, rRoll);
 	else
 		local sSkill = "Concentration";

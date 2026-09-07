@@ -1,7 +1,6 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars D20
 --
 
 function onInit() -- Adjusted
@@ -42,4 +41,11 @@ function registerOptions()
 		sKey = "HRCC", sGroupRes = "option_header_houserule",
 		tCustom = { labelsres = "option_val_on|option_val_npc", values = "on|npc", baselabelres = "option_val_off", baseval = "off", default = "on", },
 	});
+	
+	-- House Rules - Encumbrance
+	OptionsManager.registerOptionData({
+		sKey = "HREN", sGroupRes = "option_header_houserule",
+		tCustom = { labelsres = "option_val_standard", values = "standard", baselabelres = "option_val_off", baseval = "off", default = "standard", },
+	});
+	OptionsManager.registerOptionData({	sKey = "HRFF", sGroupRes = "option_header_houserule", tCustom = { default = "on", }, });
 end

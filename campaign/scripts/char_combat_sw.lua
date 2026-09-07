@@ -1,7 +1,6 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars D20
 --
 
 function onInit() -- Adjusted
@@ -58,31 +57,32 @@ function onLockModeChanged(bReadOnly) -- Adjusted
 end
 
 function onSystemChanged() -- Adjusted
-	-- local bPFMode = DataCommon.isPFRPG();
+	do return nil; end -- Disabled -> exit
+	local bPFMode = DataCommon.isPFRPG();
 	
-	-- line_cmd.setVisible(bPFMode);
+	line_cmd.setVisible(bPFMode);
 	
-	-- cmd.setVisible(bPFMode);
-	-- label_cmd.setVisible(bPFMode);
-	-- cmdacarmor.setVisible(bPFMode);
-	-- cmdacshield.setVisible(bPFMode);
-	-- cmdacstatmod.setVisible(bPFMode);
-	-- cmdacsize.setVisible(bPFMode);
-	-- cmdacnatural.setVisible(bPFMode);
-	-- cmdacdeflection.setVisible(bPFMode);
-	-- cmdacdodge.setVisible(bPFMode);
-	-- cmdmisc.setVisible(bPFMode);
+	cmd.setVisible(bPFMode);
+	label_cmd.setVisible(bPFMode);
+	cmdacarmor.setVisible(bPFMode);
+	cmdacshield.setVisible(bPFMode);
+	cmdacstatmod.setVisible(bPFMode);
+	cmdacsize.setVisible(bPFMode);
+	cmdacnatural.setVisible(bPFMode);
+	cmdacdeflection.setVisible(bPFMode);
+	cmdacdodge.setVisible(bPFMode);
+	cmdmisc.setVisible(bPFMode);
 	
-	-- cmdstat.setVisible(bPFMode);
-	-- cmdstatmod.setVisible(bPFMode);
-	-- cmdbase.setVisible(bPFMode);
-	-- cmdbasemod.setVisible(bPFMode);
+	cmdstat.setVisible(bPFMode);
+	cmdstatmod.setVisible(bPFMode);
+	cmdbase.setVisible(bPFMode);
+	cmdbasemod.setVisible(bPFMode);
 	
-	-- if bPFMode then
-		-- acframe.setStaticBounds(0,0,480,210);
-		-- label_grapple.setValue(Interface.getString("cmb"));
-	-- else
-		-- acframe.setStaticBounds(0,0,480,140);
-		-- label_grapple.setValue(Interface.getString("grapple"));
-	-- end
+	if bPFMode then
+		acframe.setAnchoredHeight(210);
+		label_grapple.setValue(Interface.getString("cmb"));
+	else
+		acframe.setAnchoredHeight(140);
+		label_grapple.setValue(Interface.getString("grapple"));
+	end
 end

@@ -1,7 +1,6 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars D20
 --
 
 function onInit()
@@ -51,29 +50,34 @@ function onStateChanged() -- Adjusted
 	WindowManager.callSafeControlUpdate(self, "sub_pack", bReadOnly, bID);
 end
 
--- Added
 function onClose()
-	self.onStateChanged()
-
-	local nodeRecord = getDatabaseNode()
-	local bWeapon = ItemManager.isWeapon(nodeRecord)
-	local bArmor = ItemManager.isArmor(nodeRecord)
-
+	self.onStateChanged();
+	local nodeRecord = getDatabaseNode();
+	local bWeapon = ItemManager.isWeapon(nodeRecord);
+	local bArmor = ItemManager.isArmor(nodeRecord);
 	if not bArmor then
-		DB.deleteChild(nodeRecord, "dr")
-		DB.deleteChild(nodeRecord, "maxstatbonus")
-		DB.deleteChild(nodeRecord, "checkpenalty")
-		DB.deleteChild(nodeRecord, "speed30")
-		DB.deleteChild(nodeRecord, "speed20")
+		DB.deleteChild(nodeRecord, "dr");
+		DB.deleteChild(nodeRecord, "maxstatbonus");
+		DB.deleteChild(nodeRecord, "checkpenalty");
+		DB.deleteChild(nodeRecord, "speed30");
+		DB.deleteChild(nodeRecord, "speed20");
+		-- Legacy 3.5E armor fields
+		DB.deleteChild(nodeRecord, "ac");
+		DB.deleteChild(nodeRecord, "bonus");
+		DB.deleteChild(nodeRecord, "spellfailure");
 	end
-
 	if not bWeapon then
-		DB.deleteChild(nodeRecord, "damage")
-		DB.deleteChild(nodeRecord, "damagetype")
-		DB.deleteChild(nodeRecord, "critical")
-		DB.deleteChild(nodeRecord, "range")
-		DB.deleteChild(nodeRecord, "stundc")
-		DB.deleteChild(nodeRecord, "firingmodes")
-		DB.deleteChild(nodeRecord, "size")
+		DB.deleteChild(nodeRecord, "damage");
+		DB.deleteChild(nodeRecord, "damagetype");
+		DB.deleteChild(nodeRecord, "critical");
+		DB.deleteChild(nodeRecord, "range");
+		DB.deleteChild(nodeRecord, "stundc");
+		DB.deleteChild(nodeRecord, "firingmodes");
+		DB.deleteChild(nodeRecord, "size");
+		-- Legacy 3.5E weapon fields
+		DB.deleteChild(nodeRecord, "bonus");
+	end
+	if not bArmor and not bWeapon then
+		DB.deleteChild(nodeRecord, "properties");
 	end
 end

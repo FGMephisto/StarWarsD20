@@ -1,10 +1,9 @@
 -- 
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
--- File adjusted for Star Wars D20
 --
 
-local FORCE_POWERS_LABEL = "Force Powers";
+local FORCE_POWERS_LABEL = Interface.getString("spell_header_forcepowers");
 
 function onInit()
 	self.updateAbility();
@@ -43,6 +42,15 @@ function addWeapon()
 		w.name.setFocus();
 	end
 end
+function addSpellClass() -- Adjusted
+	do return nil; end -- Disabled -> exit
+	local w = spellclasslist.createWindow();
+	if w then
+		w.activatedetail.setValue(1);
+		w.label.setFocus();
+		DB.setValue(getDatabaseNode(), "spellmode", "string", "");
+	end
+end
 
 local bUpdateLock = false;
 function updateAbility()
@@ -51,14 +59,10 @@ function updateAbility()
 	end
 	bUpdateLock = true;
 	for _,v in pairs(weaponlist.getWindows()) do
-		if v.onDataChanged then
-			v.onDataChanged();
-		end
+		v.onDataChanged();
 	end
 	for _,v in pairs(spellclasslist.getWindows()) do
-		if v.onStatUpdate then
-			v.onStatUpdate();
-		end
+		v.onStatUpdate();
 	end
 	bUpdateLock = false;
 end
