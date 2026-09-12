@@ -6,7 +6,7 @@
 -->
 
 <root version="3.0" release="18" logo="logo.png">
-	<announcement text="Dungeons and Dragons (3.5E) ruleset (2026-05-05)\rCopyright 2026 Smiteworks USA, LLC" font="emotefont" icon="rulesetlogo_CoreRPG" />
+	<announcement text="Dungeons and Dragons (3.5E) ruleset (2026-09-29)\rCopyright 2026 Smiteworks USA, LLC" font="emotefont" icon="rulesetlogo_CoreRPG" />
 
 	<!-- Attributes -->
 	<description>
@@ -99,6 +99,7 @@
 	<script name="CombatManager2" file="scripts/manager_combat2.lua" />
 	<script name="DiceManager35E" file="scripts/manager_dice_35E.lua" />
 	<script name="EffectManager35E" file="scripts/manager_effect_35E.lua" />
+	<script name="EncumbranceManager35E" file="scripts/manager_encumbrance_35E.lua" />
 	<script name="ItemManager2" file="scripts/manager_item2.lua" />
 	<script name="PartyManager2" file="scripts/manager_ps2.lua" />
 	<script name="PowerManager35E" file="scripts/manager_power_35E.lua" />
@@ -113,4 +114,5 @@
 	<script name="ActionSkill" file="scripts/manager_action_skill.lua" />
 	<script name="ActionSave" file="scripts/manager_action_save.lua" />
 	<script name="ActionSpell" file="scripts/manager_action_spell.lua" />
+	<script name="ActionSpellSave" file="scripts/manager_action_spell_save.lua" />
 </root>

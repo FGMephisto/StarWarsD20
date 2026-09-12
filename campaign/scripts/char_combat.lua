@@ -78,10 +78,10 @@ function onSystemChanged()
 	cmdbasemod.setVisible(bPFMode);
 	
 	if bPFMode then
-		acframe.setStaticBounds(0,0,480,210);
+		acframe.setAnchoredHeight(210);
 		label_grapple.setValue(Interface.getString("cmb"));
 	else
-		acframe.setStaticBounds(0,0,480,140);
+		acframe.setAnchoredHeight(140);
 		label_grapple.setValue(Interface.getString("grapple"));
 	end
 end

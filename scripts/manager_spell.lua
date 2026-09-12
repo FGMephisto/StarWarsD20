@@ -191,6 +191,7 @@ function addSpellCastAction(nodeSpell)
 			end
 		end
 	end
+	return nodeAction;
 end
 
 function parseSpell(nodeSpell)
@@ -662,14 +663,14 @@ function getSpellAction(rActor, nodeAction, sSubRoll)
 		return;
 	end
 	
-	local sType = DB.getValue(nodeAction, "type", "");
-	
-	local rAction = {};
-	rAction.type = sType;
-	rAction.label = DB.getValue(nodeAction, "...name", "");
-	rAction.order = getSpellActionOutputOrder(nodeAction);
+	local rAction = {
+		type = DB.getValue(nodeAction, "type", ""),
+		label = DB.getValue(nodeAction, "...name", ""),
+		order = getSpellActionOutputOrder(nodeAction),
+		nodeAction = nodeAction,
+	};
 
-	if sType == "cast" then
+	if rAction.type == "cast" then
 		rAction.subtype = sSubRoll;
 		rAction.onmissdamage = DB.getValue(nodeAction, "onmissdamage", "");
 		
@@ -743,7 +744,8 @@ function getSpellAction(rActor, nodeAction, sSubRoll)
 			rAction.sr = "no";
 		end
 		
-		rAction.dcstat = DB.getValue(nodeAction, ".......dc.ability", "");
+		local nodeSpellClass = DB.getChild(nodeAction, ".......");
+		rAction.dcstat = DB.getValue(nodeSpellClass, "dc.ability", "");
 		
 		local sSaveType = DB.getValue(nodeAction, "savetype", "");
 		if sSaveType ~= "" then
@@ -754,7 +756,7 @@ function getSpellAction(rActor, nodeAction, sSubRoll)
 			rAction.savemod = 0;
 		end
 		
-	elseif sType == "damage" then
+	elseif rAction.type == "damage" then
 		rAction.clauses = getActionDamage(rActor, nodeAction);
 		
 		rAction.meta = DB.getValue(nodeAction, "meta", "");
@@ -770,29 +772,71 @@ function getSpellAction(rActor, nodeAction, sSubRoll)
 			end
 		end
 		
-	elseif sType == "heal" then
+	elseif rAction.type == "heal" then
 		rAction.clauses = getActionHeal(rActor, nodeAction);
 
 		rAction.subtype = DB.getValue(nodeAction, "healtype", "");
 		rAction.sTargeting = DB.getValue(nodeAction, "healtargeting", "");
 		rAction.meta = DB.getValue(nodeAction, "meta", "");
 	
-	elseif sType == "effect" then
+	elseif rAction.type == "effect" then
 		EffectManagerD20.getStandardEffectDataFromAction(nodeAction, rAction);
 		rAction.aDice, rAction.nDuration = getActionEffectDuration(rActor, nodeAction);
 
-		local nodeSpellClass = DB.getChild(nodeAction, ".......");
-		ActorEffectManager.evalEffectTags(rActor, rAction, nodeSpellClass);
+		ActorEffectManager.evalEffectTags(rActor, rAction);
 	end
 	
+	if not rAction.tActionTags then
+		rAction.tActionTags = SpellManager.getPowerTags(DB.getChild(rAction.nodeAction, "..."));
+	end
+
 	return rAction;
+end
+function getPowerTags(nodePower)
+	if not nodePower then
+		return {};
+	end
+
+	local tPowerTags = {};
+
+	local sSchool = StringManager.trim(DB.getValue(nodePower, "school", "")):lower():match("^%w+");
+	if StringManager.contains(DataCommon.spellschools, sSchool) then
+		table.insert(tPowerTags, sSchool);
+	end
+
+	for _, nodeAction in ipairs(DB.getChildList(nodePower, "actions")) do
+		local sType = DB.getValue(nodeAction, "type", "");
+		if StringManager.contains({ "damage", "effect", }, sType) then
+			if sType == "damage" then
+				for _,v in ipairs(UtilityManager.getNodeSortedChildren(nodeAction, "damagelist")) do
+					local sDmgType = DB.getValue(v, "type", ""):lower();
+					for _,s in ipairs(StringManager.splitByPattern(sDmgType, ",", true)) do
+						if ActionCore.isDamageType(s) then
+							table.insert(tPowerTags, s);
+						end
+					end
+				end
+			elseif sType == "effect" then
+				local tEffectComps = EffectManager.parseEffect(EffectVarManager.getEffectVarFromNode(nodeAction, "sName", ""));
+				for _,sComp in ipairs(tEffectComps) do
+					local sLower = sComp:lower();
+					if ActionCore.isCondition(sLower) then
+						table.insert(tPowerTags, sLower);
+					end
+				end
+			end
+		end
+	end
+
+	return tPowerTags;
 end
 
 function onSpellAction(draginfo, nodeAction, sSubRoll)
 	if not nodeAction then
 		return;
 	end
-	local rActor = ActorManager.resolveActor(DB.getChild(nodeAction, "........."));
+	local nodeActor = DB.getChild(nodeAction, ".........");
+	local rActor = ActorManager.resolveActor(nodeActor);
 	if not rActor then
 		return;
 	end
@@ -825,7 +869,7 @@ function onSpellAction(draginfo, nodeAction, sSubRoll)
 
 		if not rAction.subtype or rAction.subtype == "save" then
 			if rAction.save and rAction.save ~= "" then
-				local rRoll = ActionSpell.getSaveVsRoll(rActor, rAction);
+				local rRoll = ActionSpellSave.getSaveVsRoll(rActor, rAction);
 				if not rAction.subtype then
 					rRoll.sType = "castsave";
 				end
@@ -844,7 +888,7 @@ function onSpellAction(draginfo, nodeAction, sSubRoll)
 
 	elseif rAction.type == "effect" then
 		local rRoll;
-		rRoll = ActionEffect.getRoll(draginfo, rActor, rAction);
+		rRoll = ActionEffect.getRoll(rActor, rAction);
 		if rRoll then
 			table.insert(rRolls, rRoll);
 		end
@@ -857,11 +901,12 @@ end
 
 function getActionAbilityBonus(nodeAction)
 	local nodeSpellClass = DB.getChild(nodeAction, ".......");
-	local nodeCreature = DB.getChild(nodeSpellClass, "...");
+	if not nodeSpellClass then
+		return 0;
+	end
 
 	local sAbility = DB.getValue(nodeSpellClass, "dc.ability", "");
-
-	local rActor = ActorManager.resolveActor(nodeCreature);
+	local rActor = ActorManager.resolveActor(DB.getChild(nodeSpellClass, "..."));
 	return ActorManager35E.getAbilityBonus(rActor, sAbility);
 end
 
@@ -902,12 +947,14 @@ function getActionMod(rActor, nodeAction, sStat, nStatMax)
 	
 	if sStat == "" then
 		nStat = 0;
-	elseif sStat == "cl" or sStat == "halfcl" or sStat == "oddcl" then
+	elseif sStat == "cl" or sStat == "halfcl" or sStat == "oddcl" or sStat == "thirdcl" then
 		nStat = DB.getValue(nodeAction, ".......cl", 0);
 		if sStat == "halfcl" then
 			nStat = math.floor((nStat + 0.5) / 2);
 		elseif sStat == "oddcl" then
 			nStat = math.floor((nStat + 1.5) / 2);
+		elseif sStat == "thirdcl" then
+			nStat = math.floor(nStat / 3);
 		end
 	else
 		nStat = ActorManager35E.getAbilityBonus(rActor, sStat);
@@ -1129,6 +1176,10 @@ function getActionDamageText(nodeAction)
 		sDamage = sDamage .. " [E]";
 	elseif sMeta == "maximize" then
 		sDamage = sDamage .. " [M]";
+	elseif sMeta == "empowermaximize" then
+		sDamage = sDamage .. " [E][M]";
+	elseif sMeta == "epicintensify" then
+		sDamage = sDamage .. " [I]";
 	end
 	
 	return sDamage;
@@ -1143,10 +1194,10 @@ function getActionHealText(nodeAction)
 	local aHealDice = {};
 	local nHealMod = 0;
 	for _,tClause in ipairs(clauses) do
-		for _,vDie in ipairs(tClause.dice) do
+		for _,vDie in ipairs(tClause.dice or {}) do
 			table.insert(aHealDice, vDie);
 		end
-		nHealMod = nHealMod + tClause.modifier;
+		nHealMod = nHealMod + (tClause.modifier or 0);
 	end
 
 	local sHeal = StringManager.convertDiceToString(aHealDice, nHealMod);
@@ -1159,6 +1210,10 @@ function getActionHealText(nodeAction)
 		sHeal = sHeal .. " [E]";
 	elseif sMeta == "maximize" then
 		sHeal = sHeal .. " [M]";
+	elseif sMeta == "empowermaximize" then
+		sHeal = sHeal .. " [E][M]";
+	elseif sMeta == "epicintensify" then
+		sHeal = sHeal .. " [I]";
 	end
 	
 	return sHeal;

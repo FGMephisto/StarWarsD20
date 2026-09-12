@@ -58,7 +58,7 @@ _tModifierWindowPresets =
 			"DEF_COVER",
 			"ATT_OPP",
 			"DEF_SCOVER",
-			"",
+			"ATT_CA",
 			"DEF_CONC",
 			"",
 			"DEF_TCONC",

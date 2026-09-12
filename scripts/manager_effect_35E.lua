@@ -6,7 +6,6 @@
 function onInit()
 	EffectManager.registerStandardDescriptorGroups();
 	EffectManagerD20.registerStandardConditionals();
-	EffectManagerD20.registerSizeConditional(ActorCommonManager.isCreatureSizeDnD3);
 	
 	GameManager.setFunction("onActorStartTurn", EffectManager35E.onActorStartTurn);
 	GameManager.setFunction("onActorEndTurn", EffectManager35E.onActorEndTurn);
@@ -46,13 +45,39 @@ function applySave(rActor, tCompData)
 		return;
 	end
 
-	local sEffect = EffectVarManager.getEffectVarFromNode(tCompData.node, "sName", "");
-	local tComps = EffectManager.parseEffect(sEffect);
-	local sSaveDesc = string.format("[EFFECT: %s]", tComps[1] or "");
+	local bHalfOnSave = StringManager.contains(tCompData.remainder, "half");
+	local bExpireNone = StringManager.contains(tCompData.remainder, "expirenone");
+	local bExpireAny = StringManager.contains(tCompData.remainder, "expireany");
+
+	local tSaveDesc = {};
+	table.insert(tSaveDesc, ActionCore.encodeActionText({ label = Interface.getString("effect_special_SAVE"), }, "action_savevs_tag"));
+	if bHalfOnSave then
+		table.insert(tSaveDesc, "[HALF ON SAVE]");
+	end
 
 	local rRoll = ActionSave.getRoll(rActor, sSave);
-	rRoll.sEffectRecord = DB.getPath(tCompData.node);
+	rRoll.sSaveDesc = table.concat(tSaveDesc, " ");
 	rRoll.nTarget = tCompData.mod;
-	rRoll.sSaveDesc = sSaveDesc;
-	ActionsManager.performAction(draginfo, rActor, rRoll);
+	rRoll.sEffectRecord = DB.getPath(tCompData.node);
+	if bExpireAny then
+		rRoll.sEffectExpire = "any";
+	elseif bExpireNone then
+		rRoll.sEffectExpire = "none";
+	else
+		rRoll.sEffectExpire = "success";
+	end
+	rRoll.tActionTags = {};
+	for _,sComp in ipairs(EffectManager.parseEffect(EffectVarManager.getEffectVarFromNode(tCompData.node, "sName", ""))) do
+		local sLower = sComp:lower();
+		if ActionCore.isCondition(sLower) then
+			table.insert(rRoll.tActionTags, sLower);
+		end
+	end
+
+	local rSource = EffectManager.getSourceActor(tCompData.node) or rActor;
+
+	-- Legacy (2026-08)
+	rRoll.sSource = ActorManager.getCTNodeName(rSource);
+
+	ActionsManager.actionDirect(rActor, rRoll.sType, { rRoll }, { { rSource } });
 end

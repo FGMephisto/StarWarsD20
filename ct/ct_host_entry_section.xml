@@ -43,7 +43,7 @@
 				<readonly />
 			</number_ct_init>
 			<label name="grapple_label">
-				<anchored to="init" position="righthigh" offset="15,0"/>
+				<anchored to="init" position="righthigh" offset="10,0"/>
 				<static textres="grp" />
 			</label>
 			<number_ct_grapple name="grapple">
@@ -51,8 +51,24 @@
 				<description textres="grapple" />
 				<readonly />
 			</number_ct_grapple>
+			<label name="aoo_label">
+				<anchored to="grapple" position="righthigh" offset="10,0"/>
+				<static textres="ct_label_aoo" />
+				<tooltip textres="ct_tooltip_aoo" />
+			</label>
+			<number_ct name="aoo">
+				<anchored to="aoo_label" position="righthigh" offset="10,0" />
+			</number_ct>
+			<label name="aoomax_label">
+				<anchored to="aoo" position="righthigh" offset="5,0"/>
+				<static text="/" />
+			</label>
+			<number_ct name="aoomax">
+				<anchored to="aoomax_label" position="righthigh" offset="5,0" />
+				<default>1</default>
+			</number_ct>
 			<label name="speedlabel">
-				<anchored to="grapple" position="righthigh" offset="15,0"/>
+				<anchored to="aoomax" position="righthigh" offset="10,0"/>
 				<static textres="ct_label_speed" />
 			</label>
 			<string_ct name="speed">
@@ -123,8 +139,24 @@
 				<description textres="grapple" />
 				<readonly />
 			</number_ct_grapple>
+			<label name="aoo_label">
+				<anchored to="grapple" position="righthigh" offset="10,0"/>
+				<static textres="ct_label_aoo" />
+				<tooltip textres="ct_tooltip_aoo" />
+			</label>
+			<number_ct name="aoo">
+				<anchored to="aoo_label" position="righthigh" offset="10,0" />
+			</number_ct>
+			<label name="aoomax_label">
+				<anchored to="aoo" position="righthigh" offset="5,0"/>
+				<static text="/" />
+			</label>
+			<number_ct name="aoomax">
+				<anchored to="aoomax_label" position="righthigh" offset="5,0" />
+				<default>1</default>
+			</number_ct>
 			<label name="speedlabel">
-				<anchored to="grapple" position="righthigh" offset="15,0"/>
+				<anchored to="aoomax" position="righthigh" offset="15,0"/>
 				<static textres="ct_label_speed" />
 			</label>
 			<string_ct name="speed">

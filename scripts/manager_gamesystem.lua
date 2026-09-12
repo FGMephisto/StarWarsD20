@@ -6,17 +6,18 @@
 -- Ruleset action types
 actions = {
 	["dice"] = { bUseModStack = true },
-	["table"] = { },
+	["table"] = { sIcon = "action_table", },
 	["effect"] = { sIcon = "action_effect", sTargeting = "all" },
 	["attack"] = { sIcon = "action_attack", sTargeting = "each", bUseModStack = true },
 	["grapple"] = { sIcon = "action_attack", sTargeting = "each", bUseModStack = true },
-	["damage"] = { sIcon = "action_damage", sTargeting = "each", bUseModStack = true },
+	["damage"] = { sIcon = "action_damage", sTargeting = "all", bUseModStack = true },
 	["heal"] = { sIcon = "action_heal", sTargeting = "all", bUseModStack = true },
 	["cast"] = { sTargeting = "each" },
 	["castclc"] = { sTargeting = "each" },
 	["castsave"] = { sTargeting = "each" },
 	["clc"] = { sTargeting = "each", bUseModStack = true },
 	["spellsave"] = { sTargeting = "each" },
+	["spellfailure"] = { },
 	["skill"] = { bUseModStack = true },
 	["init"] = { bUseModStack = true },
 	["save"] = { bUseModStack = true },
@@ -26,19 +27,8 @@ actions = {
 	-- TRIGGERED
 	["critconfirm"] = { sIcon = "action_attack" },
 	["misschance"] = { },
+	["fortification"] = { },
 	["stabilization"] = { },
-};
-
-targetactions = {
-	"attack",
-	"critconfirm",
-	"grapple",
-	"damage",
-	"heal",
-	"effect",
-	"cast",
-	"clc",
-	"spellsave"
 };
 
 currencies = { 
@@ -211,18 +201,8 @@ function getStabilizationRoll(rActor)
 		rRoll.aDice = DiceRollManager.getActorDice({ "d20" }, rActor);
 		rRoll.nMod = ActorManager35E.getAbilityBonus(rActor, "constitution");
 		
-		local nHP = 0;
-		local nWounds = 0;
-		local nodeActor = ActorManager.getCreatureNode(rActor);
-		if nodeActor then
-			if ActorManager.isPC(rActor) then
-				nHP = DB.getValue(nodeActor, "hp.total", 0);
-				nWounds = DB.getValue(nodeActor, "hp.wounds", 0);
-			else
-				nHP = DB.getValue(nodeActor, "hp", 0);
-				nWounds = DB.getValue(nodeActor, "wounds", 0);
-			end
-		end
+		local nHP = GameManager.getRecordFieldValueLinked(rActor, "hptotal", 0);
+		local nWounds = GameManager.getRecordFieldValueLinked(rActor, "wounds", 0);
 			
 		if nHP > 0 and nWounds > nHP then
 			rRoll.sDesc = string.format("%s [at %+d]", rRoll.sDesc, (nHP - nWounds));
@@ -288,6 +268,12 @@ function performConcentrationCheck(draginfo, rActor, nodeSpellClass)
 			rRoll.sDesc = string.format("%s (Spell Class %+d)", rRoll.sDesc, nCCMisc);
 		end
 		
+		local tCoCDice, nCoCMod, nCoCEffects = EffectManager.getBonusDiceMod(rActor, "COC");
+		if nCoCEffects > 0 then
+			rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, EffectManager.buildEffectDiceModOutput(tCoCDice, nCoCMod));
+			DiceRollManager.addRollEffectDiceMod(rActor, rRoll, tCoCDice, nCoCMod);
+		end
+
 		ActionsManager.performAction(draginfo, rActor, rRoll);
 	else
 		local sSkill = "Concentration";

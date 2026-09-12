@@ -7,6 +7,8 @@ function isPFRPG()
 	return false;
 end
 
+resttypes = { "long", "short", };
+
 -- Abilities (database names)
 abilities = {
 	"strength",
@@ -86,6 +88,7 @@ creaturesize = {
 	["huge"] = 2,
 	["gargantuan"] = 3,
 	["colossal"] = 4,
+	["epic"] = 5,
 	["f"] = -4,
 	["d"] = -3,
 	["t"] = -2,
@@ -95,6 +98,17 @@ creaturesize = {
 	["h"] = 2,
 	["g"] = 3,
 	["c"] = 4,
+};
+sizeCombatMod = {
+	[-4] = 8,
+	[-3] = 4,
+	[-2] = 2,
+	[-1] = 1,
+	[0] = 0,
+	[1] = -1,
+	[2] = -2,
+	[3] = -4,
+	[4] = -8,
 };
 
 -- Values for creature type comparison
@@ -165,6 +179,7 @@ conditions = {
 	"dazzled",
 	"deafened", 
 	"entangled", 
+	"ethereal",
 	"exhausted",
 	"fascinated",
 	"fatigued",
@@ -191,7 +206,7 @@ conditions = {
 	"stable", 
 	"stunned",
 	"turned",
-	"unconscious"
+	"unconscious",
 };
 
 -- Bonus/penalty effect types for token widgets
@@ -358,16 +373,38 @@ basicdmgtypes = {
 };
 
 specialdmgtypes = {
-	"nonlethal",
+	"adamantine", 	-- WEAPON PROPERTY DAMAGE TYPES
+	"cold iron",
+	"epic",
+	"magic",
+	"silver",
+	"chaotic",		-- ALIGNMENT DAMAGE TYPES
+	"evil",
+	"good",
+	"lawful",
+	"nonlethal",	-- SPECIAL DAMAGE TYPES
 	"spell",
 	"critical",
 	"precision",
+	"ghost touch",
+};
+
+spellschools = {
+	"abjuration",
+	"conjuration",
+	"divination",
+	"enchantment",
+	"evocation",
+	"illusion",	
+	"necromancy",
+	"transmutation",
 };
 
 -- Bonus types supported in power descriptions
 bonustypes = {
 	"alchemical",
 	"armor",
+	"armorenhancement",
 	"circumstance",
 	"competence",
 	"deflection",
@@ -377,11 +414,14 @@ bonustypes = {
 	"luck",
 	"morale",
 	"natural",
+	"naturalenhancement",
+	"naturalsize",
 	"profane",
 	"racial",
 	"resistance",
 	"sacred",
 	"shield",
+	"shieldenhancement",
 	"size",
 	"trait",
 };
@@ -395,11 +435,15 @@ stackablebonustypes = {
 actypes = {
 	["dex"] = "dex",
 	["armor"] = "armor",
+	["armorenhancement"] = "armorenhancement",
 	["shield"] = "shield",
+	["shieldenhancement"] = "shieldenhancement",
 	["natural"] = "natural",
+	["naturalenhancement"] = "naturalenhancement",
 	["dodge"] = "dodge",
 	["deflection"] = "deflection",
 	["size"] = "size",
+	["naturalsize"] = "naturalsize",
 };
 acarmormatch = {
 	"padded",

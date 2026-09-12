@@ -73,14 +73,16 @@ function getRoll(rActor, sSkillName, nSkillMod, sSkillStat, sExtra)
 end
 
 function modSkill(rSource, rTarget, rRoll)
+	local bEffects = false;
+	local aAddDice = {};
+	local nAddMod = 0;
+
 	local bAssist = Input.isShiftPressed();
 	if bAssist then
 		rRoll.sDesc = rRoll.sDesc .. " [ASSIST]";
 	end
 
 	if rSource then
-		local bEffects = false;
-
 		-- Determine skill used
 		local sSkillLower = ActionCore.decodeLabelText(rRoll.sDesc, "action_skill_tag"):lower();
 
@@ -116,7 +118,8 @@ function modSkill(rSource, rTarget, rRoll)
 		end
 		
 		-- Get effects
-		local aAddDice, nAddMod, nEffectCount = EffectManager.getBonusDiceMod(rSource, "SKILL", { tFilter = aSkillFilter, });
+		local nEffectCount;
+		aAddDice, nAddMod, nEffectCount = EffectManager.getBonusDiceMod(rSource, "SKILL", { tFilter = aSkillFilter, });
 		if (nEffectCount > 0) then
 			bEffects = true;
 		end
@@ -167,16 +170,42 @@ function modSkill(rSource, rTarget, rRoll)
 			bEffects = true;
 			nAddMod = nAddMod - nNegLevelMod;
 		end
-
-		-- If effects, then add them
-		if bEffects then
-			DiceRollManager.addRollEffectDice(rSource, rRoll, aAddDice);
-			rRoll.nMod = rRoll.nMod + nAddMod;
-
-			local sMod = StringManager.convertDiceToString(aAddDice, nAddMod, true);
-			rRoll.sDesc = string.format("%s\r%s", rRoll.sDesc, EffectManager.buildEffectOutput(sMod));
-		end
 	end
+
+	if bEffects then
+		DiceRollManager.addRollEffectDiceMod(rSource, rRoll, aAddDice, nAddMod);
+		rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, EffectManager.buildEffectDiceModOutput(aAddDice, nAddMod));
+	end
+
+	applySizeEffectsToModRoll(rSource, rTarget, rRoll);
+end
+function applySizeEffectsToModRoll(rSource, _, rRoll)
+	if not rSource then
+		return;
+	end
+
+	ActionCore.decodeRollData(rRoll, "action_skill_tag");
+	local sSkillLower = rRoll.sLabel:lower();
+	if not StringManager.contains({ "fly", "hide", "stealth", }, sSkillLower) then
+		return;
+	end
+
+	local nActorSize, nBaseSize = ActorCommonManager.getSize(rSource);
+	if nActorSize == nBaseSize then
+		return;
+	end
+
+	-- Smaller grants bonus; Larger grants penalty
+	local nEffectBonus = nBaseSize - nActorSize;
+	if StringManager.contains({ "hide", "stealth", }, sSkillLower) then
+		nEffectBonus = nEffectBonus * 4;
+	else
+		nEffectBonus = nEffectBonus * 2;
+	end
+
+	rRoll.bEffects = true;
+	rRoll.nMod = rRoll.nMod + nEffectBonus;
+	table.insert(rRoll.tNotifications, string.format("[SIZE %+d]", nEffectBonus));
 end
 
 function onRoll(rSource, rTarget, rRoll)
@@ -187,11 +216,11 @@ function onRoll(rSource, rTarget, rRoll)
 		local nTotal = ActionsManager.total(rRoll);
 		local nTargetDC = tonumber(rRoll.nTarget) or 0;
 		
-		rMessage.text = rMessage.text .. " [vs. DC " .. nTargetDC .. "]";
+		rMessage.text = StringManager.appendLine(rMessage.text, string.format("[vs. DC %d]", nTargetDC));
 		if nTotal >= nTargetDC then
-			rMessage.text = rMessage.text .. " [SUCCESS]";
+			rMessage.text = StringManager.appendLine(rMessage.text, "[SUCCESS]");
 		else
-			rMessage.text = rMessage.text .. " [FAILURE]";
+			rMessage.text = StringManager.appendLine(rMessage.text, "[FAILURE]");
 		end
 	end
 	

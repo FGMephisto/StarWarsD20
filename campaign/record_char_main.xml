@@ -11,7 +11,9 @@
 		<sheetdata>
 			<!-- Race -->
 			<frame_char name="raceframe">
-				<bounds>0,0,145,50</bounds>
+				<anchored position="insidetopleft" height="50">
+					<right anchor="left" offset="30%" />
+				</anchored>
 			</frame_char>
 			<linkfield name="racelink">
 				<anchored to="raceframe" position="insidetopright" offset="10,10" width="20" height="20" />
@@ -40,7 +42,9 @@
 
 			<!-- Class / Level -->
 			<frame_char name="classframe">
-				<bounds>145,0,335,50</bounds>
+				<anchored position="insidetopright" height="50">
+					<left offset="30%" />
+				</anchored>
 			</frame_char>
 			<stringc_charclasslevel name="classlevel">
 				<anchored to="classframe" position="insidetopleft" offset="15,10">
@@ -54,7 +58,9 @@
 
 			<!-- Abilities -->
 			<frame_char name="abilityframe">
-				<bounds>0,50,290,225</bounds>
+				<anchored position="insidetopleft" offset="0,50" height="225">
+					<right offset="-190" />
+				</anchored>
 			</frame_char>
 
 			<number_charabilityscore name="strength" source="abilities.strength.score">
@@ -192,7 +198,9 @@
 
 			<!-- Speed -->
 			<frame_char name="speedframe">
-				<bounds>0,275,385,55</bounds>
+				<anchored position="insidetopleft" offset="0,275" height="55">
+					<right offset="-95" />
+				</anchored>
 			</frame_char>
 			<number_charspeed name="speedfinal" source="speed.final">
 				<anchored to="speedframe" position="insidetopleft" offset="80,15" width="45" height="20" />
@@ -203,13 +211,17 @@
 				<static textres="char_label_speed" />
 			</label>
 			<string_labeled name="speedspecial" source="speed.special">
-				<anchored to="speedframe" position="insidetopleft" offset="135,15" width="235" height="20" />
+				<anchored to="speedframe" position="insidetopleft" offset="135,15" height="20">
+					<right offset="-15" />
+				</anchored>
 				<labelres>char_label_speedspecial</labelres>
 			</string_labeled>
 
 			<!-- Senses -->
 			<frame_char name="sensesframe">
-				<bounds>0,330,385,65</bounds>
+				<anchored position="insidetopleft" offset="0,330" height="65">
+					<right offset="-95" />
+				</anchored>
 			</frame_char>
 			<genericcontrol name="anchor_charmainskill">
 				<anchored to="sensesframe" position="insidetopleft" offset="5,24" width="0" height="20" />
@@ -256,7 +268,9 @@
 
 			<!-- Health -->
 			<frame_char name="hpframe">
-				<bounds>0,395,385,100</bounds>
+				<anchored position="insidetopleft" offset="0,395" height="100">
+					<right offset="-95" />
+				</anchored>
 			</frame_char>
 			<number_dropadd name="hp" source="hp.total">
 				<anchored to="hpframe" position="insidetopleft" offset="60,27" width="40" height="28" />
@@ -315,13 +329,13 @@
 			</label_fieldtop>
 			
 			<string_labeled name="dr" source="defenses.damagereduction">
-				<anchored to="hpframe" position="insidetop" offset="-20,63" height="20" />
+				<anchored to="hpframe" position="insidetop" offset="-15,63" height="20" />
 				<labelres>char_label_dr</labelres>
 			</string_labeled>
 
 			<!-- Attacks -->
 			<frame_char name="combatframe">
-				<bounds>290,50,95,225</bounds>
+				<anchored position="insidetopright" offset="95,50" width="95" height="225" />
 			</frame_char>
 			<number_charinit name="initiative" source="initiative.total">
 				<anchored to="combatframe" position="insidetop" offset="-25,30" height="28" />
@@ -354,7 +368,7 @@
 
 			<!-- Defenses -->
 			<frame_char name="acframe">
-				<bounds>385,50,95,225</bounds>
+				<anchored position="insidetopright" offset="0,50" width="95" height="225" />
 			</frame_char>
 			<number_chartotalac name="ac" source="ac.totals.general">
 				<anchored to="acframe" position="insidetopleft" offset="31,30" width="30" height="30" />
@@ -387,7 +401,7 @@
 			</label_fieldtop>
 			
 			<frame_char name="saveframe">
-				<bounds>385,270,95,225</bounds>
+				<anchored position="insidetopright" offset="0,270" width="95" height="225" />
 			</frame_char>
 			<number_charsr name="spellresistance" source="defenses.sr.total">
 				<anchored to="saveframe" position="insidetop" offset="-25,27" height="28" />

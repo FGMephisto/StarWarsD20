@@ -167,14 +167,14 @@
 				<static textres="power_label_metamagic" />
 			</label_column>
 			<button_stringcycler name="meta">
-				<anchored width="80">
+				<anchored width="150">
 					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
 					<left offset="97" />
 				</anchored>
 				<parameters>
 					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>power_label_metamagicempower|power_label_metamagicmaximize</labelsres>
-					<values>empower|maximize</values>
+					<labelsres>power_label_metamagicempower|power_label_metamagicmaximize|power_label_metamagicempowermaximize|power_label_metamagicepicintensify</labelsres>
+					<values>empower|maximize|empowermaximize|epicintensify</values>
 				</parameters>
 			</button_stringcycler>
 
@@ -249,8 +249,8 @@
 				<anchored width="60" />
 				<parameters>
 					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl</labelsres>
-					<values>cl|halfcl|oddcl</values>
+					<labelsres>cl|evencl|oddcl|thirdcl</labelsres>
+					<values>cl|halfcl|oddcl|thirdcl</values>
 				</parameters>
 			</stringcycler_listitem_left>
 			<label_listitem_left name="dicestatmaxparen">
@@ -282,8 +282,8 @@
 				<anchored width="60" />
 				<parameters>
 					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl|str|dex|con|int|wis|cha</labelsres>
-					<values>cl|halfcl|oddcl|strength|dexterity|constitution|intelligence|wisdom|charisma</values>
+					<labelsres>cl|evencl|oddcl|thirdcl|str|dex|con|int|wis|cha</labelsres>
+					<values>cl|halfcl|oddcl|thirdcl|strength|dexterity|constitution|intelligence|wisdom|charisma</values>
 				</parameters>
 			</stringcycler_listitem_left>
 			<label_listitem_left name="statmaxparen">
@@ -376,14 +376,14 @@
 				<static textres="power_label_metamagic" />
 			</label_column>
 			<button_stringcycler name="meta">
-				<anchored width="80">
+				<anchored width="150">
 					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
 					<left offset="97" />
 				</anchored>
 				<parameters>
 					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>power_label_metamagicempower|power_label_metamagicmaximize</labelsres>
-					<values>empower|maximize</values>
+					<labelsres>power_label_metamagicempower|power_label_metamagicmaximize|power_label_metamagicempowermaximize|power_label_metamagicepicintensify</labelsres>
+					<values>empower|maximize|empowermaximize|epicintensify</values>
 				</parameters>
 			</button_stringcycler>
 
@@ -442,8 +442,8 @@
 				<anchored width="60" />
 				<parameters>
 					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl</labelsres>
-					<values>cl|halfcl|oddcl</values>
+					<labelsres>cl|evencl|oddcl|thirdcl</labelsres>
+					<values>cl|halfcl|oddcl|thirdcl</values>
 				</parameters>
 			</stringcycler_listitem_left>
 			<label_listitem_left name="dicestatmaxparen">
@@ -475,8 +475,8 @@
 				<anchored width="60" />
 				<parameters>
 					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl|str|dex|con|int|wis|cha</labelsres>
-					<values>cl|halfcl|oddcl|strength|dexterity|constitution|intelligence|wisdom|charisma</values>
+					<labelsres>cl|evencl|oddcl|thirdcl|str|dex|con|int|wis|cha</labelsres>
+					<values>cl|halfcl|oddcl|thirdcl|strength|dexterity|constitution|intelligence|wisdom|charisma</values>
 				</parameters>
 			</stringcycler_listitem_left>
 			<label_listitem_left name="statmaxparen">
@@ -547,8 +547,8 @@
 				<anchored to="label_durdicestatx" position="righthigh" offset="5,0" width="60" />
 				<parameters>
 					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl</labelsres>
-					<values>cl|halfcl|oddcl</values>
+					<labelsres>cl|evencl|oddcl|thirdcl</labelsres>
+					<values>cl|halfcl|oddcl|thirdcl</values>
 				</parameters>
 			</button_stringcycler>
 			<label name="durdicestatmaxparen">
@@ -590,8 +590,8 @@
 				<anchored to="label_durstatmultx" position="righthigh" offset="5,0" width="60" />
 				<parameters>
 					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl|str|dex|con|int|wis|cha</labelsres>
-					<values>cl|halfcl|oddcl|strength|dexterity|constitution|intelligence|wisdom|charisma</values>
+					<labelsres>cl|evencl|oddcl|thirdcl|str|dex|con|int|wis|cha</labelsres>
+					<values>cl|halfcl|oddcl|thirdcl|strength|dexterity|constitution|intelligence|wisdom|charisma</values>
 				</parameters>
 			</cycler_ability>
 			<label name="durstatmaxparen">
@@ -641,6 +641,7 @@
 				</parameters>
 			</cycler_ability>
 			<button_editor_poweraction_effect_expiration name="expiration" />
+			<button_editor_poweraction_effect_initsource name="initsource" />
 
 			<header_column name="header_other">
 				<static textres="power_header_effect_other" />
@@ -656,11 +657,6 @@
 				<static textres="power_label_effect_apply" />
 			</label_column>
 			<stringcycler_column_poweraction_effect_apply name="apply" />
-			
-			<label_column name="initsource_label">
-				<static textres="power_label_effect_initsource" />
-			</label_column>
-			<stringcycler_column_poweraction_effect_initsource name="initsource" />
 		</sheetdata>
 	</windowclass>
 </root>

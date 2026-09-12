@@ -19,7 +19,9 @@ RACIAL_TRAIT_LOWLIGHTVISION = "^low%-?light vision$";
 RACIAL_TRAIT_SUPERIORDARKVISION = "^superior darkvision$";
 RACIAL_TRAIT_WEAPONFAMILIARITY = "^weapon familiarity$";
 
+TRAIT_ARMOR_EXPERT = "armor expert";
 TRAIT_MULTITALENTED = "multitalented";
+TRAIT_SLOW_AND_STEADY = "slow and steady";
 
 CLASS_NAME_ADEPT = "Adept";
 CLASS_NAME_ALCHEMIST = "Alchemist";
@@ -64,6 +66,8 @@ function onInit()
 		CharInventoryManager.enableInventoryUpdates();
 		CharInventoryManager.enableSimpleLocationHandling();
 
+		DB.addHandler("charsheet.*.level", "onUpdate", CharManager.onCharLevelChanged);
+
 		CharInventoryManager.registerFieldUpdateCallback("carried", CharManager.onCharInventoryArmorCalc);
 
 		CharInventoryManager.registerFieldUpdateCallback("isidentified", CharManager.onCharInventoryArmorCalcIfCarried);
@@ -77,6 +81,9 @@ function onInit()
 	end
 end
 
+function onCharLevelChanged(nodeField)
+	CharManager.calcItemArmorClass(DB.getChild(nodeField, ".."));
+end
 function onCharInventoryArmorCalcIfCarried(nodeItem, sField)
 	if DB.getValue(nodeItem, "carried", 0) == 2 then
 		CharManager.onCharInventoryArmorCalc(nodeItem, sField);
@@ -217,24 +224,40 @@ end
 function calcItemArmorClass(nodeChar)
 	local nMainArmorTotal = 0;
 	local nMainShieldTotal = 0;
-	local nMainMaxStatBonus = 0;
+
+	local nMainSpeed30 = nil;
+	local nMainSpeed20 = nil;
+	local nMainMaxStatBonus = nil;
 	local nMainCheckPenalty = 0;
 	local nMainSpellFailure = 0;
-	local nMainSpeed30 = 0;
-	local nMainSpeed20 = 0;
+
+	local tData = CharManager.getCharArmorAdjData(nodeChar);
 
 	for _,vNode in ipairs(DB.getChildList(nodeChar, "inventorylist")) do
 		if DB.getValue(vNode, "carried", 0) == 2 then
 			if ItemManager.isArmor(vNode) then
 				local bID = LibraryData.getIDState("item", vNode, true);
 				
+				local bIsShield = false;
 				if ItemManager.isShield(vNode) then
+					bIsShield = true;
+					tData.bShield = true;
 					if bID then
 						nMainShieldTotal = nMainShieldTotal + DB.getValue(vNode, "ac", 0) + DB.getValue(vNode, "bonus", 0);
 					else
 						nMainShieldTotal = nMainShieldTotal + DB.getValue(vNode, "ac", 0);
 					end
 				else
+					tData.bArmor = true;
+					local sSubtypeLower = StringManager.trim(DB.getValue(vNode, "subtype", "")):lower();
+					if sSubtypeLower:match("^heavy") then
+						tData.bHeavyArmor = true;
+					elseif sSubtypeLower:match("^medium") then
+						tData.bMediumArmor = true;
+					else
+						tData.bLightArmor = true;
+					end
+
 					if bID then
 						nMainArmorTotal = nMainArmorTotal + DB.getValue(vNode, "ac", 0) + DB.getValue(vNode, "bonus", 0);
 					else
@@ -243,32 +266,34 @@ function calcItemArmorClass(nodeChar)
 					
 					local nItemSpeed30 = DB.getValue(vNode, "speed30", 0);
 					if (nItemSpeed30 > 0) and (nItemSpeed30 < 30) then
-						if nMainSpeed30 > 0 then
-							nMainSpeed30 = math.min(nMainSpeed30, nItemSpeed30);
-						else
-							nMainSpeed30 = nItemSpeed30;
-						end
+						nMainSpeed30 = math.min(nMainSpeed30 or 30, nItemSpeed30);
 					end
 					local nItemSpeed20 = DB.getValue(vNode, "speed20", 0);
-					if (nItemSpeed20 > 0) and (nItemSpeed20 < 30) then
-						if nMainSpeed20 > 0 then
-							nMainSpeed20 = math.min(nMainSpeed20, nItemSpeed20);
-						else
-							nMainSpeed20 = nItemSpeed20;
-						end
+					if (nItemSpeed20 > 0) and (nItemSpeed20 < 20) then
+						nMainSpeed20 = math.min(nMainSpeed20 or 20, nItemSpeed20);
 					end
 				end
 					
-				local nMaxStatBonus = DB.getValue(vNode, "maxstatbonus", 0);
-				if nMaxStatBonus > 0 then
-					if nMainMaxStatBonus > 0 then nMainMaxStatBonus = math.min(nMainMaxStatBonus, nMaxStatBonus); 
-					else nMainMaxStatBonus = nMaxStatBonus;
+				local nCheckPenalty = DB.getValue(vNode, "checkpenalty", 0);
+				if nCheckPenalty < 0 then
+					if not bIsShield then
+						nCheckPenalty = nCheckPenalty + tData.nArmorCheckAdj;
+					end
+					if nCheckPenalty < 0 then
+						nMainCheckPenalty = nMainCheckPenalty + nCheckPenalty;
 					end
 				end
 				
-				local nCheckPenalty = DB.getValue(vNode, "checkpenalty", 0);
-				if nCheckPenalty < 0 then
-					nMainCheckPenalty = nMainCheckPenalty + nCheckPenalty;
+				local nMaxStatBonus = DB.getValue(vNode, "maxstatbonus", 0);
+				if nMaxStatBonus > 0 or (not bIsShield and (nMaxStatBonus == 0) and (nCheckPenalty ~= 0)) then
+					if not bIsShield then
+						nMaxStatBonus = nMaxStatBonus + tData.nArmorMaxStatAdj;
+					end
+					if nMainMaxStatBonus then
+						nMainMaxStatBonus = math.min(nMainMaxStatBonus, nMaxStatBonus);
+					else
+						nMainMaxStatBonus = nMaxStatBonus;
+					end
 				end
 				
 				local nSpellFailure = DB.getValue(vNode, "spellfailure", 0);
@@ -281,7 +306,7 @@ function calcItemArmorClass(nodeChar)
 	
 	DB.setValue(nodeChar, "ac.sources.armor", "number", nMainArmorTotal);
 	DB.setValue(nodeChar, "ac.sources.shield", "number", nMainShieldTotal);
-	if nMainMaxStatBonus > 0 then
+	if nMainMaxStatBonus then
 		DB.setValue(nodeChar, "encumbrance.armormaxstatbonusactive", "number", 1);
 		DB.setValue(nodeChar, "encumbrance.armormaxstatbonus", "number", nMainMaxStatBonus);
 	else
@@ -290,24 +315,97 @@ function calcItemArmorClass(nodeChar)
 	end
 	DB.setValue(nodeChar, "encumbrance.armorcheckpenalty", "number", nMainCheckPenalty);
 	DB.setValue(nodeChar, "encumbrance.spellfailure", "number", nMainSpellFailure);
-	
-	local bApplySpeedPenalty = true;
-	if hasTrait(nodeChar, "Slow and Steady") then
-		bApplySpeedPenalty = false;
-	end
 
 	local nSpeedBase = DB.getValue(nodeChar, "speed.base", 0);
 	local nSpeedArmor = 0;
-	if bApplySpeedPenalty then
-		if (nSpeedBase >= 30) and (nMainSpeed30 > 0) then
-			nSpeedArmor = nMainSpeed30 - 30;
-		elseif (nSpeedBase < 30) and (nMainSpeed20 > 0) then
-			nSpeedArmor = nMainSpeed20 - 20;
+	local bSkipSpeedPenalty = tData.bSkipSpeedPenalty or (not tData.bHeavyArmor and tData.bSkipSpeedPenaltyM);
+	if not bSkipSpeedPenalty then
+		if nSpeedBase >= 30 then
+			nSpeedArmor = (nMainSpeed30 or 30) - 30;
+		else
+			nSpeedArmor = (nMainSpeed20 or 20) - 20;
 		end
 	end
 	DB.setValue(nodeChar, "speed.armor", "number", nSpeedArmor);
-	local nSpeedTotal = nSpeedBase + nSpeedArmor + DB.getValue(nodeChar, "speed.misc", 0) + DB.getValue(nodeChar, "speed.temporary", 0);
+	local nFastMovement = 0;
+	if not tData.bHeavyArmor and (GameManager.getRecordFieldValue(nodeChar, "enclevel", 0) < 2) then
+		nFastMovement = nFastMovement + tData.nFastMoveNoHeavy;
+	end
+	if not tData.bArmor and (GameManager.getRecordFieldValue(nodeChar, "enclevel", 0) == 0) then
+		nFastMovement = nFastMovement + tData.nFastMoveNoArmor;
+	end
+	DB.setValue(nodeChar, "speed.fastmovement", "number", nFastMovement);
+	local nSpeedTotal = nSpeedBase + nSpeedArmor + nFastMovement + DB.getValue(nodeChar, "speed.misc", 0) + DB.getValue(nodeChar, "speed.temporary", 0);
 	DB.setValue(nodeChar, "speed.final", "number", nSpeedTotal);
+end
+function getCharArmorAdjData(nodeChar)
+	local tData = {
+		nArmorCheckAdj = 0,
+		nArmorMaxStatAdj = 0,
+		bSkipSpeedPenalty = false,
+		bSkipSpeedPenaltyM = false,
+		nFastMoveNoArmor = 0,
+		nFastMoveNoHeavy = 0,
+	};
+
+	local nFighterLevel = 0;
+	local nodeClassFighter = CharManager.getClassNode(nodeChar, "Fighter");
+	if nodeClassFighter then
+		nFighterLevel = DB.getValue(nodeClassFighter, "level", 0);
+	end
+
+	local bArmorTraining = ActorManager35E.hasSpecialAbility(nodeChar, "Armor Training", true);
+	if bArmorTraining then
+		if ActorManager35E.hasSpecialAbility(nodeChar, "Advanced Armor Training", true) then
+			tData.nArmorCheckAdj = tData.nArmorCheckAdj + 1;
+			tData.nArmorMaxStatAdj = tData.nArmorMaxStatAdj + 1;
+		elseif nFighterLevel >= 15 then
+			tData.nArmorCheckAdj = tData.nArmorCheckAdj + 4;
+			tData.nArmorMaxStatAdj = tData.nArmorMaxStatAdj + 4;
+		elseif nFighterLevel >= 11 then
+			tData.nArmorCheckAdj = tData.nArmorCheckAdj + 3;
+			tData.nArmorMaxStatAdj = tData.nArmorMaxStatAdj + 3;
+		elseif nFighterLevel >= 7 then
+			tData.nArmorCheckAdj = tData.nArmorCheckAdj + 2;
+			tData.nArmorMaxStatAdj = tData.nArmorMaxStatAdj + 2;
+		else
+			tData.nArmorCheckAdj = tData.nArmorCheckAdj + 1;
+			tData.nArmorMaxStatAdj = tData.nArmorMaxStatAdj + 1;
+		end
+	end
+	if ActorManager35E.hasTrait(nodeChar, CharManager.TRAIT_ARMOR_EXPERT) then
+		tData.nArmorCheckAdj = tData.nArmorCheckAdj + 1;
+	end
+
+	if ActorManager35E.hasTrait(nodeChar, CharManager.TRAIT_SLOW_AND_STEADY) then
+		tData.bSkipSpeedPenalty = true;
+	elseif bArmorTraining then
+		if (nFighterLevel >= 7) then
+			tData.bSkipSpeedPenalty = true;
+		elseif (nFighterLevel >= 3) and not bHeavyArmor then
+			tData.bSkipSpeedPenaltyM = true;
+		end
+	end
+
+	if ActorManager35E.hasSpecialAbility(nodeChar, "Fast Movement") then
+		local nodeClassBarbarian = CharManager.getClassNode(nodeChar, "Barbarian");
+		local nBarbarianLevel = nodeClassBarbarian and DB.getValue(nodeClassBarbarian, "level", 0) or 0;
+		if nBarbarianLevel > 0 then
+			tData.nFastMoveNoHeavy = tData.nFastMoveNoHeavy + 10;
+		end
+		local nodeClassBloodrager = CharManager.getClassNode(nodeChar, "Bloodrager");
+		local nBloodragerLevel = nodeClassBloodrager and DB.getValue(nodeClassBloodrager, "level", 0) or 0;
+		if nBloodragerLevel > 0 then
+			tData.nFastMoveNoHeavy = tData.nFastMoveNoHeavy + 10;
+		end
+		local nodeClassMonk = CharManager.getClassNode(nodeChar, "Monk");
+		local nMonkLevel = nodeClassMonk and DB.getValue(nodeClassMonk, "level", 0) or 0;
+		if nMonkLevel >= 3 then
+			tData.nFastMoveNoArmor = tData.nFastMoveNoArmor + (math.floor(nMonkLevel / 3) * 10);
+		end
+	end
+
+	return tData;
 end
 
 --
@@ -381,6 +479,9 @@ function addToWeaponDB(nodeItem)
 			bRanged = true;
 		end
 	elseif string.find(sType, "ranged") then
+		bMelee = false;
+		bRanged = true;
+	elseif string.find(sType, "firearm") then
 		bMelee = false;
 		bRanged = true;
 	end
@@ -636,7 +737,9 @@ function addToWeaponDB(nodeItem)
 
 					DB.setValue(nodeDmg, "critmult", "number", aCritMult[1]);
 					
-					if sName == "Sling" then
+					if sType:match("firearm") then
+						DB.setValue(nodeDmg, "stat", "string", "");
+					elseif sName == "Sling" then
 						DB.setValue(nodeDmg, "stat", "string", "strength");
 					elseif sName == "Shortbow" or sName == "Longbow" or sName == "Shortbow, composite" or sName == "Longbow, composite" then
 						DB.setValue(nodeDmg, "stat", "string", "");
@@ -770,9 +873,15 @@ function getWeaponAttackRollStructures(nodeWeapon, nAttack)
 	end
 	
 	local sProp = DB.getValue(nodeWeapon, "properties", ""):lower();
-	if sProp:match("touch") then
+	local tProps = StringManager.splitByPattern(sProp, ",", true);
+	if StringManager.contains(tProps, "touch") then
 		rAttack.touch = true;
 	end
+	if StringManager.contains(tProps, "ghost touch") then
+		rAttack.ghosttouch = true;
+	end
+
+	rAttack.tActionTags = StringManager.split(DB.getValue(nodeWeapon, "properties", ""):lower(), ",;", true);
 	
 	return rActor, rAttack;
 end
@@ -828,6 +937,16 @@ function getWeaponDamageRollStructures(nodeWeapon)
 				});
 	end
 	
+	local sProp = DB.getValue(nodeWeapon, "properties", ""):lower();
+	local tProps = StringManager.splitByPattern(sProp, ",", true);
+	if StringManager.contains(tProps, "ghost touch") then
+		for _,tClause in ipairs(rDamage.clauses) do
+			tClause.dmgtype = StringManager.appendUnique(tClause.dmgtype, "ghost touch");
+		end
+	end
+
+	rDamage.tActionTags = StringManager.split(DB.getValue(nodeWeapon, "properties", ""):lower(), ",;", true);
+
 	return rActor, rDamage;
 end
 
@@ -915,11 +1034,7 @@ function getSkillValue(rActor, sSkill, sSubSkill)
 			
 			local nACMult = DB.getValue(nodeSkill, "armorcheckmultiplier", 0);
 			if nACMult ~= 0 then
-				local bApplyArmorMod = DB.getValue(nodeSkill, "...encumbrance.armormaxstatbonusactive", 0);
-				if (bApplyArmorMod ~= 0) then
-					local nACPenalty = DB.getValue(nodeSkill, "...encumbrance.armorcheckpenalty", 0);
-					nValue = nValue + (nACMult * nACPenalty);
-				end
+				nValue = nValue + (nACMult * EncumbranceManager35E.getSkillCheckPenalty(nodeChar));
 			end
 
 			if bTrainedOnly then
@@ -934,11 +1049,7 @@ function getSkillValue(rActor, sSkill, sSubSkill)
 				end
 				
 				if rSkill.armorcheckmultiplier then
-					local bApplyArmorMod = DB.getValue(nodeChar, "encumbrance.armormaxstatbonusactive", 0);
-					if (bApplyArmorMod ~= 0) then
-						local nArmorCheckPenalty = DB.getValue(nodeChar, "encumbrance.armorcheckpenalty", 0);
-						nValue = nValue + (nArmorCheckPenalty * (tonumber(rSkill.armorcheckmultiplier) or 0));
-					end
+					nValue = nValue + ((tonumber(rSkill.armorcheckmultiplier) or 0) * EncumbranceManager35E.getSkillCheckPenalty(nodeChar));
 				end
 			end
 			bUntrained = bTrainedOnly;
@@ -1014,31 +1125,14 @@ function updateSkillPoints(nodeChar)
 	DB.setValue(nodeChar, "skillpoints.spent", "number", nSpentTotal);
 end
 
-function hasFeat(nodeChar, sFeat)
-	if not sFeat then
-		return false;
-	end
-	local sLowerFeat = StringManager.trim(sFeat:lower());
-	for _,vNode in ipairs(DB.getChildList(nodeChar, "featlist")) do
-		if StringManager.trim(DB.getValue(vNode, "name", ""):lower()) == sLowerFeat then
-			return true;
-		end
-	end
-	return false;
+function hasFeat(nodeChar, s, bStartsWith)
+	return ActorManager35E.hasPCFeat(nodeChar, s, bStartsWith);
 end
-
-function hasTrait(nodeChar, sTrait)
-	if not sTrait then
-		return false;
-	end
-	local sLowerTrait = StringManager.trim(string.lower(sTrait));
-	
-	for _,vNode in ipairs(DB.getChildList(nodeChar, "traitlist")) do
-		if StringManager.trim(DB.getValue(vNode, "name", ""):lower()) == sLowerTrait then
-			return true;
-		end
-	end
-	return false;
+function hasTrait(nodeChar, s, bStartsWith)
+	return ActorManager35E.hasPCTrait(nodeChar, s, bStartsWith);
+end
+function hasSpecialAbility(nodeChar, s, bStartsWith)
+	return ActorManager35E.hasPCSpecialAbility(nodeChar, s, bStartsWith);
 end
 
 --
@@ -1604,6 +1698,11 @@ function addClass(nodeChar, sClass, sRecord)
 	end
 
 	addClassSpellLevel(nodeChar, sClassName);
+	if nLevel == 1 then
+		if StringManager.contains({ CLASS_NAME_WIZARD, CLASS_NAME_SORCERER, CLASS_NAME_WITCH, CLASS_NAME_BARD, CLASS_NAME_MAGUS, CLASS_NAME_SUMMONER, }, sClassName) then
+			DB.setValue(nodeChar, "encumbrance.spellfailureactive", "number", 1);
+		end
+	end
 
 	if DataCommon.isPFRPG() then
 		if nTotalLevel == 1 then
@@ -1703,7 +1802,7 @@ function applyClassStats(nodeChar, nodeClass, nodeSource, nLevel, nTotalLevel)
 		local nHDMult = tonumber(sHDMult) or 1;
 		local nHDSides = tonumber(sHDSides) or 8;
 
-		local nHP = DB.getValue(nodeChar, "hp.total", 0);
+		local nHP = GameManager.getRecordFieldValue(nodeChar, "hptotal", 0);
 		local nConBonus = DB.getValue(nodeChar, "abilities.constitution.bonus", 0);
 		if nTotalLevel == 1 then
 			local nAddHP = (nHDMult * nHDSides);
@@ -1720,7 +1819,7 @@ function applyClassStats(nodeChar, nodeClass, nodeSource, nLevel, nTotalLevel)
 			local sMsg = string.format(sFormat, DB.getValue(nodeClass, "name", ""), DB.getValue(nodeChar, "name", "")) .. " (" .. nAddHP .. "+" .. nConBonus .. ")";
 			ChatManager.SystemMessage(sMsg);
 		end
-		DB.setValue(nodeChar, "hp.total", "number", nHP);
+		GameManager.setRecordFieldValue(nodeChar, "hptotal", "number", nHP);
 	end
 	
 	-- BAB
@@ -1988,7 +2087,6 @@ function addClassFeature(nodeChar, sClass, sRecord, nodeTargetList)
 	end
 	-- TO DO - Possible future additions
 	--			To do these, we would also need to strip (ex), (su), (sp) and (ex or sp)
-	--		Fast Movement (Barbarian) - Speed - Interacts with armor equip
 	--		Rage (Barbarian) - Ability
 	--		Rage Power (Barbarian) - Choice
 	--			Power Selection - Ability

@@ -17,133 +17,120 @@ function notifyApplyInit(rSource, nTotal)
 		return;
 	end
 	
-	local msgOOB = {};
-	msgOOB.type = OOB_MSGTYPE_APPLYINIT;
-	
-	msgOOB.nTotal = nTotal;
-
-	msgOOB.sSourceNode = ActorManager.getCreatureNodeName(rSource);
-
+	local msgOOB = {
+		type = OOB_MSGTYPE_APPLYINIT,
+		nTotal = nTotal,
+		sSourceNode = ActorManager.getCreatureNodeName(rSource),
+	};
 	Comm.deliverOOBMessage(msgOOB, "");
 end
 function handleApplyInit(msgOOB)
 	local rSource = ActorManager.resolveActor(msgOOB.sSourceNode);
-	local nTotal = tonumber(msgOOB.nTotal) or 0;
+	if not rSource then
+		return;
+	end
 
+	local nTotal = tonumber(msgOOB.nTotal) or 0;
 	DB.setValue(ActorManager.getCTNode(rSource), "initresult", "number", nTotal);
 end
 
-function getRoll(rActor, bSecretRoll)
-	local rRoll = {};
-	rRoll.sType = "init";
-	rRoll.aDice = DiceRollManager.getActorDice({ "d20" }, rActor);
-	rRoll.nMod = 0;
-	
-	rRoll.sDesc = string.format("[%s]", Interface.getString("action_init_tag"));
-	
-	rRoll.bSecret = bSecretRoll;
-
-	-- Determine the modifier and ability to use for this roll
-	local sAbility = nil;
-	local nodeActor = ActorManager.getCreatureNode(rActor);
-	if nodeActor then
-		if ActorManager.isPC(rActor) then
-			rRoll.nMod = DB.getValue(nodeActor, "initiative.total", 0);
-			sAbility = DB.getValue(nodeActor, "initiative.ability", "");
-		else
-			rRoll.nMod = DB.getValue(nodeActor, "init", 0);
-		end
-	end
-	if sAbility and sAbility ~= "" and sAbility ~= "dexterity" then
-		local sAbilityEffect = DataCommon.ability_ltos[sAbility];
-		if sAbilityEffect then
-			rRoll.sDesc = rRoll.sDesc .. " [MOD:" .. sAbilityEffect .. "]";
-		end
-	end
-
-	return rRoll;
-end
 function performRoll(draginfo, rActor, bSecretRoll)
 	local rRoll = getRoll(rActor, bSecretRoll);
 	ActionsManager.performAction(draginfo, rActor, rRoll);
 end
-
-function modRoll(rSource, rTarget, rRoll)
-	if rSource then
-		local sActionStat = nil;
-		local sModStat = rRoll.sDesc:match("%[MOD:(%w+)%]");
-		if sModStat then
-			sActionStat = DataCommon.ability_stol[sModStat];
-		end
-		if not sActionStat then
-			sActionStat = "dexterity";
-		end
-		
-		local bEffects, aEffectDice, nEffectMod = getEffectAdjustments(rSource, sActionStat);
-		if bEffects then
-			DiceRollManager.addRollEffectDice(rSource, rRoll, aEffectDice);
-			rRoll.nMod = rRoll.nMod + nEffectMod;
-
-			local sMod = StringManager.convertDiceToString(aEffectDice, nEffectMod, true);
-			rRoll.sDesc = string.format("%s\r%s", rRoll.sDesc, EffectManager.buildEffectOutput(sMod));
+function getRoll(rActor, bSecretRoll)
+	local rRoll = {
+		sType = "init",
+		sDesc = string.format("[%s]", Interface.getString("action_init_tag")),
+		aDice = DiceRollManager.getActorDice({ "d20" }, rActor),
+		nMod = 0,
+		bSecret = bSecretRoll,
+	};
+	
+	ActionInit.resolveRollAbility(rActor, rRoll);
+	if not StringManager.contains({ "", "dexterity" }, (rRoll.sAbility or "")) then
+		local sAbilityEffect = DataCommon.ability_ltos[sAbility];
+		if sAbilityEffect then
+			rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, string.format("[MOD:%s]", sAbilityEffect));
 		end
 	end
+	
+	return rRoll;
 end
 
--- Returns effect existence, effect dice, effect mod
-function getEffectAdjustments(rActor, sActionStat)
-	if rActor == nil then
-		return false, {}, 0;
-	end
-	
-	-- Determine initiative ability used
-	if not sActionStat then
-		if ActorManager.isPC(rActor) then
-			local nodeActor = ActorManager.getCreatureNode(rActor);
-			if nodeActor then
-				sActionStat = DB.getValue(nodeActor, "initiative.ability", "");
-			end
-		end
-		if (sActionStat or "") == "" then
-			sActionStat = "dexterity";
-		end
-	end
-	
-	-- Set up
-	local bEffects = false;
-	local aEffectDice = {};
-	local nEffectMod = 0;
-	
-	-- Determine general effect modifiers
-	local aInitDice, nInitMod, nInitCount = EffectManager.getBonusDiceMod(rActor, "INIT");
-	if nInitCount > 0 then
-		bEffects = true;
-		for _,vDie in ipairs(aInitDice) do
-			table.insert(aEffectDice, vDie);
-		end
-		nEffectMod = nEffectMod + nInitMod;
-	end
-	
-	-- Get ability effect modifiers
-	local nAbilityMod, nAbilityEffects = ActorManagerD20.getAbilityEffectsBonus(rActor, sActionStat);
-	if nAbilityEffects > 0 then
-		bEffects = true;
-		nEffectMod = nEffectMod + nAbilityMod;
-	end
-	
-	-- Check effects
-	if EffectManager.hasCondition(rActor, "Deafened") then
-		bEffects = true;
-		nEffectMod = nEffectMod - 4;
-	end
+function modRoll(rSource, rTarget, rRoll)
+	ActionInit.applyEffectsToRollMod(rSource, rTarget, rRoll);
+end
+function applyEffectsToRollMod(rSource, rTarget, rRoll)
+	ActionInit.resolveRollAbility(rSource, rRoll);
+	ActionInit.applyAbilityEffectsToRollMod(rSource, rTarget, rRoll);
+	ActionInit.applyStandardEffectsToRollMod(rSource, rTarget, rRoll);
+end
+function applyAbilityEffectsToRollMod(rSource, _, rRoll)
+	local nAbilityMod, nAbilityCount = ActorManagerD20.getAbilityEffectsBonus(rSource, rRoll.sAbility);
+	ActionCore.applyModRollEffect(rRoll, nil, nAbilityMod, nAbilityCount);
+end
+function applyStandardEffectsToRollMod(rSource, _, rRoll)
+	local tInitDice, nInitMod, nInitCount = EffectManager.getBonusDiceMod(rSource, "INIT");
+	ActionCore.applyModRollEffect(rRoll, tInitDice, nInitMod, nInitCount);
 
-	return bEffects, aEffectDice, nEffectMod;
+	if EffectManager.hasCondition(rSource, "Deafened") then
+		ActionCore.applyModRollEffect(rRoll, nil, -4, 1);
+	end
 end
 
 function onResolve(rSource, rTarget, rRoll)
 	local rMessage = ActionsManager.createActionMessage(rSource, rRoll);
 	Comm.deliverChatMessage(rMessage);
 	
-	local nTotal = ActionsManager.total(rRoll);
-	notifyApplyInit(rSource, nTotal);
+	ActionInit.notifyApplyInit(rSource, ActionsManager.total(rRoll));
+	ActionInit.applyHRFFOption(rSource);
+end
+function applyHRFFOption(rActor, nInit)
+	if not rActor then
+		return;
+	end
+
+	if not OptionsManager.isOption("HRFF", "on") then
+		return;
+	end
+	local nCurrent = DB.getValue("combattracker.round", 0);
+	if nCurrent > 1 then
+		return;
+	end
+	if ActorManager35E.hasRollSpecialAbility(rActor, "Uncanny Dodge") or ActorManager35E.hasRollSpecialAbility(rActor, "Improved Uncanny Dodge") then
+		return;
+	end
+
+	local nInit = DB.getValue(ActorManager.getCTNode(rActor), "initresult", 0);
+	EffectManager.addEffectByTable(rActor, { sName = "Flat-Footed", nDuration = 1, sExpire = "start", nInit = nInit, bSkipAnnounce = true, });
+end
+
+--
+--	OTHER
+--
+
+function resolveRollAbility(rActor, rRoll)
+	if not rActor or not rRoll or ((rRoll.sAbility or "") ~= "") then
+		return;
+	end
+
+	if ActorManager.isPC(rActor) then
+		rRoll.sAbility = DB.getValue(ActorManager.getCreatureNode(rActor), "initiative.ability", "");
+	else
+		rRoll.sAbility = "dexterity";
+	end
+end
+
+-- Used in combat manager script to get initiative adjustments for automatic initiative
+-- Returns effect existence, effect dice, effect mod, effect advantage, effect disadvantage
+function getEffectAdjustments(rActor)
+	local rRoll = {
+		sType = "init",
+		bEffects = false,
+		tEffectDice = {},
+		nEffectMod = 0,
+	};
+	ActionInit.applyEffectsToRollMod(rActor, nil, rRoll);
+	return rRoll;
 end

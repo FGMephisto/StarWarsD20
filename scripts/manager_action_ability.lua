@@ -47,7 +47,7 @@ function modRoll(rSource, rTarget, rRoll)
 		end
 
 		-- ACTION MODIFIERS
-		ActionCore.applyModRollEffectBonusDiceMod(rSource, rRoll, "ABIL", { tFilter = { sAbility }, });
+		ActionCore.applyModRollEffectBonusDiceMod(rSource, rRoll, "ABIL", { tFilter = { sAbility }, tActionTags = rRoll.tActionTags, });
 
 		-- CONDITION MODIFIERS
 		if EffectManager.hasCondition(rSource, "Frightened") or 
@@ -78,11 +78,11 @@ function onRoll(rSource, rTarget, rRoll)
 		local nTotal = ActionsManager.total(rRoll);
 		local nTargetDC = tonumber(rRoll.nTarget) or 0;
 		
-		rMessage.text = rMessage.text .. " [vs. DC " .. nTargetDC .. "]";
+		rMessage.text = StringManager.appendLine(rMessage.text, string.format("[vs. DC %d]", nTargetDC));
 		if nTotal >= nTargetDC then
-			rMessage.text = rMessage.text .. " [SUCCESS]";
+			rMessage.text = StringManager.appendLine(rMessage.text, "[SUCCESS]");
 		else
-			rMessage.text = rMessage.text .. " [FAILURE]";
+			rMessage.text = StringManager.appendLine(rMessage.text, "[FAILURE]");
 		end
 	end
 	

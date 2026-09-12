@@ -46,6 +46,7 @@
 	<string name="casterlevelcheck">Caster Level Check</string>
 	<string name="evencl">Even CLs</string>
 	<string name="oddcl">Odd CLs</string>
+	<string name="thirdcl">CL/3</string>
 	<string name="dc">DC</string>
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
@@ -58,12 +59,20 @@
 	<string name="menu_deleteweapon">Delete Weapon</string>
 	
 	<string name="message_rollbab">Base Attack</string>
+
+	<string name="attack_message_aoo_used">All Attacks of Opportunity used.</string>
+	<string name="attack_message_aoo_exceeded">Attack of Opportunity used when none left.</string>
 	
 	<!-- Options -->
 	<string name="option_label_ANPC">Chat: Anonymize NPC attacks</string>
 		
 	<string name="option_label_HRCC">Attack: Critical confirm</string>
+	<string name="option_label_HRFF">Combat: Flatfooted on combat start</string>
 	<string name="option_label_HRNH">Combat: NPC hit points</string>
+
+	<string name="option_label_AUTO_SPELL_FAILURE">Spell Failure Automation</string>
+	<string name="option_val_ASF_auto">Auto Roll</string>
+	<string name="option_val_ASF_prompt">Prompt Roll</string>
 
 	<!-- Languages -->
 	<string name="language_value_abyssal">Abyssal</string>
@@ -94,6 +103,8 @@
 	
 	<!-- Combat Tracker -->
 	<string name="ct_label_immediate">Imm?</string>
+	<string name="ct_label_aoo">AoO</string>
+	<string name="ct_tooltip_aoo">Attacks of Opportunity</string>
 	<string name="ct_label_speed">Spd</string>
 	<string name="ct_label_attack">Atk</string>
 	<string name="ct_label_specialqualities">Special</string>
@@ -152,6 +163,7 @@
 	<string name="modifier_label_ATT_TCH">Touch</string>
 	<string name="modifier_label_ATT_FF">Flat-Footed</string>
 	<string name="modifier_label_ATT_OPP">Opportunity</string>
+	<string name="modifier_label_ATT_CA">Combat Adv.</string>
 	<string name="modifier_label_DEF_PCOVER">Part. Cover</string>
 	<string name="modifier_label_DEF_COVER">Cover</string>
 	<string name="modifier_label_DEF_SCOVER">Sup. Cover</string>
@@ -348,6 +360,8 @@
 	<string name="char_label_invarmormaxability">Max Stat</string>
 	<string name="char_label_invarmorskillcheckpenalty">Skill Chk</string>
 	<string name="char_label_invarmorspellfailure">Spell Fail</string>
+	<string name="char_label_invenc">Enc.</string>
+	<string name="char_tooltip_invenc">Encumbrance</string>
 	<string name="char_label_totalweight">Total encumbrance</string>
 	<string name="char_label_invenclt">Light</string>
 	<string name="char_label_invencmed">Medium</string>
@@ -359,6 +373,8 @@
 	
 	<string name="char_tooltip_armormodoff">Armor modifiers disabled</string>
 	<string name="char_tooltip_armormodon">Armor modifiers enabled</string>
+	<string name="char_tooltip_sfmodoff">Spell failure disabled</string>
+	<string name="char_tooltip_sfmodon">Spell failure enabled</string>
 	
 	<string name="char_encumbrance_title">Encumbrance</string>
 	<string name="char_label_encstradj">Str Adj</string>
@@ -632,6 +648,8 @@
 	<string name="power_label_metamagic">Metamagic</string>
 	<string name="power_label_metamagicempower">Empower</string>
 	<string name="power_label_metamagicmaximize">Maximize</string>
+	<string name="power_label_metamagicempowermaximize">Empower and Maximize</string>
+	<string name="power_label_metamagicepicintensify">Epic - Intensify</string>
 
 	<string name="power_header_cast_attack">ATTACK</string>
 	<string name="power_label_atktypenone">None</string>
@@ -686,4 +704,12 @@
 	<string name="record_label_classfeature">Class Feature</string>
 	<string name="record_label_racialtrait">Racial Trait</string>
 	<string name="record_label_proficiency">Proficiency</string>
+
+	<!-- Actions -->
+	<string name="cast_message_verbalwhilesilenced">Casting spell with verbal components while Silenced. [AUTOMATIC FAIL]</string>
+	<string name="cast_message_somaticwhilepinned">Casting spell with somatic components while Pinned. [AUTOMATIC FAIL]</string>
+	<string name="cast_message_needconcentrationcheck">Casting spell while %s and needs to make a concentration check.</string>
+	<string name="cast_message_verbalwhiledeafened">Casting spell with verbal components while Deafened. [20% FAIL CHANCE]</string>
+	<string name="cast_message_somatic_prompt">Roll somatic spell failure chance. [%d%%]</string>
+	<string name="cast_message_verbal_prompt">Roll verbal spell failure chance. [%d%%]</string>
 </root>

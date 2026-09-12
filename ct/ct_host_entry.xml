@@ -116,6 +116,7 @@
 					<right anchor="left" relation="relative" offset="-10" />
 				</anchored>
 				<tabtarget prev="initresult" next="hptemp" />
+				<nodrop />
 				<script>
 					function update()
 						window.onHealthChanged();

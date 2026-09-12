@@ -7,6 +7,7 @@ function onInit()
 	CombatManager.setCustomSort(CombatManager.sortfuncDnD);
 
 	CombatManager.setCustomRoundStart(onRoundStart);
+	CombatManager.setCustomTurnStart(onTurnStart);
 	CombatManager.setCustomTurnEnd(onTurnEnd);
 	CombatManager.setCustomCombatReset(resetInit);
 
@@ -23,6 +24,35 @@ end
 function onRoundStart(nCurrent)
 	if OptionsManager.isOption("HRIR", "on") then
 		rollInit();
+	end
+end
+
+function onTurnStart(nodeEntry)
+	if not nodeEntry then
+		return
+	end
+
+	local rActor = ActorManager.resolveActor(nodeEntry);
+	if EncumbranceManager35E.hasEncumbrancePenalty(rActor) then
+		ChatManager.sendMessage(string.format("[%s]", GameManager.getRecordFieldValue(rActor, "encstate", ""):upper()), { sIcon = "action_weight", rActor = rActor, });
+	end
+	CombatManager2.resetAoO(rActor);
+	EffectManager.removeCondition(rActor, "Flat-Footed");
+	EffectManager.removeCondition(rActor, "Flatfooted");
+end
+function resetAoO(vActor)
+	local rActor = ActorManager.resolveActor(vActor);
+	local nodeCT = ActorManager.getCTNode(rActor);
+	if not nodeCT then
+		return;
+	end
+
+	DB.setValue(nodeCT, "aoo", "number", 0);
+	if ActorManager35E.hasRollFeat(rActor, "Combat Reflexes") then
+		local nStatMod = ActorManager35E.getAbilityBonus(rActor, "dexterity");
+		DB.setValue(nodeCT, "aoomax", "number", math.max(nStatMod, 1));
+	else
+		DB.setValue(nodeCT, "aoomax", "number", 1);
 	end
 end
 
@@ -178,6 +208,7 @@ function onNPCPostAdd(tCustom)
 	local bImmuneNonlethal = false;
 	local bImmuneCritical = false;
 	local bImmunePrecision = false;
+	local bInvertHeal = false;
 	if bPFMode then
 		local bElemental = false;
 		if StringManager.contains(aTypes, "construct") then
@@ -192,6 +223,7 @@ function onNPCPostAdd(tCustom)
 		elseif StringManager.contains(aTypes, "undead") then
 			table.insert(aEffects, "Undead traits");
 			bImmuneNonlethal = true;
+			bInvertHeal = true;
 		end
 		
 		if StringManager.contains(aSubTypes, "aeon") then
@@ -232,6 +264,7 @@ function onNPCPostAdd(tCustom)
 			table.insert(aEffects, "Undead traits");
 			bImmuneNonlethal = true;
 			bImmuneCritical = true;
+			bInvertHeal = true;
 		end
 		if StringManager.contains(aSubTypes, "swarm") then
 			table.insert(aEffects, "Swarm traits");
@@ -247,6 +280,10 @@ function onNPCPostAdd(tCustom)
 	if bImmunePrecision then
 		table.insert(aEffects, "IMMUNE: precision");
 	end
+	if bInvertHeal then
+		table.insert(aEffects, "@DMGMULT: -1 negative");
+		table.insert(aEffects, "@HEALMULT: -1");
+	end
 
 	-- DECODE SPECIAL HEALTH PROPERTIES
 	if sPostHDHealthProps then
@@ -259,7 +296,11 @@ function onNPCPostAdd(tCustom)
 				
 				if StringManager.isNumberString(aSQWords[i+1]) then
 					i = i + 1;
-					table.insert(aEffects, "FHEAL: " .. aSQWords[i]);
+					if bInvertHeal then
+						table.insert(aEffects, string.format("DMGO: %d negative", aSQWords[i]));
+					else
+						table.insert(aEffects, "FHEAL: " .. aSQWords[i]);
+					end
 				end
 			
 			-- REGENERATION
@@ -368,7 +409,11 @@ function onNPCPostAdd(tCustom)
 			
 			if StringManager.isNumberString(aSQWords[i+1]) then
 				i = i + 1;
-				table.insert(aEffects, "FHEAL: " .. aSQWords[i]);
+				if bInvertHeal then
+					table.insert(aEffects, string.format("DMGO: %d negative", aSQWords[i]));
+				else
+					table.insert(aEffects, "FHEAL: " .. aSQWords[i]);
+				end
 			end
 		
 		-- REGENERATION
@@ -505,21 +550,23 @@ function onNPCPostAdd(tCustom)
 			end
 			
 		-- SPECIAL DEFENSES
-		elseif StringManager.isWord(aSQWords[i], "uncanny") and StringManager.isWord(aSQWords[i+1], "dodge") then
-			if StringManager.isWord(aSQWords[i-1], "improved") then
-				table.insert(aEffects, "Improved Uncanny Dodge");
-			else
-				table.insert(aEffects, "Uncanny Dodge");
+		elseif StringManager.isWord(aSQWords[i], "fortification") then
+			local nFortify = 50;
+			if StringManager.isWord(aSQWords[i-1], "light") then
+				nFortify = 25;
+			elseif StringManager.isWord(aSQWords[i-1], "moderate") then
+				nFortify = DataCommon.isPFRPG() and 50 or 75;
+			elseif StringManager.isWord(aSQWords[i-1], "heavy") then
+				nFortify = DataCommon.isPFRPG() and 75 or 100;
+			elseif aSQWords[i+1] then
+				local sPercent = aSQWords[i+1]:match("^(%d+)$");
+				if sPercent then
+					nFortify = tonumber(sPercent) or 50;
+					i = i + 1;
+				end
 			end
-			i = i + 1;
-		
-		elseif StringManager.isWord(aSQWords[i], "evasion") then
-			if StringManager.isWord(aSQWords[i-1], "improved") then
-				table.insert(aEffects, "Improved Evasion");
-			else
-				table.insert(aEffects, "Evasion");
-			end
-		
+			table.insert(aEffects, string.format("FORTIFY: %d", nFortify));
+
 		-- TRAITS
 		elseif StringManager.isWord(aSQWords[i], "incorporeal") then
 			table.insert(aEffects, "Incorporeal");
@@ -543,8 +590,12 @@ function onNPCPostAdd(tCustom)
 		EffectManager.addEffectByTable(tCustom.nodeCT, { sName = table.concat(aEffects, "; "), nGMOnly = 1 });
 	end
 
+	-- Set max attacks of opportunity
+	CombatManager2.resetAoO(tCustom.nodeCT);
+
 	-- Roll initiative and sort
 	CombatRecordManager.handleCombatAddInitDnD(tCustom);
+	ActionInit.applyHRFFOption(tCustom.nodeCT);
 end
 
 --
@@ -555,6 +606,7 @@ function resetInit()
 	function resetCombatantInit(nodeCT)
 		DB.setValue(nodeCT, "initresult", "number", 0);
 		DB.setValue(nodeCT, "immediate", "number", 0);
+		DB.setValue(nodeCT, "aoo", "number", 0);
 	end
 	CombatManager.callForEachCombatant(resetCombatantInit);
 end
@@ -564,6 +616,7 @@ function rollInit(sType)
 end
 function rollEntryInit(nodeEntry)
 	CombatManager.rollStandardEntryInit(CombatManager2.getEntryInitRecord(nodeEntry));
+	ActionInit.applyHRFFOption(nodeEntry);
 end
 function getEntryInitRecord(nodeEntry)
 	if not nodeEntry then
@@ -577,9 +630,9 @@ function getEntryInitRecord(nodeEntry)
 	
 	-- Get any effect modifiers
 	local rActor = ActorManager.resolveActor(nodeEntry);
-	local bEffects, aEffectDice, nEffectMod = ActionInit.getEffectAdjustments(rActor);
-	if bEffects then
-		tInit.nMod = tInit.nMod + StringManager.evalDice(aEffectDice, nEffectMod);
+	local rRoll = ActionInit.getEffectAdjustments(rActor);
+	if rRoll.bEffects then
+		tInit.nMod = tInit.nMod + StringManager.evalDice(rRoll.tEffectDice, rRoll.nEffectMod);
 	end
 
 	return tInit;

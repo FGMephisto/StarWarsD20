@@ -110,6 +110,7 @@
 			</label_column>
 			<string_columnh name="type">
 				<delaykeyupdate />
+				<script file="campaign/scripts/record_size.lua" />
 			</string_columnh>
 			
 			<label_column name="alignment_label">
@@ -390,7 +391,9 @@
 			<label_column name="type_label">
 				<static textres="npc_label_type" />
 			</label_column>
-			<string_columnh name="type" />
+			<string_columnh name="type">
+				<delaykeyupdate />
+			</string_columnh>
 			
 			<label_column name="hp_label">
 				<static textres="hp" />
@@ -457,7 +460,9 @@
 			<label_column name="type_label">
 				<static textres="npc_label_type" />
 			</label_column>
-			<string_columnh name="type" />
+			<string_columnh name="type">
+				<delaykeyupdate />
+			</string_columnh>
 			
 			<label_column name="squares_label">
 				<static textres="npc_label_squares" />

@@ -7,7 +7,6 @@
 
 <root>
 	<windowclass name="charsheet_inventory" merge="join">
-		<script file="campaign/scripts/char_inv.lua" />
 		<sheetdata>
 			<genericcontrol name="showonminisheet_header" insertbefore="label_carried">
 				<anchored to="labelrightanchor" width="12" height="10">
@@ -19,14 +18,15 @@
 			</genericcontrol>
 			
 			<frame_char name="armorpenaltyframe" insertbefore="encumbranceframe">
-				<anchored position="insidebottomleft" offset="0,142" width="240" height="58" />
+				<anchored position="insidebottomleft" offset="0,118" width="240" height="82" />
 			</frame_char>
 			<label insertbefore="encumbranceframe">
-				<anchored to="armorpenaltyframe" position="insidetopleft" offset="15,24" />
+				<anchored to="armorpenaltyframe" position="insidetopleft" offset="15,24" width="80" />
 				<static textres="char_label_invarmor" />
 			</label>
 			<basicnumber name="armormaxstatbonus" source="encumbrance.armormaxstatbonus" insertbefore="encumbranceframe">
 				<anchored to="armorpenaltyframe" position="insidetopleft" offset="85,24" width="35" height="20" />
+				<min>0</min>
 			</basicnumber>
 			<label_fieldtop insertbefore="encumbranceframe">
 				<anchored to="armormaxstatbonus" offset="6,1" />
@@ -34,6 +34,7 @@
 			</label_fieldtop>
 			<basicnumber name="armorcheckpenalty" source="encumbrance.armorcheckpenalty" insertbefore="encumbranceframe">
 				<anchored to="armormaxstatbonus" position="right" offset="15,0" width="35" />
+				<max>0</max>
 			</basicnumber>
 			<label_fieldtop insertbefore="encumbranceframe">
 				<anchored to="armorcheckpenalty" offset="6,1" />
@@ -42,6 +43,7 @@
 			<basicnumber name="spellfailure" source="encumbrance.spellfailure" insertbefore="encumbranceframe">
 				<anchored to="armorcheckpenalty" position="right" offset="15,0" width="35" />
 				<hideonvalue>0</hideonvalue>
+				<min>0</min>
 			</basicnumber>
 			<label_fieldtop insertbefore="encumbranceframe">
 				<anchored to="spellfailure" offset="6,1"/>
@@ -55,34 +57,58 @@
 					function onInit()
 						onValueChanged();
 					end
-					
 					function onValueChanged()
 						local sColor, sDisabledColor = UtilityManager.getFullAndDisabledFontColors("sheetnumber");
 						if getValue() == 1 then
 							window.armormaxstatbonus.setColor(sColor);
-							window.armorcheckpenalty.setColor(sColor);
-							window.spellfailure.setColor(sColor);
 						else
 							window.armormaxstatbonus.setColor(sDisabledColor);
-							window.armorcheckpenalty.setColor(sDisabledColor);
+						end
+					end
+				</script>
+			</buttonfield>
+			<buttonfield name="usespellfailure" source="encumbrance.spellfailureactive" insertbefore="encumbranceframe">
+				<anchored to="spellfailure" position="belowleft" offset="11,3" width="12" height="12" />
+				<state icon="button_checkoff" tooltipres="char_tooltip_sfmodoff" />
+				<state icon="button_checkon" tooltipres="char_tooltip_sfmodon" />
+				<script>
+					function onInit()
+						onValueChanged();
+					end
+					function onValueChanged()
+						local sColor, sDisabledColor = UtilityManager.getFullAndDisabledFontColors("sheetnumber");
+						if getValue() == 1 then
+							window.spellfailure.setColor(sColor);
+						else
 							window.spellfailure.setColor(sDisabledColor);
 						end
 					end
 				</script>
 			</buttonfield>
+			<label insertbefore="encumbranceframe">
+				<anchored to="armorpenaltyframe" position="insidetopleft" offset="15,48" width="80" />
+				<static textres="char_label_invenc" />
+				<tooltip textres="char_tooltip_invenc" />
+			</label>
+			<number_static name="maxstatbonus" source="encumbrance.maxstatbonus" insertbefore="encumbranceframe">
+				<anchored to="armorpenaltyframe" position="insidetopleft" offset="85,48" width="35" height="20" />
+			</number_static>
+			<number_static name="checkpenalty" source="encumbrance.checkpenalty" insertbefore="encumbranceframe">
+				<anchored to="maxstatbonus" position="righthigh" offset="15,0" width="35" height="20" />
+			</number_static>
 
 			<frame_char name="encumbranceframe">
-				<anchored position="insidebottomleft" width="240" height="142" />
+				<anchored position="insidebottomleft" width="240" height="118" />
 			</frame_char>
 			<simplenumber name="encumbranceload" source="encumbrance.load">
-				<anchored offset="160,16" />
+				<anchored offset="160,12" />
 				<readonly />
 			</simplenumber>
 			<label name="encumbrance_label">
-				<anchored offset="15,16" />
+				<anchored offset="15,12" />
 			</label>
 			<number_static name="encumbrancelightload" source="encumbrance.lightload" insertbefore="coinframe">
-				<anchored to="encumbranceframe" position="insidetopleft" offset="20,62" width="55" height="20" />
+				<anchored to="encumbranceframe" position="insidetopleft" offset="20,50" width="55" height="20" />
 			</number_static>
 			<label_fieldtop>
 				<anchored to="encumbrancelightload" />
@@ -103,7 +129,7 @@
 				<static textres="char_label_invenchvy" />
 			</label_fieldtop>
 			<number_static name="encumbranceliftoverhead" source="encumbrance.liftoverhead" insertbefore="coinframe">
-				<anchored to="encumbrancelightload" position="below" offset="0,20" height="20" />
+				<anchored to="encumbrancelightload" position="below" offset="0,16" height="20" />
 			</number_static>
 			<label_fieldtop>
 				<anchored to="encumbranceliftoverhead" />
