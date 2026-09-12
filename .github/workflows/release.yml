@@ -31,6 +31,8 @@ jobs:
         run: |
           zip -r Star.Wars.D20.pak . \
             -x ".git/*" \
+            -x ".agent/*" \
+            -x ".agents/*" \
             -x ".github/*" \
             -x ".gitignore" \
             -x "docs/*" \
