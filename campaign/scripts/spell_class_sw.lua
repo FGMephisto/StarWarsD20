@@ -277,7 +277,7 @@ function updateSpellView() -- Adjusted
 				
 				nPointCost = DB.getValue(nodeSpell, "cost", 0);
 				
-				if bCombatMode then
+				if bCombatMode and (nPP > 0) then
 					bSpellShow = (nPointCost <= (nPP - nPPUsed));
 				else
 					bSpellShow = true;
@@ -367,7 +367,7 @@ function updateSpellView() -- Adjusted
 		
 		if sCasterType == "points" then
 			nPointCost = DB.getValue(nodeSpell, "cost", 0);
-			if bCombatMode then
+			if bCombatMode and (nPP > 0) then
 				bSpellShow = (nPointCost <= (nPP - nPPUsed));
 			else
 				bSpellShow = true;

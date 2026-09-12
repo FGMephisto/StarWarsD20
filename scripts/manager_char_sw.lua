@@ -123,12 +123,38 @@ end
 
 function calcLevel(nodeChar)
 	local nLevel = 0;
+	local nReputation = 0;
 	
 	for _,nodeChild in ipairs(DB.getChildList(nodeChar, "classes")) do
-		nLevel = nLevel + DB.getValue(nodeChild, "level", 0);
+		local nClassLevel = DB.getValue(nodeChild, "level", 0);
+		nLevel = nLevel + nClassLevel;
+		local sClass = StringManager.strip(DB.getValue(nodeChild, "name", ""):lower());
+		local sRep = "slow";
+		if DataCommon.classdata[sClass] and DataCommon.classdata[sClass].rep then
+			sRep = DataCommon.classdata[sClass].rep;
+		elseif sClass:match("noble") then
+			sRep = "fast";
+		elseif sClass:match("jedi") then
+			sRep = "medium";
+		end
+		if nClassLevel > 0 then
+			if sRep == "fast" then
+				nReputation = nReputation + 1 + math.floor(nClassLevel / 2);
+			elseif sRep == "medium" then
+				nReputation = nReputation + 1 + math.floor((nClassLevel - 1) / 3);
+			else
+				nReputation = nReputation + math.floor((nClassLevel - 1) / 3);
+			end
+		end
 	end
 	
 	DB.setValue(nodeChar, "level", "number", nLevel);
+	local sCurrentRep = DB.getValue(nodeChar, "reputation", "");
+	if sCurrentRep == "" or sCurrentRep == "0" or tonumber(sCurrentRep) then
+		if nReputation > 0 or sCurrentRep == "" then
+			DB.setValue(nodeChar, "reputation", "string", tostring(nReputation));
+		end
+	end
 end
 
 function sortClasses(a,b)
@@ -708,7 +734,7 @@ function checkWeaponIDChange(nodeWeapon)
 	end
 end
 
-function getWeaponAttackRollStructures(nodeWeapon, nAttack) -- Adjusted
+function getWeaponAttackRollStructures(nodeWeapon, nAttack)
 	if not nodeWeapon then
 		return;
 	end
@@ -722,6 +748,9 @@ function getWeaponAttackRollStructures(nodeWeapon, nAttack) -- Adjusted
 	local nType = DB.getValue(nodeWeapon, "type", 0);
 	if nType == 1 or nType == 2 then
 		rAttack.range = "R";
+		if nType == 2 then
+			rAttack.thrown = true;
+		end
 	else
 		rAttack.range = "M";
 	end
@@ -745,6 +774,24 @@ function getWeaponAttackRollStructures(nodeWeapon, nAttack) -- Adjusted
 	if sProp:match("touch") then
 		rAttack.touch = true;
 	end
+	if sProp:match("thrown") then
+		rAttack.thrown = true;
+	end
+
+	local nRange = DB.getValue(nodeWeapon, "rangeincrement", 0);
+	if nRange == 0 and rAttack.range == "R" then
+		local _, sRecord = DB.getValue(nodeWeapon, "shortcut", "", "");
+		if sRecord ~= "" then
+			local nodeItem = DB.findNode(sRecord);
+			if nodeItem then
+				nRange = DB.getValue(nodeItem, "rangeincrement", 0);
+			end
+		end
+	end
+	rAttack.rangeincrement = nRange;
+
+	rAttack.stundc = DB.getValue(nodeWeapon, "stundc", 0);
+	rAttack.nodeWeapon = nodeWeapon;
 
 	local sFireMode = DB.getValue(nodeWeapon, "firemode", "");
 	if sFireMode ~= "" then
@@ -784,8 +831,12 @@ function getWeaponDamageRollStructures(nodeWeapon) -- Adjusted
 		local nMult = 1;
 		local nMax = 0;
 		local sDmgAbility = DB.getValue(v, "stat", "");
+		local nWeaponType = DB.getValue(nodeWeapon, "type", 0);
 		if sDmgAbility ~= "" then
 			nMult = DB.getValue(v, "statmult", 1);
+			if nWeaponType == 2 and sDmgAbility == "strength" then
+				nMult = 0.5;
+			end
 			nMax = DB.getValue(v, "statmax", 0);
 			local nAbilityBonus = ActorManager35E.getAbilityBonus(rActor, sDmgAbility);
 			if nMax > 0 then
@@ -996,31 +1047,14 @@ function updateSkillPoints(nodeChar) -- Adjusted
 	DB.setValue(nodeChar, "skillpoints.spent", "number", nSpentTotal);
 end
 
-function hasFeat(nodeChar, sFeat)
-	if not sFeat then
-		return false;
-	end
-	local sLowerFeat = StringManager.trim(sFeat:lower());
-	for _,vNode in ipairs(DB.getChildList(nodeChar, "featlist")) do
-		if StringManager.trim(DB.getValue(vNode, "name", ""):lower()) == sLowerFeat then
-			return true;
-		end
-	end
-	return false;
+function hasFeat(nodeChar, s, bStartsWith)
+	return ActorManager35E.hasPCFeat(nodeChar, s, bStartsWith);
 end
-
-function hasTrait(nodeChar, sTrait)
-	if not sTrait then
-		return false;
-	end
-	local sLowerTrait = StringManager.trim(string.lower(sTrait));
-	
-	for _,vNode in ipairs(DB.getChildList(nodeChar, "traitlist")) do
-		if StringManager.trim(DB.getValue(vNode, "name", ""):lower()) == sLowerTrait then
-			return true;
-		end
-	end
-	return false;
+function hasTrait(nodeChar, s, bStartsWith)
+	return ActorManager35E.hasPCTrait(nodeChar, s, bStartsWith);
+end
+function hasSpecialAbility(nodeChar, s, bStartsWith)
+	return ActorManager35E.hasPCSpecialAbility(nodeChar, s, bStartsWith);
 end
 
 --
@@ -1679,30 +1713,39 @@ function applyClassStats(nodeChar, nodeClass, nodeSource, nLevel, nTotalLevel)
 		end
 	end
 	
-	-- Hit points
+	-- Vitality and Wound Points
 	local sHDMult, sHDSides = sHD:match("^(%d?)d(%d+)");
 	if sHDSides then
 		local nHDMult = tonumber(sHDMult) or 1;
 		local nHDSides = tonumber(sHDSides) or 8;
 
-		local nHP = GameManager.getRecordFieldValue(nodeChar, "hptotal", 0);
+		local nVP = DB.getValue(nodeChar, "hp.vp", 0);
 		local nConBonus = DB.getValue(nodeChar, "abilities.constitution.bonus", 0);
+		local nConScore = DB.getValue(nodeChar, "abilities.constitution.score", 10);
 		if nTotalLevel == 1 then
-			local nAddHP = (nHDMult * nHDSides);
-			nHP = nHP + nAddHP + nConBonus;
+			local nAddVP = math.max(1, (nHDMult * nHDSides) + nConBonus);
+			nVP = nVP + nAddVP;
+
+			-- First level sets Wound Points to Constitution score if unset
+			if DB.getValue(nodeChar, "hp.total", 0) <= 0 then
+				DB.setValue(nodeChar, "hp.total", "number", nConScore);
+			end
 
 			local sFormat = Interface.getString("char_message_classhpaddmax");
-			local sMsg = string.format(sFormat, DB.getValue(nodeClass, "name", ""), DB.getValue(nodeChar, "name", "")) .. " (" .. nAddHP .. "+" .. nConBonus .. ")";
+			local sConStr = (nConBonus >= 0) and ("+" .. nConBonus) or tostring(nConBonus);
+			local sMsg = string.format(sFormat, DB.getValue(nodeClass, "name", ""), DB.getValue(nodeChar, "name", "")) .. " (" .. (nHDMult * nHDSides) .. sConStr .. ")";
 			ChatManager.SystemMessage(sMsg);
 		else
-			local nAddHP = math.floor(((nHDMult * (nHDSides + 1)) / 2) + 0.5);
-			nHP = nHP + nAddHP + nConBonus;
+			local nDieRoll = math.floor(((nHDMult * (nHDSides + 1)) / 2) + 0.5);
+			local nAddVP = math.max(1, nDieRoll + nConBonus);
+			nVP = nVP + nAddVP;
 
 			local sFormat = Interface.getString("char_message_classhpaddavg");
-			local sMsg = string.format(sFormat, DB.getValue(nodeClass, "name", ""), DB.getValue(nodeChar, "name", "")) .. " (" .. nAddHP .. "+" .. nConBonus .. ")";
+			local sConStr = (nConBonus >= 0) and ("+" .. nConBonus) or tostring(nConBonus);
+			local sMsg = string.format(sFormat, DB.getValue(nodeClass, "name", ""), DB.getValue(nodeChar, "name", "")) .. " (" .. nDieRoll .. sConStr .. ")";
 			ChatManager.SystemMessage(sMsg);
 		end
-		GameManager.setRecordFieldValue(nodeChar, "hptotal", "number", nHP);
+		DB.setValue(nodeChar, "hp.vp", "number", nVP);
 	end
 	
 	-- BAB

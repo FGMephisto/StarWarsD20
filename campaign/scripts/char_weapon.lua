@@ -285,6 +285,13 @@ end
 
 function getAttackCount()
 	local nodeWeapon = getDatabaseNode();
+	local nType = DB.getValue(nodeWeapon, "type", 0);
+	if nType == 2 then
+		local nodeChar = DB.getChild(nodeWeapon, "...");
+		local bITWF = CharManager.hasFeat(nodeChar, "Improved Two-Weapon Fighting");
+		return bITWF and 2 or 1;
+	end
+
 	local nBaseAttacks = math.max(DB.getValue(nodeWeapon, "attacks", 1), 1);
 	local sFireMode = DB.getValue(nodeWeapon, "firemode", "");
 
@@ -303,20 +310,21 @@ end
 function onAttackChanged()
 	local nodeWeapon = getDatabaseNode();
 	local nAttacks = self.getAttackCount();
+	local nType = DB.getValue(nodeWeapon, "type", 0);
 	local tAttack = {};
 
 	local nViewOffset = 1;
 	local nViewSpacing = 2;
 	local nViewFieldWidth = 30;
-	attackview.setAnchoredWidth(nViewOffset + ((nViewFieldWidth + nViewSpacing) * (nAttacks)));
-	attackview1.setVisible(nAttacks >= 1);
-	attackview2.setVisible(nAttacks >= 2);
-	attackview3.setVisible(nAttacks >= 3);
-	attackview4.setVisible(nAttacks >= 4);
-	attackview5.setVisible(nAttacks >= 5);
-	attackview6.setVisible(nAttacks >= 6);
-	attackview7.setVisible(nAttacks >= 7);
-	attackview8.setVisible(nAttacks >= 8);
+	if attackview then
+		attackview.setAnchoredWidth(nViewOffset + ((nViewFieldWidth + nViewSpacing) * (nAttacks)));
+	end
+	for i = 1, 8 do
+		local ctrl = self["attackview" .. i];
+		if ctrl then
+			ctrl.setVisible(nAttacks >= i);
+		end
+	end
 	
 	for i = 1, nAttacks do
 		local nAtk = self.calcAttackBonus(i);
@@ -324,27 +332,54 @@ function onAttackChanged()
 		if ctrl then
 			ctrl.setValue(nAtk);
 		end
-		local sAtk = (i == 1) and string.format("%s: %+d", Interface.getString("action_attack_tag"), nAtk) 
-		                      or string.format("%s #%d: %+d", Interface.getString("action_attack_tag"), i, nAtk);
+		local sPrefix = (nType == 2) and " (OH)" or "";
+		local sAtk = (i == 1) and string.format("%s%s: %+d", Interface.getString("action_attack_tag"), sPrefix, nAtk) 
+		                      or string.format("%s%s #%d: %+d", Interface.getString("action_attack_tag"), sPrefix, i, nAtk);
 		table.insert(tAttack, sAtk);
 	end
 
+	local nDC = self.getStunDC();
+	if button_stun then
+		if nDC > 0 then
+			button_stun.setVisible(true);
+			button_stun.setTooltipText(string.format("%s: DC %d", Interface.getString("char_tooltip_actionstun") or "Fortitude Attack (Stun)", nDC));
+		else
+			button_stun.setVisible(false);
+		end
+	end
+
+	button_attack.setTooltipText(table.concat(tAttack, "\r"));
+end
+
+function getStunDC()
+	local nodeWeapon = getDatabaseNode();
 	local nDC = tonumber(DB.getValue(nodeWeapon, "stundc", "")) or 0;
-	if nDC == 0 then
+	local sProps = DB.getValue(nodeWeapon, "properties", ""):lower();
+	local bHasStunProp = sProps:match("stun");
+	
+	if nDC == 0 or not bHasStunProp then
 		local _, sRecord = DB.getValue(nodeWeapon, "shortcut", "", "");
 		if sRecord ~= "" then
 			local nodeItem = DB.findNode(sRecord);
 			if nodeItem then
-				nDC = tonumber(DB.getValue(nodeItem, "stundc", "")) or 0;
+				if nDC == 0 then
+					nDC = tonumber(DB.getValue(nodeItem, "stundc", "")) or 0;
+				end
+				local sItemProps = DB.getValue(nodeItem, "properties", ""):lower();
+				local sItemDmgType = DB.getValue(nodeItem, "damagetype", ""):lower();
+				if sItemProps:match("stun") or sItemDmgType:match("stun") then
+					bHasStunProp = true;
+				end
 			end
 		end
 	end
-	if nDC == 0 then nDC = 15; end
-	if button_stun then
-		button_stun.setTooltipText(string.format("%s: DC %d", Interface.getString("char_tooltip_actionstun") or "Fortitude Attack (Stun)", nDC));
+	
+	if nDC > 0 then
+		return nDC;
+	elseif bHasStunProp then
+		return 15;
 	end
-
-	button_attack.setTooltipText(table.concat(tAttack, "\r"));
+	return 0;
 end
 
 function onDamageChanged()
@@ -359,38 +394,38 @@ function onDamageChanged()
 	for i, v in ipairs(aDmgNodes) do
 		local aDice = DB.getValue(v, "dice", {});
 		local nMod = DB.getValue(v, "bonus", 0);
-
-		if bMultifire and (i == 1) and (#aDice > 0) then
-			local aMultifireDice = {};
-			for _, sDie in ipairs(aDice) do
-				table.insert(aMultifireDice, sDie);
+		local sStat = DB.getValue(v, "stat", "");
+		local nStatMult = DB.getValue(v, "statmult", 1);
+		local nStatMax = DB.getValue(v, "statmax", 0);
+		
+		if sStat ~= "" then
+			local nStatBonus = ActorManager35E.getAbilityBonus(rActor, sStat);
+			if nStatBonus > 0 then
+				local nEffMult = nStatMult;
+				local nType = DB.getValue(nodeWeapon, "type", 0);
+				if nType == 2 and sStat == "strength" then
+					nEffMult = 0.5;
+				end
+				nStatBonus = math.floor(nStatBonus * nEffMult);
+				if nStatMax > 0 then
+					nStatBonus = math.min(nStatBonus, nStatMax);
+				end
 			end
-			table.insert(aMultifireDice, aDice[1]);
-			aDice = aMultifireDice;
-		end
-
-		local sAbility = DB.getValue(v, "stat", "");
-		if sAbility ~= "" then
-			local nMult = DB.getValue(v, "statmult", 1);
-			local nMax = DB.getValue(v, "statmax", 0);
-			local nAbilityBonus = ActorManager35E.getAbilityBonus(rActor, sAbility);
-			if nMax > 0 then
-				nAbilityBonus = math.min(nAbilityBonus, nMax);
-			end
-			if nAbilityBonus > 0 and nMult ~= 1 then
-				nAbilityBonus = math.floor(nMult * nAbilityBonus);
-			end
-			nMod = nMod + nAbilityBonus;
+			nMod = nMod + nStatBonus;
 		end
 		
-		if #aDice > 0 or nMod ~= 0 then
-			local sDamage = StringManager.convertDiceToString(aDice, nMod);
+		local sDmg = StringManager.convertDiceToString(aDice, nMod);
+		if sDmg ~= "" then
 			local sType = DB.getValue(v, "type", "");
 			if sType ~= "" then
-				sDamage = sDamage .. " " .. sType;
+				sDmg = sDmg .. " " .. sType;
 			end
-			table.insert(tDamage, sDamage);
+			table.insert(tDamage, sDmg);
 		end
+	end
+
+	if bMultifire and (#tDamage > 0) then
+		tDamage[1] = "[+1 DIE] " .. tDamage[1];
 	end
 
 	local sDamage = table.concat(tDamage, " + ");
@@ -405,16 +440,7 @@ function onFortitudeAction(draginfo)
 	rAttack.modifier = self.calcAttackBonus(1);
 	rAttack.stun = true;
 	
-	local nDC = tonumber(DB.getValue(nodeWeapon, "stundc", "")) or 0;
-	if nDC == 0 then
-		local _, sRecord = DB.getValue(nodeWeapon, "shortcut", "", "");
-		if sRecord ~= "" then
-			local nodeItem = DB.findNode(sRecord);
-			if nodeItem then
-				nDC = tonumber(DB.getValue(nodeItem, "stundc", "")) or 0;
-			end
-		end
-	end
+	local nDC = self.getStunDC();
 	if nDC == 0 then
 		nDC = 15;
 	end
@@ -430,13 +456,18 @@ end
 function onFullAttackAction(draginfo)
 	local nodeWeapon = getDatabaseNode();
 	local rActor, rAttack = CharManager.getWeaponAttackRollStructures(nodeWeapon);
+	local nType = DB.getValue(nodeWeapon, "type", 0);
 	
 	local rRolls = {};
 	local nAttacks = self.getAttackCount();
 	for i = 1, nAttacks do
 		rAttack.modifier = self.calcAttackBonus(i);
 		rAttack.order = i;
-		table.insert(rRolls, ActionAttack.getRoll(rActor, rAttack));
+		local rSingleRoll = ActionAttack.getRoll(rActor, rAttack);
+		if nType == 2 then
+			rSingleRoll.sDesc = rSingleRoll.sDesc .. " [OFF-HAND]";
+		end
+		table.insert(rRolls, rSingleRoll);
 	end
 	if not OptionsManager.isOption("RMMT", "off") and (#rRolls > 1) then
 		for _,v in ipairs(rRolls) do
@@ -451,10 +482,15 @@ end
 function onSingleAttackAction(n, draginfo)
 	local nodeWeapon = getDatabaseNode();
 	local rActor, rAttack = CharManager.getWeaponAttackRollStructures(nodeWeapon);
+	local nType = DB.getValue(nodeWeapon, "type", 0);
 	rAttack.order = n or 1;
 	rAttack.modifier = self.calcAttackBonus(n or 1);
 	
-	ActionAttack.performRoll(draginfo, rActor, rAttack);
+	local rRoll = ActionAttack.getRoll(rActor, rAttack);
+	if nType == 2 then
+		rRoll.sDesc = rRoll.sDesc .. " [OFF-HAND]";
+	end
+	ActionsManager.performAction(draginfo, rActor, rRoll);
 	return true;
 end
 
@@ -475,7 +511,7 @@ function onDamageAction(draginfo)
 	return true;
 end
 
-function calcAttackBonus(n) -- Adjusted
+function calcAttackBonus(n)
 	local nodeWeapon = getDatabaseNode();
 	local nodeChar = DB.getChild(nodeWeapon, "...");
 	local rActor, rAttack = CharManager.getWeaponAttackRollStructures(nodeWeapon);
@@ -517,6 +553,26 @@ function calcAttackBonus(n) -- Adjusted
 	end
 
 	nBonus = nBonus + nModePenalty;
+
+	local nType = DB.getValue(nodeWeapon, "type", 0);
+	if nType == 2 then
+		local bTWF = CharManager.hasFeat(nodeChar, "Two-Weapon Fighting") or CharManager.hasFeat(nodeChar, "Multiweapon Fighting");
+		local bAmbi = CharManager.hasFeat(nodeChar, "Ambidexterity");
+		local sProps = DB.getValue(nodeWeapon, "properties", ""):lower();
+		local bLight = sProps:match("light") or sProps:match("small");
+		
+		local nTWFPenalty = -10;
+		if bTWF and bAmbi then
+			nTWFPenalty = bLight and -2 or -4;
+		elseif bTWF then
+			nTWFPenalty = bLight and -4 or -8;
+		elseif bAmbi then
+			nTWFPenalty = -6;
+		else
+			nTWFPenalty = bLight and -8 or -10;
+		end
+		nBonus = nBonus + nTWFPenalty;
+	end
 
 	local nIterativeStep = 1;
 	if (n or 1) > (1 + nExtraTopAttacks) then

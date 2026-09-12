@@ -76,7 +76,8 @@
 	<windowclass name="power_item" merge="join">
 		<sheetdata>
 			<linkc_listitem_left name="shortcut">
-				<class>spelldesc2</class>
+				<class>referenceskill</class>
+				<script file="campaign/scripts/power_skilllink.lua" />
 			</linkc_listitem_left>
 
 			<number_listitem_linked_right name="total" insertbefore="header">
@@ -88,7 +89,8 @@
 	<windowclass name="power_item_mini" merge="join">
 		<sheetdata>
 			<linkc_listitem_left name="shortcut">
-				<class>spelldesc2</class>
+				<class>referenceskill</class>
+				<script file="campaign/scripts/power_skilllink.lua" />
 			</linkc_listitem_left>
 		</sheetdata>
 	</windowclass>

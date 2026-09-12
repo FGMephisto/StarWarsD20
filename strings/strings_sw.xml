@@ -178,7 +178,7 @@
 	
 	<!-- Character - Notes -->
 	<string name="char_label_forcepoints">Force Points</string>
-	<string name="char_label_darksidepoints">Dark Side Pts</string>
+	<string name="char_label_darksidepoints">Dark Side Points</string>
 	
 	<!-- Character - Actions -->
 	<string name="char_label_spells">Force</string>
@@ -231,6 +231,7 @@
 	<string name="spell_tooltip_casterpoints">Points Force caster</string>
 	<string name="spell_tooltip_castspell">Use Force</string>
 	<string name="power_label_cast">Use</string>
+	<string name="power_tooltip_cast">USE</string>
 	<string name="spell_error_dropclassmissing">Unable to determine class for moved Force, please drop within a class.</string>
 	<string name="spell_error_dropclasslevelmissing">Unable to determine class or level for new Force, please drop within a class level.</string>
 	<string name="spell_label_sr">Force Resist.</string>
@@ -264,18 +265,33 @@
 	<string name="spell_header_forcepowers">Force Powers</string>
 	<string name="npc_tooltip_poweradd">Add Power</string>
 	<string name="spelllevel_emptyname">&#171; Force Level &#187;</string>
-	<string name="power_label_atktypeskill">Skill</string>
-	<string name="power_empty_atkskill">&#171; Skill Name &#187;</string>
 	
 	<!-- Special Abilities -->
 	<!-- Editors -->
 	<string name="power_label_dmg_dc">Check DC</string>
 	<string name="power_tooltip_dmg_dc">Force skill check DC result required</string>
 	<string name="weapon_label_stunrange">Stun</string>
-	<string name="power_label_spelldmg">Force Dmg?</string>
-	<string name="power_label_healtypetemp">VP</string>
+	<string name="power_label_spelldmg">Bypass DR?</string>
+	<string name="power_title_cast">Force/Ability Use</string>
+	<string name="power_title_attack">Force/Ability Attack</string>
+	<string name="power_title_damage">Force/Ability Damage</string>
 	<string name="power_title_heal">Force/Ability Heal</string>
 	<string name="power_title_effect">Force/Ability Effect</string>
+	<string name="power_title_powersave">Force/Ability Save</string>
+	<string name="power_label_savedctype_check">Check</string>
+	<string name="power_label_savedctype_fixed">Fixed</string>
+	<string name="power_label_savedctype_halflevel">1/2 Lvl</string>
+	<string name="power_label_savedctype_ability">Force DC + </string>
+	<string name="power_label_savedctype_casterlevel">1/2 Level</string>
+	<string name="power_label_srnotallowed">Force Resist. Not Allowed</string>
+
+	<!-- Action Messages -->
+	<string name="cast_message_needconcentrationcheck">Using Force while %s and needs to make a concentration check.</string>
+	<string name="cast_message_verbalwhilesilenced">Using Force with verbal components while Silenced. [AUTOMATIC FAIL]</string>
+	<string name="cast_message_somaticwhilepinned">Using Force with somatic components while Pinned. [AUTOMATIC FAIL]</string>
+	<string name="cast_message_verbalwhiledeafened">Using Force with verbal components while Deafened. [20% FAIL CHANCE]</string>
+	<string name="cast_message_somatic_prompt">Roll somatic Force failure chance. [%d%%]</string>
+	<string name="cast_message_verbal_prompt">Roll verbal Force failure chance. [%d%%]</string>
 	
 	<!-- Game System Specific Lighting/Vision Settings -->
 	<string name="lighting_sunrod">Glowrod</string>
@@ -327,4 +343,19 @@
 	<string name="npc_label_forcefeats">Force Feats</string>
 	<string name="npc_label_forceskills">Force Skills</string>
 	<string name="npc_label_equipment">Equipment</string>
+
+	<!-- Combat Options -->
+	<string name="option_label_AUTORANGE">Combat: Auto-detect range &amp; increments</string>
+	<string name="option_label_AUTOFIRINGINTOMELEE">Combat: Auto-detect shooting into melee</string>
+
+	<!-- Vitality Die & Vitality Points Leveling -->
+	<string name="class_label_hitdie">Vitality Die</string>
+	<string name="char_tooltip_hitdie">Vitality Die</string>
+	<string name="char_message_classhpaddmax">Maximum vitality points for first %s level added to '%s'.</string>
+	<string name="char_message_classhpaddavg">Average vitality points for additional %s level added to '%s'.</string>
+
+	<!-- Reputation -->
+	<string name="char_label_reputation">Reputation</string>
+	<string name="char_tooltip_reputation">Reputation Bonus (PDF p. 122)</string>
+	<string name="modifier_label_REP">Reputation</string>
 </root>

@@ -6,7 +6,6 @@
 -->
 
 <root>
-	<!-- Adjusted -->
 	<windowclass name="charsheet_inventory" merge="join">
 		<sheetdata>
 			<!-- <genericcontrol name="showonminisheet_header" insertbefore="label_carried"> -->
@@ -20,7 +19,7 @@
 
 			
 			<frame_char name="armorpenaltyframe" insertbefore="encumbranceframe">
-				<anchored position="insidebottomleft" offset="0,142" width="240" height="58" />
+				<anchored position="insidebottomleft" offset="0,118" width="240" height="82" />
 			</frame_char>
 			<label insertbefore="encumbranceframe">
 				<anchored to="armorpenaltyframe" position="insidetopleft" offset="15,24" width="80" />
@@ -102,17 +101,17 @@
 			</number_static>
 
 			<frame_char name="encumbranceframe">
-				<anchored position="insidebottomleft" width="240" height="142" />
+				<anchored position="insidebottomleft" width="240" height="118" />
 			</frame_char>
 			<simplenumber name="encumbranceload" source="encumbrance.load">
-				<anchored offset="160,16" />
+				<anchored offset="160,12" />
 				<readonly />
 			</simplenumber>
 			<label name="encumbrance_label">
-				<anchored offset="15,16" />
+				<anchored offset="15,12" />
 			</label>
 			<number_static name="encumbrancelightload" source="encumbrance.lightload" insertbefore="coinframe">
-				<anchored to="encumbranceframe" position="insidetopleft" offset="20,62" width="55" height="20" />
+				<anchored to="encumbranceframe" position="insidetopleft" offset="20,50" width="55" height="20" />
 			</number_static>
 			<label_fieldtop>
 				<anchored to="encumbrancelightload" />
@@ -133,7 +132,7 @@
 				<static textres="char_label_invenchvy" />
 			</label_fieldtop>
 			<number_static name="encumbranceliftoverhead" source="encumbrance.liftoverhead" insertbefore="coinframe">
-				<anchored to="encumbrancelightload" position="below" offset="0,20" height="20" />
+				<anchored to="encumbrancelightload" position="below" offset="0,16" height="20" />
 			</number_static>
 			<label_fieldtop>
 				<anchored to="encumbranceliftoverhead" />

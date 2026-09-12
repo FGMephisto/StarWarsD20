@@ -18,8 +18,13 @@
 				local tFields = { "prerequisites", "flavor", "summary", "benefit", "normal", "special", "type", };
 				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 
-				type_biglabel.setValue(string.format("[%s]", type.getValue()));
-				WindowManager.callSafeControlsSetVisible(self, { "type_biglabel", }, bReadOnly);
+				local sType = type.getValue();
+				if sType ~= "" then
+					type_biglabel.setValue(string.format("[%s]", sType));
+					type_biglabel.setVisible(bReadOnly);
+				else
+					type_biglabel.setVisible(false);
+				end
 				WindowManager.callSafeControlsSetVisible(self, { "type", }, not bReadOnly);
 			end
 		</script>

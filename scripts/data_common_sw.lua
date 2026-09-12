@@ -197,6 +197,7 @@ conditions = {
 	"pinned", 
 	"prone", 
 	"rebuked",
+	"run",
 	"running",
 	"shaken", 
 	"sickened", 

@@ -133,6 +133,10 @@ function modSave(rSource, rTarget, rRoll)
 		if EffectManager.hasCondition(rSource, "Flat-Footed") or EffectManager.hasCondition(rSource, "Flatfooted") then
 			bFlatfooted = true;
 		end
+		if (EffectManager.hasCondition(rSource, "Running") or EffectManager.hasCondition(rSource, "Run")) and
+				not ActorManager35E.hasFeat(rSource, "Run") then
+			bFlatfooted = true;
+		end
 		if bFlatfooted and ActorManager35E.hasRollSpecialAbility(rSource, "Uncanny Dodge") then
 			bFlatfooted = false;
 		end

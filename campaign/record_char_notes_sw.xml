@@ -6,7 +6,6 @@
 -->
 
 <root>
-	<!-- Adjusted -->
 	<windowclass name="charsheet_notes">
 		<script>
 			function onInit()
@@ -14,47 +13,56 @@
 			end
 			function onLockModeChanged(bReadOnly)
 				-- local tFields = { "gender", "age", "height", "weight", "size", "alignment", "deity", "appearance", "notes", "languages_iadd", };
-				local tFields = { "gender", "age", "height", "weight", "size", "forcepoints", "darksidepoints", "appearance", "notes", "languages_iadd", };
+				local tFields = { "gender", "age", "height", "weight", "size", "forcepoints", "darksidepoints", "reputation", "appearance", "notes", "languages_iadd", };
 				WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 			end
 		</script>
 		<sheetdata>
 			<frame_char name="detailframe">
-				<anchored position="insidetop" height="50" />
+				<anchored position="insidetop" height="90" />
 			</frame_char>
 			<string_labeled name="gender">
-				<anchored to="detailframe" position="insidetopleft" offset="15,10" width="50" height="20" />
+				<anchored to="detailframe" position="insidetopleft" offset="15,10" width="80" height="20" />
 				<labelres>char_label_gender</labelres>
 			</string_labeled>
 			<string_labeled name="age">
-				<anchored to="gender" position="righthigh" offset="5,0" width="50" />
+				<anchored to="gender" position="righthigh" offset="10,0" width="60" />
 				<labelres>char_label_age</labelres>
 			</string_labeled>
 			<string_labeled name="height">
-				<anchored to="age" position="righthigh" offset="5,0" width="50" />
+				<anchored to="age" position="righthigh" offset="10,0" width="80" />
 				<labelres>char_label_height</labelres>
 			</string_labeled>
 			<string_labeled name="weight">
-				<anchored to="height" position="righthigh" offset="5,0" width="50" />
+				<anchored to="height" position="righthigh" offset="10,0" width="80" />
 				<labelres>char_label_weight</labelres>
 			</string_labeled>
 			<string_labeled name="size">
-				<anchored to="weight" position="righthigh" offset="5,0" width="60" />
+				<anchored to="detailframe" height="20">
+					<top offset="10" />
+					<left parent="weight" anchor="right" offset="10" />
+					<right offset="-15" />
+				</anchored>
 				<labelres>char_label_size</labelres>
 				<delaykeyupdate />
 				<script file="campaign/scripts/record_size.lua" />
 			</string_labeled>
+
 			<string_labeled name="forcepoints">
-				<anchored to="size" position="righthigh" offset="5,0" width="80" />
+				<anchored to="detailframe" position="insidetopleft" offset="15,48" width="95" height="20" />
 				<labelres>char_label_forcepoints</labelres>
 			</string_labeled>
 			<string_labeled name="darksidepoints">
-				<anchored to="forcepoints" position="righthigh" offset="5,0" width="80" />
+				<anchored to="forcepoints" position="righthigh" offset="10,0" width="120" />
 				<labelres>char_label_darksidepoints</labelres>
+			</string_labeled>
+			<string_labeled name="reputation">
+				<anchored to="darksidepoints" position="righthigh" offset="10,0" width="90" />
+				<labelres>char_label_reputation</labelres>
 			</string_labeled>
 
 			<frame_char name="appearanceframe">
-				<anchored position="insidetopleft" offset="0,50" height="190">
+				<anchored position="insidetopleft" offset="0,90" height="190">
 					<right offset="-180" />
 				</anchored>
 			</frame_char>
@@ -77,7 +85,7 @@
 			</scrollbar>
 
 			<frame_char name="languageframe">
-				<anchored position="insidetopright" offset="0,50" width="180" height="190" />
+				<anchored position="insidetopright" offset="0,90" width="180" height="190" />
 			</frame_char>
 			<label_frametop>
 				<anchored to="languageframe" />
@@ -101,7 +109,7 @@
 			</button_iadd>
 
 			<frame_char name="notesframe">
-				<anchored position="insidetop" offset="0,240">
+				<anchored position="insidetop" offset="0,280">
 					<bottom />
 				</anchored>
 			</frame_char>

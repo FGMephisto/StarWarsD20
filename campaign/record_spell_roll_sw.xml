@@ -34,37 +34,10 @@
 				</anchored>
 				<parameters>
 					<defaultlabelres>power_label_atktypenone</defaultlabelres>
-					<labelsres>power_label_atktypemelee|power_label_atktyperanged|power_label_atktypeskill</labelsres>
-					<values>melee|ranged|skill</values>
+					<labelsres>power_label_atktypemelee|power_label_atktyperanged</labelsres>
+					<values>melee|ranged</values>
 				</parameters>
-				<script>
-					function onValueChanged()
-						local bSkill = (getValue() == "skill");
-						local bShowMod = (getValue() ~= "");
-						window.atkskill.setVisible(bSkill);
-						window.atkplus.setVisible(not bSkill and bShowMod);
-						if bSkill then
-							window.atkmod.setVisible(false);
-						else
-							if window.atkmod.onValueChanged then
-								window.atkmod.onValueChanged();
-							else
-								window.atkmod.setVisible(window.atkmod.getValue() ~= 0);
-							end
-						end
-					end
-					function onInit()
-						if super and super.onInit then
-							super.onInit();
-						end
-						onValueChanged();
-					end
-				</script>
 			</button_stringcycler>
-			<simplestringc name="atkskill">
-				<anchored to="atktype" position="righthigh" offset="5,0" width="80" height="20" />
-				<empty textres="power_empty_atkskill" />
-			</simplestringc>
 			<label name="atkplus">
 				<anchored to="atktype" position="righthigh" offset="5,0" width="10" />
 				<static>+</static>
@@ -97,9 +70,9 @@
 			<button_stringcycler name="savedctype">
 				<anchored to="savedclabel" position="righthigh" offset="10,0" width="70" height="20" />
 				<parameters>
-					<defaultlabelres>power_label_savedctype_ability</defaultlabelres>
-					<labelsres>power_label_savedctype_casterlevel|power_label_savedctype_fixed</labelsres>
-					<values>casterlevel|fixed</values>
+					<defaultlabelres>power_label_savedctype_check</defaultlabelres>
+					<labelsres>power_label_savedctype_fixed|power_label_savedctype_halflevel</labelsres>
+					<values>fixed|halflevel</values>
 				</parameters>
 			</button_stringcycler>
 			<basicnumber name="savedcmod">
@@ -163,20 +136,7 @@
 				<readonly />
 			</simplestringc>
 
-			<!-- <label_column> -->
-				<!-- <static textres="power_label_metamagic" /> -->
-			<!-- </label_column> -->
-			<!-- <button_stringcycler name="meta"> -->
-				<!-- <anchored width="150"> -->
-					<!-- <top parent="columnanchor" anchor="bottom" relation="relative" offset="7" /> -->
-					<!-- <left offset="97" /> -->
-				<!-- </anchored> -->
-				<!-- <parameters> -->
-					<!-- <defaultlabelres>dash</defaultlabelres> -->
-					<!-- <labelsres>power_label_metamagicempower|power_label_metamagicmaximize|power_label_metamagicempowermaximize|power_label_metamagicepicintensify</labelsres> -->
-					<!-- <values>empower|maximize|empowermaximize|epicintensify</values> -->
-				<!-- </parameters> -->
-			<!-- </button_stringcycler> -->
+
 			
 			<label_column>
 				<static textres="power_label_spelldmg" />
@@ -216,16 +176,18 @@
 				<static textres="power_label_dmg_dice" />
 			</label_fieldtop>
 			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="85,1" width="120" />
-				<static textres="power_label_dmg_dicemult" />
+				<anchored to="list" position="aboveleft" offset="92,1" width="70" />
+				<static textres="spell_label_ability" />
 			</label_fieldtop>
 			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="220,1" width="160" />
-				<static textres="power_label_dmg_stat" />
-			</label_fieldtop>
-			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="390,1" width="50" />
+				<anchored to="list" position="aboveleft" offset="182,1" width="50" />
 				<static textres="power_label_dmg_bonus" />
+			</label_fieldtop>
+			<label_fieldtop>
+				<anchored to="list" position="aboveleft" offset="224,1">
+					<right offset="-5" />
+				</anchored>
+				<static textres="power_label_dmgtype" />
 			</label_fieldtop>
 		</sheetdata>
 	</windowclass>
@@ -242,79 +204,26 @@
 			<dice_listitem_left name="dice">
 				<anchored width="60" />
 			</dice_listitem_left>
-			<label_listitem_left name="label_dicestatx">
-				<static>x</static>
-			</label_listitem_left>
-			<stringcycler_listitem_left name="dicestat">
-				<anchored width="60" />
-				<parameters>
-					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl|thirdcl</labelsres>
-					<values>cl|halfcl|oddcl|thirdcl</values>
-				</parameters>
-			</stringcycler_listitem_left>
-			<label_listitem_left name="dicestatmaxparen">
-				<static>(</static>
-			</label_listitem_left>
-			<number_listitem_left name="dicestatmax">
-				<anchored width="20" />
-				<hideonvalue value="0" />
-				<tooltip textres="power_tooltip_dicemax" />
-			</number_listitem_left>
-			<label_listitem_left name="dicestatmaxparen2">
-				<static>)</static>
-			</label_listitem_left>
 			<label_listitem_left name="label_plus">
 				<static>+</static>
 			</label_listitem_left>
-			<number_listitem_left name="statmult">
-				<anchored width="20" />
-				<default>1</default>
-				<min>0.5</min>
-				<wheel>0.5</wheel>
-				<hideonvalue>1</hideonvalue>
-				<tooltip textres="power_tooltip_statmult" />
-			</number_listitem_left>
-			<label_listitem_left name="label_statmultx">
-				<static>x</static>
-			</label_listitem_left>
 			<stringcycler_listitem_left name="stat">
-				<anchored width="60" />
+				<anchored width="70" />
 				<parameters>
 					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl|thirdcl|str|dex|con|int|wis|cha</labelsres>
-					<values>cl|halfcl|oddcl|thirdcl|strength|dexterity|constitution|intelligence|wisdom|charisma</values>
+					<labelsres>str|dex|con|int|wis|cha</labelsres>
+					<values>strength|dexterity|constitution|intelligence|wisdom|charisma</values>
 				</parameters>
 			</stringcycler_listitem_left>
-			<label_listitem_left name="statmaxparen">
-				<static>(</static>
-			</label_listitem_left>
-			<number_listitem_left name="statmax">
-				<anchored width="20" />
-				<hideonvalue value="0" />
-				<tooltip textres="power_tooltip_statmax" />
-			</number_listitem_left>
-			<label_listitem_left name="statmaxparen2">
-				<static>)</static>
-			</label_listitem_left>
 			<label_listitem_left name="label_plus2">
 				<static>+</static>
 			</label_listitem_left>
 			<number_listitem_left name="bonus">
-				<anchored width="30" />
+				<anchored width="35" />
 				<hideonvalue>0</hideonvalue>
 			</number_listitem_left>
 			
-			<label name="label_type">
-				<anchored position="insidetopleft" offset="20,25" />
-				<static textres="power_label_dmgtype" />
-			</label>
-			<stringu name="type">
-				<anchored to="label_type" position="righthigh" offset="10,0">
-					<right parent="" offset="-5" />
-				</anchored>
-				<multilinespacing>20</multilinespacing>
-			</stringu>
+			<string_listitem_center_underline name="type" />
 		</sheetdata>
 	</windowclass>
 
@@ -372,20 +281,7 @@
 				</parameters>
 			</button_stringcycler>
 			
-			<label_column>
-				<static textres="power_label_metamagic" />
-			</label_column>
-			<button_stringcycler name="meta">
-				<anchored width="150">
-					<top parent="columnanchor" anchor="bottom" relation="relative" offset="7" />
-					<left offset="97" />
-				</anchored>
-				<parameters>
-					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>power_label_metamagicempower|power_label_metamagicmaximize|power_label_metamagicempowermaximize|power_label_metamagicepicintensify</labelsres>
-					<values>empower|maximize|empowermaximize|epicintensify</values>
-				</parameters>
-			</button_stringcycler>
+
 
 			<header_column name="header_heal">
 				<static textres="power_header_heal" />
@@ -409,15 +305,11 @@
 				<static textres="power_label_heal_dice" />
 			</label_fieldtop>
 			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="85,1" width="120" />
-				<static textres="power_label_heal_dicemult" />
+				<anchored to="list" position="aboveleft" offset="92,1" width="70" />
+				<static textres="spell_label_ability" />
 			</label_fieldtop>
 			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="220,1" width="160" />
-				<static textres="power_label_heal_stat" />
-			</label_fieldtop>
-			<label_fieldtop>
-				<anchored to="list" position="aboveleft" offset="390,1" width="50" />
+				<anchored to="list" position="aboveleft" offset="182,1" width="50" />
 				<static textres="power_label_heal_bonus" />
 			</label_fieldtop>
 		</sheetdata>
@@ -435,66 +327,22 @@
 			<dice_listitem_left name="dice">
 				<anchored width="60" />
 			</dice_listitem_left>
-			<label_listitem_left name="label_dicestatx">
-				<static>x</static>
-			</label_listitem_left>
-			<stringcycler_listitem_left name="dicestat">
-				<anchored width="60" />
-				<parameters>
-					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl|thirdcl</labelsres>
-					<values>cl|halfcl|oddcl|thirdcl</values>
-				</parameters>
-			</stringcycler_listitem_left>
-			<label_listitem_left name="dicestatmaxparen">
-				<static>(</static>
-			</label_listitem_left>
-			<number_listitem_left name="dicestatmax">
-				<anchored width="20" />
-				<hideonvalue value="0" />
-				<tooltip textres="power_tooltip_dicemax" />
-			</number_listitem_left>
-			<label_listitem_left name="dicestatmaxparen2">
-				<static>)</static>
-			</label_listitem_left>
 			<label_listitem_left name="label_plus">
 				<static>+</static>
 			</label_listitem_left>
-			<number_listitem_left name="statmult">
-				<anchored width="20" />
-				<default>1</default>
-				<min>0.5</min>
-				<wheel>0.5</wheel>
-				<hideonvalue>1</hideonvalue>
-				<tooltip textres="power_tooltip_statmult" />
-			</number_listitem_left>
-			<label_listitem_left name="label_statmultx">
-				<static>x</static>
-			</label_listitem_left>
 			<stringcycler_listitem_left name="stat">
-				<anchored width="60" />
+				<anchored width="70" />
 				<parameters>
 					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl|thirdcl|str|dex|con|int|wis|cha</labelsres>
-					<values>cl|halfcl|oddcl|thirdcl|strength|dexterity|constitution|intelligence|wisdom|charisma</values>
+					<labelsres>str|dex|con|int|wis|cha</labelsres>
+					<values>strength|dexterity|constitution|intelligence|wisdom|charisma</values>
 				</parameters>
 			</stringcycler_listitem_left>
-			<label_listitem_left name="statmaxparen">
-				<static>(</static>
-			</label_listitem_left>
-			<number_listitem_left name="statmax">
-				<anchored width="20" />
-				<hideonvalue value="0" />
-				<tooltip textres="power_tooltip_statmax" />
-			</number_listitem_left>
-			<label_listitem_left name="statmaxparen2">
-				<static>)</static>
-			</label_listitem_left>
 			<label_listitem_left name="label_plus2">
 				<static>+</static>
 			</label_listitem_left>
 			<number_listitem_left name="bonus">
-				<anchored width="30" />
+				<anchored width="35" />
 				<hideonvalue>0</hideonvalue>
 			</number_listitem_left>
 		</sheetdata>
@@ -528,97 +376,28 @@
 				<center />
 			</header_column>
 
-			<basicdice name="durdice">
-				<anchored width="60" height="20">
+			<cycler_ability name="durstat">
+				<anchored width="70" height="20">
 					<top parent="columnanchor" anchor="bottom" relation="relative" offset="22" />
 					<left offset="5" />
 				</anchored>
-			</basicdice>
-			<label_fieldtop>
-				<anchored to="durdice" />
-				<static textres="power_label_effect_durdice" />
-			</label_fieldtop>
-			<label name="label_durdicestatx">
-				<anchored to="durdice" position="righthigh" offset="5,0" width="10" />
-				<static>x</static>
-				<center />
-			</label>
-			<button_stringcycler name="durdicestat">
-				<anchored to="label_durdicestatx" position="righthigh" offset="5,0" width="60" />
 				<parameters>
 					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl|thirdcl</labelsres>
-					<values>cl|halfcl|oddcl|thirdcl</values>
-				</parameters>
-			</button_stringcycler>
-			<label name="durdicestatmaxparen">
-				<anchored to="durdicestat" position="righthigh" offset="5,0" />
-				<static>(</static>
-			</label>
-			<basicnumber name="durdicestatmax">
-				<anchored to="durdicestatmaxparen" position="righthigh" offset="5,0" width="20" height="20" />
-				<hideonvalue value="0" />
-				<tooltip textres="power_tooltip_dicemax" />
-			</basicnumber>
-			<label name="durdicestatmaxparen2">
-				<anchored to="durdicestatmax" position="righthigh" offset="5,0" />
-				<static>)</static>
-			</label>
-			<label_fieldtop>
-				<anchored to="durdicestat">
-					<right parent="durdicestatmaxparen2" />
-				</anchored>
-				<static textres="power_label_effect_durdicemult" />
-			</label_fieldtop>
-			<label name="label_durplus">
-				<anchored to="durdicestatmaxparen2" position="righthigh" offset="2,0" width="10" />
-				<static>+</static>
-			</label>
-			<basicnumber name="durmult">
-				<anchored to="label_durplus" position="righthigh" offset="3,0" width="20" height="20" />
-				<default>1</default>
-				<min>1</min>
-				<hideonvalue>1</hideonvalue>
-				<tooltip textres="power_tooltip_statmult" />
-			</basicnumber>
-			<label name="label_durstatmultx">
-				<anchored to="durmult" position="righthigh" offset="5,0" width="10" />
-				<static>x</static>
-				<center />
-			</label>
-			<cycler_ability name="durstat">
-				<anchored to="label_durstatmultx" position="righthigh" offset="5,0" width="60" />
-				<parameters>
-					<defaultlabelres>dash</defaultlabelres>
-					<labelsres>cl|evencl|oddcl|thirdcl|str|dex|con|int|wis|cha</labelsres>
-					<values>cl|halfcl|oddcl|thirdcl|strength|dexterity|constitution|intelligence|wisdom|charisma</values>
+					<labelsres>str|dex|con|int|wis|cha</labelsres>
+					<values>strength|dexterity|constitution|intelligence|wisdom|charisma</values>
 				</parameters>
 			</cycler_ability>
-			<label name="durstatmaxparen">
-				<anchored to="durstat" position="righthigh" offset="5,0" />
-				<static>(</static>
-			</label>
-			<basicnumber name="dmaxstat">
-				<anchored to="durstatmaxparen" position="righthigh" offset="5,0" width="20" height="20" />
-				<hideonvalue value="0" />
-				<tooltip textres="power_tooltip_statmax" />
-			</basicnumber>
-			<label name="durstatmaxparen2">
-				<anchored to="dmaxstat" position="righthigh" offset="5,0" />
-				<static>)</static>
-			</label>
 			<label_fieldtop>
-				<anchored to="durmult">
-					<right parent="durstatmaxparen2" />
-				</anchored>
-				<static textres="power_label_effect_durstat" />
+				<anchored to="durstat" />
+				<static textres="spell_label_ability" />
 			</label_fieldtop>
-			<label name="label_durplus2">
-				<anchored to="durstatmaxparen2" position="righthigh" offset="2,0" width="10" />
+			<label name="label_durplus">
+				<anchored to="durstat" position="righthigh" offset="5,0" width="10" />
 				<static>+</static>
+				<center />
 			</label>
 			<basicnumber name="durmod">
-				<anchored to="label_durplus2" position="righthigh" offset="2,0" width="20" height="20" />
+				<anchored to="label_durplus" position="righthigh" offset="5,0" width="35" height="20" />
 				<hideonvalue>0</hideonvalue>
 			</basicnumber>
 			<label_fieldtop>

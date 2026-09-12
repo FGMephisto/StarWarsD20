@@ -1,73 +1,93 @@
-# Star Wars d20 Ruleset - Implementation Changelog (Since April 2026)
+# Star Wars d20 Ruleset - Release Notes
 
-This document outlines all major architectural improvements, ruleset adaptations, UI enhancements, and bug fixes implemented in the **Star Wars d20 ruleset for Fantasy Grounds Unity** since April 2026.
-
----
-
-## 1. Combat, Health & Damage Mechanics (August 2026)
-
-### Vitality Points (VP) & Wound Points (WP) System
-- **VP Absorption**: Damage rolls first deplete the character's Vitality Points pool. Chat notifications now display `[VP ABSORBED: X]` using authentic Star Wars d20 terminology rather than legacy temporary HP tags.
-- **Wound Damage & Health Application**: Leftover damage penetrating past Vitality Points is applied directly to Wound Points (or directly on Critical Hits).
-
-### Armor Damage Reduction (DR) (GitHub Issue #8)
-- **Authentic SW d20 Armor Model**: In Star Wars Revised d20 rules, armor provides Damage Reduction (DR) to Wound Points rather than a static Defense bonus.
-- **Inventory Integration**: Equipping armor (`carried = worn`) automatically aggregates the item's `dr` property and populates the character's `defenses.damagereduction` and Combat Tracker `dr` fields.
-- **Combat Resolution**: Penetrating wound damage (and critical hits) is reduced by the armor's DR rating, reporting `[ARMOR DR: X]` in chat.
-
-### Vehicle, Creature & Size DR (GitHub Issue #7)
-- **Universal DR Engine**: Overrode the default 3.5E restriction (which skipped DR for energy weapons) so that `DR: X` and vehicle DR protect against blaster/energy attacks as well as physical damage.
-- **Vehicle Hull Protection**: Vehicles (which have 0 VP) protect their Hull points directly with their DR value on incoming attacks.
-- **Combat Tracker Effect Support**: Supports `DR: X`, `ARMORDR: X`, and `ADR: X` effect tags.
-- **NPC & Vehicle Post-Add**: Dragging NPC and Vehicle records to the Combat Tracker automatically populates their `dr` field on the CT node.
-
-### Lightsaber Bypass Mechanics
-- Attacks made with lightsabers (detected via weapon name, damage type `energy, lightsaber`, or properties) automatically bypass Armor and Structural Damage Reduction as per Star Wars d20 rules.
-
-### Lost Wound Points & Fatigue Rule (GitHub Issue #11)
-- **Automatic Fatigue**: Whenever a character suffers damage to their Wound Points (`wounds > 0`), the `Fatigued` condition is automatically applied (`[FATIGUED]`), inflicting standard -2 Str / -2 Dex penalties and prohibiting running or charging.
-- **Automatic Recovery**: When all wound damage is healed (`wounds <= 0`), the `Fatigued` condition is automatically removed.
-
-### Removal of Unused Spell Resistance (SR)
-- Removed all legacy D&D "Spell Resistance" (SR) controls and labels from the Combat Tracker defense section and Party Sheet, as Star Wars d20 resolves Force powers via skills, saving throws, and Force Defense rather than a numerical SR stat.
+This document highlights the major features, gameplay mechanics, user interface improvements, and bug fixes for the **Star Wars d20 ruleset for Fantasy Grounds Unity**.
 
 ---
 
-## 2. Combat Tracker & Character Sheet Layouts (August 2026)
+## 1. Force Powers & Actions Overhaul (September 2026)
 
-### Combat Tracker Defense Section Overhaul
-- Redesigned the Combat Tracker defense block into a clean, 4-column layout:
-  - **Column 1**: Defense (`DEF`) / Fortitude Save (`Fort`)
-  - **Column 2**: Flat-Footed Defense (`FF`) / Reflex Save (`Ref`)
-  - **Column 3**: Touch Defense (`Tch`) / Will Save (`Will`)
+### Force Skill Integration & Direct Rolling
+- **Direct Force Skill Links**: Clicking the link shortcut beside a Force power now opens the relevant Force Skill description sheet rather than a fantasy spell sheet.
+- **Roll Force Checks from the Actions Tab**: Double-click or drag the total bonus on any Force power row to roll your Force skill check directly to chat.
+
+### Star Wars Saving Throw DCs
+- **Opposed Skill Checks**: Powers that call for a saving throw can now be set to **Check**, automatically setting the save DC to the result of your Force skill check (`[WILL vs Check]`).
+- **Fixed & Ability-Based DCs**: Added quick DC modes for fixed difficulty (e.g., standard DC 15 for tech and stun weapons) and class/species abilities ($10 + \text{half level} + \text{ability modifier}$).
+- **Clean Chat Announcements**: Save prompts in chat clearly display the required save type and DC without phantom fantasy spell level adjustments.
+
+### Streamlined Action Editors
+- **Compact Damage Editor**: Streamlined the damage editor into a clean single line with a dedicated damage type column.
+- **Bypass DR Toggle**: Clarified the damage reduction toggle to **Bypass DR? [ Yes / No ]**, making it obvious whether the power or attack bypasses armor and vehicle protection.
+- **Simplified Duration & Attack Controls**: Cleaned up the duration editor for easier time tracking and removed non-functional fantasy skill attack options.
+
+### Star Wars Terminology & Polish
+- Replaced fantasy "Cast" tooltips with **Use**.
+- Updated power and ability pop-up windows to Star Wars naming (e.g., *Force/Ability Use*, *Force/Ability Attack*, *Force/Ability Damage*, *Force/Ability Effect*, *Force/Ability Save*).
+- Updated concentration check messages to reference Force classes instead of spell classes.
+
+### Vitality Die, Health & Leveling
+- **Vitality Die Terminology**: Replaced legacy fantasy "Hit Die" terminology with **Vitality Die** across class records and UI strings.
+- **Automated VP & WP Progression**: 1st level character creation now properly sets max Vitality Points (max Vitality Die + Con modifier) into the character's VP pool, and initializes Wound Points (WP) equal to the character's Constitution score. Additional class levels add rolled/average Vitality Points to VP.
+
+### Combat Conditions & Dual-Wielding
+- **Run Condition**: Running characters lose their Dexterity bonus to Defense and on Reflex saves. If a character possesses the **Run** feat, their Dexterity bonus to Defense is preserved while running.
+- **Two-Weapon Fighting & Off-Hand Melee**: Added a dedicated **Melee Off-Hand** weapon state to the character sheet. Automatically applies authentic Star Wars d20 two-weapon fighting penalties based on `Two-Weapon Fighting`, `Multiweapon Fighting`, and `Ambidexterity` feats, limits off-hand iterative attacks unless possessing `Improved Two-Weapon Fighting`, and calculates 0.5x Strength modifier damage.
+
+### Character Sheet & Feat Enhancements
+- **Reputation Bonus**: Added a dedicated **Reputation** field to the character sheet Notes tab. Automatically calculates reputation progression from class levels while allowing manual adjustments, and supports applying the character's Reputation bonus to Bluff, Diplomacy, Gather Information, and Intimidate checks.
+- **Notes Tab Organization**: Rebuilt the character details section of the Notes tab into an elegant framed two-row layout. Physical traits (Gender, Age, Height, Weight, Size) span across the full top row, while Force Points, Dark Side Points, and Reputation sit cleanly below with clear, uncrowded labels.
+- **Inventory & Encumbrance Display**: Restored standard frame sizing in the Inventory tab, ensuring armor penalties and encumbrance values display neatly without overlapping box borders.
+- **Force Feats Recognition**: Added dynamic `[Force]` badge display on character sheet feat lists for all feats with the Force descriptor, with standardized Prerequisite, Benefit, Normal, and Special sections.
+
+---
+
+## 2. Combat, Health & Damage Mechanics (August 2026)
+
+### Vitality Points (VP) & Wound Points (WP)
+- **Vitality Point Absorption**: Damage automatically depletes a character's Vitality Points pool first, with chat notifications displaying `[VP ABSORBED: X]`.
+- **Wound Damage**: Damage exceeding Vitality Points is applied directly to Wound Points. Critical hits bypass Vitality and strike Wound Points directly.
+- **Automatic Fatigue**: Taking any damage to Wound Points automatically inflicts the **Fatigued** condition (-2 Strength, -2 Dexterity, no running/charging). The condition is automatically removed once all wound damage is healed.
+
+### Damage Reduction (DR) & Armor
+- **Authentic Armor Mechanics**: Equipping armor automatically applies its Damage Reduction (DR) rating to protect your Wound Points, displaying `[ARMOR DR: X]` in chat when hit.
+- **Energy & Blaster DR**: Vehicle, creature, and natural armor DR protect against energy and blaster attacks in addition to physical attacks.
+- **Vehicle Hull Protection**: Attacks on vehicles directly apply against Hull points after factoring in vehicle DR.
+- **Lightsaber Bypass**: Lightsaber attacks automatically ignore both armor and structural Damage Reduction.
+- **Spell Resistance Removed**: Removed obsolete fantasy "Spell Resistance" fields from sheets and the Combat Tracker.
+
+---
+
+## 3. Combat Tracker & Character Sheet Layouts (August 2026)
+
+### Combat Tracker Defenses
+- Reorganized the Combat Tracker defense section into four clean columns:
+  - **Column 1**: Defense (`DEF`) and Fortitude Save (`Fort`)
+  - **Column 2**: Flat-Footed Defense (`FF`) and Reflex Save (`Ref`)
+  - **Column 3**: Touch Defense (`Tch`) and Will Save (`Will`)
   - **Column 4**: Damage Reduction (`DR`)
-- Converted `dr` on the Combat Tracker to a string-based crosslink (`string_ct` / `hsx`) to prevent database type conflicts (`string` vs `number`) with character sheets.
-- Added automatic database node type migration in `char_main.lua` and `ct_entry.lua` for backwards compatibility with existing campaign data.
-- Fixed layout anchor warning for the `wounds` control on `charsheet_main`.
+- Combat Tracker records automatically populate DR when dropping NPCs and vehicles into combat.
 
 ---
 
-## 3. Theme, Graphics & Visual Assets (May – July 2026)
+## 4. Theme & Sci-Fi Visual Styling (May – July 2026)
 
-### Sci-Fi Theme & Frame Overhaul
-- **Frames**: Updated window frames, headers, and backgrounds for character sheets, Combat Tracker, chatbox, groupbox, referencelist, storybox, token bags, and utility dialogs.
-- **Sidebar & Dock**: Rebuilt sidebar dock categories, buttons, and state icons for clean navigation in Fantasy Grounds Unity.
-- **Star Wars Nomenclature**: Replaced remaining D&D fantasy string resources with Star Wars equivalents (Defense, Vitality, Wounds, Force Resistance, etc.).
-
----
-
-## 4. Skills System Modernization (April – May 2026)
-
-### Full Skill System Stabilization
-- Re-architected skill list controls with dedicated script controllers (`char_skills_main_sw.lua`, `char_skilllist_sw.lua`, `char_skilllist_item_sw.lua`, `char_skilllist_detailed_item_sw.lua`).
-- Added robust database node validation guards to eliminate script errors when manipulating character skill entries.
-- Implemented support for cross-class skill rank limits and cost calculations.
-- Integrated Force skill categorizations (Alter, Control, Sense aspects).
+### Visual Experience
+- **Star Wars Themed UI**: Custom sci-fi frames, headers, and backgrounds across character sheets, the Combat Tracker, chat window, and story panels.
+- **Updated Sidebar**: Modernized sidebar buttons and icons for easy navigation in Fantasy Grounds Unity.
+- **Full Sci-Fi Nomenclature**: Consistent Star Wars terms throughout all tabs and tooltips (Defense, Vitality, Wounds, Force Resistance, etc.).
 
 ---
 
-## 5. Action & Effect Pipeline Refactor (April 2026)
+## 5. Skills System Modernization (April – May 2026)
 
-### Modernized Action Management
-- Modularized handlers for attacks, damage, saving throws, ability checks, and skill rolls (`manager_action_attack_sw.lua`, `manager_action_damage.lua`, `manager_action_skill_sw.lua`, etc.).
-- Cleaned up obsolete helper scripts and standardized event registrations using `GameManager` and `ActionsManager`.
+### Skills Tab Enhancements
+- **Force Aspects**: Added clear categorization for Force skills into Alter, Control, and Sense aspects.
+- **Cross-Class Calculations**: Accurate cross-class skill rank limits and skill point purchasing costs.
+- **Stability & Performance**: Improved skill sheet responsiveness and reliability when editing, adding, or deleting character skills.
+
+---
+
+## 6. Combat Actions & Automation (April 2026)
+
+### Unified Action Engine
+- Rebuilt attack, damage, saving throw, and skill roll handling for smoother automation with Fantasy Grounds Unity combat and effect systems.

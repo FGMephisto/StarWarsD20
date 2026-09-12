@@ -108,6 +108,29 @@ function onSourceUpdate()
 	end
 end
 
-function onDragStart(_, _, _, draginfo)
-	return window.action(draginfo);
+function action(draginfo)
+	local nodeSpell = window.getDatabaseNode();
+	if not nodeSpell then
+		return;
+	end
+	local sPath = DB.getPath(nodeSpell);
+	local sCharPath = sPath:match("^([^.]*%.id%-%d+)");
+	local nodeChar = nil;
+	if sCharPath then
+		nodeChar = DB.findNode(sCharPath);
+	end
+	local rActor = ActorManager.resolveActor(nodeChar);
+	local sSkill = DB.getValue(nodeSpell, "name", "");
+	local nValue = getValue();
+	ActionSkill.performRoll(draginfo, rActor, sSkill, nValue);
+end
+
+function onDoubleClick(x, y)
+	action();
+	return true;
+end
+
+function onDragStart(button, x, y, draginfo)
+	action(draginfo);
+	return true;
 end

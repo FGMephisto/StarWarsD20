@@ -66,11 +66,23 @@ function getSaveVsRoll(rActor, rAction)
 	};
 
 	if rAction.save == "fortitude" then
-		rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, string.format("[FORT DC %d]", rAction.savemod));
+		if rAction.bCheckDC then
+			rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, "[FORT vs Check]");
+		else
+			rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, string.format("[FORT DC %d]", rAction.savemod));
+		end
 	elseif rAction.save == "reflex" then
-		rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, string.format("[REF DC %d]", rAction.savemod));
+		if rAction.bCheckDC then
+			rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, "[REF vs Check]");
+		else
+			rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, string.format("[REF DC %d]", rAction.savemod));
+		end
 	elseif rAction.save == "will" then
-		rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, string.format("[WILL DC %d]", rAction.savemod));
+		if rAction.bCheckDC then
+			rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, "[WILL vs Check]");
+		else
+			rRoll.sDesc = StringManager.appendLine(rRoll.sDesc, string.format("[WILL DC %d]", rAction.savemod));
+		end
 	end
 
 	if rAction.dcstat then

@@ -150,10 +150,32 @@
 		</sheetdata>
 	</windowclass>
 	<windowclass name="char_ability_feat" copy="char_ability_entry">
+		<script>
+			function onInit()
+				local node = getDatabaseNode();
+				if node then
+					local sType = DB.getValue(node, "type", ""):lower();
+					if sType:match("force") then
+						type_badge.setValue("[Force]");
+						type_badge.setVisible(true);
+					end
+				end
+			end
+		</script>
 		<sheetdata>
 			<linkc_listitem_left name="shortcut">
 				<class>referencefeat</class>
 			</linkc_listitem_left>
+			<stringcontrol name="type_badge" insertbefore="name">
+				<anchored width="45" height="20">
+					<top parent="rightanchor" />
+					<right parent="rightanchor" relation="relative" offset="-5" />
+				</anchored>
+				<readonly />
+				<font>sheetlabelmini</font>
+				<color>0088CC</color>
+				<invisible />
+			</stringcontrol>
 		</sheetdata>
 	</windowclass>
 	<windowclass name="char_ability_class" copy="char_ability_entry">

@@ -756,7 +756,13 @@ function getSpellAction(rActor, nodeAction, sSubRoll)
 		local sSaveType = DB.getValue(nodeAction, "savetype", "");
 		if sSaveType ~= "" then
 			rAction.save = sSaveType;
-			rAction.savemod = SpellManager.getActionSaveDC(nodeAction);
+			local sSaveDCType = DB.getValue(nodeAction, "savedctype", "");
+			if sSaveDCType == "fixed" or sSaveDCType == "casterlevel" or sSaveDCType == "halflevel" then
+				rAction.savemod = SpellManager.getActionSaveDC(nodeAction);
+			else
+				rAction.savemod = 0;
+				rAction.bCheckDC = true;
+			end
 		else
 			rAction.save = "";
 			rAction.savemod = 0;
@@ -969,25 +975,30 @@ function getActionCLC(nodeAction)
 end
 
 function getActionSaveDC(nodeAction)
-	local nTotal;
+	local nTotal = 0;
 	local nodeSpellClass = getSpellClassNodeFromAction(nodeAction);
+	local sSaveDCType = DB.getValue(nodeAction, "savedctype", "");
 	
-	if DB.getValue(nodeAction, "savedctype", "") == "fixed" then
+	if sSaveDCType == "fixed" then
 		nTotal = DB.getValue(nodeAction, "savedcmod", 0);
-	elseif DB.getValue(nodeAction, "savedctype", "") == "casterlevel" then
+	elseif sSaveDCType == "casterlevel" or sSaveDCType == "halflevel" then
 		local nClassStat = getActionAbilityBonus(nodeAction);
 		local nClassMisc = DB.getValue(nodeSpellClass, "dc.misc", 0);
-		local nCasterLevel = math.floor(DB.getValue(nodeSpellClass, "cl", 0)/2);
+		local nLevel = 0;
+		local nodeActor = getActorNodeFromAction(nodeAction);
+		if nodeActor then
+			nLevel = DB.getValue(nodeActor, "level", 0);
+		end
+		if nLevel == 0 then
+			nLevel = DB.getValue(nodeSpellClass, "cl", 0);
+		end
+		local nHalfLevel = math.floor(nLevel / 2);
 		local nMod = DB.getValue(nodeAction, "savedcmod", 0);
 
-		nTotal = 10 + nClassStat + nClassMisc + nCasterLevel + nMod;
+		nTotal = 10 + nClassStat + nClassMisc + nHalfLevel + nMod;
 	else
-		local nClassStat = getActionAbilityBonus(nodeAction);
-		local nClassMisc = DB.getValue(nodeSpellClass, "dc.misc", 0);
-		local nSpellLevel = DB.getValue(nodeAction, ".....level", 0);
-		local nMod = DB.getValue(nodeAction, "savedcmod", 0);
-		
-		nTotal = 10 + nClassStat + nClassMisc + nSpellLevel + nMod;
+		-- Check / default: DC opposes Force skill check result
+		nTotal = 0;
 	end
 	
 	return nTotal;
@@ -1184,9 +1195,9 @@ function getActionSaveText(nodeAction)
 	local sSave = "";
 
 	local sSaveType = DB.getValue(nodeAction, "savetype", "");
-	local nDC = SpellManager.getActionSaveDC(nodeAction);
+	local sSaveDCType = DB.getValue(nodeAction, "savedctype", "");
 
-	if sSaveType ~= "" and nDC ~= 0 then
+	if sSaveType ~= "" then
 		if sSaveType == "fortitude" then
 			sSave = Interface.getString("power_label_savetypefort");
 		elseif sSaveType == "reflex" then
@@ -1195,7 +1206,17 @@ function getActionSaveText(nodeAction)
 			sSave = Interface.getString("power_label_savetypewill");
 		end
 		
-		sSave = string.format("%s DC %d", sSave, nDC);
+		if sSaveDCType == "fixed" or sSaveDCType == "casterlevel" or sSaveDCType == "halflevel" then
+			local nDC = SpellManager.getActionSaveDC(nodeAction);
+			if nDC ~= 0 then
+				sSave = string.format("%s DC %d", sSave, nDC);
+			else
+				sSave = string.format("%s DC -", sSave);
+			end
+		else
+			sSave = string.format("%s vs Check", sSave);
+		end
+
 		if DB.getValue(nodeAction, "onmissdamage", "") == "half" then
 			sSave = sSave .. " (H)";
 		end

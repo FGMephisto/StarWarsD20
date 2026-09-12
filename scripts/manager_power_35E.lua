@@ -42,16 +42,14 @@ function usePower(node)
 	local nodeChar = PowerManager35E.getPowerActorNode(node);
 	local rActor = ActorManager.resolveActor(nodeChar);
 
-	local nPP = DB.getValue(nodeSpellClass, "points", 0);
-	local nPPUsed = DB.getValue(nodeSpellClass, "pointsused", 0);
 	local nCost = DB.getValue(node, "cost", 0);
-	
 	local sMessage;
-	if (nPP - nPPUsed) < nCost then
-		sMessage = string.format("%s\r[%d PP] [INSUFFICIENT PP AVAILABLE]", PowerManagerCore.getPowerName(node), nCost);
-	else
+	if nCost > 0 then
+		local nPPUsed = DB.getValue(nodeSpellClass, "pointsused", 0);
 		DB.setValue(nodeSpellClass, "pointsused", "number", nPPUsed + nCost);
-		sMessage = string.format("%s\r[%d PP]", PowerManagerCore.getPowerOutput(node), nCost);
+		sMessage = string.format("%s\r[%d VP]", PowerManagerCore.getPowerOutput(node), nCost);
+	else
+		sMessage = PowerManagerCore.getPowerOutput(node);
 	end
 
 	ChatManager.Message(sMessage, ActorManager.isPC(rActor), rActor);

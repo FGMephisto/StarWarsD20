@@ -8,10 +8,22 @@ function onInit()
 	self.onSystemChanged();
 	self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 
-	DB.addHandler(DB.getPath(getDatabaseNode(), "classes"), "onChildUpdate", self.onLevelChanged);
+	local nodeChar = getDatabaseNode();
+	DB.addHandler(DB.getPath(nodeChar, "classes"), "onChildUpdate", self.onLevelChanged);
+	DB.addHandler(DB.getPath(nodeChar, "abilities.constitution.score"), "onUpdate", self.onConstitutionChanged);
 end
 function onClose()
-	DB.removeHandler(DB.getPath(getDatabaseNode(), "classes"), "onChildUpdate", self.onLevelChanged);
+	local nodeChar = getDatabaseNode();
+	DB.removeHandler(DB.getPath(nodeChar, "classes"), "onChildUpdate", self.onLevelChanged);
+	DB.removeHandler(DB.getPath(nodeChar, "abilities.constitution.score"), "onUpdate", self.onConstitutionChanged);
+end
+
+function onConstitutionChanged()
+	local nodeChar = getDatabaseNode();
+	local nConScore = DB.getValue(nodeChar, "abilities.constitution.score", 10);
+	if DB.getValue(nodeChar, "hp.total", 0) <= 0 then
+		DB.setValue(nodeChar, "hp.total", "number", nConScore);
+	end
 end
 
 function onLockModeChanged(bReadOnly)

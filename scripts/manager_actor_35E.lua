@@ -506,7 +506,11 @@ function getDefenseValue(rAttacker, rDefender, rRoll)
 				not ActorManager35E.hasRollSpecialAbility(rDefender, "Uncanny Dodge") then
 			bCombatAdvantage = true;
 		end
-		if EffectManager.hasCondition(rDefender, "Climbing") or EffectManager.hasCondition(rDefender, "Running") then
+		if EffectManager.hasCondition(rDefender, "Climbing") then
+			bCombatAdvantage = true;
+		end
+		if (EffectManager.hasCondition(rDefender, "Running") or EffectManager.hasCondition(rDefender, "Run")) and
+				not ActorManager35E.hasFeat(rDefender, "Run") then
 			bCombatAdvantage = true;
 		end
 		if EffectManager.hasCondition(rDefender, "Pinned") then

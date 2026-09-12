@@ -158,6 +158,21 @@ function modSkill(rSource, rTarget, rRoll) -- Adjusted
 		end
 		-- Exhausted and Fatigued are handled by the effect checks for general ability modifiers
 
+		-- Reputation modifier for social interaction checks (PDF p. 122)
+		local bRepMod = ModifierManager.getKey("REP");
+		local bIsSocialSkill = (sSkillLower:match("^bluff") or sSkillLower:match("^diplomacy") or sSkillLower:match("^gather information") or sSkillLower:match("^intimidate"));
+		if bRepMod or (bIsSocialSkill and (EffectManager.hasCondition(rSource, "Reputation") or EffectManager.hasCondition(rSource, "REP"))) then
+			local nodeActor = ActorManager.getCreatureNode(rSource);
+			if nodeActor then
+				local nRep = tonumber(DB.getValue(nodeActor, "reputation", 0)) or 0;
+				if nRep ~= 0 then
+					bEffects = true;
+					nAddMod = nAddMod + nRep;
+					rRoll.sDesc = rRoll.sDesc .. string.format(" [REPUTATION %+d]", nRep);
+				end
+			end
+		end
+
 		-- Get ability modifiers
 		local nBonusStat, nBonusEffects = ActorManagerD20.getAbilityEffectsBonus(rSource, sActionStat);
 		if nBonusEffects > 0 then

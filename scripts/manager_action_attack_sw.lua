@@ -166,6 +166,12 @@ function getRoll(rActor, rAction)
 	-- Legacy
 	rRoll.range = rAction.range;
 
+	rRoll.rangeincrement = rAction.rangeincrement;
+	rRoll.thrown = rAction.thrown;
+	rRoll.stundc = rAction.stundc;
+	rRoll.stun = rAction.stun;
+	rRoll.nodeWeapon = rAction.nodeWeapon;
+
 	return rRoll;
 end
 
@@ -198,7 +204,88 @@ function getGrappleRoll(rActor, rAction)
 	return rRoll;
 end
 
-function modAttack(rSource, rTarget, rRoll) -- Adjusted
+function isAlly(rActor1, rActor2)
+	if not rActor1 or not rActor2 then
+		return false;
+	end
+	if ActorManager.isEqual(rActor1, rActor2) then
+		return false;
+	end
+	local sFaction1 = ActorManager.getFaction(rActor1);
+	local sFaction2 = ActorManager.getFaction(rActor2);
+	if (sFaction1 == "") or (sFaction2 == "") then
+		if ActorManager.isPC(rActor1) and ActorManager.isPC(rActor2) then
+			return true;
+		end
+		return false;
+	end
+	return (sFaction1 == sFaction2);
+end
+
+function isCombatantActive(rActor)
+	if not rActor then
+		return false;
+	end
+	if ActorHealthManager and ActorHealthManager.isDyingOrDead(rActor) then
+		return false;
+	end
+	if EffectManager.hasCondition(rActor, "Unconscious") or
+	   EffectManager.hasCondition(rActor, "Paralyzed") or
+	   EffectManager.hasCondition(rActor, "Helpless") or
+	   EffectManager.hasCondition(rActor, "Petrified") or
+	   EffectManager.hasCondition(rActor, "Dead") then
+		return false;
+	end
+	return true;
+end
+
+function getMeleeDistanceThreshold(rActor)
+	local nThreshold = 3;
+	local nodeCT = ActorManager.getCTNode(rActor);
+	if nodeCT then
+		local sSpaceReach = DB.getValue(nodeCT, "spacereach", ""):lower();
+		if sSpaceReach:match("ft") then
+			return 8;
+		end
+		local sReach = sSpaceReach:match("/%s*(%d+)");
+		if sReach then
+			local nR = tonumber(sReach);
+			if nR then
+				return nR * 1.5;
+			end
+		end
+	end
+	return nThreshold;
+end
+
+function isTargetEngagedInMelee(rSource, rTarget)
+	if not rSource or not rTarget then
+		return false;
+	end
+	local tokenTarget = ActorManager.getToken(rTarget);
+	if not tokenTarget then
+		return false;
+	end
+
+	local aCombatants = CombatManager.getCombatantNodes();
+	for _, nodeCT in pairs(aCombatants) do
+		local rCombatant = ActorManager.resolveActor(nodeCT);
+		if rCombatant and not ActorManager.isEqual(rCombatant, rTarget) and not ActorManager.isEqual(rCombatant, rSource) then
+			if isAlly(rSource, rCombatant) and isCombatantActive(rCombatant) then
+				local nDist = ActorManager.getDistanceBetween(rCombatant, rTarget);
+				if nDist then
+					local nThreshold = getMeleeDistanceThreshold(rCombatant);
+					if nDist <= nThreshold then
+						return true;
+					end
+				end
+			end
+		end
+	end
+	return false;
+end
+
+function modAttack(rSource, rTarget, rRoll)
 	ActionAttackCore.clearCritState(rSource);
 	
 	ActionAttackCore.decodeRollData(rRoll);
@@ -280,6 +367,68 @@ function modAttack(rSource, rTarget, rRoll) -- Adjusted
 	if bFireintoMelee then
 		table.insert(aAddDesc, "[Fire into Melee]");
 		nAddMod = nAddMod - 4;
+	end
+
+	-- Automatic Range & Melee Detection
+	if rSource and rTarget and (rRoll.sRange == "R") then
+		local nDistance = ActorManager.getDistanceBetween(rSource, rTarget);
+
+		-- Automatic Range Increments & Point Blank
+		if nDistance and OptionsManager.isOption("AUTORANGE", "on") then
+			-- 1. Point Blank Shot (+1 within 10m / 30ft)
+			local nPBMax = (getMeleeDistanceThreshold(rSource) > 3) and 30 or 10;
+			if (nDistance <= nPBMax) and not bPointBlank and not rRoll.sDesc:match("%[Point Blank%]") then
+				if ActorManager35E.hasRollFeat(rSource, "Point Blank Shot") or EffectManager.hasText(rSource, "PBLANK") then
+					bPointBlank = true;
+					table.insert(aAddDesc, "[Point Blank]");
+					nAddMod = nAddMod + 1;
+				end
+			end
+
+			-- 2. Range Increments & Out of Range
+			local nRangeInc = rRoll.rangeincrement or 0;
+			if (nRangeInc == 0) and rRoll.nodeWeapon then
+				nRangeInc = DB.getValue(rRoll.nodeWeapon, "rangeincrement", 0);
+			end
+			if (nRangeInc == 0) and rSource then
+				local nodeSource = ActorManager.getCreatureNode(rSource);
+				if nodeSource and rRoll.sLabel then
+					for _, nodeWpn in ipairs(DB.getChildList(nodeSource, "weaponlist")) do
+						if DB.getValue(nodeWpn, "name", "") == rRoll.sLabel then
+							nRangeInc = DB.getValue(nodeWpn, "rangeincrement", 0);
+							if nRangeInc > 0 then break; end
+						end
+					end
+				end
+			end
+
+			if nRangeInc > 0 then
+				local bThrown = rRoll.thrown or (rRoll.sDesc and rRoll.sDesc:lower():match("thrown"));
+				local nMaxInc = bThrown and 5 or 10;
+				local nInc = math.floor((nDistance - 0.01) / nRangeInc);
+				if nInc >= nMaxInc then
+					rRoll.bOutOfRange = true;
+					table.insert(aAddDesc, "[OUT OF RANGE]");
+				elseif nInc > 0 then
+					local nRangePenalty = nInc * -2;
+					nAddMod = nAddMod + nRangePenalty;
+					table.insert(aAddDesc, string.format("[RANGE -%d]", math.abs(nRangePenalty)));
+				end
+			end
+		end
+
+		-- Automatic Firing into Melee
+		if OptionsManager.isOption("AUTOFIRINGINTOMELEE", "on") and not bFireintoMelee and not rRoll.sDesc:match("%[Fire into Melee%]") then
+			if isTargetEngagedInMelee(rSource, rTarget) then
+				if ActorManager35E.hasRollFeat(rSource, "Precise Shot") or EffectManager.hasText(rSource, "PRECISE") then
+					table.insert(aAddDesc, "[PRECISE SHOT]");
+				else
+					bFireintoMelee = true;
+					table.insert(aAddDesc, "[Fire into Melee]");
+					nAddMod = nAddMod - 4;
+				end
+			end
+		end
 	end
 	if bFlanking then
 		table.insert(aAddDesc, "[Flanking]");
@@ -598,7 +747,11 @@ function onAttack(rSource, rTarget, rRoll)
 		rRoll.nFirstDie = rRoll.aDice[1].result or 0;
 	end
 	rRoll.bCritThreat = false;
-	if rRoll.nFirstDie >= 20 then
+	local bOutOfRange = rRoll.bOutOfRange or (rRoll.sDesc and rRoll.sDesc:match("%[OUT OF RANGE%]"));
+	if bOutOfRange then
+		rRoll.sResult = "miss";
+		table.insert(rRoll.aMessages, "[OUT OF RANGE]");
+	elseif rRoll.nFirstDie >= 20 then
 		if rRoll.sType == "critconfirm" then
 			rRoll.sResult = "crit";
 			table.insert(rRoll.aMessages, "[CRITICAL HIT]");

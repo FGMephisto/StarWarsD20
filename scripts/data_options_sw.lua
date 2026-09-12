@@ -3,7 +3,7 @@
 -- attribution and copyright information.
 --
 
-function onInit() -- Adjusted
+function onInit()
 	registerOptions();
 	DecalManager.setDefault("images/decals/stw_decal.jpg@Star_Wars_D20_Assets");
 end
@@ -31,6 +31,14 @@ function registerOptions()
 	OptionsManager.registerStandardOption("SHPC");
 	OptionsManager.registerStandardOption("SHNPC");
 	OptionsManager.registerOptionData({	sKey = "ANPC", sGroupRes = "option_header_combat", });
+	OptionsManager.registerOptionData({
+		sKey = "AUTORANGE", sGroupRes = "option_header_combat",
+		tCustom = { default = "on", },
+	});
+	OptionsManager.registerOptionData({
+		sKey = "AUTOFIRINGINTOMELEE", sGroupRes = "option_header_combat",
+		tCustom = { default = "on", },
+	});
 
 	-- House Rules
 	OptionsManager.registerStandardOption("HRFC");

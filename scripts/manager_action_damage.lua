@@ -7,7 +7,6 @@ function onInit()
 	GameManager.setOption("atktype", "3.5E");
 	GameManager.setOption("critical", "3.5E");
 	GameManager.setOption("critmult", "3.5E");
-	GameManager.setOption("dmgdr", "3.5E");
 	GameManager.setOption("dmgfortification", "3.5E");
 	GameManager.setOption("dmgmin", "3.5E");
 	GameManager.setOption("dmgvuln", "3.5E");
@@ -22,6 +21,8 @@ function onInit()
 
 	ActionDamageD20.registerStandardDamageHealHandlers();
 	GameManager.setMultiKeyFunction("onActionPreModRoll", "damage", ActionDamage.onPreModRoll);
+	GameManager.setFunction("onHealthApplyStatusChange", ActionDamage.applyStatusChangeSW);
+	GameManager.setFunction("onDamageApplyResults", ActionDamage.applyDamageResultsSW);
 
 	ActionsManager.registerModHandler("stabilization", modStabilization);
 	ActionsManager.registerResultHandler("stabilization", onStabilization);
@@ -249,4 +250,235 @@ function applyFailedStabilization(rActor, bSecret)
 		nTotal = 1,
 	};
 	ActionHealthD20.apply(nil, rActor, rRoll);
+end
+
+--
+--	SW D20 DAMAGE RESULTS (SHIELDS, VP, ARMOR DR VS SIZE DR, WP)
+--
+
+function applyDamageResultsSW(rSource, rTarget, rRoll, tApplyData)
+	tApplyData.nConcentrationDamage = tApplyData.nAdjustedDamage;
+
+	local bCritical = tApplyData.bCritical or (rRoll and rRoll.sDesc and (rRoll.sDesc:match("%[CRITICAL%]") or rRoll.sDesc:match("%[CRIT%]")));
+	local bShielded = ActionDamage.isShieldedTarget(rTarget, tApplyData.tHealth);
+
+	-- Step 1: Absorb damage with Shield Points (SP) or Vitality Points (VP)
+	-- Active energy shield bubbles absorb critical hits; unprotected VP is bypassed on a critical hit.
+	if (not bCritical) or bShielded then
+		if ((tApplyData.tHealth["hp"].nTemp or 0) > 0) and ((tApplyData.nAdjustedDamage or 0) > 0) then
+			local sAbsorbTag = bShielded and "[SHIELD ABSORBED: %d]" or "[VP ABSORBED: %d]";
+			if tApplyData.nAdjustedDamage > tApplyData.tHealth["hp"].nTemp then
+				table.insert(tApplyData.tNotifications, string.format(sAbsorbTag, tApplyData.tHealth["hp"].nTemp));
+				tApplyData.nAdjustedDamage = tApplyData.nAdjustedDamage - tApplyData.tHealth["hp"].nTemp;
+				tApplyData.tHealth["hp"].nTemp = 0;
+			else
+				table.insert(tApplyData.tNotifications, string.format(sAbsorbTag, tApplyData.nAdjustedDamage));
+				tApplyData.tHealth["hp"].nTemp = tApplyData.tHealth["hp"].nTemp - tApplyData.nAdjustedDamage;
+				tApplyData.nAdjustedDamage = 0;
+			end
+		end
+		ActionHealthD20.applyDamageResultsNonlethal(rSource, rTarget, rRoll, tApplyData);
+	end
+
+	if (tApplyData.nAdjustedDamage or 0) <= 0 then
+		return;
+	end
+
+	-- Step 2: Apply Damage Reduction (Armor DR vs. Size/Structural DR) only to damage penetrating into Wound Points
+	local bLightsaber = ActionDamage.isLightsaberAttack(rSource, rRoll);
+	local nArmorDR, nOtherDR, sOtherType = ActionDamage.getDamageReductionSW(rTarget, rSource, rRoll);
+
+	-- Armor DR: bypassed by lightsabers
+	if nArmorDR > 0 then
+		if bLightsaber then
+			table.insert(tApplyData.tNotifications, string.format("[LIGHTSABER BYPASSES ARMOR DR: %d]", nArmorDR));
+		else
+			local nPrev = tApplyData.nAdjustedDamage;
+			tApplyData.nAdjustedDamage = math.max(0, tApplyData.nAdjustedDamage - nArmorDR);
+			local nAbsorbed = nPrev - tApplyData.nAdjustedDamage;
+			if nAbsorbed > 0 then
+				table.insert(tApplyData.tNotifications, string.format("[ARMOR DR: %d]", nAbsorbed));
+			end
+		end
+	end
+
+	-- Size / Structural / Other DR: NOT bypassed by lightsabers
+	if (nOtherDR > 0) and ((tApplyData.nAdjustedDamage or 0) > 0) then
+		local nPrev = tApplyData.nAdjustedDamage;
+		tApplyData.nAdjustedDamage = math.max(0, tApplyData.nAdjustedDamage - nOtherDR);
+		local nAbsorbed = nPrev - tApplyData.nAdjustedDamage;
+		if nAbsorbed > 0 then
+			local sLabel = (sOtherType == "size" and "[SIZE DR: %d]") or (sOtherType == "structural" and "[STRUCTURAL DR: %d]") or "[DR: %d]";
+			table.insert(tApplyData.tNotifications, string.format(sLabel, nAbsorbed));
+		end
+	end
+
+	if (tApplyData.nAdjustedDamage or 0) <= 0 then
+		return;
+	end
+
+	-- Step 3: Apply leftover damage to Wound Points
+	ActionHealthD20.applyDamageResultsNormal(rSource, rTarget, rRoll, tApplyData);
+	ActionHealthD20.applyDamageResultsDeathSave(rSource, rTarget, rRoll, tApplyData);
+	ActionHealthD20.applyDamageResultsSystemShock(rSource, rTarget, rRoll, tApplyData);
+end
+
+function isLightsaberAttack(rSource, rRoll)
+	if not rRoll then
+		return false;
+	end
+	local sDesc = (rRoll.sDesc or ""):lower();
+	if sDesc:match("lightsaber") then
+		return true;
+	end
+	if rRoll.clauses then
+		for _, tClause in ipairs(rRoll.clauses) do
+			if (tClause.dmgtype or ""):lower():match("lightsaber") then
+				return true;
+			end
+		end
+	end
+	return false;
+end
+
+function isShieldedTarget(rTarget, tHealth)
+	if not rTarget or not tHealth or not tHealth["hp"] then
+		return false;
+	end
+	if (tHealth["hp"].nTemp or 0) <= 0 then
+		return false;
+	end
+
+	if EffectManager.hasCondition(rTarget, "SHIELD") or EffectManager.hasCondition(rTarget, "SHIELDS") then
+		return true;
+	end
+
+	local nodeTarget = ActorManager.getCreatureNode(rTarget);
+	if nodeTarget then
+		local sNPCType = DB.getValue(nodeTarget, "npctype", ""):lower();
+		if sNPCType == "vehicle" then
+			return true;
+		end
+		local sType = DB.getValue(nodeTarget, "type", ""):lower();
+		local sSQ = DB.getValue(nodeTarget, "specialqualities", ""):lower();
+		if sType:match("droid") and (sSQ:match("shield") or sType:match("droideka") or sType:match("destroyer")) then
+			return true;
+		end
+		if sSQ:match("shield generator") or sSQ:match("shield points") then
+			return true;
+		end
+	end
+
+	return false;
+end
+
+function getDamageReductionSW(rTarget, rSource, rRoll)
+	if not rTarget then
+		return 0, 0, "";
+	end
+
+	local nArmorDR = 0;
+	local nOtherDR = 0;
+	local sOtherType = "";
+
+	local bVehicle = false;
+	local bSizeDR = false;
+
+	local nodeTarget = ActorManager.getCreatureNode(rTarget);
+	if nodeTarget then
+		local sNPCType = DB.getValue(nodeTarget, "npctype", ""):lower();
+		local sType = DB.getValue(nodeTarget, "type", ""):lower();
+		local sSQ = DB.getValue(nodeTarget, "specialqualities", ""):lower();
+
+		if sNPCType == "vehicle" or sType:match("vehicle") or sType:match("starship") then
+			bVehicle = true;
+			sOtherType = "structural";
+		elseif sType:match("huge") or sType:match("gargantuan") or sType:match("colossal") or sSQ:match("%(size%)") then
+			bSizeDR = true;
+			sOtherType = "size";
+		end
+	end
+
+	-- Base DR from sheet (equipped armor on PC, or dr field on NPC)
+	local nBaseDR = 0;
+	local sDR = GameManager.getRecordFieldValueLinked(rTarget, "dr", "");
+	if (sDR == "" or sDR == 0) then
+		sDR = GameManager.getRecordFieldValueLinked(rTarget, "damagereduction", "");
+	end
+	if (sDR == "" or sDR == 0) then
+		sDR = GameManager.getRecordFieldValueLinked(rTarget, "defenses.damagereduction", "");
+	end
+	if type(sDR) == "number" then
+		nBaseDR = sDR;
+	elseif type(sDR) == "string" and sDR ~= "" then
+		nBaseDR = tonumber(sDR:match("(%d+)")) or 0;
+	end
+
+	if nBaseDR > 0 then
+		if bVehicle or bSizeDR then
+			nOtherDR = nOtherDR + nBaseDR;
+		else
+			nArmorDR = nArmorDR + nBaseDR;
+		end
+	end
+
+	-- Effects: ARMORDR and ADR always classify as Armor DR
+	local nArmorEffects = EffectManager.getBonusMod(rTarget, "ARMORDR") + EffectManager.getBonusMod(rTarget, "ADR");
+	nArmorDR = nArmorDR + nArmorEffects;
+
+	-- Effects: SIZEDR and NATURALDR classify as Size/Other DR
+	local nSizeEffects = EffectManager.getBonusMod(rTarget, "SIZEDR") + EffectManager.getBonusMod(rTarget, "NATURALDR");
+	if nSizeEffects > 0 then
+		nOtherDR = nOtherDR + nSizeEffects;
+		if sOtherType == "" then
+			sOtherType = "size";
+		end
+	end
+
+	-- Effects: DR tag
+	-- If DR effect specifies "armor", it is armor DR; otherwise it applies as universal / other DR
+	for _, tCompData in ipairs(EffectManager.getCompsDataByTag(rTarget, "DR", { rTarget = rSource, tActionTags = rRoll and rRoll.tActionTags })) do
+		local sRemainder = (tCompData.remainder and table.concat(tCompData.remainder, " ") or ""):lower();
+		local nVal = tCompData.mod or 0;
+		if nVal > 0 then
+			if sRemainder:match("armor") then
+				nArmorDR = nArmorDR + nVal;
+			else
+				nOtherDR = nOtherDR + nVal;
+				if sOtherType == "" then
+					sOtherType = sRemainder:match("size") and "size" or "";
+				end
+			end
+		end
+	end
+
+	return math.max(0, nArmorDR), math.max(0, nOtherDR), sOtherType;
+end
+
+--
+--	SW D20 STATUS CHANGE (LOST WOUND POINTS / FATIGUED)
+--
+
+function applyStatusChangeSW(rSource, rTarget, rRoll, tApplyData)
+	ActionHealthD20.applyStatusChangeDefault(rSource, rTarget, rRoll, tApplyData);
+
+	if not rTarget or not tApplyData or not tApplyData.tHealth or not tApplyData.tHealth["hp"] then
+		return;
+	end
+
+	local nWounds = tApplyData.tHealth["hp"].nWounds or 0;
+	if tApplyData.sType == "damage" then
+		if nWounds > 0 then
+			if not EffectManager.hasCondition(rTarget, "Fatigued") then
+				EffectManager.addCondition(rTarget, "Fatigued");
+				table.insert(tApplyData.tNotifications, "[FATIGUED]");
+			end
+		end
+	elseif tApplyData.sType == "heal" or tApplyData.sType == "fheal" or tApplyData.sType == "recovery" then
+		if nWounds <= 0 then
+			if EffectManager.hasCondition(rTarget, "Fatigued") then
+				EffectManager.removeCondition(rTarget, "Fatigued");
+			end
+		end
+	end
 end

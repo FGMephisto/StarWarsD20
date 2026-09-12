@@ -2,8 +2,18 @@
 -- Please see the license.html file included with this distribution for 
 -- attribution and copyright information.
 --
-
-local FORCE_POWERS_LABEL = Interface.getString("spell_header_forcepowers");
+local _sForcePowersLabel = nil;
+local function getForcePowersLabel()
+	if not _sForcePowersLabel then
+		if Interface and Interface.getString then
+			_sForcePowersLabel = Interface.getString("spell_header_forcepowers");
+		end
+		if not _sForcePowersLabel or _sForcePowersLabel == "" then
+			_sForcePowersLabel = "Force Powers";
+		end
+	end
+	return _sForcePowersLabel;
+end
 
 function onInit()
 	self.updateAbility();
@@ -42,14 +52,8 @@ function addWeapon()
 		w.name.setFocus();
 	end
 end
-function addSpellClass() -- Adjusted
-	do return nil; end -- Disabled -> exit
-	local w = spellclasslist.createWindow();
-	if w then
-		w.activatedetail.setValue(1);
-		w.label.setFocus();
-		DB.setValue(getDatabaseNode(), "spellmode", "string", "");
-	end
+function addSpellClass()
+	return nil;
 end
 
 local bUpdateLock = false;
@@ -90,23 +94,25 @@ end
 
 -- Find or create the "Force Powers" spell class node
 function getOrCreateForceSpellClass(nodeChar)
+	local sForceLabel = getForcePowersLabel();
 	local nodeSpellSet = DB.createChild(nodeChar, "spellset");
 	for _, nodeClass in ipairs(DB.getChildList(nodeSpellSet)) do
-		if DB.getValue(nodeClass, "label", "") == FORCE_POWERS_LABEL then
+		if DB.getValue(nodeClass, "label", "") == sForceLabel then
 			return nodeClass;
 		end
 	end
 	-- Create new spell class
 	local nodeNew = DB.createChild(nodeSpellSet);
-	DB.setValue(nodeNew, "label", "string", FORCE_POWERS_LABEL);
+	DB.setValue(nodeNew, "label", "string", sForceLabel);
 	DB.setValue(nodeNew, "castertype", "string", "points");
 	return nodeNew;
 end
 
 -- Find the "Force Powers" spell class node (without creating)
 function findForceSpellClass(nodeChar)
+	local sForceLabel = getForcePowersLabel();
 	for _, nodeClass in ipairs(DB.getChildList(nodeChar, "spellset")) do
-		if DB.getValue(nodeClass, "label", "") == FORCE_POWERS_LABEL then
+		if DB.getValue(nodeClass, "label", "") == sForceLabel then
 			return nodeClass;
 		end
 	end
