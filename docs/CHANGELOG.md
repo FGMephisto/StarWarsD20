@@ -19,6 +19,12 @@ This document highlights the major features, gameplay mechanics, user interface 
 - **Dedicated Stun Button Graphic**: Replaced the generic purple effect button on weapons with a custom electric cyan lightning action icon (`button_action_stun` and `button_action_stun_down`).
 - **Authentic Stun Range Restriction**: Enforced the Star Wars d20 rule (*Revised Core Rulebook*, p. 64) where blaster stun beams have a maximum range of **6 meters**. Within 6m, the weapon's normal range increments apply; beyond 6m, attacks are automatically flagged `[OUT OF RANGE]` and resolve as an automatic miss.
 
+### NPC Window Modernization & Vehicle Support
+- **Dynamic Type Selector**: Added top radio selectors on NPC records to seamlessly switch between **Creature**, **Vehicle**, and **Hazard / Trap** profiles.
+- **Dedicated Vehicle Sheets**: Full vehicle stat blocks featuring Hull Points (HP), Shield/Armor Damage Reduction (DR), Speed, Maneuverability/Drive checks, Crew capacity, Decks, and Mounted Weapon systems.
+- **Star Wars Creature Defenses**: Integrated Vitality Points (VP), Wound Points (HP), and Armor DR directly into NPC defenses while removing obsolete fantasy alignment and spell resistance fields.
+- **Tabbed NPC Navigation**: Modernized NPC layout with tabbed navigation supporting **Main**, **Powers** (Force power list with mode cycler and class managers), **Notes**, and **Pictures**.
+
 ### Runtime Stability
 - **Resolved Script Warning**: Restored `list_spell.lua` to ensure zero script load warnings in Fantasy Grounds Unity runtime logs.
 
