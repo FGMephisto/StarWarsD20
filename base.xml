@@ -41,8 +41,8 @@
 	<includefile source="desktop/desktop_classes_sw.xml" />
 
 	<!-- Reference -->
-	<includefile source="ref/ref_equipment_lists.xml" />
-	<includefile source="ref/ref_spells.xml" />
+	<!-- <includefile source="ref/ref_equipment_lists.xml" /> -->
+	<!-- <includefile source="ref/ref_spells.xml" /> -->
 
 	<!-- Campaign Records -->
 	<includefile source="campaign/template_campaign.xml" />
