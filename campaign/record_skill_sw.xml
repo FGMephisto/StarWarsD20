@@ -6,7 +6,19 @@
 -->
 
 <root>
-	<windowclass name="referenceskill" copy="record_window" />
+	<windowclass name="referenceskill" copy="record_window_tabbed">
+		<tab>
+			<name>main</name>
+			<resource>tab_main</resource>
+			<class>referenceskill_main</class>
+			<embed />
+		</tab>
+		<tab merge="add">
+			<name>actions</name>
+			<resource>tab_actions</resource>
+			<class>referenceskill_actions</class>
+		</tab>
+	</windowclass>
 	<windowclass name="referenceskill_header" copy="record_header" />
 
 	<windowclass name="referenceskill_main">
@@ -35,6 +47,9 @@
 			end
 			function onDataUpdate()
 				self.updateTypeLabel();
+			end
+			function update()
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
 			end
 			function onLockModeChanged(bReadOnly)
 				local tFields = { "ability", "trained", "armorcheckpenalty", "feat", "group", };
@@ -117,6 +132,84 @@
 			<string_content_columnh_single name="feat" />
 			
 			<ft_content_columnh_full name="text" />
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="referenceskill_actions">
+		<script>
+			function onInit()
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+			end
+			function update()
+				self.onLockModeChanged(WindowManager.getWindowReadOnlyState(self));
+			end
+			function handleActionAdd(sType)
+				PowerManagerCore.createPowerAction(self, sType);
+			end
+			function onLockModeChanged(bReadOnly)
+				if sub_add_buttons then
+					sub_add_buttons.setVisible(not bReadOnly);
+				end
+				if list then
+					list.setReadOnly(bReadOnly);
+				end
+			end
+		</script>
+		<sheetdata>
+			<anchor_content_top />
+			<anchor_content_bottom />
+
+			<sub_content_framed_groupbox_bottom name="sub_add_buttons">
+				<class>skill_actions_add_buttons</class>
+			</sub_content_framed_groupbox_bottom>
+
+			<list_content_framed_groupbox name="list">
+				<datasource>.actions</datasource>
+				<class>power_action</class>
+				<sortby><field>order</field></sortby>
+			</list_content_framed_groupbox>
+			<scrollbar_content_list />
+		</sheetdata>
+	</windowclass>
+
+	<template name="skill_action_add_button">
+		<buttoncontrol>
+			<anchored to="rightanchor" width="20" height="20">
+				<top />
+				<right relation="relative" offset="-2" postoffset="-2" />
+			</anchored>
+			<icon normal="button_add" pressed="button_add_down" />
+			<tooltip textres="button_add" />
+			<script>
+				local _sType;
+				function setData(sType)
+					_sType = sType;
+					setIcons("button_action_" .. sType, "button_action_" .. sType .. "_down");
+					setTooltipText(Interface.getString("power_menu_action_add_" .. sType));
+				end
+				function onButtonPress()
+					WindowManager.callOuterWindowFunction(window, "handleActionAdd", _sType);
+				end
+			</script>
+		</buttoncontrol>
+	</template>
+	<windowclass name="skill_actions_add_buttons">
+		<margins control="0,0,0,5" />
+		<script>
+			function onInit()
+				for _,sType in ipairs(PowerActionManagerCore.getSortedActionTypes()) do
+					local c = createControl("skill_action_add_button", "actions_iadd_" .. sType);
+					c.setData(sType);
+				end
+			end
+		</script>
+		<sheetdata>
+			<anchor_listitem_left />
+			<anchor_listitem_right />
+
+			<label_listitem_left name="label_add">
+				<static textres="power_menu_action_add" />
+			</label_listitem_left>
 		</sheetdata>
 	</windowclass>
 </root>

@@ -206,7 +206,7 @@
 			</buttongroup_counter_power>
 
 			<string_poweritem_header_name name="name">
-				<empty textres="library_recordtype_empty_spell" />
+				<empty textres="library_recordtype_empty_power" />
 				<script>
 					function onDragStart(button, x, y, draginfo)
 						local node = window.getDatabaseNode();
@@ -274,7 +274,7 @@
 			</buttongroup_counter_power>
 
 			<string_poweritem_header_name name="name">
-				<empty textres="library_recordtype_empty_spell" />
+				<empty textres="library_recordtype_empty_power" />
 			</string_poweritem_header_name>
 
 			<list_poweraction_mini name="actionsmini">

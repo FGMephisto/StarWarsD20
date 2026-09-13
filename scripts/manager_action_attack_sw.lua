@@ -386,34 +386,47 @@ function modAttack(rSource, rTarget, rRoll)
 			end
 
 			-- 2. Range Increments & Out of Range
-			local nRangeInc = rRoll.rangeincrement or 0;
+			local sUnit = (getMeleeDistanceThreshold(rSource) > 3) and "ft" or "m";
+			local sDistStr = string.format("%d%s", math.floor(nDistance), sUnit);
+
+			local nRangeInc = tonumber(rRoll.rangeincrement) or 0;
 			if (nRangeInc == 0) and rRoll.nodeWeapon then
-				nRangeInc = DB.getValue(rRoll.nodeWeapon, "rangeincrement", 0);
+				nRangeInc = tonumber(DB.getValue(rRoll.nodeWeapon, "rangeincrement", 0)) or 0;
 			end
 			if (nRangeInc == 0) and rSource then
 				local nodeSource = ActorManager.getCreatureNode(rSource);
 				if nodeSource and rRoll.sLabel then
 					for _, nodeWpn in ipairs(DB.getChildList(nodeSource, "weaponlist")) do
 						if DB.getValue(nodeWpn, "name", "") == rRoll.sLabel then
-							nRangeInc = DB.getValue(nodeWpn, "rangeincrement", 0);
+							nRangeInc = tonumber(DB.getValue(nodeWpn, "rangeincrement", 0)) or 0;
 							if nRangeInc > 0 then break; end
 						end
 					end
 				end
 			end
 
-			if nRangeInc > 0 then
+			local bStun = rRoll.stun or (rRoll.sDesc and rRoll.sDesc:match("%[STUN%]"));
+			local nMaxStunDist = 6;
+
+			if bStun and ((nDistance - 0.05) > nMaxStunDist) then
+				rRoll.bOutOfRange = true;
+				table.insert(aAddDesc, string.format("[OUT OF RANGE (STUN %s)]", sDistStr));
+			elseif nRangeInc > 0 then
 				local bThrown = rRoll.thrown or (rRoll.sDesc and rRoll.sDesc:lower():match("thrown"));
 				local nMaxInc = bThrown and 5 or 10;
 				local nInc = math.floor((nDistance - 0.01) / nRangeInc);
 				if nInc >= nMaxInc then
 					rRoll.bOutOfRange = true;
-					table.insert(aAddDesc, "[OUT OF RANGE]");
-				elseif nInc > 0 then
-					local nRangePenalty = nInc * -2;
-					nAddMod = nAddMod + nRangePenalty;
-					table.insert(aAddDesc, string.format("[RANGE -%d]", math.abs(nRangePenalty)));
+					table.insert(aAddDesc, string.format("[OUT OF RANGE (%s)]", sDistStr));
+				else
+					if nInc > 0 then
+						local nRangePenalty = nInc * -2;
+						nAddMod = nAddMod + nRangePenalty;
+					end
+					table.insert(aAddDesc, string.format("[RANGE: %s]", sDistStr));
 				end
+			else
+				table.insert(aAddDesc, string.format("[RANGE: %s]", sDistStr));
 			end
 		end
 
@@ -747,7 +760,7 @@ function onAttack(rSource, rTarget, rRoll)
 		rRoll.nFirstDie = rRoll.aDice[1].result or 0;
 	end
 	rRoll.bCritThreat = false;
-	local bOutOfRange = rRoll.bOutOfRange or (rRoll.sDesc and rRoll.sDesc:match("%[OUT OF RANGE%]"));
+	local bOutOfRange = rRoll.bOutOfRange or (rRoll.sDesc and rRoll.sDesc:match("%[OUT OF RANGE"));
 	if bOutOfRange then
 		rRoll.sResult = "miss";
 		table.insert(rRoll.aMessages, "[OUT OF RANGE]");

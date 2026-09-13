@@ -238,6 +238,7 @@
 	<string name="spell_label_pp">VP</string>
 	<string name="spell_tooltip_ppmax">Vitality Points Max</string>
 	<string name="spell_tooltip_ppused">Vitality Points Used</string>
+	<string name="power_tooltip_cost">Vitality Cost</string>
 	<string name="spell_label_school">School</string>
 	<string name="spell_label_components">Components</string>
 	<string name="spell_label_casttime">Casting Time</string>

@@ -21,6 +21,7 @@ function onInit()
 	DB.addHandler(DB.getPath(nodeWeapon, "maxammo"), "onUpdate", self.onTypeChanged);
 	DB.addHandler(DB.getPath(nodeWeapon, "rangeincrement"), "onUpdate", self.onTypeChanged);
 	DB.addHandler(nodeWeapon, "onChildUpdate", self.onDataChanged);
+	DB.addHandler(DB.getPath(nodeWeapon, "carried"), "onUpdate", self.onCarriedChanged);
 	DB.addHandler(DB.getPath(nodeChar, "abilities.*.bonus"), "onUpdate", self.onDataChanged);
 	DB.addHandler(DB.getPath(nodeChar, "attackbonus.base"), "onUpdate", self.onDataChanged);
 	DB.addHandler(DB.getPath(nodeChar, "attackbonus.*"), "onChildUpdate", self.onDataChanged);
@@ -39,6 +40,7 @@ function onClose()
 	DB.removeHandler(DB.getPath(nodeWeapon, "maxammo"), "onUpdate", self.onTypeChanged);
 	DB.removeHandler(DB.getPath(nodeWeapon, "rangeincrement"), "onUpdate", self.onTypeChanged);
 	DB.removeHandler(nodeWeapon, "onChildUpdate", self.onDataChanged);
+	DB.removeHandler(DB.getPath(nodeWeapon, "carried"), "onUpdate", self.onCarriedChanged);
 	DB.removeHandler(DB.getPath(nodeChar, "abilities.*.bonus"), "onUpdate", self.onDataChanged);
 	DB.removeHandler(DB.getPath(nodeChar, "attackbonus.base"), "onUpdate", self.onDataChanged);
 	DB.removeHandler(DB.getPath(nodeChar, "attackbonus.*"), "onChildUpdate", self.onDataChanged);
@@ -55,12 +57,17 @@ function onLockModeChanged(bReadOnly)
 	WindowManager.callSafeControlsSetLockMode(self, tFields, bReadOnly);
 	
 	if not minisheet then
-		local sMode = DB.getValue(WindowManager.getTopWindow(self).getDatabaseNode(), "spellmode", "");
-		WindowManager.callSafeControlsSetVisible(self, { "carried", }, not bReadOnly or (sMode == "preparation"));
+		WindowManager.callSafeControlsSetVisible(self, { "carried", }, true);
 	end
 
 	self.onTypeChanged();
 	self.onDataChanged();
+end
+
+function onCarriedChanged()
+	if windowlist and windowlist.applyFilter then
+		windowlist.applyFilter();
+	end
 end
 
 function onModeChanged()

@@ -4,7 +4,27 @@ This document highlights the major features, gameplay mechanics, user interface 
 
 ---
 
-## 1. Force Powers & Actions Overhaul (September 2026)
+## 1. Skill Actions Tab, Combat Weapons & Stun Range (September 13, 2026)
+
+### Skill Records Actions Tab (5E Layout)
+- **Dedicated Actions Tab on Skills**: Skill records (`record_skill_sw.xml`) now feature a tabbed interface with **Main** and **Actions** tabs.
+- **5E-Style Action Management**: Designed the skill actions editor using the modern 5E layout featuring framed groupbox lists and a bottom quick-action toolbar to add Cast, Damage, Heal, and Effect actions.
+- **Automatic Force Power Synchronization**: Pre-configured actions on Force skills now automatically synchronize to the character sheet's Force Powers when powers are added or populated.
+- **Streamlined Force Points**: Hidden the legacy cost field and defaulted power cost to 0, supporting manual player handling for Force points.
+
+### Weapon Line & Combat Mode Fixes
+- **Equipped / Carried State Visibility**: Fixed an issue where character sheet weapons vanished upon switching to Combat mode. The `carried` state toggle remains visible across modes and triggers immediate list filter updates when toggled.
+
+### Stun Weapon Mechanics & Visuals
+- **Dedicated Stun Button Graphic**: Replaced the generic purple effect button on weapons with a custom electric cyan lightning action icon (`button_action_stun` and `button_action_stun_down`).
+- **Authentic Stun Range Restriction**: Enforced the Star Wars d20 rule (*Revised Core Rulebook*, p. 64) where blaster stun beams have a maximum range of **6 meters**. Within 6m, the weapon's normal range increments apply; beyond 6m, attacks are automatically flagged `[OUT OF RANGE]` and resolve as an automatic miss.
+
+### Runtime Stability
+- **Resolved Script Warning**: Restored `list_spell.lua` to ensure zero script load warnings in Fantasy Grounds Unity runtime logs.
+
+---
+
+## 2. Force Powers & Actions Overhaul (September 2026)
 
 ### Force Skill Integration & Direct Rolling
 - **Direct Force Skill Links**: Clicking the link shortcut beside a Force power now opens the relevant Force Skill description sheet rather than a fantasy spell sheet.

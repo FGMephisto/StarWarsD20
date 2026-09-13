@@ -154,11 +154,13 @@ function syncForcePowers()
 		aForceSkillPaths[sPath] = nodeSkill;
 
 		-- Create power entry if it doesn't exist
-		if not aExistingPowers[sPath] then
-			local nodePower = DB.createChild(nodeSpells);
+		local nodePower = aExistingPowers[sPath];
+		if not nodePower then
+			nodePower = DB.createChild(nodeSpells);
 			DB.setValue(nodePower, "name", "string", DB.getValue(nodeSkill, "label", ""));
 			DB.setValue(nodePower, "skillpath", "string", sPath);
 		end
+		PowerManager35E.copySkillActionsToPower(nodeSkill, nodePower, false);
 	end
 
 	-- Remove orphaned power entries (skillpath no longer points to a force skill)

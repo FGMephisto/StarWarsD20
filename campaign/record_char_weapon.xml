@@ -78,7 +78,7 @@
 					<top parent="rightanchor" />
 					<right parent="rightanchor" relation="relative" offset="-5" postoffset="-5" />
 				</anchored>
-				<icon normal="button_action_effect" pressed="button_action_effect_down" />
+				<icon normal="button_action_stun" pressed="button_action_stun_down" />
 				<tooltip textres="char_tooltip_actionstun" />
 				<script>
 					function onButtonPress(x, y)

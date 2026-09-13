@@ -40,4 +40,8 @@
 	<icon name="char_weapon_melee" file="graphics/icons_sw/weapon_lightsaber.png" />
 	<icon name="char_weapon_ranged" file="graphics/icons_sw/weapon_blaster.png" />
 	<icon name="char_weapon_thrown" file="graphics/icons_sw/weapon_thrown.png" />
+
+	<!-- Weapon Actions -->
+	<icon name="button_action_stun" file="graphics/buttons_sw/button_action_stun.png" />
+	<icon name="button_action_stun_down" file="graphics/buttons_sw/button_action_stun_down.png" />
 </root>
