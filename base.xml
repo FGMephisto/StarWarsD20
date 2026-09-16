@@ -35,9 +35,9 @@
 	<includefile source="strings/strings_sw.xml" />
 
 	<!-- Desktop -->
-	<script name="Desktop35E" file="scripts/data_desktop_sw.lua" />
-	<script name="LibraryData35E" file="scripts/data_library_sw.lua" />
-	<script name="Options35E" file="scripts/data_options_sw.lua" />
+	<script name="Desktop35E" file="scripts/data_desktop_35E_sw.lua" />
+	<script name="LibraryData35E" file="scripts/data_library_35E_sw.lua" />
+	<script name="Options35E" file="scripts/data_options_35E_sw.lua" />
 	<includefile source="desktop/desktop_classes_sw.xml" />
 
 	<!-- Reference -->
@@ -99,12 +99,12 @@
 	<script name="ActorManager35E" file="scripts/manager_actor_35E.lua" />
 	<script name="CharManager" file="scripts/manager_char_sw.lua" />
 	<script name="CombatManager2" file="scripts/manager_combat2.lua" />
-	<script name="DiceManager35E" file="scripts/manager_dice_sw.lua" />
+	<script name="DiceManager35E" file="scripts/manager_dice_35E_sw.lua" />
 	<script name="EffectManager35E" file="scripts/manager_effect_35E.lua" />
 	<script name="EncumbranceManager35E" file="scripts/manager_encumbrance_35E.lua" />
 	<script name="ItemManager2" file="scripts/manager_item2.lua" />
 	<script name="PartyManager2" file="scripts/manager_ps2_sw.lua" />
-	<script name="PowerManager35E" file="scripts/manager_power_sw.lua" />
+	<script name="PowerManager35E" file="scripts/manager_power_35E_sw.lua" />
 	<script name="SpellManager" file="scripts/manager_spell_sw.lua" />
 	<script name="TokenManager2" file="scripts/manager_token2.lua" />
 	<script name="VersionManager2" file="scripts/manager_version2_sw.lua" />

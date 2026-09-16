@@ -13,8 +13,6 @@
 	</framedef>
 
 	<!-- Override CoreRPG ruleset graphics -->
-
-	<!-- Adjusted for Star Wars 3.5E -->
 	<!-- Desktop -->
 	<framedef name="desktop">
 		<bitmap file="graphics/frames_sw/desktop.jpg" />
